@@ -1,0 +1,33 @@
+# The following lines were added by compinstall
+
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle :compinstall filename '/home/chris/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt appendhistory autocd extendedglob notify
+# End of lines configured by zsh-newuser-install
+
+# Custom Prompt
+PROMPT="%B%n%b@%m %~
+%(!.#.→) "
+
+# Aliases
+alias ag='sudo aptitude'
+alias agi='ag install'
+alias agu='ag update'
+alias agp='ag purge'
+alias agg='ag safe-upgrade'
+alias ags='aptitude search'
+
+alias ll='ls -lh'
+alias la='ls -a'
+alias lla='ls -lah'
+
+# Coding facility aliases
+alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
