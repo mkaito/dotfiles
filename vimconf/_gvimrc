@@ -1,0 +1,17 @@
+" FuzzyFinder options.
+" Ignores based on common Merb app layout
+let g:fuzzy_ignore = "*.log;gems/*;bin/*;.gitignore"
+let g:fuzzy_matching_limit = 30
+
+" FuzzyFinder key maps
+map <leader>t :FuzzyFinderTextMate<CR>
+map <leader>b :FuzzyFinderBuffer<CR>
+
+" Some visuals
+colorscheme ir_black            " Colorscheme. I like them dark.
+set number                      " Show line numbers.
+set hlsearch                    " Highlight last search term.
+syntax on                       " Syntax highlighting.
+set go=a                        " GUI Options = Auto. I love "auto" to be "blank" .)
+set nuw=6                       " Wider line-number area
+set guifont=Inconsolata\ 10     " A fond easy on the eyes, compact and readable.
