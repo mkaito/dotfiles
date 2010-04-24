@@ -14,8 +14,17 @@ setopt appendhistory autocd extendedglob notify
 # End of lines configured by zsh-newuser-install
 
 # Custom Prompt
-PROMPT="%B%n%b@%m %~
+PROMPT="
+%B%n%b@%m %~
 %(!.#.→) "
+
+# Go Lang ENV
+export GOROOT=$HOME/go
+export GOOS=linux
+export GOARCH=amd64
+export GOBIN=$GOROOT/bin
+
+export PATH=$PATH:$GOBIN
 
 # Aliases
 alias ag='sudo aptitude'
