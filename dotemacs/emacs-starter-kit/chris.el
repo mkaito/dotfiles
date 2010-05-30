@@ -76,7 +76,7 @@
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
- (list "~/.org/index.org" "~/.org/personal.org" "~/.org/computers.org")
+ (list "~/.org/personal.org")
 )
 ;; }}}
 
