@@ -17,6 +17,11 @@ set shiftwidth=2
 set autoindent
 set expandtab
 
+"F7 WordProcessorOn
+:map <F7> :set wrap <CR> :setlocal spell spelllang=en_gb <CR>
+"F8 WordProcessorOff
+:map <F8> :set nowrap <CR> :set nospell <CR>
+
 " Map the leader to comma, which is easier to acccess.
 let mapleader = ","
 
@@ -52,12 +57,26 @@ if has("autocmd")
 		\ endif
 
 	augroup END
-  augroup markdown
-    autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:>
-  augroup END
 
 else
 
 	set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
+
+" FuzzyFinder options.
+" Ignores based on common Merb app layout
+let g:fuzzy_ignore = "*.log;gems/*;bin/*;.gitignore"
+let g:fuzzy_matching_limit = 30
+
+" FuzzyFinder key maps
+map <leader>t :FuzzyFinderTextMate<CR>
+map <leader>b :FuzzyFinderBuffer<CR>
+
+" Some visuals
+colorscheme ir_black            " Colorscheme. I like them dark.
+set number                      " Show line numbers.
+set hlsearch                    " Highlight last search term.
+syntax on                       " Syntax highlighting.
+set go=a
+set nuw=6                       " Wider line-number area
