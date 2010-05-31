@@ -10,6 +10,7 @@ export VISUAL="emacsclient"
 export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Go Lang ENV
 export GOROOT=$HOME/go
