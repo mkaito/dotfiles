@@ -204,7 +204,7 @@ globalkeys = awful.util.table.join(
     -- {{{ Applications
     awful.key({ modkey }, "e", function () exec("emacsclient -n -c") end),
     awful.key({ modkey }, "t", function () exec("thunar", false) end),
-    awful.key({ modkey }, "w", function () exec("firefox") end),
+    awful.key({ modkey }, "F2", function () exec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
 --  awful.key({ altkey }, "F1",  function () exec("urxvt") end),
 --  awful.key({ altkey }, "#49", function () scratch.drop("urxvt", "bottom") end),
 --  awful.key({ modkey }, "a", function () exec("urxvt -T Alpine -e alpine_exp") end),
