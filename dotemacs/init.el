@@ -91,6 +91,26 @@
 
 ;; Use ANSI colors within shell-mode
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; Mumamo chunks looks weird...
+(setq mumamo-chunk-coloring 1)
+
+(custom-set-faces 
+ '(mumamo-background-chunk-submode1 ((((class color)
+				      (min-colors 88)
+				      (background dark)) nil)))
+ '(mumamo-background-chunk-submode2 ((((class color)
+				      (min-colors 88)
+				      (background dark)) nil)))
+ '(mumamo-background-chunk-submode3 ((((class color)
+				      (min-colors 88)
+				      (background dark)) nil)))
+ '(mumamo-background-chunk-submode4 ((((class color)
+				      (min-colors 88)
+				      (background dark)) nil)))
+ '(mumamo-background-chunk-major ((((class color)
+				    (min-colors 88) 
+				    (background dark)) nil))))
 ;}}}
 
 ;; {{{ IDO
@@ -120,28 +140,7 @@
 ;; }}}
 
 ;; {{{ Colours
-;; way better than... wtf!? white? really?
-(color-theme-zenburn)
 
-;; Mumamo chunks looks weird...
-(setq mumamo-chunk-coloring 1)
-
-(custom-set-faces 
- '(mumamo-background-chunk-submode1 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode2 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode3 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode4 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-major ((((class color)
-				    (min-colors 88) 
-				    (background dark)) nil))))
 ;; }}}
 
 ;; {{{ Modes
@@ -154,13 +153,19 @@
 ;; }}}
 
 ;; {{{ Org Mode
+(require 'org-install)
 (setq org-directory "~/.org/")
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
 ;; Misc Configs
 (setq org-log-done t)
 (setq org-completion-use-ido t)
 (setq org-return-follows-link t)
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
  (list "~/.org/personal.org" "~/.org/notes.org")
@@ -237,8 +242,6 @@
 
 ;; {{{ Shortcut a few commonly used functions
 ;;
-(defalias 'cr            'comment-region)
-(defalias 'ucr           'uncomment-region)
 (defalias 'eb            'eval-buffer)
 (defalias 'er            'eval-region)
 (defalias 'ee            'eval-expression)
