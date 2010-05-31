@@ -6,6 +6,93 @@
 ;;
 ;; Latest modification: May 30 2010.
 
+;{{{ Initialization
+;
+;; Define the load path
+(setq load-path (cons "~/.emacs.d/" load-path))
+
+;; Turn off the toolbar
+(tool-bar-mode -1)
+;;
+;; Turn off the menu bar
+(menu-bar-mode -1)
+;;
+;; Turn off the scrollbar
+(scroll-bar-mode -1)
+;}}}
+
+;{{{ Look & Feel
+;
+;; Default font
+; Font is set in .Xdefaults
+;(set-default-font "-xos4-terminus-medium-r-normal-*-12-120-72-72-c-60-iso8859-2")
+
+
+;; Color theme initialization
+;;   - http://emacswiki.org/cgi-bin/wiki/ColorTheme
+(require 'color-theme)
+(setq color-theme-is-global t)
+(color-theme-initialize)
+;;
+;; Load preferred theme
+;;   - http://www.brockman.se/software/zenburn/zenburn.el
+;(load "~/.emacs.d/zenburn.el")
+(color-theme-zenburn)
+
+;; Support 256 colors in screen
+;;   - http://article.gmane.org/gmane.emacs.devel/109504/
+(if (not (window-system)) (load "term/rxvt"))
+(defun terminal-init-screen ()
+  "Terminal initialization function for screen."
+  ;; Use the rxvt color initialization code.
+  (rxvt-register-default-colors)
+  (tty-set-up-initial-frame-faces)
+)
+
+
+;; Don't show the welcome message
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message nil)
+
+;; Shut off message buffer
+(setq message-log-max nil)
+(kill-buffer "*Messages*")
+
+;; Show column number in modeline
+(setq column-number-mode t)
+
+;; Modeline setup
+;;   - somewhat cleaner than default
+(setq default-mode-line-format
+      '("-"
+       mode-line-mule-info
+       mode-line-modified
+       mode-line-frame-identification
+       mode-line-buffer-identification
+       "  "
+       global-mode-string
+       "   %[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
+       (line-number-mode "L%l--")
+       (column-number-mode "C%c--")
+       (-3 . "%p")
+       "-%-")
+)
+
+
+;; Syntax coloring (font-lock-mode)
+(global-font-lock-mode t)
+
+;; Always flash for parens and define a more distinctive color
+(show-paren-mode 1)
+(set-face-foreground 'show-paren-match-face "#bc8383")
+
+;; Answer y or n instead of yes or no at prompts
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Use ANSI colors within shell-mode
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+;}}}
+
 ;; {{{ IDO
 (require 'ido)
 (ido-mode t)
@@ -76,7 +163,7 @@
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
- (list "~/.org/personal.org")
+ (list "~/.org/personal.org" "~/.org/notes.org")
 )
 ;; }}}
 
@@ -88,11 +175,11 @@
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 ;; Notes templates
 (setq org-remember-templates
- '(("Note" ?n   "* NOTE %?\n %i\n %a" "~/.org/notes.org" "Notes")
-   ("Download" ?d "* DL %?\n %i\n %a" "~/.org/notes.org" "Download")
-   ("Login" ?l "* LOGIN %?\n %i\n %a" "~/.org/notes.org" "Logins")
-   ("Music" ?m "* MUSIC %?\n %i\n %a" "~/.org/notes.org" "Music")
-   ("Idea" ?i "* %^{Title}\n %i\n %a" "~/.org/notes.org" "Brainstorm")))
+ '(("Note" ?n   "** NOTE %?\n %i\n %a" "~/.org/notes.org" "Notes")
+   ("Download" ?d "** DL %?\n %i\n %a" "~/.org/notes.org" "Download")
+   ("Login" ?l "** LOGIN %?\n %i\n %a" "~/.org/notes.org" "Logins")
+   ("Music" ?m "** MUSIC %?\n %i\n %a" "~/.org/notes.org" "Music")
+   ("Idea" ?i "** %^{Title}\n %i\n %a" "~/.org/notes.org" "Brainstorm")))
 
 ;; Remember frames
 ;;   - $ emacsclient -e '(make-remember-frame)'
@@ -175,6 +262,6 @@
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
-(global-set-key "\M-;" 'comment-dwim-line)
+(global-set-key (kbd "\M-;") 'comment-dwim-line)
 (global-set-key (kbd "\C-c \C-c") 'comment-dwim-line)
 ;; }}}
