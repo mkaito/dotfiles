@@ -19,6 +19,16 @@
 ;;
 ;; Turn off the scrollbar
 (scroll-bar-mode -1)
+;;
+;; Ispell
+(add-hook 'text-mode-hook
+      '(lambda () "Defauts for Text mode."
+	 (setq ispell-personal-dictionary "~/.emacs.d/ispell-dico-perso")
+	 (ispell-change-dictionary "british-ize")
+	 (ispell-minor-mode)
+	 ))
+;; Can't stand the beeping, jfc!
+(setq visible-bell t)
 ;}}}
 
 ;{{{ Look & Feel
@@ -145,11 +155,17 @@
 
 ;; {{{ Modes
 
+;{{{ Textile minor mode
+(require 'textile-minor-mode)
+(add-hook 'text-mode-hook 'textile-minor-mode)
+(add-hook 'text-mode-hook 'auto-fill-mode)
+(add-to-list 'auto-mode-alist '("\\.textile\\'" . text-mode))
+;}}}
+
 ;; {{{ LUA Mode
 ;; Lua mode for awesome wm config files
 (setq auto-mode-alist (cons '("\\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
-(add-hook 'lua-mode-hook 'turn-on-font-lock)
 ;; }}}
 
 ;; {{{ Org Mode
