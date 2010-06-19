@@ -49,6 +49,7 @@ alias lcdoff='xset dpms force off'
 
 # Coding facility aliases
 alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
+alias jek="jekyll --auto --server --permalink=pretty"
 
 # Get keycode
 alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
@@ -105,6 +106,8 @@ setopt shwordsplit
 setopt interactivecomments
 setopt autopushd pushdminus pushdsilent pushdtohome
 setopt histreduceblanks histignorespace inc_append_history
+cdpath=(. ~ ~/src)
+set autopushd
 
 # Prompt requirements
 setopt extended_glob prompt_subst
