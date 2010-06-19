@@ -121,6 +121,9 @@
  '(mumamo-background-chunk-major ((((class color)
 				    (min-colors 88) 
 				    (background dark)) nil))))
+
+;; Darkroom mode
+(require 'darkroom-mode)
 ;}}}
 
 ;; {{{ IDO
@@ -160,13 +163,7 @@
    "Major mode for editing Markdown files" t)
 (setq auto-mode-alist
    (cons '("\.markdown" . markdown-mode) auto-mode-alist))
-;}}}
-
-;{{{ Textile minor mode
-(require 'textile-minor-mode)
-(add-hook 'text-mode-hook 'textile-minor-mode)
-(add-hook 'text-mode-hook 'auto-fill-mode)
-(add-to-list 'auto-mode-alist '("\\.textile\\'" . text-mode))
+(add-hook 'markdown-mode-hook 'darkroom-mode)
 ;}}}
 
 ;; {{{ LUA Mode
