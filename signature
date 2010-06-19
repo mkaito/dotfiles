@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "---";
+echo "Michishige Kaito";
+echo "";
+fortune bofh-excuses;
