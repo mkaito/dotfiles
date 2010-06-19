@@ -155,6 +155,13 @@
 
 ;; {{{ Modes
 
+;{{{ Markdown mode
+(autoload 'markdown-mode "markdown-mode.el"
+   "Major mode for editing Markdown files" t)
+(setq auto-mode-alist
+   (cons '("\.markdown" . markdown-mode) auto-mode-alist))
+;}}}
+
 ;{{{ Textile minor mode
 (require 'textile-minor-mode)
 (add-hook 'text-mode-hook 'textile-minor-mode)
@@ -283,4 +290,10 @@
 
 (global-set-key (kbd "\M-;") 'comment-dwim-line)
 (global-set-key (kbd "\C-c \C-c") 'comment-dwim-line)
+
+(defun unfill-region (begin end)
+  "Remove all linebreaks in a region but leave paragraphs, 
+  indented text (quotes,code) and lines starting with an asterix (lists) intakt."
+  (interactive "r")
+  (replace-regexp "\\([^\n]\\)\n\\([^ *\n]\\)" "\\1 \\2" nil begin end))
 ;; }}}
