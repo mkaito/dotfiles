@@ -158,13 +158,13 @@
 
 ;; {{{ Modes
 
-;{{{ Markdown mode
+;; {{{ Markdown mode
 (autoload 'markdown-mode "markdown-mode.el"
    "Major mode for editing Markdown files" t)
 (setq auto-mode-alist
    (cons '("\.markdown" . markdown-mode) auto-mode-alist))
 (add-hook 'markdown-mode-hook 'darkroom-mode)
-;}}}
+;; }}}
 
 ;; {{{ LUA Mode
 ;; Lua mode for awesome wm config files
@@ -252,6 +252,31 @@
   ;calendar-location-name "Rijeka, Croatia"
 )
 ;; }}}
+
+;; {{{ Post Mode
+;    - http://post-mode.sourceforge.net/
+;
+(autoload 'post-mode "~/.emacs.d/post.el" "Major mode for editing e-mail and journal articles" t)
+(add-to-list 'auto-mode-alist 
+  '("\\.*mutt-*\\|\\.*pico.*\\|.article\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
+;; }}}
+
+;; {{{ Custom modes for some custom files
+;
+;; Shell script mode for Arch PKGBUILDs
+(setq auto-mode-alist (cons '("\\PKGBUILD$" . sh-mode) auto-mode-alist))
+;;
+;; Conf mode for personal config files
+(when (locate-library "conf-mode")
+  (autoload 'conf-mode "conf-mode" "Major-mode for editing config files." t)
+  (add-to-list 'auto-mode-alist '("\\awesomerc$" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\gitconfig$" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\screenrc$"  . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\pinerc$"    . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\zshrc$"     . conf-mode))
+)
+;; }}}
+
 ;; }}}
 
 ;; {{{ Code Folding
