@@ -1,3 +1,15 @@
+-- {{{ License
+-- 
+-- Awesome configuration for awesome v3.4.5 (Close To You).
+--   * M Kaito <chris.webstar@gmail.com>
+-- 
+-- Large chunks from Adrian C. <anrxc@sysphere.org>
+-- 
+-- This work is licensed under the Creative Commons Attribution-Share
+-- Alike License: http://creativecommons.org/licenses/by-sa/3.0/
+-- }}}
+
+-- Can has...?
 -- Standard awesome library
 require("awful")
 require("awful.autofocus")
