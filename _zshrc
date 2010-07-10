@@ -49,23 +49,24 @@ alias lcdoff='xset dpms force off'
 
 # Coding facility aliases
 alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
-alias jek="jekyll --auto --server --permalink=pretty"
+alias jek="jekyll --auto --server"
+alias bjek="bundle exec jekyll --auto --server"
+alias drafts='grep -ln --color=always "published: false" ~/src/web/mkaito/_posts/*'
 
-# Get keycode
+# Get keycode for buttons
 alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
-
-# launch irssi in screen for bitlbee
-alias bitlbee='screen irssi -c bitlbee'
 
 # Emacs
 alias ec="emacsclient -cna ''"
 alias ect="emacsclient -ta ''"
 alias ecw="emacsclient -ca ''"
 
-# }}}
+# Netcfg
+alias n="sudo netcfg"
+alias na="n -a"
+alias nu="na && n"
 
-# SSH Agent through keychain
-eval `keychain --eval --nogui -Q -q id_rsa`
+# }}}
 
 # key bindings
 bindkey "\e[1~" beginning-of-line
@@ -134,7 +135,7 @@ zstyle ":completion:*" list-colors ""
 # }}}
 
 # {{{ Functions
-function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
+#function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
 function pmem ()  { ps -o rss,comm -p `pgrep "$1"` }
 function dsync () { rsync -lprt --progress --stats --delete "$1/" "$2/" }
 
@@ -146,6 +147,21 @@ function snap () {
     import -window root -quality 100 "${fname}.${format}"
     convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
     echo ": ${fname}.${format}"
+}
+
+function service () {
+	 [ "$1" ] && sid="$1" 
+	 [ "$2" ] && sact="$2" || sact=start
+	 bspath="/etc/rc.d/"
+
+	 if [[ -f "${bspath}${sid}" ]]; then
+	    sudo "${bspath}${sid}" "${sact}";
+	 else
+	    echo "Service $1 not found"
+	 fi
+
+	 sid=""
+	 sact=""
 }
 
 function extract () {
@@ -165,7 +181,7 @@ function extract () {
             *.7z)               7z x       "$1"     ;;
             *.Z)                uncompress "$1"     ;;
             *.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
-            *) echo 'Error: failed to extract "$1"' ;;
+            *) echo "Error: don't know how to extract \"$1\" ..." ;;
         esac
     else
         echo 'Error: "$1" is not a valid file for extraction'
