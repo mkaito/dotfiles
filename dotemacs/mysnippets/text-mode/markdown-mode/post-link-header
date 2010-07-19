@@ -1,0 +1,12 @@
+#contributor : Michishige Kaito <me@mkaito.com>
+#name : Link Post Header
+#key : phead
+#group : Jekyll Post Headers
+# --
+---
+title: ${1:title}
+meta: `(insert-current-date)` &mdash; ${meta}
+
+byline: ${byline}
+link: ${`(or (get-url-from-clipboard) "http://" )`}$0
+---
