@@ -6,7 +6,7 @@
 ;;
 ;; Latest modification: May 30 2010.
 
-;{{{ Initialization
+;; {{{ Initialization
 ;
 ;; Define the load path
 (setq load-path (cons "~/.emacs.d/" load-path))
@@ -29,9 +29,22 @@
 	 ))
 ;; Can't stand the beeping, jfc!
 (setq visible-bell t)
-;}}}
 
-;{{{ Look & Feel
+;; Move tempfiles and auto saves elsewhere
+(defvar user-temporary-file-directory
+  (concat temporary-file-directory user-login-name "/"))
+(make-directory user-temporary-file-directory t)
+(setq backup-by-copying t)
+(setq backup-directory-alist
+      `(("." . ,user-temporary-file-directory)
+        (,tramp-file-name-regexp nil)))
+(setq auto-save-list-file-prefix
+      (concat user-temporary-file-directory ".auto-saves-"))
+(setq auto-save-file-name-transforms
+      `((".*" ,user-temporary-file-directory t)))
+;; }}}
+
+;; {{{ Look & Feel
 ;
 ;; Default font
 ; Font is set in .Xdefaults
@@ -123,8 +136,8 @@
 				    (background dark)) nil))))
 
 ;; Darkroom mode
-(require 'darkroom-mode)
-;}}}
+;(require 'darkroom-mode)
+;; }}}
 
 ;; {{{ IDO
 (require 'ido)
@@ -163,7 +176,7 @@
    "Major mode for editing Markdown files" t)
 (setq auto-mode-alist
    (cons '("\.markdown" . markdown-mode) auto-mode-alist))
-(add-hook 'markdown-mode-hook 'darkroom-mode)
+;(add-hook 'markdown-mode-hook 'darkroom-mode)
 ;; }}}
 
 ;; {{{ LUA Mode
@@ -185,10 +198,44 @@
 (setq org-completion-use-ido t)
 (setq org-return-follows-link t)
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+(add-hook 'org-mode-hook 'org-indent-mode)
+
+;; MobileOrg
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+
+ (setq org-agenda-custom-commands
+       '(("w" todo "TODO")
+         ("h" agenda "" ((org-agenda-show-all-dates nil)))
+         ("W" agenda "" ((org-agenda-ndays 21)
+                         (org-agenda-show-all-dates nil)))
+         ("A" agenda ""
+          ((org-agenda-ndays 1)
+           (org-agenda-overriding-header "Today")))))
+
+
+;; Org-mode customization
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "|" "WAITING" "DONE")
+	(sequence "NOTE(n)" "|" "REVIEWED")
+	(sequence "DOWNLOAD(d)" "DOWNLOADING" "|" "DOWNLOADED")
+	(sequence "READ(r)" "READING" "|" "DONE")
+	(sequence "CALL(c)" "|" "WAITING" "CALLED")
+	(sequence "|" "CANCELED(x)")))
+
+(setq org-tag-alist '((:startgroup . nil)
+		      ("@work" . ?w)
+		      ("@home" . ?h)
+		      (:endgroup . nil)
+		      ("@phone" . ?p)
+		      ("@errands" . ?e)
+		      ("@computer" . ?c)))
 
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
- (list "~/.org/personal.org" "~/.org/notes.org")
+ (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org")
 )
 ;; }}}
 
@@ -200,11 +247,11 @@
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 ;; Notes templates
 (setq org-remember-templates
- '(("Note" ?n   "** NOTE %?\n %i\n %a" "~/.org/notes.org" "Notes")
-   ("Download" ?d "** DL %?\n %i\n %a" "~/.org/notes.org" "Download")
-   ("Login" ?l "** LOGIN %?\n %i\n %a" "~/.org/notes.org" "Logins")
-   ("Music" ?m "** MUSIC %?\n %i\n %a" "~/.org/notes.org" "Music")
-   ("Idea" ?i "** %^{Title}\n %i\n %a" "~/.org/notes.org" "Brainstorm")))
+ '(("Note"     ?n "*** NOTE %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
+   ("Download" ?d "*** DOWNLOAD %?\n    %u\n    %i\n    %a"  "~/.org/notes.org" "Notes")
+   ("Read"     ?r "*** READ %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
+   ("Todo"     ?t "*** TODO %?\n    %t\n    %i\n    %a"      "~/.org/notes.org" "Notes")
+   ("Call"     ?c "*** CALL %?\n    %T\n    %i\n    %a"      "~/.org/notes.org" "Notes")))
 
 ;; Remember frames
 ;;   - $ emacsclient -e '(make-remember-frame)'
@@ -258,7 +305,7 @@
 ;
 (autoload 'post-mode "~/.emacs.d/post.el" "Major mode for editing e-mail and journal articles" t)
 (add-to-list 'auto-mode-alist 
-  '("\\.*mutt-*\\|\\.*pico.*\\|.article\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
+  '("\\.*mutt-*\\|\\.*pico.*\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
 ;; }}}
 
 ;; {{{ Custom modes for some custom files
@@ -275,6 +322,20 @@
   (add-to-list 'auto-mode-alist '("\\pinerc$"    . conf-mode))
   (add-to-list 'auto-mode-alist '("\\zshrc$"     . conf-mode))
 )
+;;
+;; Ruby mode for Gemfile and config.ru
+(add-to-list 'auto-mode-alist '("\\Gemfile$"     . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$"     . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\Rakefile$"     . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\config\.ru$"  . ruby-mode))
+;; }}}
+
+;; {{{ Haml, Sass & Less
+(require 'haml-mode)
+(require 'sass-mode)
+(add-to-list 'auto-mode-alist '("\\.haml"        . haml-mode))
+(add-to-list 'auto-mode-alist '("\\.scss"        . sass-mode))
+(add-to-list 'auto-mode-alist '("\\.less"        . css-mode))
 ;; }}}
 
 ;; }}}
@@ -282,10 +343,9 @@
 ;; {{{ Code Folding
 ;;   - http://www.emacswiki.org/emacs/FoldIngo
 (require 'foldingo)
-(fold-enter-mode)
 ;; }}}
 
-;; {{{ Shortcut a few commonly used functions
+;; {{{ Shortcuts
 ;;
 (defalias 'eb            'eval-buffer)
 (defalias 'er            'eval-region)
@@ -293,9 +353,9 @@
 (defalias 'day           'color-theme-vim-colors)
 (defalias 'night         'color-theme-zenburn)
 (defalias 'fold          'fold-enter-fold-mode-close-all-folds)
-;;}}}
+;; }}}
 
-;;{{{ Key bindings
+;; {{{ Misc
 
 ;; Smart comments. Original idea from:
 ;; http://www.opensubscriber.com/message/emacs-devel@gnu.org/10971693.html
@@ -318,4 +378,58 @@
   indented text (quotes,code) and lines starting with an asterix (lists) intakt."
   (interactive "r")
   (replace-regexp "\\([^\n]\\)\n\\([^ *\n]\\)" "\\1 \\2" nil begin end))
+
+;; Stuff used for jekyll posts
+(require 'jekyll)
+
+; Renames the current file and updates the buffer
+(defun rename-current-file-or-buffer ()
+  (interactive)
+  (if (not (buffer-file-name))
+      (call-interactively 'rename-buffer)
+    (let ((file (buffer-file-name)))
+      (with-temp-buffer
+        (set-buffer (dired-noselect file))
+        (dired-do-rename)
+        (kill-buffer nil))))
+  nil)
+
+; \C-x \C-w = Save as
+; \C-x w    = Rename
+(global-set-key (kbd "\C-xw") 'rename-current-file-or-buffer)
+
+;; Email stuff
+;; Emacs Speaks SMTP (gnu.org) using the default mail agent
+;; If you use the default mail user agent.
+(setq send-mail-function 'smtpmail-send-it)
+;; Send mail using SMTP via gmail.
+(setq smtpmail-smtp-server "smtp.gmail.com")
+;; Send mail using SMTP on the mail submission port 587.
+(setq smtpmail-smtp-service 587)
+;; Authenticate using this username and password against smtp.gmail.com.
+(setq smtpmail-auth-credentials
+      '(("smtp.gmail.com" 587 "chris.webstar" nil)))
+;; Use STARTTLS against the server.
+(setq smtpmail-starttls-credentials
+      '(("smtp.gmail.com" 587 "chris.webstar" nil)))
+
+
+;; {{{ Yasnippet
+(require 'yasnippet)
+(yas/initialize)
+
+; Place my own snippet stuff in mysnippets
+(setq yas/root-directory '("~/.emacs.d/mysnippets"
+			  "~/.emacs.d/snippets"))
+(mapc 'yas/load-directory yas/root-directory)
+(setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/completing-prompt))
+
+; Fix up for markdown-mode
+(add-hook 'markdown-mode-hook
+          (let ((original-command (lookup-key org-mode-map [tab])))
+            `(lambda ()
+               (setq yas/fallback-behavior
+                     '(apply ,original-command))
+               (local-set-key [tab] 'yas/expand))))
+;; }}}
 ;; }}}
