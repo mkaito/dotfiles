@@ -54,13 +54,13 @@ layouts = {
 -- {{{ Tags
 tags = {
   names  = { "term", "emacs", "web", "mail", "im", 6, 7, "rss", "media" },
-  layout = { layouts[3], layouts[1], layouts[1], layouts[4], layouts[1],
+  layout = { layouts[3], layouts[1], layouts[4], layouts[4], layouts[1],
              layouts[6], layouts[6], layouts[5], layouts[6]
 }}
 
 for s = 1, screen.count() do
     tags[s] = awful.tag(tags.names, s, tags.layout)
-    awful.tag.setproperty(tags[s][5], "mwfact", 0.13)
+    awful.tag.setproperty(tags[s][5], "mwfact", 0.18)
     awful.tag.setproperty(tags[s][6], "hide",   true)
     awful.tag.setproperty(tags[s][7], "hide",   true)
 end
@@ -119,7 +119,7 @@ datewidget = widget({ type = "textbox" })
 vicious.register(datewidget, vicious.widgets.date, "%B %d %Y %H:%M", 61)
 -- Register buttons
 datewidget:buttons(awful.util.table.join(
-  awful.button({ }, 1, function () exec("pylendar.py") end)
+  awful.button({ }, 1, function () exec("/home/chris/src/bin/pylendar.py") end)
 ))
 -- }}}
 
@@ -245,11 +245,9 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Shortcuts for multimedia keyboard and Print Screen
-    awful.key({                   }, "#121",  function () sexec("/home/chris/src/bin/pvol.py -m", false) end),
-    awful.key({                   }, "#122",  function () sexec("/home/chris/src/bin/pvol.py -c -2", false) end),
-    awful.key({                   }, "#123",  function () sexec("/home/chris/src/bin/pvol.py -c 2", false) end),
-    -- awful.key({ modkey            }, "Up",    function () sexec("/home/chris/src/bin/pvol.py -c 2", false) end),
-    -- awful.key({ modkey            }, "Down",  function () sexec("/home/chris/src/bin/pvol.py -c -2", false) end),
+    awful.key({                   }, "#121",  function () sexec("~/src/bin/pvol.py -m", false) end),
+    awful.key({                   }, "#122",  function () sexec("~/src/bin/pvol.py -c -2", false) end),
+    awful.key({                   }, "#123",  function () sexec("~/src/bin/pvol.py -c 2", false) end),
     awful.key({                   }, "Print", function () sexec("scrot -q 100 -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 
     -- Awesome base control
@@ -259,14 +257,15 @@ globalkeys = awful.util.table.join(
     -- {{{ Applications
     awful.key({ modkey            }, "e",      function () exec("emacsclient -n -c") end),
     awful.key({ modkey            }, "t",      function () exec("thunar", false) end),
-    awful.key({ modkey            }, "F2",     function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
+    awful.key({ modkey            }, "F12",    function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
     awful.key({ modkey            }, "f",      function () exec("firefox") end),
     awful.key({ altkey            }, "F1",     function () exec("urxvt") end),
 --  awful.key({ altkey            }, "#49",    function () scratch.drop("urxvt", "bottom") end),
     awful.key({ modkey            }, "a",      function () exec("urxvt -T Alpine -e alpine") end),
--- awful.key({ modkey            }, "r",      function () exec("urxvt -T Snownews -e snownews") end),
+--  awful.key({ modkey            }, "r",      function () exec("urxvt -T Snownews -e snownews") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
-    awful.key({ modkey            }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
+    awful.key({ modkey            }, "g",      function () sexec("gajim") end),
+    -- awful.key({ modkey, "shift"   }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
     awful.key({ modkey            }, "q",      function () exec("emacsclient --eval '(make-remember-frame)'") end),
     awful.key({ modkey            }, "s",      function () exec("sonata", false) end),
     -- }}}
