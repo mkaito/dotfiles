@@ -18,8 +18,11 @@ xmodmap ~/.xmodmap
 # Volume magement
 thunar --daemon &
 
-# Networkmanager
-wicd-client &
+# Power manager
+gnome-power-manager &
+
+# Dropbox. Used to sync MobileOrg
+dropboxd &
 
 # Start the GNU Emacs daemon
 [[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon &
@@ -28,13 +31,20 @@ wicd-client &
 #   - resume the old screen session or start a new one
 urxvt -e screen -l -UDRS term &
 
-# Open firefox
-# firefox &
+# Start the GnuPG agent and enable OpenSSH agent emulation
+gnupginf="${HOME}/.gnupg/gpg-agent.info"
+ 
+if ( pgrep -u "${USER}" gpg-agent ); then
+    eval `cat $gnupginf`
+    eval `cut -d= -f1 $gnupginf | xargs echo export`
+else
+    eval `gpg-agent --enable-ssh-support --daemon`
+fi
 #}}}
 
 # {{{ Start session
 
 # Gotta love lightweight
 # exec ck-launch-session openbox-session
-exec ck-launch-session awesome
+exec ssh-agent ck-launch-session awesome
 # }}}
