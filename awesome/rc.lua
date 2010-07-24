@@ -54,7 +54,7 @@ layouts = {
 -- {{{ Tags
 tags = {
   names  = { "term", "emacs", "web", "mail", "im", 6, 7, "rss", "media" },
-  layout = { layouts[3], layouts[1], layouts[4], layouts[4], layouts[1],
+  layout = { layouts[2], layouts[1], layouts[4], layouts[4], layouts[1],
              layouts[6], layouts[6], layouts[5], layouts[6]
 }}
 
@@ -265,7 +265,7 @@ globalkeys = awful.util.table.join(
 --  awful.key({ modkey            }, "r",      function () exec("urxvt -T Snownews -e snownews") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
     awful.key({ modkey            }, "g",      function () sexec("gajim") end),
-    -- awful.key({ modkey, "shift"   }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
+    -- awful.key({ modkey,           }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
     awful.key({ modkey            }, "q",      function () exec("emacsclient --eval '(make-remember-frame)'") end),
     awful.key({ modkey            }, "s",      function () exec("sonata", false) end),
     -- }}}
@@ -376,6 +376,7 @@ awful.rules.rules = {
     { rule = { class = "Empathy" },       properties = { tag = tags[1][5] } },
     { rule = { class = "Knode" },         properties = { tag = tags[1][8] } },
     { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
+    { rule = { class = "Firefox" },       properties = { tag = tags[1][3] } },
 
     { rule = { class = "Emacs",
 	       instance = "emacs" },      properties = { tag = tags[1][2] } },

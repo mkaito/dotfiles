@@ -236,7 +236,13 @@
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
  (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org")
-)
+ )
+
+;; Refile targets
+(setq org-refile-targets
+      (quote
+       ((org-agenda-files :maxlevel . 5))))
+
 ;; }}}
 
 ;; {{{ Remember mode
@@ -335,6 +341,7 @@
 (require 'sass-mode)
 (add-to-list 'auto-mode-alist '("\\.haml"        . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.scss"        . sass-mode))
+(add-to-list 'auto-mode-alist '("||.sass"        . sass-mode))
 (add-to-list 'auto-mode-alist '("\\.less"        . css-mode))
 ;; }}}
 
@@ -397,6 +404,41 @@
 ; \C-x \C-w = Save as
 ; \C-x w    = Rename
 (global-set-key (kbd "\C-xw") 'rename-current-file-or-buffer)
+
+;; Auto-indent stuff
+(define-key global-map (kbd "RET") 'newline-and-indent)
+(add-hook 'ruby-mode-hook '(lambda
+			     (define-key global-map (kbd "RET") 'newline-and-indent)))
+;; (define-key global-map (kbd "C-RET") 'reindent-then-newline-and-indent)
+
+;; Indent when pasting
+(dolist (command '(yank yank-pop))
+  (eval `(defadvice ,command (after indent-region activate)
+	   (and (not current-prefix-arg)
+		(member major-mode '(emacs-lisp-mode lisp-mode
+						     clojure-mode    scheme-mode
+						     haskell-mode    ruby-mode
+						     rspec-mode      python-mode
+						     c-mode          c++-mode
+						     objc-mode       latex-mode
+						     plain-tex-mode  sass-mode
+						     haml-mode))
+		(let ((mark-even-if-inactive transient-mark-mode))
+		  (indent-region (region-beginning) (region-end) nil))))))
+
+;; When killing the end of a line, eliminate any indentation of the next line
+(defadvice kill-line (before check-position activate)
+  (if (and (eolp) (not (bolp)))
+      (progn (forward-char 1)
+	     (just-one-space 0)
+	     (backward-char 1))))
+
+;; Open new line below current and place cursor indented
+(defun open-line-below-and-go-there ()
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+(define-key global-map (kbd "M-RET") 'open-line-below-and-go-there)
 
 ;; Email stuff
 ;; Emacs Speaks SMTP (gnu.org) using the default mail agent

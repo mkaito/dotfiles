@@ -328,7 +328,7 @@ status-message-delay=
 busy-cue-rate=
 
 # The approximate number of seconds between checks for new mail
-mail-check-interval=
+mail-check-interval=30
 
 # The approximate number of seconds between checks for new mail in folders
 # other than the current folder and inbox.
@@ -427,13 +427,15 @@ incoming-folders=Arch {imap.gmail.com/ssl/user=chris.webstar@gmail.com}ML/Arch/G
 	Merb {imap.gmail.com/ssl/user=chris.webstar@gmail.com}ML/Merb,
 	Heroku {imap.gmail.com/ssl/user=chris.webstar@gmail.com}ML/Heroku,
 	Rspec {imap.gmail.com/ssl/user=chris.webstar@gmail.com}ML/Rspec,
-	Fabi {imap.gmail.com/ssl/user=chris.webstar@gmail.com}Archivo/Fabi
+	Fabi {imap.gmail.com/ssl/user=chris.webstar@gmail.com}Archivo/Fabi,
+	"INBOX mkaito" {imap.gmail.com/ssl/user=me@mkaito.com}INBOX
 
 # List of directories where saved-message folders may be. First one is
 # the default for Saves. Example: Main {host1}mail/[], Desktop mail\[]
 # Syntax: optnl-label {optnl-imap-hostname}optnl-directory-path[]
 folder-collections=mail/[],
-	Gmail {imap.gmail.com/ssl/user=chris.webstar@gmail.com}[]
+	Gmail {imap.gmail.com/ssl/user=chris.webstar@gmail.com}[],
+	mkaito.com {imap.gmail.com/ssl/user=me@mkaito.com}[]
 
 # List, only needed if nntp-server not set, or news is on a different host
 # than used for NNTP posting. Examples: News *[] or News *{host3/nntp}[]
@@ -451,7 +453,7 @@ address-book=
 global-address-book=
 
 # Set by Alpine; controls beginning-of-month sent-mail pruning.
-last-time-prune-questioned=110.6
+last-time-prune-questioned=110.7
 
 # Set by Alpine; controls display of "new version" message.
 last-version-used=6.00
@@ -562,7 +564,8 @@ personal-print-command=
 personal-print-category=
 
 # Patterns and their actions are stored here.
-patterns-roles=LIT:pattern="/NICK=Gmail/COMM=Using my Gmail account\\n/FLDTYPE=ANY" action="/ROLE=1/SMTP=smtp.gmail.com\/tls\/user=chris.webstar@gmail.com/RTYPE=YES/FTYPE=YES/CTYPE=YES"
+patterns-roles=LIT:pattern="/NICK=Gmail/COMM=Using my Gmail account\\n/FLDTYPE=EMAIL" action="/ROLE=1/FROM=Michishige Kaito <chris.webstar@gmail.com>/SMTP=smtp.gmail.com\/tls\/user=chris.webstar@gmail.com/RTYPE=YES/FTYPE=YES/CTYPE=YES",
+	LIT:pattern="/NICK=mkaito.com/FLDTYPE=EMAIL" action="/ROLE=1/FROM=Michishige Kaito <me@mkaito.com>/SMTP=smtp.gmail.com\/tls\/user=me@mkaito.com/RTYPE=YES/FTYPE=YES/CTYPE=NO"
 
 # Patterns and their actions are stored here.
 patterns-filters2=

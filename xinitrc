@@ -18,8 +18,9 @@ xmodmap ~/.xmodmap
 # Volume magement
 thunar --daemon &
 
-# Power manager
+# Power stuff
 gnome-power-manager &
+xscreensaver -no-splash &
 
 # Dropbox. Used to sync MobileOrg
 dropboxd &

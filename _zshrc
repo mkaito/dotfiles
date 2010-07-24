@@ -10,15 +10,6 @@ export VISUAL="emacsclient"
 export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
-export _JAVA_AWT_WM_NONREPARENTING=1
-
-# Go Lang ENV
-export GOROOT=$HOME/go
-export GOOS=linux
-export GOARCH=amd64
-export GOBIN=$GOROOT/bin
-export PATH=$PATH:$GOBIN
-
 # }}}
 
 # {{{ Aliases
@@ -68,6 +59,9 @@ alias nu="na && n"
 
 # }}}
 
+# Keychain
+eval `keychain --agents ssh --eval --nogui -Q -q id_rsa`
+
 # key bindings
 bindkey "\e[1~" beginning-of-line
 bindkey "\e[4~" end-of-line
@@ -99,7 +93,6 @@ setopt emacs
 setopt nohup
 setopt autocd
 setopt cdablevars
-setopt ignoreeof
 setopt nobgnice
 setopt nobanghist
 setopt noclobber
@@ -107,8 +100,6 @@ setopt shwordsplit
 setopt interactivecomments
 setopt autopushd pushdminus pushdsilent pushdtohome
 setopt histreduceblanks histignorespace inc_append_history
-cdpath=(. ~ ~/src)
-set autopushd
 
 # Prompt requirements
 setopt extended_glob prompt_subst
@@ -149,7 +140,7 @@ function snap () {
     echo ": ${fname}.${format}"
 }
 
-function service () {
+function d () {
 	 [ "$1" ] && sid="$1" 
 	 [ "$2" ] && sact="$2" || sact=start
 	 bspath="/etc/rc.d/"
@@ -164,38 +155,14 @@ function service () {
 	 sact=""
 }
 
-function extract () {
-    if [[ -f "$1" ]]; then
-        case "$1" in
-            *.tbz2 | *.tar.bz2) tar -xvjf  "$1"     ;;
-            *.txz | *.tar.xz)   tar -xvJf  "$1"     ;;
-            *.tgz | *.tar.gz)   tar -xvzf  "$1"     ;;
-            *.tar | *.cbt)      tar -xvf   "$1"     ;;
-            *.zip | *.cbz)      unzip      "$1"     ;;
-            *.rar | *.cbr)      unrar x    "$1"     ;;
-            *.arj)              unarj x    "$1"     ;;
-            *.ace)              unace x    "$1"     ;;
-            *.bz2)              bunzip2    "$1"     ;;
-            *.xz)               unxz       "$1"     ;;
-            *.gz)               gunzip     "$1"     ;;
-            *.7z)               7z x       "$1"     ;;
-            *.Z)                uncompress "$1"     ;;
-            *.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
-            *) echo "Error: don't know how to extract \"$1\" ..." ;;
-        esac
-    else
-        echo 'Error: "$1" is not a valid file for extraction'
-    fi
-}
-
 # {{{ Terminal and prompt
-function preexec () {
-    # Screen window titles as currently running programs
-    if [[ "${TERM}" == "screen-256color" ]]; then
-        local CMD="${1[(wr)^(*=*|sudo|-*)]}"
-        echo -n "\ek$CMD\e\\"
-    fi
-}
+# function preexec () {
+#     # Screen window titles as currently running programs
+#     if [[ "${TERM}" == "screen-256color" ]]; then
+#         local CMD="${1[(wr)^(*=*|sudo|-*)]}"
+#         echo -n "\ek$CMD\e\\"
+#     fi
+# }
 
 function setprompt () {
     if [[ "${terminfo[colors]}" -ge 8 ]]; then
@@ -245,16 +212,6 @@ function setprompt () {
             PROMPT='$PR_GREEN%n@%m$PR_WHITE:$PR_YELLOW%l$PR_WHITE:$PR_RED%~$PR_YELLOW%%$PR_NO_COLOUR '
             ;;
         *)  # Main prompt
-#             PROMPT='$PR_SET_CHARSET$PR_GREEN$PR_SHIFT_IN$PR_ULCORNER$PR_GREEN$PR_HBAR\
-# $PR_SHIFT_OUT($PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m)\
-# $PR_SHIFT_IN$PR_HBAR$PR_GREEN$PR_HBAR${(e)PR_FILLBAR}$PR_GREEN$PR_HBAR$PR_SHIFT_OUT(\
-# $PR_RED%$PR_PWDLEN<...<%~%<<$PR_GREEN)$PR_SHIFT_IN$PR_HBAR$PR_GREEN$PR_URCORNER$PR_SHIFT_OUT\
-
-# $PR_GREEN$PR_SHIFT_IN$PR_LLCORNER$PR_GREEN$PR_HBAR$PR_SHIFT_OUT(\
-# %(?..$PR_RED%?$PR_WHITE:)%(!.$PR_RED.$PR_YELLOW)%#$PR_GREEN)$PR_NO_COLOUR '
-
-#             RPROMPT=' $PR_GREEN$PR_SHIFT_IN$PR_HBAR$PR_GREEN$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
-#             ;;
             PROMPT="$PR_SET_CHARSET$PR_GREEN%B%n%b@$PR_NO_COLOUR%m %~
 %(!.$PR_RED#$PR_NO_COLOUR.$PR_YELLOW→$PR_NO_COLOUR)$PR_NO_COLOUR "
             RPROMPT=""
