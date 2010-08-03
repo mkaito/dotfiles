@@ -42,6 +42,14 @@
       (concat user-temporary-file-directory ".auto-saves-"))
 (setq auto-save-file-name-transforms
       `((".*" ,user-temporary-file-directory t)))
+
+;; Automatically save the buffer after 3 idle seconds
+;; (save when you stop typing)
+(defun set-save-on-idle ()
+  (interactive)
+  (run-with-idle-timer 2 t 'save-buffer))
+;; Add this to any buffer inheriting text-mode
+(add-hook 'ruby-mode-hook 'set-save-on-idle)
 ;; }}}
 
 ;; {{{ Look & Feel
@@ -170,6 +178,11 @@
 ;; }}}
 
 ;; {{{ Modes
+
+;; {{{ Textmate (Minor) Mode
+(require 'textmate)
+(textmate-mode)
+;; }}}
 
 ;; {{{ Markdown mode
 (autoload 'markdown-mode "markdown-mode.el"
@@ -405,11 +418,14 @@
 ; \C-x w    = Rename
 (global-set-key (kbd "\C-xw") 'rename-current-file-or-buffer)
 
-;; Auto-indent stuff
+;; {{{ Auto-indent stuff
+
+;; This should cover mostly everything...
 (define-key global-map (kbd "RET") 'newline-and-indent)
-(add-hook 'ruby-mode-hook '(lambda
-			     (define-key global-map (kbd "RET") 'newline-and-indent)))
-;; (define-key global-map (kbd "C-RET") 'reindent-then-newline-and-indent)
+;; ... but ruby-mode thinks otherwise.
+(defun set-newline-and-indent ()
+  (local-set-key (kbd "RET") 'newline-and-indent))
+(add-hook 'ruby-mode-hook 'set-newline-and-indent)
 
 ;; Indent when pasting
 (dolist (command '(yank yank-pop))
@@ -439,6 +455,8 @@
   (move-end-of-line nil)
   (newline-and-indent))
 (define-key global-map (kbd "M-RET") 'open-line-below-and-go-there)
+
+;; }}}
 
 ;; Email stuff
 ;; Emacs Speaks SMTP (gnu.org) using the default mail agent
