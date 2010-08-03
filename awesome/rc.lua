@@ -53,16 +53,15 @@ layouts = {
 
 -- {{{ Tags
 tags = {
-  names  = { "term", "emacs", "web", "mail", "im", 6, 7, "rss", "media" },
-  layout = { layouts[2], layouts[1], layouts[4], layouts[4], layouts[1],
-             layouts[6], layouts[6], layouts[5], layouts[6]
+  names  = { "term", "emacs", "web", "mail", "im", 6, "org", "rss", "media" },
+  layout = { layouts[2], layouts[2], layouts[4], layouts[4], layouts[1],
+             layouts[6], layouts[3], layouts[5], layouts[6]
 }}
 
 for s = 1, screen.count() do
     tags[s] = awful.tag(tags.names, s, tags.layout)
     awful.tag.setproperty(tags[s][5], "mwfact", 0.18)
     awful.tag.setproperty(tags[s][6], "hide",   true)
-    awful.tag.setproperty(tags[s][7], "hide",   true)
 end
 -- }}}
 
@@ -153,6 +152,34 @@ orgwidget:buttons(awful.util.table.join(
 ))
 -- }}}
 
+-- {{{ Tasklist
+tasklist = {}
+tasklist.buttons = awful.util.table.join(
+   awful.button({ }, 1, function (c)
+			   if not c:isvisible() then
+			      awful.tag.viewonly(c:tags()[1])
+			   end
+			   client.focus = c
+			   c:raise()
+			end),
+   awful.button({ }, 3, function ()
+			   if instance then
+			      instance:hide()
+			      instance = nil
+			   else
+			      instance = awful.menu.clients({ width=250 })
+			   end
+			end),
+   awful.button({ }, 4, function ()
+			   awful.client.focus.byidx(1)
+			   if client.focus then client.focus:raise() end
+			end),
+   awful.button({ }, 5, function ()
+			   awful.client.focus.byidx(-1)
+			   if client.focus then client.focus:raise() end
+			end))
+-- }}}
+
 -- }}}
 
 -- {{{ Wibox initialisation
@@ -183,6 +210,11 @@ for s = 1, screen.count() do
 
     -- Create the taglist
     taglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, taglist.buttons)
+    -- Create the Tasklist
+    tasklist[s] = awful.widget.tasklist(function(c)
+					     -- return awful.widget.tasklist.label.currenttags(c, s)
+					   return awful.widget.tasklist.label.focused(c, s)
+					  end, tasklist.buttons)
     -- Create the wibox
     wibox[s] = awful.wibox({      screen = s,
         fg = beautiful.fg_normal, height = wbheight,
@@ -190,15 +222,15 @@ for s = 1, screen.count() do
     })
     -- Add widgets to the wibox
     wibox[s].widgets = {
-        {   taglist[s], layoutbox[s], separator, promptbox[s],
-            ["layout"] = awful.widget.layout.horizontal.leftright
+       {   taglist[s], layoutbox[s], separator, promptbox[s],
+	   ["layout"] = awful.widget.layout.horizontal.leftright
         },
         s == screen.count() and systray or nil,
         separator, datewidget, dateicon,
         separator, volwidget,  volbar.widget, volicon,
         separator, orgwidget,  orgicon,
         separator, batwidget, baticon,
-        separator, ["layout"] = awful.widget.layout.horizontal.rightleft
+        separator, tasklist[s], ["layout"] = awful.widget.layout.horizontal.rightleft
     }
 end
 -- }}}
@@ -220,21 +252,27 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
-        function ()
-            awful.client.focus.byidx( 1)
-            if client.focus then client.focus:raise() end
-        end),
+	      function ()
+		 awful.client.focus.byidx( 1)
+		 if client.focus then client.focus:raise() end
+	      end),
     awful.key({ modkey,           }, "k",
-        function ()
-            awful.client.focus.byidx(-1)
-            if client.focus then client.focus:raise() end
-        end),
-
+	      function ()
+		 awful.client.focus.byidx(-1)
+		 if client.focus then client.focus:raise() end
+	      end),
+    awful.key({ altkey            },  "Tab",
+	      function ()
+		 -- If you want to always position the menu on the same place set coordinates
+		 awful.menu.menu_keys.down = { "Down", "Alt_L" }
+		 local cmenu = awful.menu.clients({width=245}, { keygrabber=true, coords={x=525, y=330} })
+	      end),
+    
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+    -- awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
+    -- awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
     awful.key({ modkey,           }, "Tab",
         function ()
@@ -380,6 +418,9 @@ awful.rules.rules = {
 
     { rule = { class = "Emacs",
 	       instance = "emacs" },      properties = { tag = tags[1][2] } },
+    { rule = { class = "Emacs",
+	       instance = "org" },        properties = { tag = tags[1][7] } },
+    { rule = { class = "Gvim" },          properties = { tag = tags[1][2] } },
 
     { rule = { class = "Emacs",
 	       instance = "_Remember_" }, properties = { floating = true } },
@@ -387,7 +428,7 @@ awful.rules.rules = {
     { rule = { class = "Xmessage",
 	       instance = "xmessage" },   properties = { floating = true } },
 
-    { rule = { name = "Snownews" },       properties = { tag = tags[1][8] } },
+    { rule = { name = "Liferea" },        properties = { tag = tags[1][8] } },
     { rule = { class = "Sonata" },        properties = { floating = true, tag = tags[1][9] } },
 
     { rule=  { class = "sun-awt-X11-XFramePeer",
