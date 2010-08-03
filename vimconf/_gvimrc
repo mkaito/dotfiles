@@ -8,7 +8,7 @@ map <leader>t :FuzzyFinderTextMate<CR>
 map <leader>b :FuzzyFinderBuffer<CR>
 
 " Some visuals
-colorscheme ir_black            " Colorscheme. I like them dark.
+colorscheme zenburn             " Colorscheme. I like them dark.
 set number                      " Show line numbers.
 set hlsearch                    " Highlight last search term.
 syntax on                       " Syntax highlighting.

@@ -51,6 +51,10 @@ alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycod
 alias ec="emacsclient -cna ''"
 alias ect="emacsclient -ta ''"
 alias ecw="emacsclient -ca ''"
+alias org='emacs -name org --funcall org-agenda-list &'
+
+# JDownloader
+alias jd='wmname LG3D && java -jar ~/Descargas/JDownloader/JDownloader.jar &'
 
 # Netcfg
 alias n="sudo netcfg"
