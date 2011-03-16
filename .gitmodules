@@ -1,0 +1,3 @@
+[submodule "dotemacs/vendor/twittering-mode"]
+	path = dotemacs/vendor/twittering-mode
+	url = https://github.com/hayamiz/twittering-mode.git

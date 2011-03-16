@@ -45,11 +45,11 @@
 
 ;; Automatically save the buffer after 3 idle seconds
 ;; (save when you stop typing)
-(defun set-save-on-idle ()
-  (interactive)
-  (run-with-idle-timer 2 t 'save-buffer))
+;;(defun set-save-on-idle ()
+;;  (interactive)
+;;  (run-with-idle-timer 2 t 'save-buffer))
 ;; Add this to any buffer inheriting text-mode
-(add-hook 'ruby-mode-hook 'set-save-on-idle)
+;;(add-hook 'ruby-mode-hook 'set-save-on-idle)
 ;; }}}
 
 ;; {{{ Look & Feel
@@ -126,22 +126,16 @@
 ;; Mumamo chunks looks weird...
 (setq mumamo-chunk-coloring 1)
 
-(custom-set-faces 
- '(mumamo-background-chunk-submode1 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode2 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode3 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-submode4 ((((class color)
-				      (min-colors 88)
-				      (background dark)) nil)))
- '(mumamo-background-chunk-major ((((class color)
-				    (min-colors 88) 
-				    (background dark)) nil))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode2 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode3 ((((class color) (min-colors 88) (background dark)) nil)))
+ '(mumamo-background-chunk-submode4 ((((class color) (min-colors 88) (background dark)) nil))))
 
 ;; Darkroom mode
 ;(require 'darkroom-mode)
@@ -178,6 +172,51 @@
 ;; }}}
 
 ;; {{{ Modes
+
+;; {{{ Twittering mode
+;; https://github.com/hayamiz/twittering-mode
+(add-to-list 'load-path "~/.emacs.d/vendor/twittering-mode")
+(require 'twittering-mode)
+(setq twittering-use-master-password t)      ; Don't bother me with the damn PIN.
+(setq twittering-icon-mode t)                ; Show icons
+(setq twittering-timer-interval 60)          ; Update your timeline each 60 seconds (1 minute)
+(setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
+
+;; Spell checking on tweet editing
+(add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
+
+;; Display a desktop notification upon tweet arrival.
+(require 'todochiku)
+(add-hook 'twittering-new-tweets-hook (lambda ()
+					(let ((n twittering-new-tweets-count))
+					  (if (> n 5)
+					      (todochiku-message
+					       (twittering-timeline-spec-to-string twittering-new-tweets-spec)
+					       (format "You have %d new tweet%s"
+						       n (if (> n 1) "s" ""))
+					       (todochiku-icon 'social))
+					    (dolist (el twittering-new-tweets-statuses)
+					      (todochiku-message
+					       (twittering-timeline-spec-to-string twittering-new-tweets-spec)
+					       (concat (cdr (assoc 'user-screen-name el))
+						       " said: "
+						       (cdr (assoc 'text el)))
+					       (todochiku-icon 'social)))))))
+
+;;
+(setq twittering-initial-timeline-spec-string
+      '("michishigekaito/anime-stuffs"
+	":direct_messages"
+	":mentions"
+	":home"))
+;; }}}
+
+;; {{{ YAML mode
+(require 'yaml-mode)
+(setq auto-mode-alist
+      (append '(("\.yml\'" . yaml-mode))
+              auto-mode-alist))
+;; }}}
 
 ;; {{{ Textmate (Minor) Mode
 (require 'textmate)
@@ -248,7 +287,7 @@
 
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
- (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org")
+ (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org" "~/.org/work.org")
  )
 
 ;; Refile targets
@@ -458,22 +497,6 @@
 
 ;; }}}
 
-;; Email stuff
-;; Emacs Speaks SMTP (gnu.org) using the default mail agent
-;; If you use the default mail user agent.
-(setq send-mail-function 'smtpmail-send-it)
-;; Send mail using SMTP via gmail.
-(setq smtpmail-smtp-server "smtp.gmail.com")
-;; Send mail using SMTP on the mail submission port 587.
-(setq smtpmail-smtp-service 587)
-;; Authenticate using this username and password against smtp.gmail.com.
-(setq smtpmail-auth-credentials
-      '(("smtp.gmail.com" 587 "chris.webstar" nil)))
-;; Use STARTTLS against the server.
-(setq smtpmail-starttls-credentials
-      '(("smtp.gmail.com" 587 "chris.webstar" nil)))
-
-
 ;; {{{ Yasnippet
 (require 'yasnippet)
 (yas/initialize)
@@ -493,3 +516,10 @@
                (local-set-key [tab] 'yas/expand))))
 ;; }}}
 ;; }}}
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(browse-url-browser-function (quote browse-url-generic))
+ '(browse-url-generic-program "/usr/bin/chromium"))
