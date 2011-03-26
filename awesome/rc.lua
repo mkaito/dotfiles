@@ -20,9 +20,10 @@ require("beautiful")
 require("naughty")
 -- Widgets
 require("vicious")
+require("vicious.contrib.pulse")
 
 -- {{{ Variable definitions
-local terminal = "urxvt"
+local terminal = "urxvtc"
 local editor_cmd = terminal .. "ect"
 
 local altkey = "Mod1"
@@ -53,15 +54,15 @@ layouts = {
 
 -- {{{ Tags
 tags = {
-  names  = { "term", "emacs", "web", "mail", "im", 6, "org", "rss", "media" },
-  layout = { layouts[2], layouts[2], layouts[4], layouts[4], layouts[1],
-             layouts[6], layouts[3], layouts[5], layouts[6]
+  names  = { "term", "emacs", "web", "mail", "im", "boxing", "gaming", "video", "misc" },
+  layout = { layouts[3], layouts[3], layouts[3], layouts[3], layouts[1],
+             layouts[4], layouts[4], layouts[4], layouts[6]
 }}
 
 for s = 1, screen.count() do
     tags[s] = awful.tag(tags.names, s, tags.layout)
     awful.tag.setproperty(tags[s][5], "mwfact", 0.18)
-    awful.tag.setproperty(tags[s][6], "hide",   true)
+--  awful.tag.setproperty(tags[s][6], "hide",   true)
 end
 -- }}}
 
@@ -83,32 +84,40 @@ batwidget = widget({ type = "textbox" })
 vicious.register(batwidget, vicious.widgets.bat, "$1$2%", 61, "BAT0")
 -- }}}
 
--- {{{ Volume level
+---- {{{ Volume level
 volicon = widget({ type = "imagebox" })
 volicon.image = image(beautiful.widget_vol)
--- Initialize widgets
+---- Initialize widgets
 volbar    = awful.widget.progressbar()
 volwidget = widget({ type = "textbox" })
--- Progressbar properties
+---- Progressbar properties
 volbar:set_vertical(true):set_ticks(true)
 volbar:set_height(12):set_width(8):set_ticks_size(2)
 volbar:set_background_color(beautiful.fg_off_widget)
 volbar:set_gradient_colors({ beautiful.fg_widget,
    beautiful.fg_center_widget, beautiful.fg_end_widget
 }) -- Enable caching
-vicious.cache(vicious.widgets.volume)
--- Register widgets
-vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master")
-vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master")
--- Register buttons
+vicious.cache(vicious.widgets.pulse)
+---- Register widgets
+vicious.register(volwidget, vicious.contrib.pulse,
+		 function(widget, v)
+		    local volume = math.floor(v[1])
+		    return " " .. volume .. "%"
+		 end,
+		 2, "alsa_output.pci-0000_00_1b.0.analog-stereo")
+vicious.register(volbar,    vicious.contrib.pulse, "$1",  2, "alsa_output.pci-0000_00_1b.0.analog-stereo")
+
+--vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master")
+--vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master")
+---- Register buttons
 volbar.widget:buttons(awful.util.table.join(
-   awful.button({ }, 1, function () exec("urxvt -T Mixer -e alsamixer") end),
-   awful.button({ }, 4, function () exec("amixer -q set Master 2dB+", false) end),
-   awful.button({ }, 5, function () exec("amixer -q set Master 2dB-", false) end)
+  awful.button({ }, 1, function () awful.util.spawn("pavucontrol") end),
+  awful.button({ }, 4, function () vicious.contrib.pulse.add(5, "alsa_output.pci-0000_00_1b.0.analog-stereo") end),
+  awful.button({ }, 5, function () vicious.contrib.pulse.add(-5, "alsa_output.pci-0000_00_1b.0.analog-stereo") end)
 )) -- Register assigned buttons
 volwidget:buttons(volbar.widget:buttons())
--- }}}
-
+---- }}}
+--
 -- {{{ Date and time
 dateicon = widget({ type = "imagebox" })
 dateicon.image = image(beautiful.widget_date)
@@ -133,7 +142,7 @@ orgicon.image = image(beautiful.widget_org)
 orgwidget = widget({ type = "textbox" })
 -- Configure widget
 local orgmode = {
-  files = { home.."/.org/notes.org", home.."/.org/personal.org",
+  files = { home.."/.org/notes.org", home.."/.org/personal.org", home.."/.org/work.org"
   },
   color = {
     past   = '<span color="'..beautiful.fg_urgent..'">',
@@ -283,9 +292,9 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Shortcuts for multimedia keyboard and Print Screen
-    awful.key({                   }, "#121",  function () sexec("~/src/bin/pvol.py -m", false) end),
-    awful.key({                   }, "#122",  function () sexec("~/src/bin/pvol.py -c -2", false) end),
-    awful.key({                   }, "#123",  function () sexec("~/src/bin/pvol.py -c 2", false) end),
+    awful.key({                   }, "#121",  function () sexec("~/dev/bin/pvol.py -m", false) end),
+    awful.key({                   }, "#122",  function () sexec("~/dev/bin/pvol.py -c -2", false) end),
+    awful.key({                   }, "#123",  function () sexec("~/dev/bin/pvol.py -c 2", false) end),
     awful.key({                   }, "Print", function () sexec("scrot -q 100 -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 
     -- Awesome base control
@@ -294,18 +303,30 @@ globalkeys = awful.util.table.join(
 
     -- {{{ Applications
     awful.key({ modkey            }, "e",      function () exec("emacsclient -n -c") end),
-    awful.key({ modkey            }, "t",      function () exec("thunar", false) end),
-    awful.key({ modkey            }, "F12",    function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
-    awful.key({ modkey            }, "f",      function () exec("firefox") end),
-    awful.key({ altkey            }, "F1",     function () exec("urxvt") end),
+    awful.key({ modkey            }, "t",      function () exec("nautilus --no-desktop", false) end),
+--  awful.key({ modkey            }, "F12",    function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
+    awful.key({ modkey            }, "F1",     function () exec(terminal) end),
+    awful.key({ modkey            }, "F2",     function () exec("firefox") end),
+    awful.key({ modkey            }, "F3",     function () exec("emacs --name=twmode -e twit") end),
+    awful.key({ modkey            }, "F4",     function () exec("emacs --name=gnus -e gnus") end),
 --  awful.key({ altkey            }, "#49",    function () scratch.drop("urxvt", "bottom") end),
-    awful.key({ modkey            }, "a",      function () exec("urxvt -T Alpine -e alpine") end),
---  awful.key({ modkey            }, "r",      function () exec("urxvt -T Snownews -e snownews") end),
+--  awful.key({ modkey            }, "a",      function () exec("urxvtc -T Alpine -e alpine") end),
+--  awful.key({ modkey            }, "r",      function () exec("urxvtc -T Snownews -e snownews") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
-    awful.key({ modkey            }, "g",      function () sexec("gajim") end),
-    -- awful.key({ modkey,           }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
+--  awful.key({ modkey            }, "g",      function () sexec("pidgin") end),
+    awful.key({ modkey,           }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
     awful.key({ modkey            }, "q",      function () exec("emacsclient --eval '(make-remember-frame)'") end),
     awful.key({ modkey            }, "s",      function () exec("sonata", false) end),
+
+    awful.key({ modkey            }, "F11",    function ()
+						  sexec('WINEPREFIX=/home/chris/.wine_64 wine explorer /desktop=1,1440x888 "C:\EVE\eve.exe"',
+						       false)
+					       end),
+
+    awful.key({ modkey            }, "F12",    function ()
+						  sexec('WINEPREFIX=/home/chris/.wine_64 wine explorer /desktop=0,1440x888 "C:\EVE\eve.exe"',
+						       false)
+					       end),
     -- }}}
 
 
@@ -331,7 +352,7 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
+    awful.key({ modkey, "Shift"   }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
@@ -404,23 +425,38 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons } },
 
-    { rule = { class = "MPlayer" },       properties = { floating = true  } },
     { rule = { class = "gimp" },          properties = { floating = true  } },
     { rule = { name  = "Alpine" },        properties = { tag = tags[1][4] } },
+
+    { rule = { name  = "twmode" },        properties = { tag = tags[1][4] } },
+    { rule = { name  = "gnus" },        properties = { tag = tags[1][4] } },
+
+    { rule = { class = "Lanikai" },       properties = { tag = tags[1][4] } },
     { rule = { name  = "Mixer" },         properties = { floating = true  } },
+    { rule = { class = "Pavucontrol" },   properties = { floating = true  } },
     { rule = { class = "Gajim.py" },      properties = { tag = tags[1][5] } },
     { rule = { class = "Pidgin" },        properties = { tag = tags[1][5] } },
     { rule = { name  = "Bitlbee" },       properties = { tag = tags[1][5] } },
     { rule = { class = "Empathy" },       properties = { tag = tags[1][5] } },
     { rule = { class = "Knode" },         properties = { tag = tags[1][8] } },
-    { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
-    { rule = { class = "Firefox" },       properties = { tag = tags[1][3] } },
 
+    { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
+    { rule = { class = "Minefield" },     properties = { tag = tags[1][3] } },
+    { rule = { class = "Firefox" },       properties = { tag = tags[1][3] } },
+    { rule = { class = "Chromium" },      properties = { tag = tags[1][3] } },
+    { rule = { class = "Epiphany" },      properties = { tag = tags[1][3] } },
+    
     { rule = { class = "Emacs",
 	       instance = "emacs" },      properties = { tag = tags[1][2] } },
     { rule = { class = "Emacs",
 	       instance = "org" },        properties = { tag = tags[1][7] } },
     { rule = { class = "Gvim" },          properties = { tag = tags[1][2] } },
+
+    { rule = { class = "Wine",
+	       instance ="EverQuest2.exe" }, properties = { floating = false } },
+
+    { rule = { class = "Wine",
+	       instance ="explorer.exe" }, properties = { floating = false } },
 
     { rule = { class = "Emacs",
 	       instance = "_Remember_" }, properties = { floating = true } },
@@ -441,11 +477,11 @@ awful.rules.rules = {
 -- {{{ Manage signal handler
 client.add_signal("manage", function (c, startup)
     -- Add titlebar to floaters, but remove those from rule callback
-    if awful.client.floating.get(c)
-    or awful.layout.get(c.screen) == awful.layout.suit.floating then
-        if   c.titlebar then awful.titlebar.remove(c)
-        else awful.titlebar.add(c, {modkey = modkey, height=tbheight}) end
-    end
+    -- if awful.client.floating.get(c)
+    -- or awful.layout.get(c.screen) == awful.layout.suit.floating then
+    --     if   c.titlebar then awful.titlebar.remove(c)
+    --     else awful.titlebar.add(c, {modkey = modkey, height=tbheight}) end
+    -- end
 
     -- Enable sloppy focus
     c:add_signal("mouse::enter", function (c)
@@ -485,4 +521,6 @@ for s = 1, screen.count() do screen[s]:add_signal("arrange", function ()
     end
   end)
 end
+-- }}}
+
 -- }}}
