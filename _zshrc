@@ -1,5 +1,5 @@
 # {{{ Environment
-export PATH="${PATH}:${HOME}/src/bin"
+export PATH="${PATH}:${HOME}/dev/bin:${HOME}/.cabal/bin"
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -12,59 +12,10 @@ export BROWSER="firefox"
 export XTERM="urxvt"
 # }}}
 
-# {{{ Aliases
-
-# aptitude shorthands
-alias ag='sudo aptitude'
-alias agi='ag install'
-alias agu='ag update'
-alias agp='ag purge'
-alias agg='ag safe-upgrade'
-alias ags='aptitude search'
-
-# Yaourt shorthands
-alias ya='yaourt'
-alias yas='ya -S'
-alias yass='ya -Ss'
-alias yasy='ya -Sy'
-alias yasyy='ya -Syy'
-alias yard='ya -Rd'
-alias yasyu='ya -Syu'
-
-# ls shorthands
-alias ls='ls -aF --color=always'
-alias ll='ls -lh'
-
-# Turn the display off
-alias lcdoff='xset dpms force off'
-
-# Coding facility aliases
-alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
-alias jek="jekyll --auto --server"
-alias bjek="bundle exec jekyll --auto --server"
-alias drafts='grep -ln --color=always "published: false" ~/src/web/mkaito/_posts/*'
-
-# Get keycode for buttons
-alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
-
-# Emacs
-alias ec="emacsclient -cna ''"
-alias ect="emacsclient -ta ''"
-alias ecw="emacsclient -ca ''"
-alias org='emacs -name org --funcall org-agenda-list &'
-
-# JDownloader
-alias jd='wmname LG3D && java -jar ~/Descargas/JDownloader/JDownloader.jar &'
-
-# Netcfg
-alias n="sudo netcfg"
-alias na="n -a"
-alias nu="na && n"
-
-# }}}
+source ~/dev/dotfiles/alias.zshrc
 
 # Keychain
-eval `keychain --agents ssh --eval --nogui -Q -q id_rsa`
+# eval `keychain --agents ssh --eval --nogui -Q -q id_rsa`
 
 # key bindings
 bindkey "\e[1~" beginning-of-line
