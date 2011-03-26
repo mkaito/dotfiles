@@ -14,6 +14,6 @@ set hlsearch                    " Highlight last search term.
 syntax on                       " Syntax highlighting.
 set go=a
 set nuw=6                       " Wider line-number area
-set guifont=Inconsolata\ 10     " A fond easy on the eyes, compact and readable.
+set guifont=Terminus\ 9          " A fond easy on the eyes, compact and readable.
 set lines=45                    " Slightly bigger default size
 set columns=100                 "
