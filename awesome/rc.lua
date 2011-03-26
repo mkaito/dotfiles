@@ -310,7 +310,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey            }, "F3",     function () exec("emacs --name=twmode -e twit") end),
     awful.key({ modkey            }, "F4",     function () exec("emacs --name=gnus -e gnus") end),
 --  awful.key({ altkey            }, "#49",    function () scratch.drop("urxvt", "bottom") end),
---  awful.key({ modkey            }, "a",      function () exec("urxvtc -T Alpine -e alpine") end),
+    awful.key({ modkey            }, "a",      function () exec("urxvtc -T Alpine -e alpine") end),
 --  awful.key({ modkey            }, "r",      function () exec("urxvtc -T Snownews -e snownews") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
 --  awful.key({ modkey            }, "g",      function () sexec("pidgin") end),
