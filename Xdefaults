@@ -1,24 +1,13 @@
-! emacs
-
-!{{{ XFT
-Xft.dpi:       96
-Xft.antialias: 1
-Xft.hinting:   1
-Xft.hintstyle: hintfull
-Xft.rgba:      rgb
-!}}}
-
-
 !{{{ EMACS
 !
-Emacs.font: Inconsolata-10:medium
+Emacs.font: Terminus-9:medium,rgba=vbgr
 !}}}
 
 !{{{ XFT
 Xft.dpi:       96
 Xft.antialias: 1
 Xft.hinting:   1
-Xft.hintstyle: hintfull
+Xft.hintstyle: hintslight
 Xft.rgba:      rgb
 !}}}
 
@@ -32,6 +21,10 @@ urxvt*secondaryScroll:    true
 urxvt*saveLines:         65535
 urxvt*cursorBlink:       false
 urxvt*urgentOnBell:       true
+rxvt*transparent:     	  true
+rxvt*shading:		  35
+rxvt*tint:     		  black
+rxvt*inheritPixmap:       true
 !urxvt*override-redirect:false
 !urxvt*borderLess:       false
 !urxvt*internalBorder:       0
@@ -46,8 +39,8 @@ urxvt*matcher.button:  1
 urxvt*cutchars:        '"'()*<>[]{|}
 !
 ! Appearance
-URxvt*font: xft:Inconsolata-10:medium
-urxvt*boldFont: xft:Inconsolata-10:bold
+urxvt*font: xft:Terminus-9:medium,rgba=vbgr
+urxvt*boldFont: xft:Terminus-9:medium,rgba=vbgr
 !
 ! Cursor
 urxvt*cursorColor: #DCDCCC
