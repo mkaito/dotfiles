@@ -1,6 +1,0 @@
-#contributor : Michishige Kaito <me@mkaito.com>
-#name : @option
-#key : yard
-#group : YARD
-# --
-# @option ${1:var} [${2:Class}] $0

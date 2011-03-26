@@ -1,6 +1,0 @@
-#contributor : Michishige Kaito <me@mkaito.com>
-#name : @return
-#key : yard
-#group : YARD
-# --
-# @return [${3:Class}] ${4:description}

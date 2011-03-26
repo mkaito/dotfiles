@@ -1,6 +1,0 @@
-#contributor : Michishige Kaito <me@mkaito.com>
-#name : @tag [Type]
-#key : yard
-#group : YARD
-# --
-# @$1 [${2:Class}]$0
