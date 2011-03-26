@@ -20,14 +20,21 @@
 ;; Turn off the scrollbar
 (scroll-bar-mode -1)
 ;;
-;; Ispell
-(add-hook 'text-mode-hook
-      '(lambda () "Defauts for Text mode."
-	 (setq ispell-personal-dictionary "~/.emacs.d/ispell-dico-perso")
-	 (ispell-change-dictionary "british-ize")
-	 (ispell-minor-mode)
-	 ))
-;; Can't stand the beeping, jfc!
+;; I(/A)spell & FlySpell
+(require 'ispell)
+(setq ispell-prefer-aspell t)
+(setq ispell-program-name "aspell")
+(setq ispell-list-command "list")
+(setq ispell-extra-args '("--sug-mode=fast"))
+(setq ispell-personal-dictionary "~/.emacs.d/ispell-dico-perso")
+(setq ispell-dictionary "british-ize")
+(require 'flyspell)
+(setq flyspell-issue-message-flag nil)
+(global-set-key (kbd "\C-c C-4") 'flyspell-correct-word-before-point)
+(global-set-key (kbd "\C-c C-\\") 'flyspell-correct-word-before-point) ; The shell doesn't recognize C-4, but reads C-\ instead.
+
+
+;; BEEP, BEEEP!
 (setq visible-bell t)
 
 ;; Move tempfiles and auto saves elsewhere
@@ -167,10 +174,6 @@
            (all-completions "" obarray 'commandp))))))
 ;; }}}
 
-;; {{{ Colours
-
-;; }}}
-
 ;; {{{ Modes
 
 ;; {{{ Twittering mode
@@ -181,6 +184,7 @@
 (setq twittering-icon-mode t)                ; Show icons
 (setq twittering-timer-interval 60)          ; Update your timeline each 60 seconds (1 minute)
 (setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
+(setq twittering-status-format "%i %s (%S),  %@:\n%FOLD[  ]{%T // from %f%L%r%R}\n ")
 
 ;; Spell checking on tweet editing
 (add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
@@ -205,10 +209,18 @@
 
 ;;
 (setq twittering-initial-timeline-spec-string
-      '("michishigekaito/anime-stuffs"
+      '("michishigekaito/anime"
 	":direct_messages"
 	":mentions"
 	":home"))
+
+;; This should cause the pinentry dialog to occur in the minibuffer
+;; Do not use gpg agent when runing in terminal
+(defadvice epg--start (around advice-epg-disable-agent activate)
+  (let ((agent (getenv "GPG_AGENT_INFO")))
+      (setenv "GPG_AGENT_INFO" nil)
+    ad-do-it
+      (setenv "GPG_AGENT_INFO" agent)))
 ;; }}}
 
 ;; {{{ YAML mode
@@ -220,7 +232,8 @@
 
 ;; {{{ Textmate (Minor) Mode
 (require 'textmate)
-(textmate-mode)
+;; TODO: Call textmate-mode off hooks for programming modes
+;; (textmate-mode)
 ;; }}}
 
 ;; {{{ Markdown mode
@@ -254,18 +267,18 @@
 
 ;; MobileOrg
 ;; Set to the name of the file where new notes will be stored
-(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
+;;(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
+;;(setq org-mobile-directory "~/Dropbox/MobileOrg")
 
- (setq org-agenda-custom-commands
-       '(("w" todo "TODO")
-         ("h" agenda "" ((org-agenda-show-all-dates nil)))
-         ("W" agenda "" ((org-agenda-ndays 21)
-                         (org-agenda-show-all-dates nil)))
-         ("A" agenda ""
-          ((org-agenda-ndays 1)
-           (org-agenda-overriding-header "Today")))))
+;;(setq org-agenda-custom-commands
+;      '(("w" todo "TODO")
+;	("h" agenda "" ((org-agenda-show-all-dates nil)))
+;	("W" agenda "" ((org-agenda-ndays 21)
+;			(org-agenda-show-all-dates nil)))
+;	("A" agenda ""
+;	 ((org-agenda-ndays 1)
+;	  (org-agenda-overriding-header "Today")))))
 
 
 ;; Org-mode customization
@@ -400,8 +413,9 @@
 ;; }}}
 
 ;; {{{ Code Folding
-;;   - http://www.emacswiki.org/emacs/FoldIngo
-(require 'foldingo)
+;; http://www.emacswiki.org/emacs/FoldingMode
+(load "folding" 'nomessage 'noerror)
+(folding-mode-add-find-file-hook)
 ;; }}}
 
 ;; {{{ Shortcuts
@@ -439,7 +453,7 @@
   (replace-regexp "\\([^\n]\\)\n\\([^ *\n]\\)" "\\1 \\2" nil begin end))
 
 ;; Stuff used for jekyll posts
-(require 'jekyll)
+;;(require 'jekyll)
 
 ; Renames the current file and updates the buffer
 (defun rename-current-file-or-buffer ()
@@ -522,4 +536,4 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(browse-url-browser-function (quote browse-url-generic))
- '(browse-url-generic-program "/usr/bin/chromium"))
+ '(browse-url-generic-program "/usr/bin/firefox"))
