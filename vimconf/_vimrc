@@ -79,4 +79,4 @@ set number                      " Show line numbers.
 set hlsearch                    " Highlight last search term.
 syntax on                       " Syntax highlighting.
 set go=a
-set nuw=6                       " Wider line-number area
+set nuw=4                       " Wider line-number area
