@@ -1,6 +1,6 @@
 # {{{ Aliases
 
-# Eve online from PlayOnLinux
+# Eve online
 alias eve='WINEPREFIX=~/.wine_64 wine explorer /desktop=0,1440x888 "C:\EVE\eve.exe"'
 alias eve1='WINEPREFIX=~/.wine_64 wine explorer /desktop=1,1440x888 "C:\EVE\eve.exe"'
 function killeve() {
@@ -17,6 +17,15 @@ function minertimer () {
 
 # function calc () { awk "BEGIN { print $* }" }
 function calc () { echo "$@" | bc -l ; }
+
+# FFMpeg screen capturing
+function capture() {
+  ffmpeg -y -f x11grab -r 12 -s $2 -i :0.0+$3 -vcodec libx264 -vpre ultrafast -crf 22 -threads 0 x11grab.$1
+}
+
+function wincap() {
+  capture `xwininfo | grep 'geometry' | awk '{print $2}' | awk '{ BEGIN { FS="[+-]" } print $1 $2,$3; }'`
+}
 
 # aptitude shorthands
 alias ag='sudo aptitude'
@@ -36,8 +45,10 @@ alias yard='ya -Rd'
 alias yasyu='ya -Syu'
 
 # ls shorthands
-alias ls='ls -aF --color=always'
+alias ls='ls -F --color=always'
 alias ll='ls -lh'
+alias la='ls -a'
+alias lla='la -lh'
 
 # Turn the display off
 alias lcdoff='xset dpms force off'
@@ -46,18 +57,17 @@ alias lcdoff='xset dpms force off'
 alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
 alias jek="jekyll --auto --server"
 alias bjek="bundle exec jekyll --auto --server"
-alias drafts='grep -ln --color=always "published: false" ~/src/web/mkaito/_posts/*'
+alias drafts='grep -ln --color=always "published: false" ~/dev/blog/_posts/*'
+alias be='bundle exec'
+alias ber='be rake'
 
 # Get keycode for buttons
 alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
 
 # Emacs
 alias ec="emacsclient --create-frame --no-wait"
-alias ect="emacsclient --tty --no-wait"
+alias ect="emacsclient --tty"
 alias org='emacs -name org --funcall org-agenda-list &'
-
-# JDownloader
-alias jd='wmname LG3D && java -jar ~/Descargas/JDownloader/JDownloader.jar &'
 
 # Netcfg
 alias n="sudo netcfg"
