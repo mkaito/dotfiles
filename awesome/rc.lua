@@ -55,7 +55,7 @@ layouts = {
 -- {{{ Tags
 tags = {
   names  = { "term", "emacs", "web", "mail", "im", "boxing", "gaming", "video", "misc" },
-  layout = { layouts[3], layouts[3], layouts[3], layouts[3], layouts[1],
+  layout = { layouts[1], layouts[1], layouts[3], layouts[3], layouts[1],
              layouts[4], layouts[4], layouts[4], layouts[6]
 }}
 
@@ -306,11 +306,11 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey            }, "t",      function () exec("nautilus --no-desktop", false) end),
 --  awful.key({ modkey            }, "F12",    function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
     awful.key({ modkey            }, "F1",     function () exec(terminal) end),
-    awful.key({ modkey            }, "F2",     function () exec("firefox") end),
+    awful.key({ modkey            }, "F2",     function () sexec("env GTK2_RC_FILES=/usr/share/themes/A-New-Hope/gtk-2.0/gtkrc firefox") end),
     awful.key({ modkey            }, "F3",     function () exec("emacs --name=twmode -e twit") end),
-    awful.key({ modkey            }, "F4",     function () exec("emacs --name=gnus -e gnus") end),
+--  awful.key({ modkey            }, "F4",     function () exec("emacs --name=gnus -e gnus") end),
 --  awful.key({ altkey            }, "#49",    function () scratch.drop("urxvt", "bottom") end),
-    awful.key({ modkey            }, "a",      function () exec("urxvtc -T Alpine -e alpine") end),
+    awful.key({ modkey            }, "F4",      function () exec("urxvtc -T Alpine -e alpine") end),
 --  awful.key({ modkey            }, "r",      function () exec("urxvtc -T Snownews -e snownews") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
 --  awful.key({ modkey            }, "g",      function () sexec("pidgin") end),
@@ -442,9 +442,12 @@ awful.rules.rules = {
 
     { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
     { rule = { class = "Minefield" },     properties = { tag = tags[1][3] } },
-    { rule = { class = "Firefox" },       properties = { tag = tags[1][3] } },
+    { rule = { class = "Firefox" },       properties = { tag = tags[1][3], floating = true } },
     { rule = { class = "Chromium" },      properties = { tag = tags[1][3] } },
     { rule = { class = "Epiphany" },      properties = { tag = tags[1][3] } },
+
+    { rule = { class = "Firefox",
+	       instance = "Navigator" },  properties = { tag = tags[1][3], floating = false } },
     
     { rule = { class = "Emacs",
 	       instance = "emacs" },      properties = { tag = tags[1][2] } },
