@@ -46,8 +46,8 @@ urxvt*boldFont: xft:Terminus-9:medium,rgba=vbgr
 urxvt*cursorColor: #DCDCCC
 !
 ! Pseudo Transparency
-!urxvt*shading:    50
-!urxvt*transparent:true
+urxvt*shading:    20
+urxvt*transparent:true
 ! 
 ! Zenburn color-scheme
 urxvt*background:  #3f3f3f
