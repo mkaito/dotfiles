@@ -10,28 +10,14 @@ export DE=xfce
 export WINEPREFIX=${HOME}/.wine_64
 # }}}
 
-# {{{ Get my shell aliases
-source ~/dev/dotfiles/alias.zshrc
-# }}}
-
 # {{{ Keyboard settings
 setxkbmap es
 xmodmap ~/.xmodmap
-#xbindkeys &
 # }}}
 
 # {{{ Autostart
-# Volume magement
-# thunar --daemon &
-
-# gnome-settings-daemon &
-
 # Music Player Daemon
 mpd ~/.mpd/mpd.conf
-
-# Power stuff
-#gnome-power-manager &
-# xscreensaver -no-splash &
 
 # Dropbox. Used to sync MobileOrg
 dropboxd &
@@ -41,8 +27,8 @@ dropboxd &
 
 # Open a terminal emulator on the first tag
 #   - resume the old screen session or start a new one
-#urxvt -e screen -l -UDRS term &
-urxvtd &
+urxvtd -q -f &
+#urxvtc -e screen -l -UDRS term &
 
 # Start the GnuPG agent and enable OpenSSH agent emulation
 if (pgrep -u "${USER}" gpg-agent); then
@@ -57,7 +43,9 @@ if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
     eval `dbus-launch --sh-syntax --exit-with-session`
 fi
 
-start-pulseaudio-x11 &
+# Composition manager
+# xcompmgr -as &
+xsetroot -cursor_name left_ptr &
 #}}}
 
 # {{{ Start session

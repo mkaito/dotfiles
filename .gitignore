@@ -3,3 +3,4 @@
 */auto-save-list/*
 **~
 dotemacs/abbrev_defs
+*.elc

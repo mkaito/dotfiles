@@ -1,82 +1,138 @@
-" Use Vim settings, rather than Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+filetype off
+call pathogen#runtime_append_all_bundles()
+filetype plugin indent on
+
+"" {{{ General options
 set nocompatible
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set nobackup
-set nowritebackup
-set history=50		" Keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
-set tabstop=2		" 2 spaces per indend
-set smarttab
+set tabstop=2
 set shiftwidth=2
-set autoindent
+set softtabstop=2
 set expandtab
 
+set encoding=utf-8
+set scrolloff=3
+set autoindent
+set showmode
+set showcmd
+set hidden
+set wildmenu
+set wildmode=list:longest
+set ttyfast
+set ruler
+set backspace=indent,eol,start
+set laststatus=2
+set undofile
+
+let mapleader = ","
+let g:mapleader = ","
+
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set smartcase
+set gdefault
+set incsearch
+set showmatch
+nnoremap <leader><space> :noh<cr>
+nnoremap <tab> %
+vnoremap <tab> %
+
+set wrap
+set textwidth=79
+set formatoptions=qrn1
+set colorcolumn=85
+
+set list
+set listchars=tab:▸\ ,eol:¬
+
+colorscheme wombat256i
+set nuw=6
+set number
+set clipboard=unnamedplus       " X11 System Clipboard
+set autowrite
+set autoread
+
+" Swith syntax highlighting on, when the terminal has colors
+" Also switching on highlighting the last used search pattern
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+    syntax on
+    set hlsearch
+endif
+
+augroup vimrcEx
+  au!
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+        \ if line("'\'") > 0 && line("'\'") <= line("$") |
+        \ exe "normal g`\"" |
+        \ endif
+
+  au FocusLost * :wa
+augroup END
+
+" FuzzyFinder options.
+let g:fuzzy_ignore = "*.log;gems/*;vendor/*;.gitignore;*.pyo"
+let g:fuzzy_matching_limit = 30
+" }}}
+
+" {{{ Mappings & Functions
 "F7 WordProcessorOn
 :map <F7> :set wrap <CR> :setlocal spell spelllang=en_gb <CR>
 "F8 WordProcessorOff
 :map <F8> :set nowrap <CR> :set nospell <CR>
 
-" Map the leader to comma, which is easier to acccess.
-let mapleader = ","
+" Clean up trailing whitespace in the active file
+nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
-" Swith syntax highlighting on, when the terminal has colors
-" Also switching on highlighting the last used search pattern
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-	syntax on
-	set hlsearch
-endif
+nnoremap <leader>a :Ack
 
-" Only do this part when compiled for autocommands.
-if has("autocmd")
-	
-	" Enable file type detection
-	" Use the default filetype settings, so that mail gets 'tw' set to 72,
-	" 'cindent' is on in C files, etc.
-	" Also load indent files, to automatically do language-depending indenting.
-	filetype plugin indent on
-	
-	" Put these in an autocmd group, so that we can delete them easily.
-	augroup vimrcEx
-	au!
+" This will sort a CSS file by selector
+nnoremap <leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
 
-	" For all text files set 'textwidth' to 78 characters.
-	autocmd FileType text setlocal textwidth=78
+" Select what you just pasted
+nnoremap <leader>v V`]
 
-	" When editing a file, always jump to the last known cursor position.
-	" Don't do it when the position is invalid or when inside an event handler
-	" (happens when dropping a file on gvim).
-	autocmd BufReadPost *
-		\ if line("'\'") > 0 && line("'\'") <= line("$") |
-		\ exe "normal g`\"" |
-		\ endif
+" use jj to exit insert mode
+inoremap jj <ESC>
 
-	augroup END
+" Create vertical split and switch to it
+nnoremap <leader>w <C-w>v<C-w>l
 
-else
-
-	set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" FuzzyFinder options.
-" Ignores based on common Merb app layout
-let g:fuzzy_ignore = "*.log;gems/*;bin/*;.gitignore"
-let g:fuzzy_matching_limit = 30
+" Split window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " FuzzyFinder key maps
 map <leader>t :FuzzyFinderTextMate<CR>
 map <leader>b :FuzzyFinderBuffer<CR>
 
-" Some visuals
-colorscheme zenburn             " Colorscheme. I like them dark.
-set number                      " Show line numbers.
-set hlsearch                    " Highlight last search term.
-syntax on                       " Syntax highlighting.
-set go=a
-set nuw=4                       " Wider line-number area
+
+" <leader>r will spawn a Ranger instance in cwd() and open the selected file
+" in vim
+fun Ranger()
+  silent !ranger --choosefile=/tmp/chosen
+  if filereadable('/tmp/chosen')
+    exec 'edit ' . system('cat /tmp/chosen')
+    call system('rm /tmp/chosen')
+  endif
+  redraw!
+endfun
+map <leader>r :call Ranger()<CR>
+
+" Fast editing of the .vimrc
+map <leader>e :e! ~/.vimrc<CR>
+" }}}
+
+" {{{ Mode options
+if !empty(matchstr($MY_RUBY_HOME, 'jruby'))
+  let g:ruby_path = join(split(glob($MY_RUBY_HOME.'/lib/ruby/*.*')."\n".glob($MY_RUBY_HOME.'/lib/rubysite_ruby/*'),"\n"),',')
+endif
+" }}}
+
+" vim:fdm=marker

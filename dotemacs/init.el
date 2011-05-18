@@ -2,71 +2,50 @@
 ;;
 ;; Large chunks shamelessly copied from anrxc's dotemacs:
 ;;   http://git.sysphere.org/dotfiles/tree/emacs
-;; My emacs wouldn't be half as pleasant without his help.
+;; My Emacs wouldn't be half as pleasant without his help.
 ;;
-;; Latest modification: May 30 2010.
+;; Latest modification: May 15 2011.
 
-;; {{{ Initialization
-;
-;; Define the load path
-(setq load-path (cons "~/.emacs.d/" load-path))
+;; Actually, what do I want from Emacs?
+;;
+;; * Syntax highlighting for: Markdown, Ruby, JavaScript, Lua, HAML,
+;;   SASS/SCSS/CSS, HTML.
+;; * Code folding with markers (I don't like the automatic ones)
+;; * Clean interface, low contrast colour theme.
+;; * Snippet expansion
+;; 
+;; Organization:
+;; 
+;; init.el should contain all common configuration. One file per major
+;; mode, containing all and any configuration relating to this mode,
+;; and one file per major configuration topic.
 
-;; Turn off the toolbar
+;; {{{ Base configuration
+;;   {{{ Load path
+(setq load-path
+      (append
+       (list
+	"~/.emacs.d"
+        "~/.emacs.d/vendor"
+        "~/.emacs.d/vendor/twittering-mode"
+        "~/.emacs.d/vendor/haml-mode"
+        "~/.emacs.d/vendor/sass-mode"
+        )
+        load-path))
+;;   }}}
+
+;;   {{{ Recompile packages
+;; Check for stale .elc on startup. Slow, but I only restart Emacs after reboots.
+(byte-recompile-directory "~/.emacs.d/vendor")
+;;   }}}
+
+;;   {{{ Visuals
 (tool-bar-mode -1)
-;;
-;; Turn off the menu bar
 (menu-bar-mode -1)
-;;
-;; Turn off the scrollbar
 (scroll-bar-mode -1)
-;;
-;; I(/A)spell & FlySpell
-(require 'ispell)
-(setq ispell-prefer-aspell t)
-(setq ispell-program-name "aspell")
-(setq ispell-list-command "list")
-(setq ispell-extra-args '("--sug-mode=fast"))
-(setq ispell-personal-dictionary "~/.emacs.d/ispell-dico-perso")
-(setq ispell-dictionary "british-ize")
-(require 'flyspell)
-(setq flyspell-issue-message-flag nil)
-(global-set-key (kbd "\C-c C-4") 'flyspell-correct-word-before-point)
-(global-set-key (kbd "\C-c C-\\") 'flyspell-correct-word-before-point) ; The shell doesn't recognize C-4, but reads C-\ instead.
-
-
-;; BEEP, BEEEP!
 (setq visible-bell t)
 
-;; Move tempfiles and auto saves elsewhere
-(defvar user-temporary-file-directory
-  (concat temporary-file-directory user-login-name "/"))
-(make-directory user-temporary-file-directory t)
-(setq backup-by-copying t)
-(setq backup-directory-alist
-      `(("." . ,user-temporary-file-directory)
-        (,tramp-file-name-regexp nil)))
-(setq auto-save-list-file-prefix
-      (concat user-temporary-file-directory ".auto-saves-"))
-(setq auto-save-file-name-transforms
-      `((".*" ,user-temporary-file-directory t)))
-
-;; Automatically save the buffer after 3 idle seconds
-;; (save when you stop typing)
-;;(defun set-save-on-idle ()
-;;  (interactive)
-;;  (run-with-idle-timer 2 t 'save-buffer))
-;; Add this to any buffer inheriting text-mode
-;;(add-hook 'ruby-mode-hook 'set-save-on-idle)
-;; }}}
-
-;; {{{ Look & Feel
-;
-;; Default font
-; Font is set in .Xdefaults
-;(set-default-font "-xos4-terminus-medium-r-normal-*-12-120-72-72-c-60-iso8859-2")
-
-
-;; Color theme initialization
+;; Colour theme initialization
 ;;   - http://emacswiki.org/cgi-bin/wiki/ColorTheme
 (require 'color-theme)
 (setq color-theme-is-global t)
@@ -74,19 +53,17 @@
 ;;
 ;; Load preferred theme
 ;;   - http://www.brockman.se/software/zenburn/zenburn.el
-(require 'zenburn)
-(color-theme-zenburn)
+(require 'color-theme-wombat)
+(color-theme-wombat)
 
-;; Support 256 colors in screen
+;; Support 256 colours in screen
 ;;   - http://article.gmane.org/gmane.emacs.devel/109504/
 (if (not (window-system)) (load "term/rxvt"))
 (defun terminal-init-screen ()
   "Terminal initialization function for screen."
   ;; Use the rxvt color initialization code.
   (rxvt-register-default-colors)
-  (tty-set-up-initial-frame-faces)
-)
-
+  (tty-set-up-initial-frame-faces))
 
 ;; Don't show the welcome message
 (setq inhibit-startup-screen t)
@@ -101,21 +78,20 @@
 
 ;; Modeline setup
 ;;   - somewhat cleaner than default
-(setq default-mode-line-format
+(setq mode-line-format
       '("-"
-       mode-line-mule-info
-       mode-line-modified
-       mode-line-frame-identification
-       mode-line-buffer-identification
-       "  "
-       global-mode-string
-       "   %[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
-       (line-number-mode "L%l--")
-       (column-number-mode "C%c--")
-       (-3 . "%p")
-       "-%-")
-)
-
+        mode-line-mule-info
+        mode-line-modified
+        mode-line-frame-identification
+        mode-line-buffer-identification
+        "  "
+        global-mode-string
+        "   %[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
+        (line-number-mode "L%l--")
+        (column-number-mode "C%c--")
+        (-3 . "%p")
+        "-%-")
+      )
 
 ;; Syntax coloring (font-lock-mode)
 (global-font-lock-mode t)
@@ -134,18 +110,58 @@
 (setq mumamo-chunk-coloring 1)
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode2 ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode3 ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode4 ((((class color) (min-colors 88) (background dark)) nil))))
+;;   }}}
 
-;; Darkroom mode
-;(require 'darkroom-mode)
+;;   {{{ Spell correction
+(require 'ispell)
+(setq ispell-prefer-aspell t)
+(setq ispell-program-name "aspell")
+(setq ispell-list-command "list")
+(setq ispell-extra-args '("--sug-mode=fast"))
+(setq ispell-dictionary "british-ize")
+
+(require 'flyspell)
+(setq flyspell-issue-message-flag nil)
+(global-set-key (kbd "\C-c C-4") 'flyspell-correct-word-before-point)
+(global-set-key (kbd "\C-c C-\\") 'flyspell-correct-word-before-point)
+;; TODO: Add flyspell-mode and flyspell-prog-mode hooks
+;;   }}}
+
+;; Move tempfiles and auto saves elsewhere
+(defvar user-temporary-file-directory
+  (concat temporary-file-directory user-login-name "/"))
+(make-directory user-temporary-file-directory t)
+(setq backup-by-copying t)
+(setq backup-directory-alist
+      `(("." . ,user-temporary-file-directory)
+        (,tramp-file-name-regexp nil)))
+(setq auto-save-list-file-prefix
+      (concat user-temporary-file-directory ".auto-saves-"))
+(setq auto-save-file-name-transforms
+      `((".*" ,user-temporary-file-directory t)))
+
+;; Proper auto save
+(require 'real-auto-save)
+;; TODO: Move these hooks to wherever their mode is configured
+(add-hook 'text-mode-hook 'turn-on-real-auto-save)
+(add-hook 'ruby-mode-hook 'turn-on-real-auto-save)
+(add-hook 'markdown-mode-hook 'turn-on-real-auto-save)
+
+(setq real-auto-save-interval 2) ;; in seconds
+
+;; Split window navigation: S-arrow
+(windmove-default-keybindings)
+(setq windmove-wrap-around t)
+
 ;; }}}
 
 ;; {{{ IDO
@@ -166,224 +182,55 @@
 (global-set-key
  "\M-x"
  (lambda ()
-        (interactive)
-        (call-interactively
-         (intern
-          (ido-completing-read
-           "M-x "
-           (all-completions "" obarray 'commandp))))))
+   (interactive)
+   (call-interactively
+    (intern
+     (ido-completing-read
+      "M-x "
+      (all-completions "" obarray 'commandp))))))
 ;; }}}
 
 ;; {{{ Modes
 
-;; {{{ Twittering mode
-;; https://github.com/hayamiz/twittering-mode
-(add-to-list 'load-path "~/.emacs.d/vendor/twittering-mode")
-(require 'twittering-mode)
-(setq twittering-use-master-password t)      ; Don't bother me with the damn PIN.
-(setq twittering-icon-mode t)                ; Show icons
-(setq twittering-timer-interval 60)          ; Update your timeline each 60 seconds (1 minute)
-(setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
-(setq twittering-status-format "%i %s (%S),  %@:\n%FOLD[  ]{%T // from %f%L%r%R}\n ")
-
-;; Spell checking on tweet editing
-(add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
-
-;; Display a desktop notification upon tweet arrival.
-(require 'todochiku)
-(add-hook 'twittering-new-tweets-hook (lambda ()
-					(let ((n twittering-new-tweets-count))
-					  (if (> n 5)
-					      (todochiku-message
-					       (twittering-timeline-spec-to-string twittering-new-tweets-spec)
-					       (format "You have %d new tweet%s"
-						       n (if (> n 1) "s" ""))
-					       (todochiku-icon 'social))
-					    (dolist (el twittering-new-tweets-statuses)
-					      (todochiku-message
-					       (twittering-timeline-spec-to-string twittering-new-tweets-spec)
-					       (concat (cdr (assoc 'user-screen-name el))
-						       " said: "
-						       (cdr (assoc 'text el)))
-					       (todochiku-icon 'social)))))))
-
-;;
-(setq twittering-initial-timeline-spec-string
-      '("michishigekaito/anime"
-	":direct_messages"
-	":mentions"
-	":home"))
-
-;; This should cause the pinentry dialog to occur in the minibuffer
-;; Do not use gpg agent when runing in terminal
-(defadvice epg--start (around advice-epg-disable-agent activate)
-  (let ((agent (getenv "GPG_AGENT_INFO")))
-      (setenv "GPG_AGENT_INFO" nil)
-    ad-do-it
-      (setenv "GPG_AGENT_INFO" agent)))
-;; }}}
-
 ;; {{{ YAML mode
-(require 'yaml-mode)
-(setq auto-mode-alist
-      (append '(("\.yml\'" . yaml-mode))
-              auto-mode-alist))
+(autoload 'yaml-mode "yaml-mode" "YAML mode" t)
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 ;; }}}
 
 ;; {{{ Textmate (Minor) Mode
-(require 'textmate)
+(autoload 'textmate-mode "textmate" "Textmate mode" t)
 ;; TODO: Call textmate-mode off hooks for programming modes
 ;; (textmate-mode)
 ;; }}}
 
 ;; {{{ Markdown mode
 (autoload 'markdown-mode "markdown-mode.el"
-   "Major mode for editing Markdown files" t)
-(setq auto-mode-alist
-   (cons '("\.markdown" . markdown-mode) auto-mode-alist))
-;(add-hook 'markdown-mode-hook 'darkroom-mode)
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'\\|\\.mkd\\'" . markdown-mode))
+(add-hook 'markdown-mode-hook 'visual-line-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 ;; }}}
 
 ;; {{{ LUA Mode
 ;; Lua mode for awesome wm config files
-(setq auto-mode-alist (cons '("\\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua\\'" . lua-mode))
 ;; }}}
 
-;; {{{ Org Mode
-(require 'org-install)
-(setq org-directory "~/.org/")
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-
-;; Misc Configs
-(setq org-log-done t)
-(setq org-completion-use-ido t)
-(setq org-return-follows-link t)
-(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
-(add-hook 'org-mode-hook 'org-indent-mode)
-
-;; MobileOrg
-;; Set to the name of the file where new notes will be stored
-;;(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
-;; Set to <your Dropbox root directory>/MobileOrg.
-;;(setq org-mobile-directory "~/Dropbox/MobileOrg")
-
-;;(setq org-agenda-custom-commands
-;      '(("w" todo "TODO")
-;	("h" agenda "" ((org-agenda-show-all-dates nil)))
-;	("W" agenda "" ((org-agenda-ndays 21)
-;			(org-agenda-show-all-dates nil)))
-;	("A" agenda ""
-;	 ((org-agenda-ndays 1)
-;	  (org-agenda-overriding-header "Today")))))
-
-
-;; Org-mode customization
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "WAITING" "DONE")
-	(sequence "NOTE(n)" "|" "REVIEWED")
-	(sequence "DOWNLOAD(d)" "DOWNLOADING" "|" "DOWNLOADED")
-	(sequence "READ(r)" "READING" "|" "DONE")
-	(sequence "CALL(c)" "|" "WAITING" "CALLED")
-	(sequence "|" "CANCELED(x)")))
-
-(setq org-tag-alist '((:startgroup . nil)
-		      ("@work" . ?w)
-		      ("@home" . ?h)
-		      (:endgroup . nil)
-		      ("@phone" . ?p)
-		      ("@errands" . ?e)
-		      ("@computer" . ?c)))
-
-;; Files that are included in org-mode agenda
-(setq org-agenda-files
- (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org" "~/.org/work.org")
- )
-
-;; Refile targets
-(setq org-refile-targets
-      (quote
-       ((org-agenda-files :maxlevel . 5))))
-
-;; }}}
-
-;; {{{ Remember mode
-(require 'remember)
-(org-remember-insinuate)
-
-;; Notes file
-(setq org-default-notes-file (concat org-directory "/notes.org"))
-;; Notes templates
-(setq org-remember-templates
- '(("Note"     ?n "*** NOTE %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-   ("Download" ?d "*** DOWNLOAD %?\n    %u\n    %i\n    %a"  "~/.org/notes.org" "Notes")
-   ("Read"     ?r "*** READ %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-   ("Todo"     ?t "*** TODO %?\n    %t\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-   ("Call"     ?c "*** CALL %?\n    %T\n    %i\n    %a"      "~/.org/notes.org" "Notes")))
-
-;; Remember frames
-;;   - $ emacsclient -e '(make-remember-frame)'
-;;
-;; Org-remember splits windows, force it to a single window
-(add-hook 'remember-mode-hook  'delete-other-windows)
-
-;; Automatic closing of remember frames
-(defadvice remember-finalize (after delete-remember-frame activate)
-  "Advise remember-finalize to close the frame if it is the remember frame"
-  (if (equal "*Remember*" (frame-parameter nil 'name))
-    (delete-frame))
-)
-(defadvice remember-destroy (after delete-remember-frame activate)
-  "Advise remember-destroy to close the frame if it is the remember frame"
-  (if (equal "*Remember*" (frame-parameter nil 'name))
-    (delete-frame))
-)
-
-;; Initialization of remember frames
-(defun make-remember-frame ()
-  "Create a new frame and run org-remember"
-  (interactive)  
-  (make-frame '((name . "*Remember*") (width . 80) (height . 10)))
-  (select-frame-by-name "*Remember*")
-  (org-remember)
-)
-;; }}}
-
-;; {{{ Calendar settings
-;;
-(setq
-  holidays-in-diary-buffer               t
-  mark-holidays-in-calendar              t
-  all-christian-calendar-holidays        t
-  all-islamic-calendar-holidays        nil
-  all-hebrew-calendar-holidays         nil
-  european-calendar-style                t
-  ;display-time-24hr-format              t
-  display-time-day-and-date            nil
-  ;display-time-format                 nil
-  ;display-time-use-mail-icon          nil
-  ;calendar-latitude                  45.21
-  ;calendar-longitude                 14.26
-  ;calendar-location-name "Rijeka, Croatia"
-)
-;; }}}
+(load-library "mkaito-org")
 
 ;; {{{ Post Mode
-;    - http://post-mode.sourceforge.net/
-;
+;;    - http://post-mode.sourceforge.net/
 (autoload 'post-mode "~/.emacs.d/post.el" "Major mode for editing e-mail and journal articles" t)
-(add-to-list 'auto-mode-alist 
-  '("\\.*mutt-*\\|\\.*pico.*\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.*mutt-*\\|\\.*pico.*\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
 ;; }}}
 
 ;; {{{ Custom modes for some custom files
-;
+                                        ;
 ;; Shell script mode for Arch PKGBUILDs
-(setq auto-mode-alist (cons '("\\PKGBUILD$" . sh-mode) auto-mode-alist))
-;;
+(add-to-list 'auto-mode-alist '("\\PKGBUILD$" . sh-mode))
+
 ;; Conf mode for personal config files
 (when (locate-library "conf-mode")
   (autoload 'conf-mode "conf-mode" "Major-mode for editing config files." t)
@@ -392,30 +239,91 @@
   (add-to-list 'auto-mode-alist '("\\screenrc$"  . conf-mode))
   (add-to-list 'auto-mode-alist '("\\pinerc$"    . conf-mode))
   (add-to-list 'auto-mode-alist '("\\zshrc$"     . conf-mode))
-)
+  )
 ;;
 ;; Ruby mode for Gemfile and config.ru
 (add-to-list 'auto-mode-alist '("\\Gemfile$"     . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$"     . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\Rakefile$"     . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$"    . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\Rakefile$"    . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\config\.ru$"  . ruby-mode))
+
+;; Ruby mode hooks
+(add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook 'ruby-mode-hook 'textmate-mode)
 ;; }}}
 
 ;; {{{ Haml, Sass & Less
-(require 'haml-mode)
-(require 'sass-mode)
-(add-to-list 'auto-mode-alist '("\\.haml"        . haml-mode))
-(add-to-list 'auto-mode-alist '("\\.scss"        . sass-mode))
-(add-to-list 'auto-mode-alist '("||.sass"        . sass-mode))
-(add-to-list 'auto-mode-alist '("\\.less"        . css-mode))
+(autoload 'haml-mode "haml-mode" "HAML mode" t)
+(autoload 'sass-mode "sass-mode" "SASS mode" t)
+(add-to-list 'auto-mode-alist '("\\.haml$"        . haml-mode))
+(add-to-list 'auto-mode-alist '("\\.scss$"        . sass-mode))
+(add-to-list 'auto-mode-alist '("\\.sass$"        . sass-mode))
+(add-to-list 'auto-mode-alist '("\\.less$"        . css-mode))
+;; }}}
+
+;; {{{ Twittering mode
+;; https://github.com/hayamiz/twittering-mode
+;; (add-to-list 'load-path "~/.emacs.d/vendor/twittering-mode")
+(autoload 'twit "twittering-mode" "Twittering mode" t)
+(setq twittering-use-master-password t      ; Don't bother me with the damn PIN.
+      twittering-icon-mode t                ; Show icons
+      twittering-scroll-mode t              ; Keep the cursor in place upon updates
+      twittering-timer-interval 60          ; Update your timeline each 60 seconds (1 minute)
+      twittering-url-show-status nil        ; Keeps the echo area from showing all the http processes
+      twittering-status-format "%i %s (%S),  %@:\n%FOLD[  ]{%T // from %f%L%r%R}\n "
+      twittering-number-of-tweets-on-retrieval 30
+
+      twittering-tinyurl-service 'is.gd)
+
+;; Spell checking on tweet editing
+(add-hook 'twittering-edit-mode-hook (lambda () (flyspell-mode)))
+;;
+;; Display a desktop notification upon tweet arrival.
+(autoload 'todochiku-message "todochiku" "Todochiku" t)
+(add-hook 'twittering-new-tweets-hook (lambda ()
+                                        (let ((n twittering-new-tweets-count))
+                                          (if (> n 2)
+                                              (todochiku-message
+                                               (twittering-timeline-spec-to-string twittering-new-tweets-spec)
+                                               (format "You have %d new tweet%s"
+                                                       n (if (> n 1) "s" ""))
+                                               (todochiku-icon 'social))
+                                            (dolist (el twittering-new-tweets-statuses)
+                                              (todochiku-message
+                                               (twittering-timeline-spec-to-string twittering-new-tweets-spec)
+                                               (concat (cdr (assoc 'user-screen-name el))
+                                                       " said: "
+                                                       (cdr (assoc 'text el)))
+                                               (todochiku-icon 'social)))))))
+;;
+(setq twittering-initial-timeline-spec-string
+      '("michishigekaito/fansubs"
+	"michishigekaito/animanga"
+	"michishigekaito/design"
+	"michishigekaito/code"
+        ":direct_messages"
+        ":mentions"
+        ":home"))
+
+;; This should cause the pinentry dialog to occur in the minibuffer
+;; Do not use gpg agent when runing in terminal
+(defadvice epg--start (around advice-epg-disable-agent activate)
+  (let ((agent (getenv "GPG_AGENT_INFO")))
+    (setenv "GPG_AGENT_INFO" nil)
+    ad-do-it
+    (setenv "GPG_AGENT_INFO" agent)))
 ;; }}}
 
 ;; }}}
 
 ;; {{{ Code Folding
 ;; http://www.emacswiki.org/emacs/FoldingMode
-(load "folding" 'nomessage 'noerror)
-(folding-mode-add-find-file-hook)
+;;
+;; (autoload 'folding-mode          "folding" "Folding mode" t)
+;; (autoload 'turn-off-folding-mode "folding" "Folding mode" t)
+;; (autoload 'turn-on-folding-mode  "folding" "Folding mode" t)
+(if (load "folding" 'nomessage 'noerror)
+    (folding-mode-add-find-file-hook))
 ;; }}}
 
 ;; {{{ Shortcuts
@@ -425,7 +333,7 @@
 (defalias 'ee            'eval-expression)
 (defalias 'day           'color-theme-vim-colors)
 (defalias 'night         'color-theme-zenburn)
-(defalias 'fold          'fold-enter-fold-mode-close-all-folds)
+;; (defalias 'fold          'fold-enter-fold-mode-close-all-folds)
 ;; }}}
 
 ;; {{{ Misc
@@ -447,15 +355,12 @@
 (global-set-key (kbd "\C-c \C-c") 'comment-dwim-line)
 
 (defun unfill-region (begin end)
-  "Remove all linebreaks in a region but leave paragraphs, 
+  "Remove all linebreaks in a region but leave paragraphs,
   indented text (quotes,code) and lines starting with an asterix (lists) intakt."
   (interactive "r")
   (replace-regexp "\\([^\n]\\)\n\\([^ *\n]\\)" "\\1 \\2" nil begin end))
 
-;; Stuff used for jekyll posts
-;;(require 'jekyll)
-
-; Renames the current file and updates the buffer
+;; Renames the current file and updates the buffer
 (defun rename-current-file-or-buffer ()
   (interactive)
   (if (not (buffer-file-name))
@@ -467,8 +372,8 @@
         (kill-buffer nil))))
   nil)
 
-; \C-x \C-w = Save as
-; \C-x w    = Rename
+;; \C-x \C-w = Save as
+;; \C-x w    = Rename
 (global-set-key (kbd "\C-xw") 'rename-current-file-or-buffer)
 
 ;; {{{ Auto-indent stuff
@@ -483,45 +388,51 @@
 ;; Indent when pasting
 (dolist (command '(yank yank-pop))
   (eval `(defadvice ,command (after indent-region activate)
-	   (and (not current-prefix-arg)
-		(member major-mode '(emacs-lisp-mode lisp-mode
-						     clojure-mode    scheme-mode
-						     haskell-mode    ruby-mode
-						     rspec-mode      python-mode
-						     c-mode          c++-mode
-						     objc-mode       latex-mode
-						     plain-tex-mode  sass-mode
-						     haml-mode))
-		(let ((mark-even-if-inactive transient-mark-mode))
-		  (indent-region (region-beginning) (region-end) nil))))))
+           (and (not current-prefix-arg)
+                (member major-mode '(emacs-lisp-mode lisp-mode
+                                                     clojure-mode    scheme-mode
+                                                     haskell-mode    ruby-mode
+                                                     rspec-mode      python-mode
+                                                     c-mode          c++-mode
+                                                     objc-mode       latex-mode
+                                                     plain-tex-mode  sass-mode
+                                                     haml-mode))
+                (let ((mark-even-if-inactive transient-mark-mode))
+                  (indent-region (region-beginning) (region-end) nil))))))
 
 ;; When killing the end of a line, eliminate any indentation of the next line
 (defadvice kill-line (before check-position activate)
   (if (and (eolp) (not (bolp)))
       (progn (forward-char 1)
-	     (just-one-space 0)
-	     (backward-char 1))))
+             (just-one-space 0)
+             (backward-char 1))))
 
-;; Open new line below current and place cursor indented
 (defun open-line-below-and-go-there ()
+  "Open new line below current and place cursor indented"
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
 (define-key global-map (kbd "M-RET") 'open-line-below-and-go-there)
 
+(defun iwb ()
+  "indent whole buffer"
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max)))
 ;; }}}
 
 ;; {{{ Yasnippet
 (require 'yasnippet)
 (yas/initialize)
 
-; Place my own snippet stuff in mysnippets
+;; Place my own snippet stuff in mysnippets
 (setq yas/root-directory '("~/.emacs.d/mysnippets"
-			  "~/.emacs.d/snippets"))
+                           "~/.emacs.d/vendor/snippets"))
 (mapc 'yas/load-directory yas/root-directory)
 (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/completing-prompt))
 
-; Fix up for markdown-mode
+;; Fix up for markdown-mode
 (add-hook 'markdown-mode-hook
           (let ((original-command (lookup-key org-mode-map [tab])))
             `(lambda ()
@@ -531,9 +442,9 @@
 ;; }}}
 ;; }}}
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(browse-url-browser-function (quote browse-url-generic))
  '(browse-url-generic-program "/usr/bin/firefox"))

@@ -6,16 +6,13 @@ export SAVEHIST=10000
 export LESSHISTFILE="-"
 export PAGER="less"
 export READNULLCMD="${PAGER}"
-export VISUAL="emacsclient"
+export VISUAL="vim"
 export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
 # }}}
 
 source ~/dev/dotfiles/alias.zshrc
-
-# Keychain
-# eval `keychain --agents ssh --eval --nogui -Q -q id_rsa`
 
 # key bindings
 bindkey "\e[1~" beginning-of-line
@@ -108,6 +105,11 @@ function d () {
 
 	 sid=""
 	 sact=""
+}
+
+. ${HOME}/dev/bin/z.sh
+function precmd () {
+  z --add "$(pwd -P)"
 }
 
 # {{{ Terminal and prompt

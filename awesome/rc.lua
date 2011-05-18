@@ -20,7 +20,6 @@ require("beautiful")
 require("naughty")
 -- Widgets
 require("vicious")
-require("vicious.contrib.pulse")
 
 -- {{{ Variable definitions
 local terminal = "urxvtc"
@@ -97,23 +96,16 @@ volbar:set_background_color(beautiful.fg_off_widget)
 volbar:set_gradient_colors({ beautiful.fg_widget,
    beautiful.fg_center_widget, beautiful.fg_end_widget
 }) -- Enable caching
-vicious.cache(vicious.widgets.pulse)
+vicious.cache(vicious.widgets.volume)
 ---- Register widgets
-vicious.register(volwidget, vicious.contrib.pulse,
-		 function(widget, v)
-		    local volume = math.floor(v[1])
-		    return " " .. volume .. "%"
-		 end,
-		 2, "alsa_output.pci-0000_00_1b.0.analog-stereo")
-vicious.register(volbar,    vicious.contrib.pulse, "$1",  2, "alsa_output.pci-0000_00_1b.0.analog-stereo")
-
---vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master")
---vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master")
+vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master")
+vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master")
 ---- Register buttons
 volbar.widget:buttons(awful.util.table.join(
-  awful.button({ }, 1, function () awful.util.spawn("pavucontrol") end),
-  awful.button({ }, 4, function () vicious.contrib.pulse.add(5, "alsa_output.pci-0000_00_1b.0.analog-stereo") end),
-  awful.button({ }, 5, function () vicious.contrib.pulse.add(-5, "alsa_output.pci-0000_00_1b.0.analog-stereo") end)
+  awful.button({ }, 1, function () sexec("amixer -q set Master toggle") end),
+  awful.button({ }, 3, function () sexec("urxvtc -e alsamixer") end),
+  awful.button({ }, 4, function () sexec("amixer -q set Master 1+ unmute") end),
+  awful.button({ }, 5, function () sexec("amixer -q set Master 1- unmute") end)
 )) -- Register assigned buttons
 volwidget:buttons(volbar.widget:buttons())
 ---- }}}
@@ -292,9 +284,9 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Shortcuts for multimedia keyboard and Print Screen
-    awful.key({                   }, "#121",  function () sexec("~/dev/bin/pvol.py -m", false) end),
-    awful.key({                   }, "#122",  function () sexec("~/dev/bin/pvol.py -c -2", false) end),
-    awful.key({                   }, "#123",  function () sexec("~/dev/bin/pvol.py -c 2", false) end),
+    awful.key({                   }, "#121",  function () sexec("amixer set Master toggle", false) end),
+    awful.key({                   }, "#122",  function () sexec("amixer set Master 10- unmute", false) end),
+    awful.key({                   }, "#123",  function () sexec("amixer set Master 10+ unmute", false) end),
     awful.key({                   }, "Print", function () sexec("scrot -q 100 -e 'mv $f ~/screenshots/ 2>/dev/null'") end),
 
     -- Awesome base control
@@ -302,20 +294,19 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "q",      awesome.quit),
 
     -- {{{ Applications
-    awful.key({ modkey            }, "e",      function () exec("emacsclient -n -c") end),
-    awful.key({ modkey            }, "t",      function () exec("nautilus --no-desktop", false) end),
---  awful.key({ modkey            }, "F12",    function () sexec("java -jar ~/Descargas/JDownloader/JDownloader.jar") end),
+    awful.key({ modkey            }, "e",      function () sexec("emacsclient -n -c") end),
+    awful.key({ modkey            }, "t",      function () sexec("urxvtc -T Ranger -e ranger") end),
+  --awful.key({ modkey            }, "t",      function () exec("nautilus --no-desktop", false) end),
     awful.key({ modkey            }, "F1",     function () exec(terminal) end),
-    awful.key({ modkey            }, "F2",     function () sexec("env GTK2_RC_FILES=/usr/share/themes/A-New-Hope/gtk-2.0/gtkrc firefox") end),
-    awful.key({ modkey            }, "F3",     function () exec("emacs --name=twmode -e twit") end),
---  awful.key({ modkey            }, "F4",     function () exec("emacs --name=gnus -e gnus") end),
---  awful.key({ altkey            }, "#49",    function () scratch.drop("urxvt", "bottom") end),
-    awful.key({ modkey            }, "F4",      function () exec("urxvtc -T Alpine -e alpine") end),
---  awful.key({ modkey            }, "r",      function () exec("urxvtc -T Snownews -e snownews") end),
+    awful.key({ modkey            }, "F2",     function () sexec("env GTK2_RC_FILES=/usr/share/themes/Clearlooks/gtk-2.0/gtkrc firefox") end),
+  --awful.key({ modkey,           }, "F3",     function () sexec("urxvtc -T Twitter -e screen -l -UDRS Twitter /home/chris/dev/bin/ttytter") end),
+    awful.key({ modkey            }, "F3",     function () sexec("emacs --name twmode -e twit") end),
+--  awful.key({ modkey            }, "F4",     function () sexec("emacs --name=gnus -e gnus") end),
+    awful.key({ modkey            }, "F4",     function () sexec("urxvtc -T Alpine -e alpine") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
 --  awful.key({ modkey            }, "g",      function () sexec("pidgin") end),
-    awful.key({ modkey,           }, "g",      function () sexec("urxvt -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
-    awful.key({ modkey            }, "q",      function () exec("emacsclient --eval '(make-remember-frame)'") end),
+    awful.key({ modkey,           }, "g",      function () sexec("urxvtc -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
+    awful.key({ modkey            }, "q",      function () sexec("emacsclient --eval '(make-remember-frame)'") end),
     awful.key({ modkey            }, "s",      function () exec("sonata", false) end),
 
     awful.key({ modkey            }, "F11",    function ()
@@ -443,7 +434,7 @@ awful.rules.rules = {
     { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
     { rule = { class = "Minefield" },     properties = { tag = tags[1][3] } },
     { rule = { class = "Firefox" },       properties = { tag = tags[1][3], floating = true } },
-    { rule = { class = "Chromium" },      properties = { tag = tags[1][3] } },
+    { rule = { class = "Chromium" },      properties = { tag = tags[1][4] } },
     { rule = { class = "Epiphany" },      properties = { tag = tags[1][3] } },
 
     { rule = { class = "Firefox",
