@@ -30,6 +30,7 @@
         "~/.emacs.d/vendor/twittering-mode"
         "~/.emacs.d/vendor/haml-mode"
         "~/.emacs.d/vendor/sass-mode"
+	"~/.emacs.d/vendor/textmate.el"
         )
         load-path))
 ;;   }}}
@@ -192,6 +193,11 @@
 
 ;; {{{ Modes
 
+;; {{{ Haskell mode
+(load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
 ;; {{{ YAML mode
 (autoload 'yaml-mode "yaml-mode" "YAML mode" t)
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
@@ -268,11 +274,10 @@
 (setq twittering-use-master-password t      ; Don't bother me with the damn PIN.
       twittering-icon-mode t                ; Show icons
       twittering-scroll-mode t              ; Keep the cursor in place upon updates
-      twittering-timer-interval 60          ; Update your timeline each 60 seconds (1 minute)
+      twittering-timer-interval 300         ; Update your timeline each 300 seconds (5 minutes)
       twittering-url-show-status nil        ; Keeps the echo area from showing all the http processes
       twittering-status-format "%i %s (%S),  %@:\n%FOLD[  ]{%T // from %f%L%r%R}\n "
       twittering-number-of-tweets-on-retrieval 30
-
       twittering-tinyurl-service 'is.gd)
 
 ;; Spell checking on tweet editing
