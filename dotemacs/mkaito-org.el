@@ -12,6 +12,8 @@
 (setq org-return-follows-link t)
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
 
 ;; MobileOrg
 ;; Set to the name of the file where new notes will be stored
