@@ -37,3 +37,6 @@
 [submodule "vimconf/bundle/vimoutliner"]
 	path = vimconf/bundle/vimoutliner
 	url = git://github.com/vimoutliner/vimoutliner.git
+[submodule "dotemacs/vendor/textmate.el"]
+	path = dotemacs/vendor/textmate.el
+	url = git://github.com/defunkt/textmate.el.git
