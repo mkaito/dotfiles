@@ -54,7 +54,7 @@ layouts = {
 -- {{{ Tags
 tags = {
   names  = { "term", "emacs", "web", "mail", "im", "boxing", "gaming", "video", "misc" },
-  layout = { layouts[1], layouts[1], layouts[3], layouts[3], layouts[1],
+  layout = { layouts[1], layouts[1], layouts[3], layouts[2], layouts[1],
              layouts[4], layouts[4], layouts[4], layouts[6]
 }}
 
@@ -298,11 +298,14 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey            }, "t",      function () sexec("urxvtc -T Ranger -e ranger") end),
   --awful.key({ modkey            }, "t",      function () exec("nautilus --no-desktop", false) end),
     awful.key({ modkey            }, "F1",     function () exec(terminal) end),
-    awful.key({ modkey            }, "F2",     function () sexec("env GTK2_RC_FILES=/usr/share/themes/Clearlooks/gtk-2.0/gtkrc firefox") end),
+    --awful.key({ modkey            }, "F2",     function () sexec("GTK2_RC_FILES=/usr/share/themes/Aurora/gtk-2.0/gtkrc firefox") end),
+    awful.key({ modkey            }, "F2",     function () sexec("chromium --enable-accelerated-compositing --memory-model=low") end),
   --awful.key({ modkey,           }, "F3",     function () sexec("urxvtc -T Twitter -e screen -l -UDRS Twitter /home/chris/dev/bin/ttytter") end),
     awful.key({ modkey            }, "F3",     function () sexec("emacs --name twmode -e twit") end),
+    awful.key({ modkey, "Shift"   }, "F3",     function () sexec("GTK2_RC_FILES=/usr/share/themes/Aurora/gtk-2.0/gtkrc turpial") end),
 --  awful.key({ modkey            }, "F4",     function () sexec("emacs --name=gnus -e gnus") end),
-    awful.key({ modkey            }, "F4",     function () sexec("urxvtc -T Alpine -e alpine") end),
+  --awful.key({ modkey            }, "F4",     function () sexec("urxvtc -T Mail -e alpine") end),
+    awful.key({ modkey            }, "F4",     function () sexec("urxvtc -T Mail -e mutt") end),
 --  awful.key({ modkey            }, "g",      function () sexec("GTK2_RC_FILES=~/.gtkrc-gajim gajim") end),
 --  awful.key({ modkey            }, "g",      function () sexec("pidgin") end),
     awful.key({ modkey,           }, "g",      function () sexec("urxvtc -T Bitlbee -e screen -l -UDRS Bitlbee irssi -c bitlbee") end),
@@ -417,7 +420,8 @@ awful.rules.rules = {
                      buttons = clientbuttons } },
 
     { rule = { class = "gimp" },          properties = { floating = true  } },
-    { rule = { name  = "Alpine" },        properties = { tag = tags[1][4] } },
+    { rule = { class = "Galculator" },    properties = { floating = true  } },
+    { rule = { name  = "Mail" },          properties = { tag = tags[1][4] } },
 
     { rule = { name  = "twmode" },        properties = { tag = tags[1][4] } },
     { rule = { name  = "gnus" },        properties = { tag = tags[1][4] } },
@@ -434,7 +438,7 @@ awful.rules.rules = {
     { rule = { class = "Namoroka" },      properties = { tag = tags[1][3] } },
     { rule = { class = "Minefield" },     properties = { tag = tags[1][3] } },
     { rule = { class = "Firefox" },       properties = { tag = tags[1][3], floating = true } },
-    { rule = { class = "Chromium" },      properties = { tag = tags[1][4] } },
+    { rule = { class = "Chromium" },      properties = { tag = tags[1][3] } },
     { rule = { class = "Epiphany" },      properties = { tag = tags[1][3] } },
 
     { rule = { class = "Firefox",
