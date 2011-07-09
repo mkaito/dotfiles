@@ -92,6 +92,10 @@ function pubip() {
   curl -s http://checkip.dyndns.org/ | grep -o "[[:digit:].]\+"
 }
 
+function currency() {
+  wget -qO- "http://www.google.com/finance/converter?a=$1&from=$2&to=$3&hl=es" |  sed '/res/!d;s/<[^>]*>//g';
+}
+
 # aptitude shorthands
 alias ag='sudo aptitude'
 alias agi='ag install'
@@ -117,7 +121,7 @@ alias la='ls -a'
 alias lla='la -lh'
 
 # Moving around
-alias ...='cd ..; cd ..'
+alias ...='cd ../..'
 
 # Turn the display off
 alias lcdoff='xset dpms force off'
@@ -125,13 +129,14 @@ alias lcdoff='xset dpms force off'
 # Set the keyboard up
 alias setkb='setxkbmap es; xmodmap ~/.xmodmap'
 
-# Coding facility aliases
-alias ann="egrep '# TODO|# FIXME' * -RnT | sed -e 's/\s\+/ /g'"
-alias jek="jekyll --auto --server"
+# Coding facility aliases, mostly bundler related
 alias bjek="bundle exec jekyll --auto --server"
-alias drafts='grep -ln --color=always "published: false" ~/dev/blog/_posts/*'
 alias be='bundle exec'
+alias beu='bundle exec unicorn'
 alias ber='be rake'
+alias bec='be compass'
+alias becc='bec compile -c config/compass.rb'
+alias becw='bec watch -c config/compass.rb'
 
 # Get keycode for buttons
 alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
