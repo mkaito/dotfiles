@@ -40,3 +40,6 @@
 [submodule "dotemacs/vendor/textmate.el"]
 	path = dotemacs/vendor/textmate.el
 	url = git://github.com/defunkt/textmate.el.git
+[submodule "vimconf/bundle/vim-coffee-script"]
+	path = vimconf/bundle/vim-coffee-script
+	url = git://github.com/kchmck/vim-coffee-script.git
