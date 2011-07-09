@@ -14,25 +14,27 @@ Xft.rgba:      rgb
 !{{{ URXVT
 !
 ! General
-urxvt*termName:  rxvt-256color
+urxvt*termName:   rxvt-unicode
 urxvt*loginShell:         true
 urxvt*scrollBar:         false
 urxvt*secondaryScroll:    true
 urxvt*saveLines:         65535
 urxvt*cursorBlink:       false
 urxvt*urgentOnBell:       true
-rxvt*transparent:     	  true
-rxvt*shading:		  35
-rxvt*tint:     		  black
+rxvt*transparent:         true
+rxvt*shading:               35
+rxvt*tint:               black
 rxvt*inheritPixmap:       true
 !urxvt*override-redirect:false
 !urxvt*borderLess:       false
 !urxvt*internalBorder:       0
 !urxvt*externalBorder:       0
-URxvt*scrollTtyOutput:      false
-URxvt*scrollWithBuffer:     true
-URxvt*scrollTtyKeypress:    true
-URxvt.inputMethod:          SCIM
+URxvt*scrollTtyOutput:   false
+URxvt*scrollWithBuffer:   true
+URxvt*scrollTtyKeypress:  true
+URxvt*keysym.Home:     \033[7~
+URxvt*keysym.End:      \033[8~
+URxvt.inputMethod:        SCIM
 !
 ! Extensions
 urxvt*perl-lib:        /usr/lib/urxvt/perl/

@@ -29,13 +29,23 @@ dropboxd &
 # Start the GNU Emacs daemon
 #[[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon &
 
-urxvtd -q -f &
+urxvtd -q -f -o&
 #urxvtc -e screen -l -UDRS term &
 
 # Start the GnuPG agent and enable OpenSSH agent emulation
-if (pgrep -u "${USER}" gpg-agent); then
-  eval `cat ${gnupglog}`
-  eval `cut -d= -f1 ${gnupglog} | xargs echo export`
+#if (pgrep -u "${USER}" gpg-agent); then
+  #eval `cat ${gnupglog}`
+  #eval `cut -d= -f1 ${gnupglog} | xargs echo export`
+#else
+  #eval `gpg-agent --enable-ssh-support --daemon`
+#fi
+
+# Start the GnuPG agent and enable OpenSSH agent emulation
+gnupginf="${HOME}/.gnupg/gpg-agent.info"
+
+if pgrep -u "${USER}" gpg-agent >/dev/null 2>&1; then
+  eval `cat $gnupginf`
+  eval `cut -d= -f1 $gnupginf | xargs echo export`
 else
   eval `gpg-agent --enable-ssh-support --daemon`
 fi
