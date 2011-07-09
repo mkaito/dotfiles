@@ -39,14 +39,14 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 set wrap
-set textwidth=79
+set textwidth=0
 set formatoptions=qrn1
-set colorcolumn=85
+"set colorcolumn=79
 
 set list
 set listchars=tab:▸\ ,eol:¬
 
-colorscheme wombat256i
+colorscheme zenburn
 set nuw=6
 set number
 set clipboard=unnamedplus       " X11 System Clipboard
@@ -72,6 +72,7 @@ augroup vimrcEx
         \ endif
 
   au FocusLost * :wa
+  au BufWritePre * :%s/s+$//e   " Remove trailing whitespace upon saving
 augroup END
 
 " FuzzyFinder options.
@@ -81,9 +82,9 @@ let g:fuzzy_matching_limit = 30
 
 " {{{ Mappings & Functions
 "F7 WordProcessorOn
-:map <F7> :set wrap <CR> :setlocal spell spelllang=en_gb <CR>
+:map <F7> :set wrap <CR> :setlocal spell spelllang=en_gb linebreak nolist colorcolumn=0<CR>
 "F8 WordProcessorOff
-:map <F8> :set nowrap <CR> :set nospell <CR>
+:map <F8> :set nowrap <CR> :set nospell list colorcolumn=79<CR>
 
 " Clean up trailing whitespace in the active file
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -108,6 +109,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+nnoremap j gj
+nnoremap k gk
+
 " FuzzyFinder key maps
 map <leader>t :FuzzyFinderTextMate<CR>
 map <leader>b :FuzzyFinderBuffer<CR>
@@ -127,12 +131,28 @@ map <leader>r :call Ranger()<CR>
 
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<CR>
+
+" Periodical auto-save
+" Write to disk after 2 seconds of inactivity, once every 15 seconds.
+au BufRead,BufNewFile * let b:last_autosave=localtime()
+au CursorHold * call UpdateFile()
+au BufWritePre * let b:last_autosave=localtime()
+set updatetime=2000
+function! UpdateFile()
+  if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
+    update
+    let b:last_autosave=localtime()
+  endif
+endfunction
 " }}}
 
 " {{{ Mode options
-if !empty(matchstr($MY_RUBY_HOME, 'jruby'))
-  let g:ruby_path = join(split(glob($MY_RUBY_HOME.'/lib/ruby/*.*')."\n".glob($MY_RUBY_HOME.'/lib/rubysite_ruby/*'),"\n"),',')
-endif
+"if !empty(matchstr($MY_RUBY_HOME, 'jruby'))
+  "let g:ruby_path = join(split(glob($MY_RUBY_HOME.'/lib/ruby/*.*')."\n".glob($MY_RUBY_HOME.'/lib/rubysite_ruby/*'),"\n"),',')
+"endif
+
+" Coffee Script mode: Enable folding
+let coffee_folding = 1
 " }}}
 
 " vim:fdm=marker
