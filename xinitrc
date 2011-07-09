@@ -4,15 +4,19 @@
 
 # {{{ Environment settings
 export OOO_FORCE_DESKTOP="gnome"
-errorlog="${HOME}/.xsession-errors"
-gnupglog="${HOME}/.gnupg/gpg-agent.info"
+export errorlog="${HOME}/.xsession-errors"
+export gnupglog="${HOME}/.gnupg/gpg-agent.info"
 export DE=xfce
 export WINEPREFIX=${HOME}/.wine_64
+export XMODIFIERS=@im=SCIM
+export GTK_IM_MODULE="scim"
+export QT_IM_MODULE="scim"
 # }}}
 
 # {{{ Keyboard settings
 setxkbmap es
 xmodmap ~/.xmodmap
+scim -d &
 # }}}
 
 # {{{ Autostart
@@ -23,10 +27,8 @@ mpd ~/.mpd/mpd.conf
 dropboxd &
 
 # Start the GNU Emacs daemon
-[[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon &
+#[[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon &
 
-# Open a terminal emulator on the first tag
-#   - resume the old screen session or start a new one
 urxvtd -q -f &
 #urxvtc -e screen -l -UDRS term &
 
@@ -39,15 +41,14 @@ else
 fi
 
 # DBUS Session for nautilus, etc. 
-if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-    eval `dbus-launch --sh-syntax --exit-with-session`
-fi
+#if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+    #eval `dbus-launch --sh-syntax --exit-with-session`
+#fi
 
-# Composition manager
-# xcompmgr -as &
-xsetroot -cursor_name left_ptr &
+#xsetroot -cursor_name left_ptr &
 #}}}
 
 # {{{ Start session
 exec ck-launch-session awesome
+#exec ck-launch-session gnome-session
 # }}}
