@@ -13,9 +13,9 @@
 ;; * Code folding with markers (I don't like the automatic ones)
 ;; * Clean interface, low contrast colour theme.
 ;; * Snippet expansion
-;; 
+;;
 ;; Organization:
-;; 
+;;
 ;; init.el should contain all common configuration. One file per major
 ;; mode, containing all and any configuration relating to this mode,
 ;; and one file per major configuration topic.
@@ -25,14 +25,14 @@
 (setq load-path
       (append
        (list
-	"~/.emacs.d"
+        "~/.emacs.d"
         "~/.emacs.d/vendor"
         "~/.emacs.d/vendor/twittering-mode"
         "~/.emacs.d/vendor/haml-mode"
         "~/.emacs.d/vendor/sass-mode"
-	"~/.emacs.d/vendor/textmate.el"
+        "~/.emacs.d/vendor/textmate.el"
         )
-        load-path))
+       load-path))
 ;;   }}}
 
 ;;   {{{ Recompile packages
@@ -157,7 +157,7 @@
 (add-hook 'ruby-mode-hook 'turn-on-real-auto-save)
 (add-hook 'markdown-mode-hook 'turn-on-real-auto-save)
 
-(setq real-auto-save-interval 2) ;; in seconds
+(setq real-auto-save-interval 3) ;; in seconds
 
 ;; Split window navigation: S-arrow
 (windmove-default-keybindings)
@@ -303,9 +303,9 @@
 ;;
 (setq twittering-initial-timeline-spec-string
       '("michishigekaito/fansubs"
-	"michishigekaito/animanga"
-	"michishigekaito/design"
-	"michishigekaito/code"
+        "michishigekaito/animanga"
+        "michishigekaito/design"
+        "michishigekaito/code"
         ":direct_messages"
         ":mentions"
         ":home"))
@@ -341,6 +341,10 @@
 ;; (defalias 'fold          'fold-enter-fold-mode-close-all-folds)
 ;; }}}
 
+;; {{{ Keys
+(global-set-key (kbd "M--") 'hippie-expand)
+;; }}}
+
 ;; {{{ Misc
 
 ;; Smart comments. Original idea from:
@@ -356,8 +360,8 @@
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
 
-(global-set-key (kbd "\M-;") 'comment-dwim-line)
-(global-set-key (kbd "\C-c \C-c") 'comment-dwim-line)
+(global-set-key (kbd "M-;") 'comment-dwim-line)
+(global-set-key (kbd "C-c C-c") 'comment-dwim-line)
 
 (defun unfill-region (begin end)
   "Remove all linebreaks in a region but leave paragraphs,
@@ -417,7 +421,7 @@
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
-(define-key global-map (kbd "M-RET") 'open-line-below-and-go-there)
+(global-set-key (kbd "M-RET") 'open-line-below-and-go-there)
 
 (defun iwb ()
   "indent whole buffer"
@@ -425,6 +429,8 @@
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil)
   (untabify (point-min) (point-max)))
+
+(global-set-key (kbd "C-c i b") 'iwb)
 ;; }}}
 
 ;; {{{ Yasnippet
@@ -452,4 +458,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(browse-url-browser-function (quote browse-url-generic))
- '(browse-url-generic-program "/usr/bin/firefox"))
+ '(browse-url-generic-program "/usr/bin/chromium"))
