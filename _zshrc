@@ -10,6 +10,10 @@ export VISUAL="vim"
 export EDITOR="${VISUAL}"
 export BROWSER="firefox"
 export XTERM="urxvt"
+export MPD_HOST=127.0.0.1
+export MPD_PORT=6660
+export TDL_DATABASE=~/.tdldb
+export PERL_SIGNALS=unsafe
 # }}}
 
 source ~/dev/dotfiles/alias.zshrc
@@ -181,3 +185,9 @@ function setprompt () {
 setprompt
 # }}}
 # }}}
+
+export PERL_LOCAL_LIB_ROOT="/home/chris/perl5";
+export PERL_MB_OPT="--install_base /home/chris/perl5";
+export PERL_MM_OPT="INSTALL_BASE=/home/chris/perl5";
+export PERL5LIB="/home/chris/perl5/lib/perl5/x86_64-linux-thread-multi:/home/chris/perl5/lib/perl5";
+export PATH="/home/chris/perl5/bin:$PATH";
