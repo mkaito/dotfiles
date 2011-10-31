@@ -1,0 +1,94 @@
+#!/usr/bin/ruby -W
+require 'trollop'
+
+STDOUT.sync = true
+
+opts = Trollop::options do
+  version "rubydoro 0.0a"
+  banner <<-EOS
+Pomodoro timer for the console, written in Ruby.
+
+Usage:
+        rubydoro [options]
+
+[options]:
+
+  EOS
+  opt :pomodoro, "Duration of a pomodoro.", :default => "25m"
+  opt :break, "Duration of a break.", :default => "5m"
+  opt :interval, "Time between notifications of time left for pomodoros.", :default => "10m"
+  opt :skip, "Do not time the break period."
+  opt :loop, "Start a new pomodoro automatically."
+  opt :debug, "Verbosity control"
+end
+
+if opts[:debug]
+  puts "Rubydoro running:"
+  puts "  Pomodoro length: #{opts[:pomodoro]}."
+  puts "  Break length: #{opts[:break]}."
+  puts "  Loop: #{opts[:loop]}."
+  puts "  Skip break: #{opts[:skip]}"
+  puts "  Task: #{opts[:task]}"
+end
+
+def parse_time(t)
+  case t[-1]
+    when "s" then t.to_i
+    when "h" then t.to_i * 60 * 60
+    when "d" then t.to_i * 60 * 60 * 24
+    # "m" or nothing
+    else t.to_i * 60
+  end
+end
+
+def pretify_time(t)
+  case t
+    # Contains only seconds
+    when 0..59 then "#{t}s"
+    # Contains minutes
+    when 60..3599 then "#{t/60}:#{t%60}"
+    # Contains hours
+    when 3600..86399 then "#{t/3600}:#{t%3600/60}:#{t%3600%60}"
+  end
+end
+
+def notify(what)
+  hl = "#{what.capitalize} is over!"
+  if what == "break"
+    if opts[:loop]
+      sl = "The break is over. A new pomodoro has already started."
+    else
+      sl = "The break is over."
+    end
+  else
+    sl = "The pomodoro is over. Time for a break!"
+  end
+  `notify-send "#{hl}" "#{sl}"`
+end
+
+# TODO: Rewrite as triggered redraw actions, otherwise computing will delay timing.
+def countdown(time, b = false)
+  ts = Time.now.strftime("%H:%M")
+  what = b ? "break" : "pomodoro"
+  puts "#{time} #{what} started at #{ts}"
+
+  # Parse time into seconds for sleep loop
+  x = parse_time time
+
+  while x > 0 do
+    # Pretty display the time left
+    td = pretify_time(x)
+    print "\rTime left: #{td}"
+    x -= 1
+    sleep 1
+  end
+  notify what
+  puts "\r#{what.capitalize} over!                                               "
+end
+
+begin
+  countdown(opts[:pomodoro], opts[:task])
+  countdown(opts[:break], true) unless opts[:"skip"]
+end while opts[:loop]
+
+# vim:ft=ruby

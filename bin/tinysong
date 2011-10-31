@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+require 'net/http'
+require 'json'
+require 'cgi'
+require 'extlib'
+
+playing = `mpc current`.chomp
+key = "6e840b3bd1f80fcce5e0d36ebdf1faa3"
+url = "http://tinysong.com/b/#{CGI.escape(playing)}?format=json&key=#{key}"
+
+resp = Net::HTTP.get_response(URI.parse(url))
+tiny = JSON.parse(resp.body)
+
+unless tiny.blank?
+  puts "First match: #{tiny['ArtistName']} ♪ #{tiny['SongName']}"
+  puts "#nowplaying \[#{playing}\] #{tiny["Url"]}"
+else
+  puts "Found nothing. Quit listening to weird shit."
+end

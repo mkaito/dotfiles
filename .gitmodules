@@ -43,3 +43,18 @@
 [submodule "vimconf/bundle/vim-coffee-script"]
 	path = vimconf/bundle/vim-coffee-script
 	url = git://github.com/kchmck/vim-coffee-script.git
+[submodule "vimconf/bundle/snipmate"]
+	path = vimconf/bundle/snipmate
+	url = git://github.com/garbas/vim-snipmate.git
+[submodule "vimconf/bundle/tlib"]
+	path = vimconf/bundle/tlib
+	url = https://github.com/tomtom/tlib_vim.git
+[submodule "vimconf/bundle/mw-utils"]
+	path = vimconf/bundle/mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+[submodule "vimconf/bundle/snipmate-snippets"]
+	path = vimconf/bundle/snipmate-snippets
+	url = https://github.com/honza/snipmate-snippets.git
+[submodule "dotemacs/vendor/emacs-liquid"]
+	path = dotemacs/vendor/emacs-liquid
+	url = https://github.com/rehanift/Emacs-Liquid.git
