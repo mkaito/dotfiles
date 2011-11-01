@@ -108,7 +108,8 @@ case $1 in
           mv $ppath "${POSTS_PATH}/${pubstr}"
           sed -i 's/published:\sfalse/published: true/' "${POSTS_PATH}/${pubstr}"
         else
-          gawk 'NR>1 && $ppath=="---" {printf"published: true\n"}{print}' $ppath > "${POSTS_PATH}/${pubstr}"
+          gawk 'NR>1 && $ppath=="---" {printf"published: true\n"}{print}'\
+            $ppath > "${POSTS_PATH}/${pubstr}"
           rm $ppath
         fi
       fi
