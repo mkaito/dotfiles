@@ -15,7 +15,7 @@ export PERL_SIGNALS=unsafe
 export WINEDEBUG=-all
 # }}}
 
-source ~/dev/dotfiles/alias.zshrc
+source ~/dev/dotfiles/zsh/_alias
 
 # {{{ ZSH settings
 setopt emacs
