@@ -1,0 +1,9 @@
+out_to_console yes
+out_to_x no
+background no
+update_interval 1
+total_run_times 0
+use_spacer none
+
+TEXT
+${if_mpd_playing}[♫ ${mpd_title} ${mpd_elapsed}/${mpd_length}]${endif}${if_existing "/proc/acpi/battery"}[⚡${battery}]${endif}[${cpu cpu0}%|$memperc%]${if_up wlan0}[${wireless_link_qual wlan0}% ↓${downspeedf wlan0}KiB ↑${upspeedf wlan0}KiB]${endif}${if_up eth0}[↓${downspeedf eth0}KiB ↑${upspeedf eth0}KiB]${endif}[${time %H:%M}]
