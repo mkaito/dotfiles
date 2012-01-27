@@ -37,7 +37,7 @@
 [submodule "vimconf/bundle/vimoutliner"]
 	path = vimconf/bundle/vimoutliner
 	url = git://github.com/vimoutliner/vimoutliner.git
-[submodule "dotemacs/vendor/textmate.el"]
+[submodule "dotemacs/vendor/textmate-mode"]
 	path = dotemacs/vendor/textmate.el
 	url = git://github.com/defunkt/textmate.el.git
 [submodule "vimconf/bundle/vim-coffee-script"]
@@ -58,3 +58,6 @@
 [submodule "dotemacs/vendor/emacs-liquid"]
 	path = dotemacs/vendor/emacs-liquid
 	url = https://github.com/rehanift/Emacs-Liquid.git
+[submodule "irssi/scripts/xdccget"]
+	path = irssi/scripts/xdccget
+	url = https://code.google.com/p/xdccget/

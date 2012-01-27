@@ -6,8 +6,8 @@ export SAVEHIST=10000
 export LESSHISTFILE="-"
 export PAGER="less"
 export READNULLCMD="${PAGER}"
-export VISUAL="vim"
-export EDITOR="${VISUAL}"
+export VISUAL="emacsclient"
+export EDITOR="emacsclient"
 export BROWSER="firefox"
 export XTERM="urxvt"
 export TDL_DATABASE=~/.tdldb
@@ -118,10 +118,10 @@ function d () {
 	 sact=""
 }
 
-. ${HOME}/dev/bin/z.sh
-function precmd () {
-  z --add "$(pwd -P)"
-}
+#. ${HOME}/dev/bin/z.sh
+#function precmd () {
+#  z --add "$(pwd -P)"
+#}
 
 # {{{ Terminal and prompt
 # function preexec () {

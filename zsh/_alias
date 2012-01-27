@@ -1,3 +1,4 @@
+# -*- mode: sh -*-
 # {{{ Aliases
 
 # mplayer & youtube
@@ -6,18 +7,28 @@ function myt() {
   m -fs $(curl -s "http://www.youtube.com/get_video_info?&video_id=$1" | echo -e $(sed 's/%/\\x/g;s/.*\(v[0-9]\.lscache.*\)/http:\/\/\1/g') | grep -oP '^[^|,]*')
 }
 
+# Encrypted files
+function cryptouch() {
+    echo '-*- mode: org; epa-file-encrypt-to: ("me@mkaito.com") -*-' > $1
+}
+alias ct=cryptouch
+
 # Eve online
-alias eve='WINEPREFIX=~/.wine_64 wine explorer /desktop=0,1440x888 "C:\EVE\eve.exe"'
-alias eve1='WINEPREFIX=~/.wine_64 wine explorer /desktop=1,1440x888 "C:\EVE\eve.exe"'
+alias eve='wine explorer /desktop=0,1920x1068 "C:\EVE\eve.exe"'
+alias eve1='wine explorer /desktop=1,1920x1068 "C:\EVE1\eve.exe"'
+alias eve2='wine explorer /desktop=2,1920x1068 "C:\EVE2\eve.exe"'
+alias eve22='wine explorer /desktop=2,960x1068 "C:\EVE2\eve.exe" &; wine explorer /desktop=1,960x1068 "C:\EVE1\eve.exe" &'
 function killeve() {
    ps aux | grep -iE '(wine|exefile|ccpbrowser|system32|eve)' | awk '{print $2}' | xargs kill
 }
+
 function minertimer () {
     [ "$1" ] && t="$1"  || t=120
     echo "Setting recurring alert every ${t} seconds."
     while true; do
+      sudo beep;
+      echo 'naughty.notify({title = "Cycle", text = "Your mining cycle is over, please empty your cargo", timeout = 20, screen = 2})' | awesome-client -
       sleep "$t";
-      beep;
     done
 }
 
@@ -178,14 +189,9 @@ alias gi='sudo gem install'
 alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
 
 # Emacs
-alias ec="emacsclient --create-frame --no-wait"
-alias ect="emacsclient --tty"
-alias org='emacs -name org --funcall org-agenda-list &'
-
-# Netcfg
-alias n="sudo netcfg"
-alias na="n -a"
-alias nu="na && n"
+alias ec="emacsclient -nc"
+alias ect="emacsclient -nw"
+alias org='emacs -name org -f org-agenda-list &'
 
 # }}}
 
