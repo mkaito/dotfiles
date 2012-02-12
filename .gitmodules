@@ -1,6 +1,3 @@
-[submodule "dotemacs/vendor/twittering-mode"]
-	path = dotemacs/vendor/twittering-mode
-	url = https://github.com/hayamiz/twittering-mode.git
 [submodule "vimconf/bundle/nerdcommenter"]
 	path = vimconf/bundle/nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
