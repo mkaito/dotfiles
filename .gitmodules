@@ -61,3 +61,12 @@
 [submodule "irssi/scripts/xdccget"]
 	path = irssi/scripts/xdccget
 	url = https://code.google.com/p/xdccget/
+[submodule "vimconf/bundle/coffee-script"]
+	path = vimconf/bundle/coffee-script
+	url = https://github.com/kchmck/vim-coffee-script.git
+[submodule "dotemacs/vendor/coffee-mode"]
+	path = dotemacs/vendor/coffee-mode
+	url = https://github.com/defunkt/coffee-mode.git
+[submodule "dotemacs/vendor/smart-tabs-mode"]
+	path = dotemacs/vendor/smart-tabs-mode
+	url = https://github.com/jcsalomon/smarttabs.git
