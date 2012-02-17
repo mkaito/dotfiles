@@ -31,12 +31,6 @@
 [submodule "vimconf/bundle/vim-colors-solarized"]
 	path = vimconf/bundle/vim-colors-solarized
 	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule "vimconf/bundle/vimoutliner"]
-	path = vimconf/bundle/vimoutliner
-	url = git://github.com/vimoutliner/vimoutliner.git
-[submodule "dotemacs/vendor/textmate-mode"]
-	path = dotemacs/vendor/textmate.el
-	url = git://github.com/defunkt/textmate.el.git
 [submodule "vimconf/bundle/vim-coffee-script"]
 	path = vimconf/bundle/vim-coffee-script
 	url = git://github.com/kchmck/vim-coffee-script.git
@@ -67,3 +61,9 @@
 [submodule "dotemacs/vendor/smart-tabs-mode"]
 	path = dotemacs/vendor/smart-tabs-mode
 	url = https://github.com/jcsalomon/smarttabs.git
+[submodule "dotemacs/vendor/color-theme-ir-black"]
+	path = dotemacs/vendor/color-theme-ir-black
+	url = https://github.com/burke/color-theme-ir-black.git
+[submodule "dotemacs/vendor/nginx-mode"]
+	path = dotemacs/vendor/nginx-mode
+	url = https://github.com/ajc/nginx-mode.git
