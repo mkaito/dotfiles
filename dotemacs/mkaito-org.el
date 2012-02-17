@@ -15,29 +15,43 @@
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 
-;; MobileOrg
-;; Set to the name of the file where new notes will be stored
-;;(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
-;; Set to <your Dropbox root directory>/MobileOrg.
-;;(setq org-mobile-directory "~/Dropbox/MobileOrg")
+;; key based encryption of node contents
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+(setq org-crypt-key "98F29617")		; me@mkaito.com
+(add-hook 'org-mode-hook '(lambda () (auto-save-mode 0)))
 
-;;(setq org-agenda-custom-commands
-;;      '(("w" todo "TODO")
-;;       ("h" agenda "" ((org-agenda-show-all-dates nil)))
-;;       ("W" agenda "" ((org-agenda-ndays 21)
-;;                       (org-agenda-show-all-dates nil)))
-;;       ("A" agenda ""
-;;        ((org-agenda-ndays 1)
-;;         (org-agenda-overriding-header "Today")))))
+;; Custom key bindings
+(add-hook 'org-mode-hook 
+          '(lambda ()
+            (local-set-key (kbd "C-c d") 'org-decrypt-entry)
+	    (local-set-key "\M-n" 'outline-next-visible-heading)
+            (local-set-key "\M-p" 'outline-previous-visible-heading)
+	    ;; yasnippet (allow yasnippet to do its thing in org files)
+	    (org-set-local 'yas/trigger-key [tab])
+            (define-key yas/keymap [tab] 'yas/next-field-group)))
+
+;; Mobileorg
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/.org/flagged.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+
+(setq org-agenda-custom-commands
+     '(("w" todo "TODO")
+       ("n" todo "NOTE")
+      ("h" agenda "" ((org-agenda-show-all-dates nil)))
+      ("W" agenda "" ((org-agenda-ndays 21)
+                      (org-agenda-show-all-dates nil)))
+      ("A" agenda ""
+       ((org-agenda-ndays 1)
+        (org-agenda-overriding-header "Today")))))
 
 ;; Org-mode customization
 (setq org-todo-keywords
       '((sequence "TODO(t)" "|" "WAITING" "DONE")
-        (sequence "NOTE(n)" "|" "REVIEWED")
-        (sequence "DOWNLOAD(d)" "DOWNLOADING" "|" "DOWNLOADED")
-        (sequence "READ(r)" "READING" "|" "DONE")
-	(sequence "TO WATCH(w)" "WATCHING" "|" "WATCHED")
-        (sequence "CALL(c)" "|" "WAITING" "CALLED")
+        (sequence "|" "NOTE(n)")
         (sequence "|" "CANCELED(x)")))
 
 (setq org-tag-alist '((:startgroup . nil)
@@ -50,7 +64,7 @@
 
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
-      (list "~/.org/personal.org" "~/.org/notes.org" "~/.org/permanent.org" "~/.org/work.org" "~/.org/shows.org")
+      (list "~/.org/personal.org" "~/.org/refile.org")
       )
 
 ;; Refile targets
@@ -65,14 +79,14 @@
 (org-remember-insinuate)
 
 ;; Notes file
-(setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-default-notes-file (concat org-directory "/refile.org"))
 ;; Notes templates
 (setq org-remember-templates
-      '(("Note"     ?n "*** NOTE %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-        ("Download" ?d "*** DOWNLOAD %?\n    %u\n    %i\n    %a"  "~/.org/notes.org" "Notes")
-        ("Read"     ?r "*** READ %?\n    %u\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-        ("Todo"     ?t "*** TODO %?\n    %t\n    %i\n    %a"      "~/.org/notes.org" "Notes")
-        ("Call"     ?c "*** CALL %?\n    %T\n    %i\n    %a"      "~/.org/notes.org" "Notes")))
+      '(("Note"     ?n "*** NOTE %?\n    %u\n    %i\n    %a"      "~/.org/refile.org" "Notes")
+        ("Download" ?d "*** TODO: Download %?\n    %u\n    %i\n    %^L"  "~/.org/refile.org" "Notes")
+        ("Read"     ?r "*** TODO: Read %?\n    %u\n    %i\n    %a"      "~/.org/refile.org" "Notes")
+        ("Todo"     ?t "*** TODO %?\n    %t\n    %i\n    %a"      "~/.org/refile.org" "Notes")
+        ("Call"     ?c "*** TODO: Call %?\n    %T\n    %i\n    %a"      "~/.org/refile.org" "Notes")))
 
 ;; Remember frames
 ;;   - $ emacsclient -e '(make-remember-frame)'
