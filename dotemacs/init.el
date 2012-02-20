@@ -158,8 +158,8 @@
 (windmove-default-keybindings)
 (setq windmove-wrap-around t)
 
-(require 'epa-file)
-(epa-file-enable)
+;; (require 'epa-file)
+;; (epa-file-enable)
 
 (require 'ido)
 (ido-mode t)
@@ -185,7 +185,7 @@
       "M-x "
       (all-completions "" obarray 'commandp))))))
 
-(autoload 'find-file-in-project "find-file-in-project.el" "Find file in project" t)
+(require 'find-file-in-project)
 (setq ffip-find-options "-not -regex \".*vendor.*\"")
 
 ;; Assume default-directory if no project root could be found
@@ -194,7 +194,23 @@
 				     (locate-dominating-file default-directory ffip-project-file)
 				     default-directory)))
 
-(global-set-key (kbd "C-x f") 'find-file-in-project)
+(setq ffip-patterns
+      (append
+       (list
+	"Gemfile"
+	"Procfile"
+	"Rakefile"
+	"*.gpg"
+	"*.org"
+	"config.ru"
+	"*.yaml"
+	"*.yml"
+	"*.watchr"
+	"*.rake"
+	)
+       ffip-patterns))
+
+(global-set-key (kbd "C-c C-f") 'find-file-in-project)
 
 ;; Modes
 
@@ -217,7 +233,7 @@
 
 (defun coffee-custom ()
   "coffee-mode-hook"
-  (set (make-local-variable 'tab-width) 2))
+  (set (make-local-variable 'tab-width) 4))
 
 (add-hook 'coffee-mode-hook '(lambda() (coffee-custom)))
 
@@ -259,26 +275,31 @@
   (add-to-list 'auto-mode-alist '("\\awesomerc$" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\gitconfig$" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\screenrc$"	 . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\pinerc$"		 . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\zshrc$"		 . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\pinerc$"	 . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\zshrc$"	 . conf-mode))
   )
 ;;
 ;; Ruby mode for Gemfile and config.ru
-(add-to-list 'auto-mode-alist '("\\Gemfile$"		 . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$"		 . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\Rakefile$"		 . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\config\.ru$"	 . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\Gemfile$"	 . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$"	 . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake$"	 . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\Rakefile$"	 . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\config\.ru$"  . ruby-mode))
 
 ;; Ruby mode hooks
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook 'ruby-mode-hook
+	  '(lambda ()
+	     (setq ruby-indent-level 4)
+	     (setq tab-width 4)))
 
 ;; Haml, Sass & Less
 (autoload 'haml-mode "haml-mode" "HAML mode" t)
 (autoload 'sass-mode "sass-mode" "SASS mode" t)
-(add-to-list 'auto-mode-alist '("\\.haml$"				. haml-mode))
-(add-to-list 'auto-mode-alist '("\\.scss$"				. sass-mode))
-(add-to-list 'auto-mode-alist '("\\.sass$"				. sass-mode))
-(add-to-list 'auto-mode-alist '("\\.less$"				. css-mode))
+(add-to-list 'auto-mode-alist '("\\.haml$"	. haml-mode))
+(add-to-list 'auto-mode-alist '("\\.scss$"	. sass-mode))
+(add-to-list 'auto-mode-alist '("\\.sass$"	. sass-mode))
+(add-to-list 'auto-mode-alist '("\\.less$"	. css-mode))
 
 ;; Code Folding
 ;; - http://www.emacswiki.org/emacs/FoldingMode
@@ -340,7 +361,7 @@
 ;; Indentation
 (require 'smart-tabs-mode)
 (setq-default indent-tabs-mode t)
-(setq tab-width 2)
+(setq tab-width 4)
 
 ;; C/C++
 (add-hook 'c-mode-hook 'smart-tabs-mode-enable)
@@ -422,6 +443,17 @@
   (if (bufferp (get-file-buffer "~/.emacs.d/init.el"))
       (save-buffer (get-buffer "~/.emacs.d/init.el")))
   (load-file "~/.emacs.d/init.el"))
+
+(defun sort-words (reverse beg end)
+  "Sort words in region alphabetically, in REVERSE if negative.
+    Prefixed with negative \\[universal-argument], sorts in reverse.
+
+    The variable `sort-fold-case' determines whether alphabetic case
+    affects the sort order.
+
+    See `sort-regexp-fields'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
 
 ;; Yasnippet
 (require 'yasnippet)
