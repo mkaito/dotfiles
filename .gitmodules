@@ -67,3 +67,6 @@
 [submodule "dotemacs/vendor/nginx-mode"]
 	path = dotemacs/vendor/nginx-mode
 	url = https://github.com/ajc/nginx-mode.git
+[submodule "dotemacs/vendor/yasnippet"]
+	path = dotemacs/vendor/yasnippet
+	url = https://github.com/capitaomorte/yasnippet.git
