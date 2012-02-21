@@ -1,6 +1,6 @@
 *.old
 */emacs-starter-kit/*
 */auto-save-list/*
-**~
+**/*~
 dotemacs/abbrev_defs
 *.elc
