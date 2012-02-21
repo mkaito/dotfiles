@@ -33,6 +33,7 @@
 	"~/.emacs.d/vendor/coffee-mode"
 	"~/.emacs.d/vendor/smart-tabs-mode"
 	"~/.emacs.d/vendor/nginx-mode"
+	"~/.emacs.d/vendor/yasnippet"
 	)
        load-path))
 
@@ -207,6 +208,7 @@
 	"*.yml"
 	"*.watchr"
 	"*.rake"
+	"*.gemspec"
 	)
        ffip-patterns))
 
@@ -455,12 +457,25 @@
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\w+" "\\&" beg end))
 
+
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+  )
+(global-set-key (kbd "C-c d") 'duplicate-line)
+
 ;; Yasnippet
 (require 'yasnippet)
-(yas/initialize)
+(yas/global-mode 1)
+;; (yas/initialize)
 
 ;; Place my own snippet stuff in mysnippets
-(setq yas/root-directory '("~/.emacs.d/mysnippets"
+(setq yas/root-directory '("~/.emacs.d/snippets"
 			   "~/.emacs.d/vendor/snippets"))
 (mapc 'yas/load-directory yas/root-directory)
 (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/completing-prompt))
