@@ -34,18 +34,12 @@
 [submodule "vimconf/bundle/vim-coffee-script"]
 	path = vimconf/bundle/vim-coffee-script
 	url = git://github.com/kchmck/vim-coffee-script.git
-[submodule "vimconf/bundle/snipmate"]
-	path = vimconf/bundle/snipmate
-	url = git://github.com/garbas/vim-snipmate.git
 [submodule "vimconf/bundle/tlib"]
 	path = vimconf/bundle/tlib
 	url = https://github.com/tomtom/tlib_vim.git
 [submodule "vimconf/bundle/mw-utils"]
 	path = vimconf/bundle/mw-utils
 	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
-[submodule "vimconf/bundle/snipmate-snippets"]
-	path = vimconf/bundle/snipmate-snippets
-	url = https://github.com/honza/snipmate-snippets.git
 [submodule "dotemacs/vendor/emacs-liquid"]
 	path = dotemacs/vendor/emacs-liquid
 	url = https://github.com/rehanift/Emacs-Liquid.git
@@ -70,3 +64,21 @@
 [submodule "dotemacs/vendor/yasnippet"]
 	path = dotemacs/vendor/yasnippet
 	url = https://github.com/capitaomorte/yasnippet.git
+[submodule "vimconf/bundle/vim-orgmode"]
+	path = vimconf/bundle/vim-orgmode
+	url = https://github.com/jceb/vim-orgmode.git
+[submodule "vimconf/bundle/speeddating"]
+	path = vimconf/bundle/speeddating
+	url = https://github.com/tpope/vim-speeddating.git
+[submodule "solarized"]
+	path = solarized
+	url = https://github.com/altercation/solarized.git
+[submodule "vimconf/bundle/vim-addon-mw-utils"]
+	path = vimconf/bundle/vim-addon-mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+[submodule "vimconf/bundle/vim-snipmate"]
+	path = vimconf/bundle/vim-snipmate
+	url = git://github.com/garbas/vim-snipmate.git
+[submodule "vimconf/bundle/snipmate-snippets"]
+	path = vimconf/bundle/snipmate-snippets
+	url = https://github.com/honza/snipmate-snippets.git

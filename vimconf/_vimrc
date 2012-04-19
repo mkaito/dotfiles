@@ -8,7 +8,7 @@ set nocompatible
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set expandtab
+set noexpandtab
 
 set encoding=utf-8
 set scrolloff=3
@@ -24,9 +24,11 @@ set backspace=indent,eol,start
 set laststatus=2
 set undofile
 
-let mapleader = ","
-let g:mapleader = ","
+"let mapleader = "\"
+"let g:mapleader = "\"
 
+nnoremap ; :
+vnoremap ; :
 nnoremap / /\v
 vnoremap / /\v
 set ignorecase
@@ -43,10 +45,11 @@ set textwidth=0
 set formatoptions=qrn1
 "set colorcolumn=79
 
-set list
-set listchars=tab:▸\ ,eol:¬
+"set list
+"set listchars=tab:▸\ ,eol:¬
 
-colorscheme zenburn
+colorscheme solarized
+set background=dark
 set nuw=6
 set number
 set clipboard=unnamedplus       " X11 System Clipboard
