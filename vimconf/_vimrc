@@ -43,7 +43,7 @@ vnoremap <tab> %
 set wrap
 set textwidth=0
 set formatoptions=qrn1
-"set colorcolumn=79
+set colorcolumn=79
 
 "set list
 "set listchars=tab:▸\ ,eol:¬
@@ -52,6 +52,7 @@ colorscheme solarized
 set background=dark
 set nuw=6
 set number
+set cursorline
 set clipboard=unnamedplus       " X11 System Clipboard
 set autowrite
 set autoread
@@ -79,7 +80,7 @@ augroup vimrcEx
 augroup END
 
 " FuzzyFinder options.
-let g:fuzzy_ignore = "*.log;gems/*;vendor/*;.gitignore;*.pyo"
+let g:fuzzy_ignore = "*.log;gems/*;vendor/*;.gitignore;*.pyo;*.pyc;*.hi;*.o;core/*;deps/*;rel/*;*.beam;*.erl;*.hrl;*.svg;*.psd"
 let g:fuzzy_matching_limit = 30
 " }}}
 
@@ -112,12 +113,18 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Move around split lines
 nnoremap j gj
 nnoremap k gk
 
 " FuzzyFinder key maps
 map <leader>t :FuzzyFinderTextMate<CR>
+map <leader>r :FuzzyFinderTextMateRefreshFiles<CR>
 map <leader>b :FuzzyFinderBuffer<CR>
+
+" NERDCommenter
+" Select alternate comment delimiters for haskell files (-- instead of {- -})
+"au BufRead,BufNewFile *.hs NERDComAltDelim()
 
 
 " <leader>r will spawn a Ranger instance in cwd() and open the selected file
@@ -136,11 +143,11 @@ map <leader>r :call Ranger()<CR>
 map <leader>e :e! ~/.vimrc<CR>
 
 " Periodical auto-save
-" Write to disk after 2 seconds of inactivity, once every 15 seconds.
+" Write to disk after 1 second of inactivity, once every 15 seconds.
 au BufRead,BufNewFile * let b:last_autosave=localtime()
 au CursorHold * call UpdateFile()
 au BufWritePre * let b:last_autosave=localtime()
-set updatetime=2000
+set updatetime=1000
 function! UpdateFile()
   if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
     update
@@ -150,12 +157,25 @@ endfunction
 " }}}
 
 " {{{ Mode options
+" {{{ Ruby Scripts
 "if !empty(matchstr($MY_RUBY_HOME, 'jruby'))
   "let g:ruby_path = join(split(glob($MY_RUBY_HOME.'/lib/ruby/*.*')."\n".glob($MY_RUBY_HOME.'/lib/rubysite_ruby/*'),"\n"),',')
 "endif
+" }}}
 
-" Coffee Script mode: Enable folding
+" {{{Coffee Script mode: Enable folding
 let coffee_folding = 1
+" }}}
+
+" {{{ Ledger
+au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
+" }}}
+
+" {{{ haskellmode-vim
+au BufEnter *.hs compiler ghc
+let g:haddock_browser="/usr/bin/firefox"
+" }}}
+
 " }}}
 
 " vim:fdm=marker

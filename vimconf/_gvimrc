@@ -1,4 +1,5 @@
-colorscheme solarized
+colorscheme wombat
 set background=dark
 set go=a
-set guifont=Terminus\ 9
+"set guifont=Terminus\ 9
+set guicursor+=a:blinkon0
