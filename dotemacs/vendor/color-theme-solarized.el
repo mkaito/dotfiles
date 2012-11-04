@@ -1,0 +1,1 @@
+/home/chris/dev/dotfiles/solarized/emacs-colors-solarized/color-theme-solarized.el
