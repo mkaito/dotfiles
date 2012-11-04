@@ -1,18 +1,25 @@
 # {{{ Environment
-export PATH="${PATH}:${HOME}/dev/bin:${HOME}/.cabal/bin"
+export PATH="${HOME}/dev/bin:${HOME}/.cabal/bin:${HOME}/.gem/ruby/1.9.1/bin:"${PATH}
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
 export LESSHISTFILE="-"
 export PAGER="less"
 export READNULLCMD="${PAGER}"
-export VISUAL="emacsclient"
-export EDITOR="emacsclient"
+export VISUAL="vim"
+export EDITOR="vim"
+export ALTERNATE_EDITOR=””
 export BROWSER="firefox"
 export XTERM="urxvt"
-export TDL_DATABASE=~/.tdldb
 export PERL_SIGNALS=unsafe
 export WINEDEBUG=-all
+
+export ANDROIDSDK="/opt/android-sdk"
+export ANDROIDNDK="/opt/android-ndk"
+export ANDROIDNDKVER=r8
+export ANDROIDAPI=8
+
+export LEDGER_FILE="~/ledger.ldg"
 # }}}
 
 source ~/dev/dotfiles/zsh/_alias
@@ -33,10 +40,12 @@ setopt histreduceblanks histignorespace inc_append_history
 # Prompt requirements
 setopt extended_glob prompt_subst
 autoload colors zsh/terminfo
+autoload -U zmv
 
 # New style completion system
-fpath=(~/dev/dotfiles/zsh/complete $fpath)
+fpath=(/home/chris/dev/dotfiles/zsh/completion $fpath)
 autoload -U compinit; compinit
+compdef '_dispatch git git' hub
 #  * List of completers to use
 zstyle ":completion:*" completer _complete _match _approximate
 #  * Allow approximate
@@ -72,8 +81,8 @@ key[PageUp]=${terminfo[kpp]}
 key[PageDown]=${terminfo[knp]}
 
 for k in ${(k)key} ; do
-  # $terminfo[] entries are weird in ncurses application mode...
-  [[ ${key[$k]} == $'\eO'* ]] && key[$k]=${key[$k]/O/[}
+	# $terminfo[] entries are weird in ncurses application mode...
+	[[ ${key[$k]} == $'\eO'* ]] && key[$k]=${key[$k]/O/[}
 done
 unset k
 
@@ -89,18 +98,18 @@ unset k
 # }}}
 
 # {{{ Functions
-#function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
+function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
 function pmem ()  { ps -o rss,comm -p `pgrep "$1"` }
 function dsync () { rsync -lprt --progress --stats --delete "$1/" "$2/" }
 
 function snap () {
-    [ "$2" ] && tmout="$2"  || tmout=5
-    [ "$3" ] && format="$3" || format=png
-    fname="${HOME}/$1-`date +%d%m%y-%H%M`"
-    for ((i=${tmout}; i>=1; i--)) do; echo -n "${i}.. "; sleep 1; done
-    import -window root -quality 100 "${fname}.${format}"
-    convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
-    echo ": ${fname}.${format}"
+		[ "$2" ] && tmout="$2"  || tmout=5
+		[ "$3" ] && format="$3" || format=png
+		fname="${HOME}/$1-`date +%d%m%y-%H%M`"
+		for ((i=${tmout}; i>=1; i--)) do; echo -n "${i}.. "; sleep 1; done
+		import -window root -quality 100 "${fname}.${format}"
+		convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
+		echo ": ${fname}.${format}"
 }
 
 function d () {
@@ -109,9 +118,9 @@ function d () {
 	 bspath="/etc/rc.d/"
 
 	 if [[ -f "${bspath}${sid}" ]]; then
-	    sudo "${bspath}${sid}" "${sact}";
+			sudo "${bspath}${sid}" "${sact}";
 	 else
-	    echo "Service $1 not found"
+			echo "Service $1 not found"
 	 fi
 
 	 sid=""
@@ -120,17 +129,17 @@ function d () {
 
 #. ${HOME}/dev/bin/z.sh
 #function precmd () {
-#  z --add "$(pwd -P)"
+	#z --add "$(pwd -P)"
 #}
 
 # {{{ Terminal and prompt
-# function preexec () {
-#     # Screen window titles as currently running programs
-#     if [[ "${TERM}" == "screen-256color" ]]; then
-#         local CMD="${1[(wr)^(*=*|sudo|-*)]}"
-#         echo -n "\ek$CMD\e\\"
-#     fi
-# }
+function preexec () {
+	 # Screen window titles as currently running programs
+	 if [[ "${TERM}" == "screen-256color" ]]; then
+			 local CMD="${1[(wr)^(*=*|sudo|-*)]}"
+			 echo -n "\ek$CMD\e\\"
+	 fi
+}
 
 function setprompt () {
     if [[ "${terminfo[colors]}" -ge 8 ]]; then
@@ -193,8 +202,14 @@ setprompt
 # }}}
 # }}}
 
+#{{{ SSH Agent
+ssh-add -l > /dev/null || ssh-add
+#}}}
+
 export PERL_LOCAL_LIB_ROOT="/home/chris/perl5";
 export PERL_MB_OPT="--install_base /home/chris/perl5";
 export PERL_MM_OPT="INSTALL_BASE=/home/chris/perl5";
 export PERL5LIB="/home/chris/perl5/lib/perl5/x86_64-linux-thread-multi:/home/chris/perl5/lib/perl5";
 export PATH="/home/chris/perl5/bin:$PATH";
+
+# vim:ft=sh:fdm=marker

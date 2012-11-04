@@ -1,143 +1,211 @@
-# -*- mode: sh -*-
-# {{{ Aliases
+## -*- mode: sh; tab-width: 4; indent-tabs-mode: t; -*-
+## {{{ Aliases
+
+source ~/dev/dotfiles/zsh/_android.sh
+
+# {{{ transmission-daemon
+alias tt=transmission-remote
+alias ttl='tt -l'
+
+function tts {
+	local torrents
+
+	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+	if [[ ! -t 0 ]]; then
+		torrents=()
+
+		while read line; do
+			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+		done
+
+		torrents=${(j:,:)torrents}
+		echo "Starting torrents: ${torrents}."
+	elif [[ ! -z "$1" ]]; then
+		torrents="$1"
+	fi
+
+	tt -t${torrents:-all} -s
+}
+
+function ttS {
+	local torrents
+
+	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+	if [[ ! -t 0 ]]; then
+		torrents=()
+
+		while read line; do
+			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+		done
+
+		torrents=${(j:,:)torrents}
+		echo "Stopping torrents: ${torrents}."
+	elif [[ ! -z "$1" ]]; then
+		torrents="$1"
+	fi
+
+	tt -t${torrents:-all} -S ${2}
+}
+
+function ttr {
+	local torrents
+
+	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+	if [[ ! -t 0 ]]; then
+		torrents=()
+
+		while read line; do
+			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+		done
+
+		torrents=${(j:,:)torrents}
+		echo "Stopping torrents: ${torrents}."
+	elif [[ ! -z "$1" ]]; then
+		torrents="$1"
+	fi
+	[[ -z "$torrents" ]] && echo "Won't remove all torrents!" && return 2
+
+	tt -t${torrents} -r
+}
+
+function ttm {
+	local torrents
+
+	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+	if [[ ! -t 0 ]]; then
+		torrents=()
+
+		while read line; do
+			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+		done
+
+		torrents=${(j:,:)torrents}
+		echo "Stopping torrents: ${torrents}."
+	elif [[ ! -z "$1" ]]; then
+		torrents="$1"
+	fi
+	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
+	[[ -z "$2" ]] && echo "Please specify a target folder" && return 2
+
+	tt -t${torrents} -m ${2}
+}
+
+function ttf {
+	local pattern='*'
+	[[ ! -z "$1" ]] && pattern="$1"
+	ttl | grep -i "$pattern"
+}
+
+function tta {
+	local url='*' location args
+	[[ ! -z "$1" ]] && url="$1"
+	[[ ! -z "$2" ]] && location="$2"
+
+	args="-a $url"
+	[[ ! -z "$location" ]] && args="$args -w $location"
+	tt "$args"
+}
+# }}}
+
+## Twitch.tv livestreamer shortcut
+function ttv() {
+	livestreamer http://www.twitch.tv/$1 best
+}
+
+function remacs {
+	emacsclient -e "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
+	emacs --daemon
+}
+
+## Get a new terminal, in same folder
+alias t='urxvtc'
+
+## Serve $PWD with WEBrick
+function serve {
+	port="${1:-3000}"
+	ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
+}
+
+alias sc2='WINEPREFIX=~/.wine_sc2 wine explorer /desktop=sc2,1920x1064 "C:\Starcraft II\Starcraft II.exe"'
+alias sc2na='WINEPREFIX=~/.wine_sc2 wine explorer /desktop=sc2na,1920x1064 "C:\Starcraft II NA\Starcraft II.exe"'
+
+alias sr="screen -URDS rtorrent rtorrent"
+alias im="screen -l -UDRS weechat weechat-curses"
+#alias git=hub
+alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
 
 # mplayer & youtube
 alias m=mplayer;
-function myt() {
-  m -fs $(curl -s "http://www.youtube.com/get_video_info?&video_id=$1" | echo -e $(sed 's/%/\\x/g;s/.*\(v[0-9]\.lscache.*\)/http:\/\/\1/g') | grep -oP '^[^|,]*')
-}
-
-# Encrypted files
-function cryptouch() {
-    echo '-*- mode: org; epa-file-encrypt-to: ("me@mkaito.com") -*-' > $1
-}
-alias ct=cryptouch
-
-# Eve online
-alias eve='wine explorer /desktop=0,1920x1068 "C:\EVE\eve.exe"'
-alias eve1='wine explorer /desktop=1,1920x1068 "C:\EVE1\eve.exe"'
-alias eve2='wine explorer /desktop=2,1920x1068 "C:\EVE2\eve.exe"'
-alias eve22='wine explorer /desktop=2,960x1068 "C:\EVE2\eve.exe" &; wine explorer /desktop=1,960x1068 "C:\EVE1\eve.exe" &'
-function killeve() {
-   ps aux | grep -iE '(wine|exefile|ccpbrowser|system32|eve)' | awk '{print $2}' | xargs kill
-}
-
-function minertimer () {
-    [ "$1" ] && t="$1"  || t=120
-    echo "Setting recurring alert every ${t} seconds."
-    while true; do
-      sudo beep;
-      echo 'naughty.notify({title = "Cycle", text = "Your mining cycle is over, please empty your cargo", timeout = 20, screen = 2})' | awesome-client -
-      sleep "$t";
-    done
+function yt() {
+	i="$1"
+	mplayer -fs $(curl -s "http://www.youtube.com/get_video_info?&video_id=$i" | echo -e $(sed 's/%/\\x/g;s/.*\(v[0-9]\.lscache.*\)/http:\/\/\1/g') | grep -oP '^[^|,]*')
 }
 
 # Archive utilities
 function compress() {
-  if [[ ! -z "$1" ]]; then
-    fn="$1"
-    shift
-  else
-    echo "Please provide an archive name"
-    return 65
-  fi
+	if [[ ! -z "$1" ]]; then
+		fn="$1"
+		shift
+	else
+		echo "Please provide an archive name"
+		return 65
+	fi
 
-  # Process flags
-  while [[ $1 == -* ]]; do
+	# Process flags
+	while [[ $1 == -* ]]; do
 
-  done
+	done
 
-  if [[ -z "$1" ]]; then
-    echo "Please provide a list of files or directories to compress"
-    return 65
-  fi
+	if [[ -z "$1" ]]; then
+		echo "Please provide a list of files or directories to compress"
+		return 65
+	fi
 
-  case $fn in
-  *.tar.gz)       tar czf $fn $@                              ;;
-  *.tar.bz2)      tar cjf $fn $@                              ;;
-  *.zip | *.cbz)  zip -r $fn $@                               ;;
-  *.7z)           7z a -t7z -m0=lzma -mx=9 -mfb=64 $fn $@     ;;
-  *)              echo "Please provide a valid archive kind: *.tar.gz, *.tar.bz2, *.zip, *.cbz, *.7z"; return 65 ;;
-  esac
+	case $fn in
+	*.tar.gz)       tar czf $fn $@                              ;;
+	*.tar.bz2)      tar cjf $fn $@                              ;;
+	*.zip | *.cbz)  zip -r $fn $@                               ;;
+	*.7z)           7z a -t7z -m0=lzma -mx=9 -mfb=64 $fn $@     ;;
+	*)              echo "Please provide a valid archive kind: *.tar.gz, *.tar.bz2, *.zip, *.cbz, *.7z"; return 65 ;;
+	esac
 }
 
 function extract() {
-  while [ ! -z "$1" ]; do
-    if [ -f "$1" ]; then
-      case "$1" in
-        *.tbz2 | *.tar.bz2) tar -xjf  "$1"      ;;
-        *.txz | *.tar.xz)   tar -xJf  "$1"      ;;
-        *.tgz | *.tar.gz)   tar -xzf  "$1"      ;;
-        *.tar | *.cbt)      tar -xf   "$1"      ;;
-        *.zip | *.cbz)      unzip      "$1"     ;;
-        *.rar | *.cbr)      unrar x    "$1"     ;;
-        *.arj)              unarj x    "$1"     ;;
-        *.ace)              unace x    "$1"     ;;
-        *.bz2)              bunzip2    "$1"     ;;
-        *.xz)               unxz       "$1"     ;;
-        *.gz)               gunzip     "$1"     ;;
-        *.7z)               7z x       "$1"     ;;
-        *.Z)                uncompress "$1"     ;;
-        *.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
-        *) echo 'Error: I have no idea wtf you tried to feed me there.' ;;
-      esac
-    else
-      echo 'Error: "$1" is not a valid file for extraction'
-    fi
+	while [ ! -z "$1" ]; do
+		if [ -f "$1" ]; then
+			case "$1" in
+				*.tbz2 | *.tar.bz2) tar -xjf  "$1"      ;;
+				*.txz | *.tar.xz)   tar -xJf  "$1"      ;;
+				*.tgz | *.tar.gz)   tar -xzf  "$1"      ;;
+				*.tar | *.cbt)      tar -xf   "$1"      ;;
+				*.zip | *.cbz)      unzip      "$1"     ;;
+				*.rar | *.cbr)      unrar x    "$1"     ;;
+				*.arj)              unarj x    "$1"     ;;
+				*.ace)              unace x    "$1"     ;;
+				*.bz2)              bunzip2    "$1"     ;;
+				*.xz)               unxz       "$1"     ;;
+				*.gz)               gunzip     "$1"     ;;
+				*.7z)               7z x       "$1"     ;;
+				*.Z)                uncompress "$1"     ;;
+				*.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
+				*) echo 'Error: I have no idea wtf you tried to feed me there.' ;;
+			esac
+		else
+			echo 'Error: "$1" is not a valid file for extraction'
+		fi
 
-    shift
-  done
-}
-
-##
-# Archive conversion
-#
-#     aconv [format] [file[, file...]]
-#
-# Convert a (list of) file to the given format.
-function aconv() { # Archive conversion
-  if [[ ! -z "$1" ]]; then
-    atype="$1"
-    shift
-  else
-    echo "Please provide an archive type: zip, tar.gz, tar.bz2, 7zip."
-    return 65
-  fi
-
-  while [ ! -z "$1" ]; do
-    if [ -f "$1" ]; then
-      extract $1;
-      compress $atype $1;
-    fi
-  done
+		shift
+	done
 }
 
 # function calc () { awk "BEGIN { print $* }" }
 function calc () { echo "$@" | bc -l ; }
 
-function air() {
-  /opt/adobe-air-sdk/bin/adl -nodebug /opt/airapps/$1/META-INF/AIR/application.xml /opt/airapps/$1/
-}
-
 # Fix file and folder permissions recursively under .
 alias fixperm="find . -type d -exec chmod 755 {} \;; find . -type f -exec chmod 644 {} \;"
 
-# FFMpeg screen capturing
-function capture() {
-  ffmpeg -y -f x11grab -r 12 -s $2 -i :0.0+$3 -vcodec libx264 -vpre ultrafast -crf 22 -threads 0 x11grab.$1
-}
-
-function wincap() {
-  capture `xwininfo | grep 'geometry' | awk '{print $2}' | awk '{ BEGIN { FS="[+-]" } print $1 $2,$3; }'`
-}
-
-# Get my public ip
-function pubip() {
-  curl -s http://checkip.dyndns.org/ | grep -o "[[:digit:].]\+"
-}
-
 function currency() {
-  wget -qO- "http://www.google.com/finance/converter?a=$1&from=$2&to=$3&hl=es" |  sed '/res/!d;s/<[^>]*>//g';
+	wget -qO- "http://www.google.com/finance/converter?a=$1&from=$2&to=$3&hl=es" |  sed '/res/!d;s/<[^>]*>//g';
 }
 
 # aptitude shorthands
@@ -166,6 +234,7 @@ alias lla='la -lh'
 
 # Moving around
 alias ...='cd ../..'
+alias ....='cd ../../..'
 
 # Turn the display off
 alias lcdoff='xset dpms force off'
@@ -185,14 +254,13 @@ alias becw='bec watch -c config/compass.rb'
 alias g='sudo gem'
 alias gi='sudo gem install'
 
-# Get keycode for buttons
-alias getkeycode="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
-
 # Emacs
-alias ec="emacsclient -nc"
-alias ect="emacsclient -nw"
-alias org='emacs -name org -f org-agenda-list &'
-
+# alias e="emacsclient -n"
+# alias ec="e -c"
+# alias ect="emacsclient -nw"
+alias e='emacs'
+alias ec=e
+alias ect='emacs -nw'
 # }}}
 
-# vim:ft=sh
+# vim:ft=zsh:fdm=marker

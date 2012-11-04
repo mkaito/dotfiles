@@ -1,0 +1,26 @@
+#compdef transmission-remote
+# ------------------------------------------------------------------------------
+# Description
+# -----------
+#
+# Completion script for transmission-remote
+#
+# ------------------------------------------------------------------------------
+# Authors
+# -------
+#
+# * Chris 'mkaito' Hoeppner (https://github.com/mkaito)
+#
+# ------------------------------------------------------------------------------
+
+local curcontext="$curcontext" state line ret=1
+typeset -A opt_args
+
+_arguments -C -s -w \
+  '(- *)'{-h,--help}'[display this help message]' \
+  '(-f --file)'{-f+,--file=}'[Specify a file to operate on]:File:_files -g "*.mkd" -W ~/dev/blog/_drafts' \
+  '*:script or directory:_files' && ret=0
+
+return ret
+
+# vim:ft=zsh sw=2 ts=2 et fdm=marker
