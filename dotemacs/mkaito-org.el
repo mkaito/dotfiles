@@ -51,8 +51,15 @@
 ;; Org-mode customization
 (setq org-todo-keywords
       '((sequence "TODO(t)" "|" "WAITING" "DONE")
+	(sequende "WATCHING(w)" "|" "WATCHED" "DROPPED")
         (sequence "|" "NOTE(n)")
         (sequence "|" "CANCELED(x)")))
+
+(setq org-todo-keyword-faces
+      '(("WAITING" . "yellow")
+	("DROPPED" . "red")
+	("CANCELED" . "red")
+	("NOTE" . "yellow")))
 
 (setq org-tag-alist '((:startgroup . nil)
                       ("@work" . ?w)
@@ -82,11 +89,10 @@
 (setq org-default-notes-file (concat org-directory "/refile.org"))
 ;; Notes templates
 (setq org-remember-templates
-      '(("Note"     ?n "*** NOTE %?\n    %u\n    %i\n    %a"      "~/.org/refile.org" "Notes")
-        ("Download" ?d "*** TODO: Download %?\n    %u\n    %i\n    %^L"  "~/.org/refile.org" "Notes")
-        ("Read"     ?r "*** TODO: Read %?\n    %u\n    %i\n    %a"      "~/.org/refile.org" "Notes")
-        ("Todo"     ?t "*** TODO %?\n    %t\n    %i\n    %a"      "~/.org/refile.org" "Notes")
-        ("Call"     ?c "*** TODO: Call %?\n    %T\n    %i\n    %a"      "~/.org/refile.org" "Notes")))
+      '(
+	("Note"     ?n "*** NOTE %?\n    %x\n"          "~/.org/refile.org" "Notes")
+        ("Todo"     ?t "*** TODO %?\n    %^t\n    %x\n" "~/.org/refile.org" "Notes")
+	))
 
 ;; Remember frames
 ;;   - $ emacsclient -e '(make-remember-frame)'

@@ -25,20 +25,28 @@
 (setq load-path
       (append
        (list
+	"/usr/share/emacs/site-lisp/icicles"
 	"~/.emacs.d"
 	"~/.emacs.d/vendor"
-	"~/.emacs.d/vendor/color-theme-ir-black"
+	;; "~/.emacs.d/vendor/color-theme-ir-black"
 	"~/.emacs.d/vendor/haml-mode"
 	"~/.emacs.d/vendor/sass-mode"
 	"~/.emacs.d/vendor/coffee-mode"
 	"~/.emacs.d/vendor/smart-tabs-mode"
 	"~/.emacs.d/vendor/nginx-mode"
 	"~/.emacs.d/vendor/yasnippet"
+	"/usr/share/ghc-mod-1.11.2/"
 	)
        load-path))
 
 ;; Check for stale .elc on startup. Slow, but I only restart Emacs after reboots.
 (byte-recompile-directory "~/.emacs.d/vendor" 0)
+
+;; Clean initial buffers, windows.
+(defun buffer-exists (bufname) (not (eq nil (get-buffer bufname)))) 
+(if (buffer-exists "*Compile-Log*") (kill-buffer "*Compile-Log*"))
+(if (buffer-exists "*Backtrace*") (kill-buffer "*Backtrace*"))
+(delete-other-windows)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -48,13 +56,20 @@
 ;; Fix dead keys
 (load-library "iso-transl")
 
+;; Icicles
+(require 'icicles)
+(eval-after-load "ring" '(progn (require 'ring+)))
+
 ;; Colour theme initialization
 ;;	 - http://emacswiki.org/cgi-bin/wiki/ColorTheme
-(require 'color-theme)
-(setq color-theme-is-global t)
-(color-theme-initialize)
-(require 'color-theme-ir-black)
-(color-theme-ir-black)
+;(require 'color-theme)
+;(setq color-theme-is-global t)
+;(color-theme-initialize)
+(require 'color-theme-solarized)
+(color-theme-solarized-dark)
+
+(global-hl-line-mode 1)
+;(set-face-background 'hl-line "#353535")
 
 ;; Support 256 colours in screen
 ;;	 - http://article.gmane.org/gmane.emacs.devel/109504/
@@ -201,6 +216,7 @@
 	"Gemfile"
 	"Procfile"
 	"Rakefile"
+	"Makefile"
 	"*.gpg"
 	"*.org"
 	"config.ru"
@@ -209,12 +225,33 @@
 	"*.watchr"
 	"*.rake"
 	"*.gemspec"
+	"*.hrl"
+	"*.mustache"
+	"*.sass"
+	"*.coffee"
+	"*.scss"
 	)
        ffip-patterns))
 
 (global-set-key (kbd "C-c C-f") 'find-file-in-project)
 
 ;; Modes
+
+(autoload 'ghc-init "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init) (flymake-mode)))
+
+(autoload 'python-mode "python-mode.el" "Python mode." t)
+(setq auto-mode-alist (append '(("/*.\.py$" . python-mode)) auto-mode-alist))
+
+;; Mustache
+;; (require 'mustache-mode)
+(autoload 'mustache-mode "mustache-mode" "Mustache mode" t)
+(add-to-list 'auto-mode-alist '("\\.mustache$" . mustache-mode))
+
+;; Erlang Mode
+;; (setq erlang-root-dir "/usr/lib/erlang")
+;; (setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+;; (require 'erlang-start)
 
 ;; nginx mode
 ;; Not going to associate it, just activate with file variables.
@@ -229,13 +266,13 @@
 					       (shell-command-on-region (point-min) (point-max) "zsh -vx")))))
 
 ;; Coffee Mode
-(autoload 'coffee-mode "coffee-mode.el" "Coffee mode" t)
+(autoload 'coffee-mode "coffee-mode" "Coffee mode" t)
 (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
 (add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
 
 (defun coffee-custom ()
   "coffee-mode-hook"
-  (set (make-local-variable 'tab-width) 4))
+  (set (make-local-variable 'tab-width) 2))
 
 (add-hook 'coffee-mode-hook '(lambda() (coffee-custom)))
 
@@ -249,7 +286,7 @@
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
 ;; Markdown mode
-(autoload 'markdown-mode "markdown-mode.el"
+(autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'\\|\\.mkd\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook 'visual-line-mode)
@@ -263,7 +300,7 @@
 
 ;; Post Mode
 ;;		- http://post-mode.sourceforge.net/
-(autoload 'post-mode "~/.emacs.d/vendor/post.el" "Major mode for editing e-mail and journal articles" t)
+(autoload 'post-mode "post" "Major mode for editing e-mail and journal articles" t)
 (add-to-list 'auto-mode-alist
 	     '("\\.*mutt-*\\|\\.*pico.*\\|\\.*200\\(T\\)?\\|\\.followup" . post-mode))
 
@@ -292,12 +329,19 @@
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
 (add-hook 'ruby-mode-hook
 	  '(lambda ()
-	     (setq ruby-indent-level 4)
-	     (setq tab-width 4)))
+	     (setq ruby-indent-level 2)
+	     (setq tab-width 2)))
 
 ;; Haml, Sass & Less
 (autoload 'haml-mode "haml-mode" "HAML mode" t)
 (autoload 'sass-mode "sass-mode" "SASS mode" t)
+;; (require 'sass-mode)
+;; (require 'haml-mode)
+
+(add-hook 'sass-mode-hook 
+  '(lambda () (add-hook 'local-write-file-hooks 
+    '(lambda () (save-excursion (untabify (point-min) (point-max)))))))
+
 (add-to-list 'auto-mode-alist '("\\.haml$"	. haml-mode))
 (add-to-list 'auto-mode-alist '("\\.scss$"	. sass-mode))
 (add-to-list 'auto-mode-alist '("\\.sass$"	. sass-mode))
@@ -305,20 +349,22 @@
 
 ;; Code Folding
 ;; - http://www.emacswiki.org/emacs/FoldingMode
-;;
-;; (autoload 'folding-mode "folding" "Folding mode" t)
-;; (autoload 'turn-off-folding-mode "folding" "Folding mode" t)
-;; (autoload 'turn-on-folding-mode	"folding" "Folding mode" t)
-;; (if (load "folding" 'nomessage 'noerror)
-;;     (folding-mode-add-find-file-hook))
+(if (load "folding" 'nomessage 'noerror)
+    (folding-mode-add-find-file-hook))
+
+;; C-c only, not C-c @.
+(setq folding-default-keys-function
+      'folding-bind-backward-compatible-keys)
+
+;; Extra fold marks for nonstandard major modes
+(folding-add-to-marks-list
+ 'sass-mode "// {{{ " "// }}}" nil t)
 
 ;; Shortcuts
 (defalias 'eb						 'eval-buffer)
 (defalias 'er						 'eval-region)
 (defalias 'ee						 'eval-expression)
-(defalias 'day					 'color-theme-vim-colors)
-(defalias 'night				 'color-theme-zenburn)
-;; (defalias 'fold					'fold-enter-fold-mode-close-all-folds)
+(defalias 'fold		        			 'fold-enter-fold-mode-close-all-folds)
 
 (global-set-key (kbd "M--") 'hippie-expand)
 
@@ -363,7 +409,7 @@
 ;; Indentation
 (require 'smart-tabs-mode)
 (setq-default indent-tabs-mode t)
-(setq tab-width 4)
+(setq tab-width 2)
 
 ;; C/C++
 (add-hook 'c-mode-hook 'smart-tabs-mode-enable)
@@ -434,17 +480,26 @@
   (indent-region (point-min) (point-max) nil)
   (tabify (point-min) (point-max)))
 
-(defun edit-dot-emacs ()
-  "Load the .emacs file into a buffer for editing."
+;{{{ Reload or edit .emacs on the fly
+;    - key bindings defined below
+;
+(defun aic-reload-dot-emacs ()
+  "Reload user configuration from .emacs"
   (interactive)
-  (find-file "~/.emacs.d/init.el"))
+  ;; Fails on killing the Messages buffer, workaround:
+  (get-buffer-create "*Messages*")
+  (load-file "~/.emacs.d/init.el")
+)
+(defun aic-edit-dot-emacs ()
+  "Edit user configuration in .emacs"
+  (interactive)
+  (find-file "~/.emacs.d/init.el")
+)
+;}}}
 
-(defun reload-dot-emacs ()
-  "Save .emacs, if it is in a buffer, and reload it."
-  (interactive)
-  (if (bufferp (get-file-buffer "~/.emacs.d/init.el"))
-      (save-buffer (get-buffer "~/.emacs.d/init.el")))
-  (load-file "~/.emacs.d/init.el"))
+;; Reload or edit .emacs as defined above
+(global-set-key "\C-c\C-r" 'aic-reload-dot-emacs)
+(global-set-key "\C-c\C-e" 'aic-edit-dot-emacs)
 
 (defun sort-words (reverse beg end)
   "Sort words in region alphabetically, in REVERSE if negative.
@@ -471,13 +526,12 @@
 
 ;; Yasnippet
 (require 'yasnippet)
-(yas/global-mode 1)
-;; (yas/initialize)
+(yas/global-mode 0)
 
 ;; Place my own snippet stuff in mysnippets
-(setq yas/root-directory '("~/.emacs.d/snippets"
-			   "~/.emacs.d/vendor/snippets"))
-(mapc 'yas/load-directory yas/root-directory)
+(setq yas/snippet-dirs '("~/.emacs.d/snippets"
+			   "~/.emacs.d/vendor/yasnippet/snippets"))
+;; (mapc 'yas/load-directory yas/root-directory)
 (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/completing-prompt))
 
 ;; Fix up for markdown-mode
@@ -487,3 +541,12 @@
 	       (setq yas/fallback-behavior
 		     '(apply ,original-command))
 	       (local-set-key [tab] 'yas/expand))))
+
+(defun shutdown-emacs-server () (interactive)
+  (when (not (eq window-system 'x))
+    (message "Initializing x windows system.")
+    (x-initialize-window-system)
+    (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
+    (select-frame (make-frame-on-display x-display-name '((window-system . x))))
+    )
+  (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))

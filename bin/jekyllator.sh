@@ -5,15 +5,15 @@ BLOG_PATH=${HOME}/dev/blog;
 DRAFTS_PATH=${BLOG_PATH}/_drafts;
 POSTS_PATH=${BLOG_PATH}/_posts;
 FILE_EXT=".mkd"
-# "be" is a shell alias for "bundle execute". Replace for your way to get jekyll serving.
-JEKYLL_EX="cd ${BLOG_PATH} && be jekyll";
-JEKYLL_SERVE="${JEKYLL_EX} --auto --server 8080 && ${BROWSER} http://localhost:8080";
+
+# TODO: Add flags for byline, meta, published, date.
+# TODO: Assume format jekyllator.sh [options] [title or filename]
 
 # {{{ Functions
 
 ##
 # Echo string if $DEBUG evaluates to aything.
-# Execute with @DEBUG=1 blog.sh@ to get debug information printed.
+# Execute with @DEBUG=1 jekyllator.sh@ to get debug information printed.
 function debug()
 {
   [[ ! -z "$DEBUG" ]] && echo "$*";
@@ -26,10 +26,10 @@ function debug()
 function slugify()
 {
   [[ -z "$1" ]] && return 65;
-  s=`echo $1 |\
+  s=$(echo $1 |\
      sed -e 's/\s\{1,\}/ /g' |\
      sed 's/^[ \t]*//;s/[ \t]*$//g' |\
-     sed 's/ /-/g' | tr '[A-Z]' '[a-z]'`;
+     sed 's/ /-/g' | tr '[A-Z]' '[a-z]');
   debug "1: $s";
 
   typeset -A accents; # key value key value...
@@ -42,10 +42,10 @@ function slugify()
 
   for k in ${(k)accents}; do;
     debug "Replacing $k with ${accents[$k]}";
-    s=`echo $s | sed -e "s/${k}/${accents[$k]}/g"`;
+    s=$(echo $s | sed -e "s/${k}/${accents[$k]}/g");
   done;
 
-  s=`echo $s | sed -re 's/[^[:alnum:]]/-/g' | tr -s '-'`
+  s=$(echo $s | sed -re 's/[^[:alnum:]]/-/g' | tr -s '-')
 
   debug "2: $s";
 
@@ -84,12 +84,13 @@ case $1 in
     if [[ ! -f ${DRAFTS_PATH}/${filestr} ]]; then
       if (confirm "Create and edit file with $EDITOR: $filestr?"); then
         echo "---\ntitle: ${titlestr}\nbyline:\nmeta: \nlayout: post\npublished: false\n---" > ${DRAFTS_PATH}/${filestr};
-        $EDITOR "${DRAFTS_PATH}/${filestr}";
+        eval "$VISUAL" "${DRAFTS_PATH}/${filestr}";
       fi
     else
       echo "File already exists: ${filestr}";
+			[[ ! -f "${DRAFTS_PATH}/${filestr}" ]] && echo "Could not create draft file :("
       if (confirm "Would you like to edit it with $EDITOR now?"); then
-        $EDITOR "${DRAFTS_PATH}/${filestr}";
+        eval "$VISUAL" "${DRAFTS_PATH}/${filestr}";
       fi;
       exit 1;
     fi;
@@ -195,3 +196,5 @@ case $1 in
     ;;
 esac;
 # }}}
+
+#vim:ft=sh:foldmethod=marker
