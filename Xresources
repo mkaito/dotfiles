@@ -1,0 +1,248 @@
+!{{{ EMACS
+!
+Emacs.font:							Terminus-9
+!Emacs*font:							Inconsolata-g-8
+!}}}
+
+!{{{ XFT
+Xft*dpi:								101
+Xft*antialias:					1
+Xft*hinting:						1
+Xft*rgba:								rgb
+Xft*autohint:						0
+Xft*lcdfilter:					lcddefault
+Xft*hintstyle:					hintfull
+!}}}
+
+!{{{ URXVT
+!
+! General
+urxvt*iso14755:          false
+urxvt*scrollBar:         false
+urxvt*secondaryScroll:    true
+urxvt*saveLines:         65535
+urxvt*cursorBlink:       false
+urxvt*urgentOnBell:       true
+urxvt*scrollTtyOutput:   false
+urxvt*scrollWithBuffer:   true
+urxvt*scrollTtyKeypress:  true
+!
+! Extensions
+urxvt*perl-lib:        /home/chris/dev/dotfiles/urxvt/:/usr/lib/urxvt/perl/
+urxvt*perl-ext-common: default,url-select,clipboard
+urxvt*keysym.M-u:      perl:url-select:select_next
+urxvt*keysym.M-c:      perl:clipboard:copy
+urxvt*keysym.M-v:      perl:clipboard:paste
+urxvt*keysym.M-C-v:    perl:clipboard:paste_escaped
+urxvt*underlineURLs:   true
+urxvt*urlLauncher:     /usr/bin/firefox
+! Catch ugly URLs
+urxvt*cutchars:        '"'()*<>[]{|}_-
+!
+! Appearance
+urxvt*font: -xos4-terminus-medium-r-normal-*-14-*-*-*-*-*-*-u
+!urxvt*font: xft:inconsolata-g:pixelsize=12
+urxvt*shade: 50
+
+!! Zenburn color-scheme
+!urxvt*background:  #3f3f3f
+!urxvt*foreground:  #dcdccc
+!! black + red
+!!urxvt*color0:     #3f3f3f
+!urxvt*color0:      #1E2320
+!urxvt*color1:      #705050
+!! green + yellow
+!urxvt*color2:      #60b48a
+!urxvt*color3:      #dfaf8f
+!! blue + purple
+!urxvt*color4:      #506070
+!urxvt*color5:      #dc8cc3
+!! cyan + white
+!urxvt*color6:      #8cd0d3
+!urxvt*color7:      #dcdccc
+!! bright-black + bright-red
+!urxvt*color8:      #709080
+!urxvt*color9:      #dca3a3
+!! bright-green + bright-yellow
+!urxvt*color10:     #c3bf9f
+!urxvt*color11:     #f0dfaf
+!! bright-blue + bright-purple
+!urxvt*color12:     #94bff3
+!urxvt*color13:     #ec93d3
+!! bright-cyan + bright-white
+!urxvt*color14:     #93e0e3
+!urxvt*color15:     #ffffff
+
+#define S_base03 #002b36
+#define S_base02 #073642
+#define S_base01 #586e75
+#define S_base00 #657b83
+#define S_base0 #839496
+#define S_base1 #93a1a1
+#define S_base2 #eee8d5
+#define S_base3 #fdf6e3
+#define S_yellow #b58900
+#define S_orange #cb4b16
+#define S_red #dc322f
+#define S_magenta #d33682
+#define S_violet #6c71c4
+#define S_blue #268bd2
+#define S_cyan #2aa198
+#define S_green #859900
+
+urxvt*background: S_base03
+urxvt*foreground: S_base0
+urxvt*fading: 40
+urxvt*fadeColor: S_base03
+urxvt*cursorColor: S_base1
+urxvt*pointerColorBackground:S_base01
+urxvt*pointerColorForeground:S_base1
+
+!! black dark/light
+urxvt*color0: S_base02
+urxvt*color8: S_base03
+
+!! red dark/light
+urxvt*color1: S_red
+urxvt*color9: S_orange
+
+!! green dark/light
+urxvt*color2: S_green
+urxvt*color10: S_base01
+
+!! yellow dark/light
+urxvt*color3: S_yellow
+urxvt*color11: S_base00
+
+!! blue dark/light
+urxvt*color4: S_blue
+urxvt*color12: S_base0
+
+!! magenta dark/light
+urxvt*color5: S_magenta
+urxvt*color13: S_violet
+
+!! cyan dark/light
+urxvt*color6: S_cyan
+urxvt*color14: S_base1
+
+!! white dark/light
+urxvt*color7: S_base2
+urxvt*color15: S_base3
+!}}}
+
+!{{{ SshAskpass
+! {{{Default theme (like SSH v1)
+
+!SshAskpass*Dialog.font:			-adobe-helvetica-bold-r-normal-*-*-120-*-*-*-*-iso8859-1
+!SshAskpass*?.foreground:			rgb:00/00/00
+!SshAskpass*?.background:			rgb:cc/cc/cc
+!SshAskpass*topShadowColor:		rgb:ff/ff/ff
+!SshAskpass*bottomShadowColor:		rgb:7f/7f/7f
+!SshAskpass*borderColor:			rgb:20/20/20
+!SshAskpass*shadowThickness:		3
+!SshAskpass*borderWidth:			1
+!SshAskpass*horizontalSpacing:		5
+!SshAskpass*verticalSpacing:		6
+
+!SshAskpass*Button.font:			-adobe-helvetica-bold-r-normal-*-*-120-*-*-*-*-iso8859-1
+!SshAskpass*Button.shadowThickness:	2
+!SshAskpass*Button.borderWidth:		1
+!SshAskpass*Button.horizontalSpacing:	5
+!SshAskpass*Button.verticalSpacing:	2
+
+!SshAskpass*Indicator.foreground:		rgb:9b/cd/9b
+!SshAskpass*Indicator.background:		rgb:00/00/80
+!SshAskpass*Indicator.shadowThickness:	2
+!SshAskpass*Indicator.borderWidth:		0
+!SshAskpass*Indicator.height:		7
+!SshAskpass*Indicator.width:		15
+!SshAskpass*Indicator.horizontalSpacing:	2
+!SshAskpass*Indicator.verticalSpacing:	4
+!SshAskpass*Indicator.minimumCount:	8
+!SshAskpass*Indicator.maximumCount:	24
+!}}}
+
+! {{{ e133t theme
+
+!SshAskpass*Dialog.font:								-b&h-lucida-medium-r-normal-*-*-100-*-*-*-*-iso8859-1
+!SshAskpass*Dialog.font:									-*-inconsolata g-*-*-*-*-17-*-*-*-*-*-*-*
+SshAskpass*Dialog.font:									-xos4-terminus-medium-r-normal-*-14-*-*-*-*-*-*-u
+SshAskpass*?.foreground:								rgb:d0/d0/d0
+SshAskpass*?.background:								rgb:50/50/50
+SshAskpass*topShadowColor:							rgb:90/90/90
+SshAskpass*bottomShadowColor:						rgb:00/00/00
+SshAskpass*borderColor:									rgb:a0/a0/a0
+SshAskpass*shadowThickness:							2
+SshAskpass*borderWidth:									1
+SshAskpass*horizontalSpacing:						5
+SshAskpass*verticalSpacing:							5
+
+!SshAskpass*Button.font:								-b&h-lucida-medium-r-normal-*-*-100-*-*-*-*-iso8859-1
+SshAskpass*Button.font:									-xos4-terminus-medium-r-normal-*-14-*-*-*-*-*-*-u
+SshAskpass*Button.shadowThickness:			1
+SshAskpass*Button.borderWidth:					0
+SshAskpass*Button.horizontalSpacing:		4
+SshAskpass*Button.verticalSpacing:			2
+
+SshAskpass*Indicator.foreground:				rgb:70/80/90
+SshAskpass*Indicator.background:				rgb:50/50/50
+SshAskpass*Indicator.shadowThickness:		1
+SshAskpass*Indicator.borderWidth:				0
+SshAskpass*Indicator.height:						4
+SshAskpass*Indicator.width:							13
+SshAskpass*Indicator.horizontalSpacing:	4
+SshAskpass*Indicator.verticalSpacing:		5
+SshAskpass*Indicator.minimumCount:			8
+SshAskpass*Indicator.maximumCount:			24
+!}}}
+
+! X11 does a miserable job of providing resolution-independent drawing
+! facilities---it expects everything to be done in pixels.  So if you
+! happen to run your X server at a resolution of 100 pixels per inch
+! (or some other strange value) instead of the widely used default of
+! 75, x11-ssh-askpass looks might tiny.  [Sigh].
+! 
+! To get around this, umm, limitation, we declare the resolution that
+! the spacing and width/height pixels values are "valid" for, along
+! with a fuzz factor.  If the current actual resolution is outside of
+! the range of <DEFAULT - FUZZ>..<DEFAULT + FUZZ>, then we scale pixel
+! measurements to fit the actual resolution.
+! 
+! (And if you think SshAskpass*this* is a horrid hack, then take a look at the
+! actual code, which has to deal with conversion to [cheesy fanfare]
+! thats right. millimeters!!!  The right hand managed to slip that
+! one in while the left hand was adding a '-dpi' switch to the sample
+! server implementation.  I think both left feet were adding the
+! RESOLUTION_X and RESOLUTION_Y fields [in dots per inch, naturally]
+! to the X Logical Font Description.  The irony is underwhelming.)
+
+SshAskpass*defaultXResolution:		75/in
+SshAskpass*defaultYResolution:		75/in
+SshAskpass*xResolutionFuzz:				20/in
+SshAskpass*yResolutionFuzz:				20/in
+
+! Number of seconds to wait for a key- or button-press
+! before giving up.  '0' means wait forever.
+SshAskpass*inputTimeout:					0
+
+! Ssh-askpass grabs the keyboard by default.
+! To stop it from grabbing the keyboard, use:
+!SshAskpass*grabKeyboard:			false
+
+! Ssh-askpass does not grab the pointer by default.
+! To make it grab the pointer, use:
+!SshAskpass*grabPointer:			true
+
+! Ssh-askpass does not grab the server by default.
+! To make it grab the server, use:
+!SshAskpass*grabServer:			true
+
+SshAskpass*Dialog.title:					OpenSSH Authentication Passphrase Request
+SshAskpass*Dialog.label:					Please enter your authentication passphrase:
+SshAskpass*okButton.label:				OK
+SshAskpass*cancelButton.label:		Cancel
+
+!}}}
+
+! vim:fdm=marker
