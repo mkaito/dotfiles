@@ -4,9 +4,6 @@
 [submodule "vimconf/bundle/ack"]
 	path = vimconf/bundle/ack
 	url = git://github.com/mileszs/ack.vim.git
-[submodule "vimconf/bundle/surround"]
-	path = vimconf/bundle/surround
-	url = git://github.com/tpope/vim-surround.git
 [submodule "vimconf/bundle/repeat"]
 	path = vimconf/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
@@ -19,9 +16,6 @@
 [submodule "vimconf/bundle/vim-haml"]
 	path = vimconf/bundle/vim-haml
 	url = git://github.com/tpope/vim-haml.git
-[submodule "vimconf/bundle/vim-textile"]
-	path = vimconf/bundle/vim-textile
-	url = git://github.com/timcharper/textile.vim.git
 [submodule "dotemacs/vendor/haml-mode"]
 	path = dotemacs/vendor/haml-mode
 	url = git://github.com/nex3/haml-mode.git
