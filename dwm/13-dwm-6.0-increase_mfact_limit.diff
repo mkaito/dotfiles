@@ -1,0 +1,11 @@
+--- a/dwm.c	2012-03-28 22:57:19.246221856 +0300
++++ b/dwm.c	2012-03-28 22:57:19.249221856 +0300
+@@ -1657,7 +1657,7 @@ setmfact(const Arg *arg) {
+ 	if(!arg || !selmon->lt[selmon->sellt]->arrange)
+ 		return;
+ 	f = arg->f < 1.0 ? arg->f + selmon->mfacts[selmon->curtag] : arg->f - 1.0;
+-	if(f < 0.1 || f > 0.9)
++	if(f < 0.05 || f > 0.95)
+ 		return;
+ 	selmon->mfacts[selmon->curtag] = f;
+ 	arrange(selmon);

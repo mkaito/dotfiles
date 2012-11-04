@@ -6,4 +6,4 @@ total_run_times 0
 use_spacer none
 
 TEXT
-${if_mpd_playing}[♫ ${mpd_title} ${mpd_elapsed}/${mpd_length}]${endif}${if_existing "/proc/acpi/battery"}[⚡${battery}]${endif}[${cpu cpu0}%|$memperc%]${if_up wlan0}[${wireless_link_qual wlan0}% ↓${downspeedf wlan0}KiB ↑${upspeedf wlan0}KiB]${endif}${if_up eth0}[↓${downspeedf eth0}KiB ↑${upspeedf eth0}KiB]${endif}[${time %H:%M}]
+${if_mpd_playing}[${mpd_title} ${mpd_elapsed}/${mpd_length}]${endif} [${cpu cpu1}% ${cpu cpu2}% ${cpu cpu3}% ${cpu cpu4}% | $memperc%] ${if_up eth0}[down: ${downspeedf eth0}KiB up: ${upspeedf eth0}KiB]${endif} [${time %A, %d de %B, %Y %H:%M}]

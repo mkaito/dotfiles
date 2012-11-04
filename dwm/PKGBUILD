@@ -1,0 +1,56 @@
+dwm_patch=${dwm_patch:-1}
+
+pkgname=dwm
+pkgver=6.0
+pkgrel=1
+pkgdesc='A dynamic window manager for X'
+url='http://dwm.suckless.org'
+arch=('i686' 'x86_64')
+license=('MIT')
+options=('zipman')
+depends=('libx11' 'libxinerama' 'dmenu')
+source=("${pkgname}-${pkgver}.tar.gz::http://hg.suckless.org/${pkgname}/archive/tip.tar.gz"
+        "config.h"
+        "01-${pkgname}-${pkgver}-pertag2.diff"
+        "02-${pkgname}-${pkgver}-push.diff"
+        "03-${pkgname}-${pkgver}-cycle.diff"
+        "04-${pkgname}-${pkgver}-gaplessgrid.diff"
+        "05-${pkgname}-${pkgver}-pidgin.diff"
+        "06-${pkgname}-${pkgver}-monocle_count.diff"
+        "07-${pkgname}-${pkgver}-monocle_borderless.diff"
+#       "08-${pkgname}-${pkgver}-clicktofocus.diff"
+        "09-${pkgname}-${pkgver}-viewontag.diff"
+        "10-${pkgname}-${pkgver}-scratchpad.diff"
+        "11-${pkgname}-${pkgver}-togglemax.diff"
+        "12-${pkgname}-${pkgver}-autoresize.diff"
+        "13-${pkgname}-${pkgver}-increase_mfact_limit.diff"
+        "14-${pkgname}-${pkgver}-remember-tags.diff"
+        "15-${pkgname}-${pkgver}-centred-floating.diff"
+        "16-${pkgname}-${pkgver}-focusurgent.diff"
+        "17-${pkgname}-${pkgver}-statuscolors.diff"
+        "18-${pkgname}-${pkgver}-save_floats.diff"
+        "19-${pkgname}-${pkgver}-fix_keypress_deprecated.diff")
+
+build() {
+  cd "${srcdir}" && cd "`find . -type d -name dwm-\*`"
+  if [ "${dwm_patch}" == 1 ]; then
+    cp "${srcdir}/config.h" config.h
+    for PATCH in "${source[@]:2}"; do
+      msg "${PATCH##*/}" && patch -Np1 -i "${srcdir}/${PATCH##*/}"
+    done
+  fi
+  sed -i \
+    -e 's/^CPPFLAGS =/CPPFLAGS +=/g' \
+    -e 's/^CFLAGS   =/CFLAGS   +=/g' \
+    -e 's/^LDFLAGS  =/LDFLAGS  +=/g' \
+    -e 's/-O[s0-3]/-O2/g' \
+    config.mk
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd "${srcdir}" && cd "`find . -type d -name dwm-\*`"
+  make PREFIX=/usr DESTDIR="${pkgdir}" install
+  install -m644 -D LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -m644 -D README "${pkgdir}/usr/share/doc/${pkgname}/README"
+}
