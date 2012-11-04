@@ -1,0 +1,2 @@
+#Triggers file version 1.0
+-publics -masks '*!twitter_*@twitter' -channels '&bitlbee' -regexp '^Kaito: (\x02\[\x02+\d\d:\d\d:\d\d\x02\]\x02  )?\x02<\x02([^>]+)\x02>\x02' -replace '<\x033$2\x0F>' 
