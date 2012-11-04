@@ -55,6 +55,8 @@ require "binds"
 ----------------------------------
 -- Optional user script loading --
 ----------------------------------
+-- Optional plugins
+require("plugins")
 
 require "webinspector"
 
