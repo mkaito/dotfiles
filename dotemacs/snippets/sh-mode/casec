@@ -1,0 +1,6 @@
+#contributor : mkaito <me@mkaito.com>
+#name : Case statement
+#key : )
+# --
+$1)
+	$0

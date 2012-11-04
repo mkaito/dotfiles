@@ -1,0 +1,8 @@
+#contributor : mkaito <me@mkaito.com>
+#name : Double branch conditional
+#key : ife
+# --
+if [[ $1 ]]; then
+	$0
+else
+fi # $1

@@ -1,0 +1,10 @@
+# contributor: Michishige Kaito <me@mkaito.com>
+# key: widget
+# name: Graph
+# --
+$1widget = awful.widget.graph()
+$1widget:set_width(${2:50})
+$1widget:set_background_color("#494B4F")
+$1widget:set_color("#FF5656")
+$1widget:set_gradient_colors({ "#FF5656", "#88A175", "#AECF96" })
+vicious.register(cpuwidget, vicious.widgets.$3, "$0")

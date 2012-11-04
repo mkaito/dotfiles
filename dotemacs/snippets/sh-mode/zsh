@@ -1,0 +1,5 @@
+#contributor : mkaito <me@mkaito.com>
+#name : Z Shell shebang
+#key : sh
+# --
+#!/usr/bin/env zsh
