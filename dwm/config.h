@@ -22,29 +22,29 @@ static const Bool clicktofocus      = True;     /* Change focus only on click */
 static const Bool viewontag         = True;     /* Switch view on tag switch */
 
 static const Rule rules[] = {
-	//class          instance	title		tags mask     isfloating   iscentred   monitor 
-	{ "Gimp",         NULL,		NULL,		0,            True,        False,      -1 },
-	{ "MPlayer",      NULL,		NULL,		0,            False,       True,       -1 },
-	{ "mplayer2",     NULL,		NULL,		0,            True,        True,       -1 },
-	{ "XFontSel",     NULL,		NULL,		0,            True,        True,       -1 },
-	{ "Chromium",     NULL,		NULL,		1 << 2,       False,       False,       0 },
-	{ "Firefox",      NULL,		NULL,		1 << 2,       True,        True,       -1 },
-	{ "Firefox",      "Navigator",	NULL,		1 << 2,       False,       False,       0 },
-	{ "luakit",       NULL,		NULL,		1 << 2,       False,       False,       0 },
-	{ NULL,           NULL,		"JDownloader",	1 << 5,	      False,       False,       0 },
-	{ "Emacs",        "_Remember_",	NULL,		0,            True,        True,       -1 },
-	{ "Anki",         NULL,		NULL,		0,            True,        True,       -1 },
-	{ NULL,           NULL,		"Weechat",	1 << 3,       False,       False,       1 },
-	{ "Pidgin",       NULL,		NULL,		1 << 3,       False,       False,       1 },
-	{ NULL,           NULL,		"Mail",		1 << 3,       False,       False,       1 },
-	{ NULL,           NULL,		"mixer",	0,            True,        True,       -1 },
-	{ NULL,           NULL,		"luakit-clive", 0,            True,        True,        1 },
-	{ "Pavucontrol",  NULL,		NULL,		0,            True,        True,       -1 },
-	{ NULL,           NULL,		"MPD",		0,            True,        True,       -1 },
-	{ "Galculator",   NULL,		NULL,		0,            True,        True,       -1 },
-	{ "Xmessage",     "xmessage",	NULL,		0,            True,        True,       -1 },
-	{ "Nitrogen",     NULL,		NULL,		0,            True,        True,       -1 },
-	{ "Wine",        "explorer.exe",NULL,		1 << 4,       False,       False,       0 },
+	//class          instance				title					tags mask     isfloating   iscentred   monitor 
+	{ "Gimp",         NULL,					NULL,					0,            True,        False,      -1 },
+	{ "MPlayer",      NULL,					NULL,					0,            False,       True,       -1 },
+	{ "mplayer2",     NULL,					NULL,					0,            True,        True,       -1 },
+	{ "XFontSel",     NULL,					NULL,					0,            True,        True,       -1 },
+	{ "Chromium",     NULL,					NULL,					1 << 2,       False,       False,       0 },
+	{ "Firefox",      NULL,					NULL,					1 << 2,       True,        True,       -1 },
+	{ "Firefox",      "Navigator",	NULL,					1 << 2,       False,       False,       0 },
+	{ "Dwb",          NULL,					NULL,					1 << 2,       False,       False,      -1 },
+	{ "luakit",       NULL,					NULL,					1 << 2,       False,       False,       0 },
+	{ NULL,           NULL,					"JDownloader",1 << 5,	      False,       False,       0 },
+	{ "Emacs",        "_Remember_",	NULL,					0,            True,        True,       -1 },
+	{ "Anki",         NULL,					NULL,					0,            True,        True,       -1 },
+	{ NULL,           NULL,					"Weechat",		1 << 3,       False,       False,       1 },
+	{ "Pidgin",       NULL,					NULL,					1 << 3,       False,       False,       1 },
+	{ NULL,           NULL,					"Mail",				1 << 3,       False,       False,       1 },
+	{ NULL,           NULL,					"mixer",			0,            True,        True,       -1 },
+	{ "Pavucontrol",  NULL,					NULL,					0,            True,        True,       -1 },
+	{ NULL,           NULL,					"MPD",				0,            True,        True,       -1 },
+	{ "Galculator",   NULL,					NULL,					0,            True,        True,       -1 },
+	{ "Xmessage",     "xmessage",		NULL,					0,            True,        True,       -1 },
+	{ "Nitrogen",     NULL,					NULL,					0,            True,        True,       -1 },
+	{ "Wine",        "explorer.exe",NULL,					1 << 4,       False,       False,       0 },
 };
 
 //layout(s) 
@@ -68,7 +68,7 @@ static const Tag tags[] = {
 	{ "term",     &layouts[0],     -1,      -1 },
 	{ "code",     &layouts[0],     -1,      -1 },
 	{ "web",      &layouts[0],     -1,      -1 },
-	{ "IM",       &layouts[5],     0.8,      -1 },
+	{ "IM",       &layouts[4],     0.8,      -1 },
 	{ "gaming",   &layouts[1],     -1,      -1 },
 	{ "aux",      &layouts[4],     -1,      -1 },
 	{ "media",    &layouts[1],     -1,      -1 },
@@ -95,10 +95,10 @@ static const char *termcmd[]        = { terminal, NULL };
 static const char *scratchpadcmd[]  = { "emacs", "-name", scratchpadname, "-geometry", "150x40", NULL };
 static const char *musiccmd[]       = { terminal, "-e", "ncmpcpp", NULL };
 static const char *filemancmd[]     = { terminal, "-e", "ranger", NULL };
-static const char *browsercmd[]     = { "/bin/sh", "-c", "GTK2_RC_FILES=/usr/share/themes/Aurora/gtk-2.0/gtkrc firefox", NULL };
-//static const char *browsercmd[]   = { "firefox", NULL };
+//static const char *browsercmd[]     = { "/bin/sh", "-c", "GTK2_RC_FILES=/usr/share/themes/Aurora/gtk-2.0/gtkrc firefox", NULL };
+static const char *browsercmd[]     = { "dwb", NULL };
 //static const char *altbrowsercmd[]= { "chromium", "--enable-accelerated-compositing", "--memory-model=low", NULL };
-static const char *altbrowsercmd[]  = { "/bin/sh", "-c", "GTK2_RC_FILES=/usr/share/themes/Aurora/gtk-2.0/gtkrc luakit", NULL };
+static const char *altbrowsercmd[]  = { "firefox", NULL };
 static const char *imcmd[]          = { terminal, "-T", "Weechat", "-e", "screen", "-l", "-UDRS", "weechat", "weechat-curses", NULL };
 static const char *emacscmd[]       = { "emacsclient", "-c", "-n", NULL };
 static const char *remembercmd[]    = { "emacsclient", "--eval", "(make-remember-frame)", NULL };
