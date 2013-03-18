@@ -1,10 +1,10 @@
 --- 
 :benchmark: false
 :verbose: true
-#gem: --no-ri --no-rdoc
+gem: --no-ri --no-rdoc --user-install
 :update_sources: true
 :sources: 
-- http://gemcutter.org
+- https://rubygems.org
 :backtrace: false
 :bulk_threshold: 1000
 #rdoc: --inline-source --line-numbers --format=html --template=hanna

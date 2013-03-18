@@ -1,5 +1,6 @@
 # {{{ Environment
-export PATH="${HOME}/dev/bin:${HOME}/.cabal/bin:${HOME}/.gem/ruby/1.9.1/bin:"${PATH}
+export PATH="${HOME}/dev/bin:${HOME}/.cabal/bin:${HOME}/.gem/ruby/1.9.1/bin:${PATH}"
+export GEM_HOME=~/.gem/ruby/1.9.1
 export HISTFILE="${HOME}/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -23,6 +24,18 @@ export LEDGER_FILE="~/ledger.ldg"
 # }}}
 
 source ~/dev/dotfiles/zsh/_alias
+#source ~/dev/dotfiles/zsh/syntax-highlighting/zsh-syntax-highlighting.zsh
+#ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+
+if [[ $TERM == xterm-termite ]]; then
+  . /etc/profile.d/vte.sh
+
+  __vte_ps1
+
+  chpwd() {
+    __vte_ps1
+  }
+fi
 
 # {{{ ZSH settings
 setopt emacs
@@ -45,7 +58,27 @@ autoload -U zmv
 # New style completion system
 fpath=(/home/chris/dev/dotfiles/zsh/completion $fpath)
 autoload -U compinit; compinit
+
+# Enable completion caching
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# Quick completions
 compdef '_dispatch git git' hub
+compdef gpg2=gpg
+
+_get_passwords() {
+    #local a
+    #read -l a
+    #reply=(`./make.pbj --list "$a"`)
+		reply=(clear `pw complete`)
+}
+compctl -K _get_passwords pw
+
+# God bless _gnu_generic
+compdef _gnu_generic transmission-remote
+compdef _gnu_generic bitcoind
+
 #  * List of completers to use
 zstyle ":completion:*" completer _complete _match _approximate
 #  * Allow approximate
@@ -146,8 +179,8 @@ function setprompt () {
         colors
     fi
     for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-	eval PR_"${color}"="%{${terminfo[bold]}$fg[${(L)color}]%}"
-	eval PR_LIGHT_"${color}"="%{$fg[${(L)color}]%}"
+			eval PR_"${color}"="%{${terminfo[bold]}$fg[${(L)color}]%}"
+			eval PR_LIGHT_"${color}"="%{$fg[${(L)color}]%}"
     done
     PR_NO_COLOUR="%{${terminfo[sgr0]}%}"
 
@@ -190,7 +223,7 @@ function setprompt () {
             ;;
         *)  # Main prompt
             PROMPT="$PR_SET_CHARSET$PR_GREEN%B%n%b@$PR_NO_COLOUR%m %~
-%(!.$PR_RED#$PR_NO_COLOUR.$PR_YELLOW→$PR_NO_COLOUR)$PR_NO_COLOUR "
+%(!.$PR_RED──╼$PR_NO_COLOUR.$PR_YELLOW──╼$PR_NO_COLOUR)$PR_NO_COLOUR "
             RPROMPT=""
     esac
 }

@@ -26,6 +26,7 @@
       (append
        (list
 	"/usr/share/emacs/site-lisp/icicles"
+	"/usr/share/emacs/site-lisp/"
 	"~/.emacs.d"
 	"~/.emacs.d/vendor"
 	;; "~/.emacs.d/vendor/color-theme-ir-black"
@@ -35,6 +36,7 @@
 	"~/.emacs.d/vendor/smart-tabs-mode"
 	"~/.emacs.d/vendor/nginx-mode"
 	"~/.emacs.d/vendor/yasnippet"
+	"~/.emacs.d/vendor/solarized"
 	"/usr/share/ghc-mod-1.11.2/"
 	)
        load-path))
@@ -56,6 +58,11 @@
 ;; Fix dead keys
 (load-library "iso-transl")
 
+;; Fix clipboard
+(global-set-key "\C-w" 'clipboard-kill-region)
+(global-set-key "\M-w" 'clipboard-kill-ring-save)
+(global-set-key "\C-y" 'clipboard-yank)
+
 ;; Icicles
 (require 'icicles)
 (eval-after-load "ring" '(progn (require 'ring+)))
@@ -66,7 +73,7 @@
 ;(setq color-theme-is-global t)
 ;(color-theme-initialize)
 (require 'color-theme-solarized)
-(color-theme-solarized-dark)
+(color-theme-solarized-light)
 
 (global-hl-line-mode 1)
 ;(set-face-background 'hl-line "#353535")
@@ -129,6 +136,10 @@
 (setq mumamo-chunk-coloring 1)
 
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(mumamo-background-chunk-major ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode1 ((((class color) (min-colors 88) (background dark)) nil)))
  '(mumamo-background-chunk-submode2 ((((class color) (min-colors 88) (background dark)) nil)))
@@ -174,8 +185,8 @@
 (windmove-default-keybindings)
 (setq windmove-wrap-around t)
 
-;; (require 'epa-file)
-;; (epa-file-enable)
+(require 'epa-file)
+(epa-file-enable)
 
 (require 'ido)
 (ido-mode t)
@@ -236,6 +247,9 @@
 (global-set-key (kbd "C-c C-f") 'find-file-in-project)
 
 ;; Modes
+
+(autoload 'php-mode "php-mode.el" "Php mode." t)
+(setq auto-mode-alist (append '(("/*.\.php[345]?$" . php-mode)) auto-mode-alist))
 
 (autoload 'ghc-init "ghc" nil t)
 (add-hook 'haskell-mode-hook (lambda () (ghc-init) (flymake-mode)))
@@ -445,19 +459,19 @@
 	     (local-set-key (kbd "RET") 'newline-and-indent)))
 
 ;; Indent when pasting
-(dolist (command '(yank yank-pop))
-  (eval `(defadvice ,command (after indent-region activate)
-	   (and (not current-prefix-arg)
-		(member major-mode '(emacs-lisp-mode lisp-mode
-						     clojure-mode		 scheme-mode
-						     haskell-mode		 ruby-mode
-						     rspec-mode			 python-mode
-						     c-mode					 c++-mode
-						     objc-mode			 latex-mode
-						     plain-tex-mode	 sass-mode
-						     haml-mode))
-		(let ((mark-even-if-inactive transient-mark-mode))
-		  (indent-region (region-beginning) (region-end) nil))))))
+;; (dolist (command '(yank yank-pop))
+;;   (eval `(defadvice ,command (after indent-region activate)
+;; 	   (and (not current-prefix-arg)
+;; 		(member major-mode '(emacs-lisp-mode lisp-mode
+;; 						     clojure-mode		 scheme-mode
+;; 						     haskell-mode		 ruby-mode
+;; 						     rspec-mode			 python-mode
+;; 						     c-mode					 c++-mode
+;; 						     objc-mode			 latex-mode
+;; 						     plain-tex-mode	 sass-mode
+;; 						     haml-mode))
+;; 		(let ((mark-even-if-inactive transient-mark-mode))
+;; 		  (indent-region (region-beginning) (region-end) nil))))))
 
 ;; When killing the end of a line, eliminate any indentation of the next line
 (defadvice kill-line (before check-position activate)
@@ -550,3 +564,9 @@
     (select-frame (make-frame-on-display x-display-name '((window-system . x))))
     )
   (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((encoding . utf-8)))))

@@ -3,6 +3,9 @@
 
 source ~/dev/dotfiles/zsh/_android.sh
 
+# Helper function for resolving relative paths
+realpath() { for f in "$@"; do echo ${f}(:A); done }
+
 # {{{ transmission-daemon
 alias tt=transmission-remote
 alias ttl='tt -l'
@@ -59,7 +62,7 @@ function ttr {
 		done
 
 		torrents=${(j:,:)torrents}
-		echo "Stopping torrents: ${torrents}."
+		echo "Removing torrents: ${torrents}."
 	elif [[ ! -z "$1" ]]; then
 		torrents="$1"
 	fi
@@ -80,14 +83,14 @@ function ttm {
 		done
 
 		torrents=${(j:,:)torrents}
-		echo "Stopping torrents: ${torrents}."
+		echo "Moving torrents: ${torrents}."
 	elif [[ ! -z "$1" ]]; then
 		torrents="$1"
 	fi
 	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
 	[[ -z "$2" ]] && echo "Please specify a target folder" && return 2
 
-	tt -t${torrents} -m ${2}
+	tt "-t$torrents" --move $(abspath "$2")
 }
 
 function ttf {
@@ -107,9 +110,12 @@ function tta {
 }
 # }}}
 
+alias yt="noglob clive -f best -c"
+alias ytp="yt --exec 'mplayer %f; rm %f'"
+
 ## Twitch.tv livestreamer shortcut
 function ttv() {
-	livestreamer http://www.twitch.tv/$1 best
+	livestreamer http://www.twitch.tv/$1 $2
 }
 
 function remacs {
@@ -126,19 +132,17 @@ function serve {
 	ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
 }
 
-alias sc2='WINEPREFIX=~/.wine_sc2 wine explorer /desktop=sc2,1920x1064 "C:\Starcraft II\Starcraft II.exe"'
-alias sc2na='WINEPREFIX=~/.wine_sc2 wine explorer /desktop=sc2na,1920x1064 "C:\Starcraft II NA\Starcraft II.exe"'
-
 alias sr="screen -URDS rtorrent rtorrent"
 alias im="screen -l -UDRS weechat weechat-curses"
-#alias git=hub
 alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
+
+# Github
+eval "$(hub alias -s)"
 
 # mplayer & youtube
 alias m=mplayer;
 function yt() {
-	i="$1"
-	mplayer -fs $(curl -s "http://www.youtube.com/get_video_info?&video_id=$i" | echo -e $(sed 's/%/\\x/g;s/.*\(v[0-9]\.lscache.*\)/http:\/\/\1/g') | grep -oP '^[^|,]*')
+	quvi -f best --exec 'mplayer -prefer-ipv4 %u' "$1"
 }
 
 # Archive utilities
@@ -199,7 +203,8 @@ function extract() {
 }
 
 # function calc () { awk "BEGIN { print $* }" }
-function calc () { echo "$@" | bc -l ; }
+function calculate () { echo "$@" | bc -l ; }
+alias calc='noglob calculate'
 
 # Fix file and folder permissions recursively under .
 alias fixperm="find . -type d -exec chmod 755 {} \;; find . -type f -exec chmod 644 {} \;"
@@ -255,12 +260,12 @@ alias g='sudo gem'
 alias gi='sudo gem install'
 
 # Emacs
-# alias e="emacsclient -n"
-# alias ec="e -c"
-# alias ect="emacsclient -nw"
-alias e='emacs'
-alias ec=e
-alias ect='emacs -nw'
+#alias e="emacsclient -n"
+#alias ec="e -c"
+#alias ect="emacsclient -nw"
+# alias e='emacs'
+# alias ec=e
+# alias ect='emacs -nw'
 # }}}
 
 # vim:ft=zsh:fdm=marker

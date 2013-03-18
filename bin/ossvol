@@ -1,0 +1,88 @@
+#!/bin/bash
+#
+# ossvol is a simple script to manage oss volume levels and muting.
+#
+# Script by: Daniel J Griffiths <ghost1227@archlinux.us>
+
+# Configure stuff
+VOLSTORE=${XDG_CONFIG_HOME:-~/.config}/ossvol/volume
+MUTSTORE=${XDG_CONFIG_HOME:-~/.config}/ossvol/volume.muted
+CHANNEL="vmix0-outvol"
+ARGUMENT=$2
+
+# You shouldn't have to edit below here.
+[ ! -d ${XDG_CONFIG_HOME:-~/.config}/ossvol ] && mkdir ${XDG_CONFIG_HOME:-~/.config}/ossvol
+
+err() {
+    echo "$1"
+    exit 1
+}
+
+usage() {
+    echo "usage: ossvol [option] [argument]"
+    echo
+    echo "Options:"
+    echo "     -i, --increase - increase volume by [argument]"
+    echo "     -d, --decrease - decrease volume by [argument]"
+    echo "     -t, --toggle   - toggle mute on and off"
+    echo "     -h, --help     - display this"
+    exit
+}
+
+toggle() {
+    if [ -f $MUTSTORE ]; then
+        ossmix $CHANNEL `cat $VOLSTORE`
+        rm $MUTSTORE
+    else
+        VOLUME=$(ossmix $CHANNEL | awk '{print $10}' | awk -F : '{print $1}')
+        ossmix $CHANNEL 0
+        echo $VOLUME > $VOLSTORE
+        touch $MUTSTORE
+    fi
+}
+
+increase() {
+    if [ -f $MUTSTORE ]; then
+        TMPVOL=`cat $VOLSTORE`
+        NEWVOL=`expr $TMPVOL + $ARGUMENT`
+        ossmix $CHANNEL +$NEWVOL
+        echo $NEWVOL > $VOLSTORE
+        rm $MUTSTORE
+    else
+        ossmix $CHANNEL +$ARGUMENT
+        VOLUME=$(ossmix $CHANNEL | awk '{print $10}' | awk -F : '{print $1}')
+        echo $VOLUME > $VOLSTORE
+    fi
+}
+
+decrease() {
+    if [ -f $MUTSTORE ]; then
+        TMPVOL=`cat $VOLSTORE`
+        NEWVOL=`expr $TMPVOL - $ARGUMENT`
+        ossmix $CHANNEL -- -$NEWVOL
+        echo $NEWVOL > $VOLSTORE
+        rm $MUTSTORE
+    else
+        ossmix $CHANNEL -- -$ARGUMENT
+        VOLUME=$(ossmix $CHANNEL | awk '{print $10}' | awk -F : '{print $1}')
+        echo $VOLUME > $VOLSTORE
+    fi
+}
+
+case "$1" in
+	'-i'|'--increase')
+	increase
+	;;
+	'-d'|'--decrease')
+	decrease
+	;;
+	'-t'|'--toggle')
+	toggle
+	;;
+	''|'-h'|'--help')
+	usage
+	;;
+	*)
+	err "Unrecognized option \`$1', see ossvol --help"
+	;;
+esac

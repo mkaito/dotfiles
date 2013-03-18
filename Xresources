@@ -1,86 +1,104 @@
 !{{{ EMACS
 !
-Emacs.font:							Terminus-9
-!Emacs*font:							Inconsolata-g-8
+Emacs.font:		Ubuntu Mono:style=Regular:size=14
+! Emacs.FontBackend:      xft
+! Emacs.font:		Inconsolata\-g-12
 !}}}
 
 !{{{ XFT
-Xft*dpi:								101
-Xft*antialias:					1
-Xft*hinting:						1
-Xft*rgba:								rgb
-Xft*autohint:						0
-Xft*lcdfilter:					lcddefault
-Xft*hintstyle:					hintfull
+Xft.dpi:		101
+Xft.antialias:		1
+Xft.hinting:		1
+Xft.rgba:		none
+Xft.autohint:		0
+Xft.lcdfilter:		lcddefault
+Xft.hintstyle:		hintfull
 !}}}
 
 !{{{ URXVT
 !
 ! General
-urxvt*iso14755:          false
-urxvt*scrollBar:         false
-urxvt*secondaryScroll:    true
-urxvt*saveLines:         65535
-urxvt*cursorBlink:       false
-urxvt*urgentOnBell:       true
-urxvt*scrollTtyOutput:   false
-urxvt*scrollWithBuffer:   true
-urxvt*scrollTtyKeypress:  true
+URxvt.iso14755                :false
+URxvt.scrollBar               :false
+URxvt.secondaryScroll         :true
+URxvt.saveLines               :65535
+URxvt.cursorBlink             :false
+URxvt.urgentOnBell            :true
+URxvt.scrollTtyOutput         :false
+URxvt.scrollWithBuffer        :true
+URxvt.scrollTtyKeypress       :true
 !
 ! Extensions
-urxvt*perl-lib:        /home/chris/dev/dotfiles/urxvt/:/usr/lib/urxvt/perl/
-urxvt*perl-ext-common: default,url-select,clipboard
-urxvt*keysym.M-u:      perl:url-select:select_next
-urxvt*keysym.M-c:      perl:clipboard:copy
-urxvt*keysym.M-v:      perl:clipboard:paste
-urxvt*keysym.M-C-v:    perl:clipboard:paste_escaped
-urxvt*underlineURLs:   true
-urxvt*urlLauncher:     /usr/bin/firefox
+URxvt.perl-lib                :/home/chris/dev/dotfiles/urxvt/:/usr/lib/urxvt/perl/
+URxvt.perl-ext-common         :default,url-select,clipboard
+URxvt.keysym.M-u              :perl:url-select:select_next
+URxvt.keysym.M-c              :perl:clipboard:copy
+URxvt.keysym.M-v              :perl:clipboard:paste
+URxvt.keysym.M-C-v            :perl:clipboard:paste_escaped
+URxvt.url-select.launcher     :/usr/bin/firefox
+URxvt.url-select.underline    :true
 ! Catch ugly URLs
-urxvt*cutchars:        '"'()*<>[]{|}_-
+URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
 !
 ! Appearance
-urxvt*font: -xos4-terminus-medium-r-normal-*-14-*-*-*-*-*-*-u
-!urxvt*font: xft:inconsolata-g:pixelsize=12
-urxvt*shade: 50
+!URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
+URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=14
+!URxvt.transparent            :true
+!URxvt.shading                :50
+!URxvt.blurRadius             :27
+!URxvt.tintColor              :#3f3f3f
 
 !! Zenburn color-scheme
-!urxvt*background:  #3f3f3f
-!urxvt*foreground:  #dcdccc
+!URxvt.background              :#3f3f3f
+!URxvt.foreground              :#dcdccc
 !! black + red
-!!urxvt*color0:     #3f3f3f
-!urxvt*color0:      #1E2320
-!urxvt*color1:      #705050
+!!URxvt.color0                 :#3f3f3f
+!URxvt.color0                  :#1E2320
+!URxvt.color1                  :#705050
 !! green + yellow
-!urxvt*color2:      #60b48a
-!urxvt*color3:      #dfaf8f
+!URxvt.color2                  :#60b48a
+!URxvt.color3                  :#dfaf8f
 !! blue + purple
-!urxvt*color4:      #506070
-!urxvt*color5:      #dc8cc3
+!URxvt.color4                  :#506070
+!URxvt.color5                  :#dc8cc3
 !! cyan + white
-!urxvt*color6:      #8cd0d3
-!urxvt*color7:      #dcdccc
+!URxvt.color6                  :#8cd0d3
+!URxvt.color7                  :#dcdccc
 !! bright-black + bright-red
-!urxvt*color8:      #709080
-!urxvt*color9:      #dca3a3
+!URxvt.color8                  :#709080
+!URxvt.color9                  :#dca3a3
 !! bright-green + bright-yellow
-!urxvt*color10:     #c3bf9f
-!urxvt*color11:     #f0dfaf
+!URxvt.color10                 :#c3bf9f
+!URxvt.color11                 :#f0dfaf
 !! bright-blue + bright-purple
-!urxvt*color12:     #94bff3
-!urxvt*color13:     #ec93d3
+!URxvt.color12                 :#94bff3
+!URxvt.color13                 :#ec93d3
 !! bright-cyan + bright-white
-!urxvt*color14:     #93e0e3
-!urxvt*color15:     #ffffff
+!URxvt.color14                 :#93e0e3
+!URxvt.color15                 :#ffffff
 
-#define S_base03 #002b36
-#define S_base02 #073642
-#define S_base01 #586e75
-#define S_base00 #657b83
-#define S_base0 #839496
-#define S_base1 #93a1a1
-#define S_base2 #eee8d5
-#define S_base3 #fdf6e3
+! Solarized
+! Dark
+!#define S_base03 #002b36
+!#define S_base02 #073642
+!#define S_base01 #586e75
+!#define S_base00 #657b83
+!#define S_base0 #839496
+!#define S_base1 #93a1a1
+!#define S_base2 #eee8d5
+!#define S_base3 #fdf6e3
+
+! Light
+#define S_base03 #fdf6e3
+#define S_base02 #eee8d5
+#define S_base01 #93a1a1
+#define S_base00 #839496
+#define S_base0 #657b83
+#define S_base1 #586e75
+#define S_base2 #073642
+#define S_base3 #002b36
+
+! Common
 #define S_yellow #b58900
 #define S_orange #cb4b16
 #define S_red #dc322f
@@ -90,46 +108,46 @@ urxvt*shade: 50
 #define S_cyan #2aa198
 #define S_green #859900
 
-urxvt*background: S_base03
-urxvt*foreground: S_base0
-urxvt*fading: 40
-urxvt*fadeColor: S_base03
-urxvt*cursorColor: S_base1
-urxvt*pointerColorBackground:S_base01
-urxvt*pointerColorForeground:S_base1
+URxvt*background: S_base03
+URxvt*foreground: S_base0
+!URxvt*fading: 60
+!URxvt*fadeColor: S_base03
+URxvt*cursorColor: S_base1
+URxvt*pointerColorBackground:S_base01
+URxvt*pointerColorForeground:S_base1
 
 !! black dark/light
-urxvt*color0: S_base02
-urxvt*color8: S_base03
+URxvt*color0: S_base02
+URxvt*color8: S_base03
 
 !! red dark/light
-urxvt*color1: S_red
-urxvt*color9: S_orange
+URxvt*color1: S_red
+URxvt*color9: S_orange
 
 !! green dark/light
-urxvt*color2: S_green
-urxvt*color10: S_base01
+URxvt*color2: S_green
+URxvt*color10: S_base01
 
 !! yellow dark/light
-urxvt*color3: S_yellow
-urxvt*color11: S_base00
+URxvt*color3: S_yellow
+URxvt*color11: S_base00
 
 !! blue dark/light
-urxvt*color4: S_blue
-urxvt*color12: S_base0
+URxvt*color4: S_blue
+URxvt*color12: S_base0
 
 !! magenta dark/light
-urxvt*color5: S_magenta
-urxvt*color13: S_violet
+URxvt*color5: S_magenta
+URxvt*color13: S_violet
 
 !! cyan dark/light
-urxvt*color6: S_cyan
-urxvt*color14: S_base1
+URxvt*color6: S_cyan
+URxvt*color14: S_base1
 
 !! white dark/light
-urxvt*color7: S_base2
-urxvt*color15: S_base3
-!}}}
+URxvt*color7: S_base2
+URxvt*color15: S_base3
+!!}}}
 
 !{{{ SshAskpass
 ! {{{Default theme (like SSH v1)
@@ -202,13 +220,13 @@ SshAskpass*Indicator.maximumCount:			24
 ! happen to run your X server at a resolution of 100 pixels per inch
 ! (or some other strange value) instead of the widely used default of
 ! 75, x11-ssh-askpass looks might tiny.  [Sigh].
-! 
+!
 ! To get around this, umm, limitation, we declare the resolution that
 ! the spacing and width/height pixels values are "valid" for, along
 ! with a fuzz factor.  If the current actual resolution is outside of
 ! the range of <DEFAULT - FUZZ>..<DEFAULT + FUZZ>, then we scale pixel
 ! measurements to fit the actual resolution.
-! 
+!
 ! (And if you think SshAskpass*this* is a horrid hack, then take a look at the
 ! actual code, which has to deal with conversion to [cheesy fanfare]
 ! thats right. millimeters!!!  The right hand managed to slip that
@@ -228,7 +246,7 @@ SshAskpass*inputTimeout:					0
 
 ! Ssh-askpass grabs the keyboard by default.
 ! To stop it from grabbing the keyboard, use:
-!SshAskpass*grabKeyboard:			false
+SshAskpass*grabKeyboard:			false
 
 ! Ssh-askpass does not grab the pointer by default.
 ! To make it grab the pointer, use:

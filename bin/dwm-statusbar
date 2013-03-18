@@ -1,0 +1,109 @@
+#!/bin/bash
+#
+# ~/bin/dwm-statusbar
+#
+# Status bar for dwm. Expanded from:
+# https://bitbucket.org/jasonwryan/eeepc/src/73dadb289dead8ef17ef29a9315ba8f1706927cb/Scripts/dwm-status
+
+print_song_info() {
+  song_info="$(ncmpcpp --now-playing '\x09{{{{%t - }%a}}|{%f}}' | head -c 70)"
+  if [[ ! $song_info ]]; then
+    song_info="Off"
+  fi
+  echo -ne "\x04E01D\x0F\uE00E ${song_info}"
+}
+
+# WTF is this shit?
+print_torrent_status() {
+  torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
+  if [[ ! $torrent_status ]]; then
+    torrent_status="Idle"
+  else
+    torrent_status="\x07${torrent_status}"
+  fi
+  echo -ne "\x04\uE01C\uE01D\x0D\uE017 ${torrent_status}"
+}
+
+# Not quite...
+print_email_unread() {
+  echo -ne "\x04\uE01C\uE01D\x0D\uE014"
+  for maildir in $(find $HOME/.mutt/maildir/*/inbox/new -type d); do
+    unread_count="$(ls "${maildir}" | wc -l)"
+    if [[ $unread_count -ne 0 ]]; then
+      echo -ne " \x07${unread_count}"
+    else
+      echo -ne " \x0D0"
+    fi
+  done
+}
+
+# I guess I could ask weechat, but wtf does this do anyway?
+print_last_msg() {
+  last_msg="$(cat $HOME/.logs/irssi_pipe)"
+  echo -ne "\x04\uE01C\uE01D\x0D\uE013 ${last_msg}"
+}
+
+print_mem_used() {
+  mem_used="$(free -m | awk 'NR==3 {print $3}')"
+  echo -ne " \x0E\uE010 \x08${mem_used}M"
+}
+
+print_volume() {
+  #volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+	volume=$(( $(ossmix vmix0-outvol | awk '{print $10}' | awk -F : '{print $1}') * 4 ))
+
+  if [[ $volume -ne 0 ]]; then
+    volume="\x0A${volume}"
+  fi
+  echo -ne "\x04\uE01C\uE01D\x10\uE015 ${volume}%"
+}
+
+print_datetime() {
+  datetime="$(date "+%a %d %b \x12%I:%M %p")"
+  echo -ne "\x04\uE01C\uE01D\x11\uE016 ${datetime}"
+}
+
+# network (from: http://dzen.geekmode.org/dwiki/doku.php?id=dzen:network-meter)
+# cpu (from: https://bbs.archlinux.org/viewtopic.php?pid=661641#p661641)
+rx_old=$(cat /sys/class/net/eth0/statistics/rx_bytes)
+tx_old=$(cat /sys/class/net/eth0/statistics/tx_bytes)
+
+while true; do
+  # get new cpu idle and total usage
+  eval $(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)
+  cpu_interval=$((cpu_total_now-${cpu_total_old:-0}))
+  # calculate cpu usage (%)
+  let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
+
+  # get new rx/tx counts
+  rx_now=$(cat /sys/class/net/eth0/statistics/rx_bytes)
+  tx_now=$(cat /sys/class/net/eth0/statistics/tx_bytes)
+  # calculate the rate (K) and total (M)
+  let rx_rate=($rx_now-$rx_old)/1024
+  let tx_rate=($tx_now-$tx_old)/1024
+  #  let rx_total=$rx_now/1048576
+  #  let tx_total=$tx_now/1048576
+
+  # output vars
+  print_cpu_used() { printf "%-16b" "\x04\uE01C\uE01D\x0E\uE00F \x08${cpu_used}%"; }
+  print_rx_rate() { printf "%-18b" "\x04\uE01C\uE01D\x0C\uE011 \x06${rx_rate}K"; }
+  print_tx_rate() { printf "%-9b" "\x0B\uE012 \x05${tx_rate}K"; }
+
+  # Pipe to status bar, not indented due to printing extra spaces/tabs
+#$(print_email_unread)\
+#$(print_last_msg)\
+#$(print_torrent_status)\
+#$(print_volume)\
+  xsetroot -name "$(print_song_info)\
+$(print_cpu_used)$(print_mem_used)\
+$(print_rx_rate)$(print_tx_rate)\
+$(print_datetime)"
+
+  # reset old rates
+  rx_old=$rx_now
+  tx_old=$tx_now
+  cpu_idle_old=$cpu_idle_now
+  cpu_total_old=$cpu_total_now
+  # loop stats every 1 second
+  sleep 1
+done

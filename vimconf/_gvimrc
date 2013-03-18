@@ -1,5 +1,4 @@
-colorscheme wombat
-set background=dark
+set background=light
 set go=a
-"set guifont=Terminus\ 9
+set guifont=Ubuntu\ Mono\ 10
 set guicursor+=a:blinkon0

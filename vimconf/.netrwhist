@@ -1,11 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/home/chris/dev/build/libtorrent-extended/libtorrent-extended/src/libtorrent-0.12.6/src/torrent'
-let g:netrw_dirhist_2='/home/chris/dev/build/libtorrent-extended/libtorrent-extended/src/libtorrent-0.12.6/src'
-let g:netrw_dirhist_3='/home/chris/.config/awesome'
-let g:netrw_dirhist_4='/home/chris/.mozilla/firefox'
-let g:netrw_dirhist_5='/home/chris/dev/rubydoro'
-let g:netrw_dirhist_6='/home/chris/dev/is/fril/site/sass'
-let g:netrw_dirhist_7='/home/chris/.weechat/xfer'
-let g:netrw_dirhist_8='/home/chris/dev/is/fril/site'
-let g:netrw_dirhist_9='/home/chris/dev/is/fril/site/src'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/home/chris/dev/blog'

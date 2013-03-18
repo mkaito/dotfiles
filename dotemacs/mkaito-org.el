@@ -1,5 +1,5 @@
 ;; {{{ Org Mode
-(require 'org-install)
+;;(require 'org-install)
 (setq org-directory "~/.org/")
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
@@ -12,7 +12,7 @@
 (setq org-return-follows-link t)
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 (add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'auto-fill-mode)
+;; (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 
 ;; key based encryption of node contents
@@ -69,9 +69,13 @@
                       ("@errands" . ?e)
                       ("@computer" . ?c)))
 
+;; Clocking options
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
-      (list "~/.org/personal.org" "~/.org/refile.org")
+      (list "~/.org/personal.org" "~/.org/refile.org" "~/.org/work.org")
       )
 
 ;; Refile targets

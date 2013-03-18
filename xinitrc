@@ -5,7 +5,10 @@
 # {{{Environment settings
 ## Fix WM compat for some apps
 export OOO_FORCE_DESKTOP="gnome"
-export _JAVA_AWT_WM_NONREPARENTING=1; wmname LG3D
+export _JAVA_AWT_WM_NONREPARENTING=1
+export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' 
+export JAVA_FONTS=/usr/share/fonts/TTF
+# wmname LG3D
 export DE=xfce
 
 # Keep the logs
@@ -16,10 +19,10 @@ export gnupglog="${HOME}/.gnupg/gpg-agent.info"
 export WINEPREFIX=${HOME}/.wine_64
 
 # Ibus
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
-export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
+# export GTK_IM_MODULE=ibus
+# export XMODIFIERS=@im=ibus
+# export QT_IM_MODULE=ibus
+# export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
 
 # MPD runs on a unix socket
 export MPD_HOST=${HOME}/.mpd/mpd.sock
@@ -27,41 +30,52 @@ export MPD_PORT=-1
 #}}}
 
 # {{{ Resource and keymap settings
-usermodmap="${HOME}/.Xmodmap"
-userresources="${HOME}/.Xresources"
-userdefresources="${HOME}/.Xresources"
-sysmodmap="/etc/X11/xinit/.Xmodmap"
-sysresources="/etc/X11/xinit/.Xresources"
+# usermodmap="${HOME}/.Xmodmap"
+# userresources="${HOME}/.Xresources"
+# userdefresources="${HOME}/.Xresources"
+# sysmodmap="/etc/X11/xinit/.Xmodmap"
+# sysresources="/etc/X11/xinit/.Xresources"
 
-# Merge system and user resources and keymaps
-[[ -r "${sysresources}" ]]  && xrdb -merge "${sysresources}"
-[[ -r "${sysmodmap}" ]]     && xmodmap "${sysmodmap}"
-[[ -r "${userresources}" ]] && xrdb -merge "${userresources}"
-[[ -r "${userdefresources}" ]] && xrdb -merge "${userdefresources}"
-[[ -r "${usermodmap}" ]]    && xmodmap "${usermodmap}"
+# # Merge system and user resources and keymaps
+# [[ -r "${sysresources}" ]]  && xrdb -merge "${sysresources}"
+# [[ -r "${sysmodmap}" ]]     && xmodmap "${sysmodmap}"
+# [[ -r "${userresources}" ]] && xrdb -merge "${userresources}"
+# [[ -r "${userdefresources}" ]] && xrdb -merge "${userdefresources}"
+# #[[ -r "${usermodmap}" ]]    && xmodmap "${usermodmap}"
+xrdb ~/.Xresources &
 # }}}
 
 # {{{ Keyboard settings
 #setxkbmap es
 #xmodmap ~/.xmodmap
-#ibus-daemon -r -d &
+ibus-daemon -r -d &
 #autocutsel -fork &
 #autocutsel -selection PRIMARY -fork &
 #}}}
 
 # {{{ Expand the font search path
-xset +fp /usr/share/fonts/local &
+[[ -d /usr/share/fonts/local ]] && xset +fp /usr/share/fonts/local
+[[ -d $HOME/.fonts ]] && xset +fp $HOME/.fonts
 xset fp rehash &
 #}}}
 
 # {{{ Autostart programs
 hostname=$(uname -n)
 
+function checkstart() {
+	pidof $1 > /dev/null || $@
+}
+
+[[ "$hostname" == "archbox" ]] && sudo VBoxClient-all &
+
 # Start urxvt daemon
-urxvtd -q -f -o &
+#urxvtd -q -o -f &
 
 # SSH Agent
 eval `ssh-agent`
+
+checkstart bitcoind -daemon &
+
 # Instead of starting it here every single time,
 # I've decided to have scripts call it themselves.
 # That way, if a script needs unattended ssh, it can ask for it,
@@ -69,8 +83,8 @@ eval `ssh-agent`
 # (ssh-add -l || ssh-add) &
 
 # Music Player Daemon
-mpd ~/.mpd/mpd.conf &
-scmpc &
+checkstart mpd ~/.mpd/mpd.conf &
+checkstart mpdscribble &
 
 # SSH Tunnels
 ## SSH listening on 2304
@@ -80,7 +94,7 @@ scmpc &
 #dropboxd &
 
 # Start the GNU Emacs daemon
-#[[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon 2>/dev/null &
+[[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon 1>/dev/null &
 
 # Start the GnuPG agent and enable OpenSSH agent emulation
 gnupginf="${HOME}/.gnupg/gpg-agent.info"
@@ -94,20 +108,23 @@ else
 fi
 
 xsetroot -cursor_name left_ptr &
-# Mouse speed (intended for my Razer @ 4000 dpi)
-#xset m 0 0 &
-#xinput --set-prop "pointer:Razer Razer Lachesis" "Device Accel Constant Deceleration" "3.7" &
-# I'll have some faster scrolling with that too.
-#xinput --set-prop "pointer:Razer Razer Lachesis" "Evdev Wheel Emulation Inertia" 15 &
 
 # Kill the goddamn bell
 xset b 0 &
 
+# Don't turn the screen off
+xset -dpms
+xset s off
+
 # Turn numlock on
-numlockx &
+# numlockx &
+
+# Remove the mouse pointer when it's idle
+# This screws with window focus
+#checkstart unclutter -idle 3 &
 
 # Redshift adjusts monitor colour temperature according to day time
-redshift -l 28:-13 -t 5600:5000 -m vidmode &
+checkstart redshift -l 28:-13 -t 5600:5000 -m vidmode &
 
 # Fix alsa volumes
 if [[ "$hostname" == "hydra" ]]; then
@@ -118,22 +135,30 @@ else
 	(sleep 10 && amixer set Master 100+ unmute) &
 fi
 
-# Le Pulse Audiô servá
-start-pulseaudio-x11 &
-
 # Keep the sc2replay folder clean
 if [[ "$hostname" == "hydra" ]]; then
 	pgrep 'upload_sc2replays.sh' || $HOME/dev/bin/upload_sc2replays.sh &
 fi;
 
 # Canto RSS
-canto-fetch -b &
+checkstart canto-fetch -b &
 #}}}
 
-# {{{ dwm
-nitrogen --restore &
-conky -c ~/dev/dotfiles/dwm/conky_status | while read -r; do xsetroot -name "$REPLY"; done &
-exec ~/dev/bin/startdwm
+# {{{ WM
+case $1 in
+	subtle)
+		exec dbus-launch subtle --no-randr
+		;;
+	urxvt)
+		urxvt
+		;;
+	*) # dwm
+		#conky -c ~/dev/dotfiles/dwm/conky_status | while read -r; do xsetroot -name "$REPLY"; done &
+		nitrogen --restore &
+		exec dbus-launch ~/dev/bin/startdwm
+		;;
+esac
+                    
 #}}}
 
 # vim:fdm=marker

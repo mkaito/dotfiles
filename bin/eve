@@ -1,0 +1,6 @@
+#!/bin/bash
+# Start all eve clients
+~/dev/bin/eve1 &
+~/dev/bin/eve2 &
+~/dev/bin/eve3 &
+exec emdu_console --add-eve ~/.eveonline/drive_c/users/chris/Local\ Settings/Application\ Data/CCP/EVE/ --enable-deletion

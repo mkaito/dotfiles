@@ -1,9 +1,0 @@
-out_to_console yes
-out_to_x no
-background no
-update_interval 1
-total_run_times 0
-use_spacer none
-
-TEXT
-${if_mpd_playing}[${mpd_title} ${mpd_elapsed}/${mpd_length}]${endif} [${cpu cpu1}% ${cpu cpu2}% ${cpu cpu3}% ${cpu cpu4}% | $memperc%] ${if_up eth0}[down: ${downspeedf eth0}KiB up: ${upspeedf eth0}KiB]${endif} [${time %A, %d de %B, %Y %H:%M}]
