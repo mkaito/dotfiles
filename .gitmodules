@@ -87,7 +87,7 @@
 	url = https://github.com/ap/vim-css-color.git
 [submodule "vimconf/bundle/vim-ledger"]
 	path = vimconf/bundle/vim-ledger
-	url = https://github.com/cypok/vim-ledger.git
+	url = https://github.com/ledger/vim-ledger.git
 [submodule "vimconf/bundle/haskellmode-vim"]
 	path = vimconf/bundle/haskellmode-vim
 	url = https://github.com/lukerandall/haskellmode-vim.git
