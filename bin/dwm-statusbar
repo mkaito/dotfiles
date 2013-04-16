@@ -6,11 +6,11 @@
 # https://bitbucket.org/jasonwryan/eeepc/src/73dadb289dead8ef17ef29a9315ba8f1706927cb/Scripts/dwm-status
 
 print_song_info() {
-  song_info="$(ncmpcpp --now-playing '\x09{{{{%t - }%a}}|{%f}}' | head -c 70)"
+  song_info="$(ncmpcpp --now-playing '\x05{{{{%t - }%a}}|{%f}}' | head -c 70)"
   if [[ ! $song_info ]]; then
     song_info="Off"
   fi
-  echo -ne "\x04E01D\x0F\uE00E ${song_info}"
+  echo -ne "\x04E01D\x0B\uE00E ${song_info}"
 }
 
 # WTF is this shit?
@@ -49,8 +49,8 @@ print_mem_used() {
 }
 
 print_volume() {
-  #volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
-	volume=$(( $(ossmix vmix0-outvol | awk '{print $10}' | awk -F : '{print $1}') * 4 ))
+  volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+	#volume=$(( $(ossmix vmix0-outvol | awk '{print $10}' | awk -F : '{print $1}') * 4 ))
 
   if [[ $volume -ne 0 ]]; then
     volume="\x0A${volume}"
@@ -78,11 +78,9 @@ while true; do
   # get new rx/tx counts
   rx_now=$(cat /sys/class/net/eth0/statistics/rx_bytes)
   tx_now=$(cat /sys/class/net/eth0/statistics/tx_bytes)
-  # calculate the rate (K) and total (M)
-  let rx_rate=($rx_now-$rx_old)/1024
+  # calculate the rate
+	let rx_rate=($rx_now-$rx_old)/1024
   let tx_rate=($tx_now-$tx_old)/1024
-  #  let rx_total=$rx_now/1048576
-  #  let tx_total=$tx_now/1048576
 
   # output vars
   print_cpu_used() { printf "%-16b" "\x04\uE01C\uE01D\x0E\uE00F \x08${cpu_used}%"; }
@@ -93,9 +91,9 @@ while true; do
 #$(print_email_unread)\
 #$(print_last_msg)\
 #$(print_torrent_status)\
-#$(print_volume)\
+#$(print_cpu_used)$(print_mem_used)\
   xsetroot -name "$(print_song_info)\
-$(print_cpu_used)$(print_mem_used)\
+$(print_volume)\
 $(print_rx_rate)$(print_tx_rate)\
 $(print_datetime)"
 

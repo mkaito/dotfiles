@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/zsh
 #
 # mkaito's X.org init file on Arch GNU/Linux
 
-# {{{Environment settings
 ## Fix WM compat for some apps
 export OOO_FORCE_DESKTOP="gnome"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' 
+export BSPWM_SOCKET=~/.bspwm_sock
 export JAVA_FONTS=/usr/share/fonts/TTF
 # wmname LG3D
 export DE=xfce
@@ -27,9 +27,7 @@ export WINEPREFIX=${HOME}/.wine_64
 # MPD runs on a unix socket
 export MPD_HOST=${HOME}/.mpd/mpd.sock
 export MPD_PORT=-1
-#}}}
 
-# {{{ Resource and keymap settings
 # usermodmap="${HOME}/.Xmodmap"
 # userresources="${HOME}/.Xresources"
 # userdefresources="${HOME}/.Xresources"
@@ -43,44 +41,42 @@ export MPD_PORT=-1
 # [[ -r "${userdefresources}" ]] && xrdb -merge "${userdefresources}"
 # #[[ -r "${usermodmap}" ]]    && xmodmap "${usermodmap}"
 xrdb ~/.Xresources &
-# }}}
 
-# {{{ Keyboard settings
 #setxkbmap es
 #xmodmap ~/.xmodmap
 ibus-daemon -r -d &
 #autocutsel -fork &
 #autocutsel -selection PRIMARY -fork &
-#}}}
 
-# {{{ Expand the font search path
 [[ -d /usr/share/fonts/local ]] && xset +fp /usr/share/fonts/local
 [[ -d $HOME/.fonts ]] && xset +fp $HOME/.fonts
 xset fp rehash &
-#}}}
 
-# {{{ Autostart programs
 hostname=$(uname -n)
 
 function checkstart() {
 	pidof $1 > /dev/null || $@
 }
 
-[[ "$hostname" == "archbox" ]] && sudo VBoxClient-all &
+[[ `hostname` == "archbox" ]] && sudo VBoxClient-all &
+
+# Source scripts from /etc/X11/xinit/xinitrc.d
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
+  for f in /etc/X11/xinit/xinitrc.d/*; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
+fi
 
 # Start urxvt daemon
-#urxvtd -q -o -f &
+urxvtd -q -o -f
 
 # SSH Agent
 eval `ssh-agent`
+(ssh-add -l || ssh-add) &
 
-checkstart bitcoind -daemon &
+checkstart bitcoind -daemon
 
-# Instead of starting it here every single time,
-# I've decided to have scripts call it themselves.
-# That way, if a script needs unattended ssh, it can ask for it,
-# and otherwise, I won't be bothered by the askpass dialog.
-# (ssh-add -l || ssh-add) &
 
 # Music Player Daemon
 checkstart mpd ~/.mpd/mpd.conf &
@@ -88,7 +84,7 @@ checkstart mpdscribble &
 
 # SSH Tunnels
 ## SSH listening on 2304
-#autossh -M 2305 -fNR 2304:localhost:2304 mkaito
+autossh -M 2305 -fNR 2304:localhost:2304 mkaito
 
 # Dropbox. Used to sync MobileOrg
 #dropboxd &
@@ -107,24 +103,24 @@ else
     eval `gpg-agent --daemon`
 fi
 
-xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
 
 # Kill the goddamn bell
-xset b 0 &
+xset b 0
 
 # Don't turn the screen off
 xset -dpms
 xset s off
 
 # Turn numlock on
-# numlockx &
+numlockx &
 
 # Remove the mouse pointer when it's idle
 # This screws with window focus
-#checkstart unclutter -idle 3 &
+checkstart unclutter -idle 3 -noevents &
 
 # Redshift adjusts monitor colour temperature according to day time
-checkstart redshift -l 28:-13 -t 5600:5000 -m vidmode &
+ checkstart redshift -l 28:-13 -t 5600:4500 -m randr &
 
 # Fix alsa volumes
 if [[ "$hostname" == "hydra" ]]; then
@@ -136,29 +132,32 @@ else
 fi
 
 # Keep the sc2replay folder clean
-if [[ "$hostname" == "hydra" ]]; then
-	pgrep 'upload_sc2replays.sh' || $HOME/dev/bin/upload_sc2replays.sh &
-fi;
+#if [[ "$hostname" == "hydra" ]]; then
+	#pgrep 'upload_sc2replays.sh' || $HOME/dev/bin/upload_sc2replays.sh &
+#fi;
 
 # Canto RSS
-checkstart canto-fetch -b &
-#}}}
+checkstart canto-fetch -b -s -i 300 &
 
-# {{{ WM
-case $1 in
+nitrogen --restore &
+
+# Slim doesn't set the default session, even if it says it does in a comment in the conf file.
+# Using parameter expansion below to set a "default" session instead.
+case "${1:-dwm}" in
 	subtle)
-		exec dbus-launch subtle --no-randr
+		exec dbus-launch subtle --no-randr > ~/subtle.log 2>&1
 		;;
-	urxvt)
-		urxvt
+	bspwm)
+		sxhkd &
+		exec wm
 		;;
-	*) # dwm
-		#conky -c ~/dev/dotfiles/dwm/conky_status | while read -r; do xsetroot -name "$REPLY"; done &
-		nitrogen --restore &
+	dwm) # dwm
+		#conky -c ~/dev/dwm/conkyrc | while read -r; do xsetroot -name "$REPLY"; done &
 		exec dbus-launch ~/dev/bin/startdwm
 		;;
+	wmfs)
+		exec dbus-launch wmfs
+		;;
+	*) # Pop a shell to fix things
+		urxvt
 esac
-                    
-#}}}
-
-# vim:fdm=marker

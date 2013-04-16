@@ -41,17 +41,16 @@
 (setq org-agenda-custom-commands
      '(("w" todo "TODO")
        ("n" todo "NOTE")
-      ("h" agenda "" ((org-agenda-show-all-dates nil)))
-      ("W" agenda "" ((org-agenda-ndays 21)
+       ("h" agenda "" ((org-agenda-show-all-dates nil)))
+       ("W" agenda "" ((org-agenda-ndays 21)
                       (org-agenda-show-all-dates nil)))
-      ("A" agenda ""
-       ((org-agenda-ndays 1)
-        (org-agenda-overriding-header "Today")))))
+       ("A" agenda ""
+	((org-agenda-ndays 1)
+	 (org-agenda-overriding-header "Today")))))
 
 ;; Org-mode customization
 (setq org-todo-keywords
       '((sequence "TODO(t)" "|" "WAITING" "DONE")
-	(sequende "WATCHING(w)" "|" "WATCHED" "DROPPED")
         (sequence "|" "NOTE(n)")
         (sequence "|" "CANCELED(x)")))
 
@@ -90,40 +89,51 @@
 (org-remember-insinuate)
 
 ;; Notes file
-(setq org-default-notes-file (concat org-directory "/refile.org"))
+(setq org-default-notes-file (concat org-directory "refile.org"))
+(define-key global-map "\C-cc" 'org-capture)
 ;; Notes templates
 (setq org-remember-templates
       '(
-	("Note"     ?n "*** NOTE %?\n    %x\n"          "~/.org/refile.org" "Notes")
-        ("Todo"     ?t "*** TODO %?\n    %^t\n    %x\n" "~/.org/refile.org" "Notes")
+	("Note"  ?n "*** NOTE %?\n  %x\n"                  "personal.org" "Notas")
+        ("Todo"  ?t "*** TODO %?\n  %^t{Due date}\n  %x\n" "personal.org" "Tareas urgentes")
 	))
 
-;; Remember frames
-;;   - $ emacsclient -e '(make-remember-frame)'
+(setq org-capture-templates
+      '(("t" "Tarea" entry (file+headline "personal.org" "Tareas urgentes")
+	 "* TODO %?\n  %^{Due date}t\n  %x")
+	("n" "Nota" entry (file+headline "personal.org" "Notas")
+	 "* %?\n  %i\n  %x")))
+
+;; Capture frames
+;;   - $ emacsclient -e '(make-capture-frame)'
 ;;
-;; Org-remember splits windows, force it to a single window
-(add-hook 'remember-mode-hook  'delete-other-windows)
+(defadvice org-capture-finalize
+  (after delete-capture-frame activate)
+  "Advise capture-finalize to close the frame"
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-frame)))
 
-;; Automatic closing of remember frames
-(defadvice remember-finalize (after delete-remember-frame activate)
-  "Advise remember-finalize to close the frame if it is the remember frame"
-  (if (equal "*Remember*" (frame-parameter nil 'name))
-      (delete-frame))
-  )
-(defadvice remember-destroy (after delete-remember-frame activate)
-  "Advise remember-destroy to close the frame if it is the remember frame"
-  (if (equal "*Remember*" (frame-parameter nil 'name))
-      (delete-frame))
-  )
+(defadvice org-capture-destroy
+  (after delete-capture-frame activate)
+  "Advise capture-destroy to close the frame"
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-frame)))
 
-;; Initialization of remember frames
-(defun make-remember-frame ()
-  "Create a new frame and run org-remember"
+;; make the frame contain a single window. by default org-capture
+;; splits the window.
+(add-hook 'org-capture-mode-hook
+	  'delete-other-windows)
+
+(defun make-capture-frame ()
+  "Create a new frame and run org-capture."
   (interactive)
-  (make-frame '((name . "*Remember*") (width . 80) (height . 10)))
-  (select-frame-by-name "*Remember*")
-  (org-remember)
-  )
+  (make-frame '((name . "capture")
+		(width . 120)
+		(height . 15)))
+  (select-frame-by-name "capture")
+  (setq word-wrap 1)
+  (setq truncate-lines nil)
+  (org-capture))  
 ;; }}}
 
 ;; {{{ Calendar settings
@@ -135,12 +145,12 @@
  calendar-islamic-all-holidays-flag   nil
  calendar-hebrew-all-holidays-flag    nil
  calendar-date-style           "european"
-                                        ;display-time-24hr-format              t
+ ;;display-time-24hr-format              t
  display-time-day-and-date            nil
-                                        ;display-time-format                 nil
-                                        ;display-time-use-mail-icon          nil
-                                        ;calendar-latitude                  45.21
-                                        ;calendar-longitude                 14.26
-                                        ;calendar-location-name "Rijeka, Croatia"
+ ;;display-time-format                 nil
+ ;;display-time-use-mail-icon          nil
+ ;;calendar-latitude                  45.21
+ ;;calendar-longitude                 14.26
+ ;;calendar-location-name "Rijeka, Croatia"
  )
 ;; }}}

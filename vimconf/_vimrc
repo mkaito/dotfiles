@@ -2,7 +2,6 @@ filetype off
 call pathogen#runtime_append_all_bundles()
 filetype plugin indent on
 
-"" {{{ General options
 set nocompatible
 
 set tabstop=2
@@ -24,8 +23,8 @@ set backspace=indent,eol,start
 set laststatus=2
 set undofile
 
-"let mapleader = "\"
-"let g:mapleader = "\"
+let mapleader = ","
+let g:mapleader = ","
 
 nnoremap ; :
 vnoremap ; :
@@ -46,49 +45,78 @@ set formatoptions=qrn1
 "set colorcolumn=79
 
 "set list
-"set listchars=tab:▸\ ,eol:¬
+"set listchars=tab:—\ ,eol:¬
 
 " Swith syntax highlighting on, when the terminal has colors
 " Also switching on highlighting the last used search pattern
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-    syntax on
+		syntax on
 		set background=dark
-		colorscheme solarized
-    set hlsearch
+		colorscheme zenburn
+		set hlsearch
 endif
 
 set nuw=6
 set number
 set cursorline
-set clipboard=unnamedplus       " X11 System Clipboard
+set clipboard=unnamedplus			 " X11 System Clipboard
 set autowrite
 set autoread
 
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+set backup
+
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+" viminfo stores the the state of your previous editing session
+set viminfo+=n~/.vim/viminfo
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
+endif
+
 augroup vimrcEx
-  au!
+	au!
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-        \ if line("'\'") > 0 && line("'\'") <= line("$") |
-        \ exe "normal g`\"" |
-        \ endif
+	" When editing a file, always jump to the last known cursor position.
+	" Don't do it when the position is invalid or when inside an event handler
+	" (happens when dropping a file on gvim).
+	autocmd BufReadPost *
+				\ if line("'\'") > 0 && line("'\'") <= line("$") |
+				\ exe "normal g`\"" |
+				\ endif
 
-  au FocusLost * :wa
-  au BufWritePre * :%s/s+$//e   " Remove trailing whitespace upon saving
+	au FocusLost * :wa
+	au BufWritePre * :%s/s+$//e	 " Remove trailing whitespace upon saving
 augroup END
-
-" FuzzyFinder options.
-let g:fuzzy_ignore = "*.log;gems/*;vendor/*;.gitignore;*.pyo;*.pyc;*.hi;*.o;core/*;deps/*;rel/*;*.beam;*.erl;*.hrl;*.svg;*.psd"
-let g:fuzzy_matching_limit = 30
-" }}}
-
-" {{{ Mappings & Functions
-"F7 WordProcessorOn
-:map <F7> :set wrap <CR> :setlocal spell spelllang=en_gb linebreak nolist colorcolumn=0<CR>
-"F8 WordProcessorOff
-:map <F8> :set nowrap <CR> :set nospell list colorcolumn=79<CR>
 
 " Clean up trailing whitespace in the active file
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -117,28 +145,6 @@ nnoremap <C-l> <C-w>l
 nnoremap j gj
 nnoremap k gk
 
-" FuzzyFinder key maps
-map <leader>t :FuzzyFinderTextMate<CR>
-map <leader>r :FuzzyFinderTextMateRefreshFiles<CR>
-map <leader>b :FuzzyFinderBuffer<CR>
-
-" NERDCommenter
-" Select alternate comment delimiters for haskell files (-- instead of {- -})
-"au BufRead,BufNewFile *.hs NERDComAltDelim()
-
-
-" <leader>r will spawn a Ranger instance in cwd() and open the selected file
-" in vim
-fun Ranger()
-  silent !ranger --choosefile=/tmp/chosen
-  if filereadable('/tmp/chosen')
-    exec 'edit ' . system('cat /tmp/chosen')
-    call system('rm /tmp/chosen')
-  endif
-  redraw!
-endfun
-map <leader>r :call Ranger()<CR>
-
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<CR>
 
@@ -149,40 +155,41 @@ au CursorHold * call UpdateFile()
 au BufWritePre * let b:last_autosave=localtime()
 set updatetime=1000
 function! UpdateFile()
-  if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
-    update
-    let b:last_autosave=localtime()
-  endif
+	if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
+		update
+		let b:last_autosave=localtime()
+	endif
 endfunction
-" }}}
 
-" {{{ Mode options
-" {{{ Ruby Scripts
-"if !empty(matchstr($MY_RUBY_HOME, 'jruby'))
-  "let g:ruby_path = join(split(glob($MY_RUBY_HOME.'/lib/ruby/*.*')."\n".glob($MY_RUBY_HOME.'/lib/rubysite_ruby/*'),"\n"),',')
-"endif
-" }}}
+" Ruby stuff
+autocmd FileType ruby
+					\ if expand('%') =~# '_test\.rb$' |
+					\   compiler rubyunit | setl makeprg=testrb\ \"%:p\" |
+					\ elseif expand('%') =~# '_spec\.rb$' |
+					\  compiler rspec | setl makeprg=rspec\ \"%:p\" |
+					\ else |
+					\  compiler ruby | setl makeprg=ruby\ -wc\ \"%:p\" |
+					\ endif
 
-" {{{Coffee Script mode: Enable folding
+" Coffee Script mode: Enable folding
 let coffee_folding = 1
-" }}}
 
-" {{{ Ledger
+" Ledger
 au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
-" }}}
+let g:ledger_maxwidth = 80
+let g:ledger_fillstring = '	»'
 
-" {{{ haskellmode-vim
+" haskellmode-vim
 au BufEnter *.hs compiler ghc
 let g:haddock_browser="/usr/bin/firefox"
-" }}}
 
-" {{{ CtrlP
+" CtrlP
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-t>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
-	\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+	\ 'dir':	'\v[\/]\.(git|hg|svn)$',
 	\ 'file': '\v\.(exe|so|dll)$',
 	\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
 	\ }
@@ -193,8 +200,3 @@ let g:ctrlp_user_command = {
 		\ },
 	\ 'fallback': 'find %s -type f'
 	\ }
-" }}}
-
-" }}}
-
-" vim:fdm=marker

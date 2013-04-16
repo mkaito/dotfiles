@@ -1,8 +1,8 @@
 !{{{ EMACS
 !
-Emacs.font:		Ubuntu Mono:style=Regular:size=14
-! Emacs.FontBackend:      xft
-! Emacs.font:		Inconsolata\-g-12
+Emacs.FontBackend:      xft
+Emacs.font:		Ubuntu Mono-12
+!Emacs.font:		Inconsolata\-g-12
 !}}}
 
 !{{{ XFT
@@ -12,6 +12,7 @@ Xft.hinting:		1
 Xft.rgba:		none
 Xft.autohint:		0
 Xft.lcdfilter:		lcddefault
+Xft.embolden:           false
 Xft.hintstyle:		hintfull
 !}}}
 
@@ -42,40 +43,48 @@ URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
 !
 ! Appearance
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
-URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=14
+URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=16
 !URxvt.transparent            :true
 !URxvt.shading                :50
 !URxvt.blurRadius             :27
 !URxvt.tintColor              :#3f3f3f
 
-!! Zenburn color-scheme
-!URxvt.background              :#3f3f3f
-!URxvt.foreground              :#dcdccc
-!! black + red
-!!URxvt.color0                 :#3f3f3f
-!URxvt.color0                  :#1E2320
-!URxvt.color1                  :#705050
-!! green + yellow
-!URxvt.color2                  :#60b48a
-!URxvt.color3                  :#dfaf8f
-!! blue + purple
-!URxvt.color4                  :#506070
-!URxvt.color5                  :#dc8cc3
-!! cyan + white
-!URxvt.color6                  :#8cd0d3
-!URxvt.color7                  :#dcdccc
-!! bright-black + bright-red
-!URxvt.color8                  :#709080
-!URxvt.color9                  :#dca3a3
-!! bright-green + bright-yellow
-!URxvt.color10                 :#c3bf9f
-!URxvt.color11                 :#f0dfaf
-!! bright-blue + bright-purple
-!URxvt.color12                 :#94bff3
-!URxvt.color13                 :#ec93d3
-!! bright-cyan + bright-white
-!URxvt.color14                 :#93e0e3
-!URxvt.color15                 :#ffffff
+! Zenburn color-scheme
+URxvt.background              :#3f3f3f
+URxvt.foreground              :#dcdccc
+
+! black + red
+!URxvt.color0                 :#3f3f3f
+URxvt.color0                  :#1E2320
+URxvt.color1                  :#705050
+
+! green + yellow
+URxvt.color2                  :#60b48a
+URxvt.color3                  :#dfaf8f
+
+! blue + purple
+URxvt.color4                  :#506070
+URxvt.color5                  :#dc8cc3
+
+! cyan + white
+URxvt.color6                  :#8cd0d3
+URxvt.color7                  :#dcdccc
+
+! bright-black + bright-red
+URxvt.color8                  :#709080
+URxvt.color9                  :#dca3a3
+
+! bright-green + bright-yellow
+URxvt.color10                 :#c3bf9f
+URxvt.color11                 :#f0dfaf
+
+! bright-blue + bright-purple
+URxvt.color12                 :#94bff3
+URxvt.color13                 :#ec93d3
+
+! bright-cyan + bright-white
+URxvt.color14                 :#93e0e3
+URxvt.color15                 :#ffffff
 
 ! Solarized
 ! Dark
@@ -88,65 +97,65 @@ URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=14
 !#define S_base2 #eee8d5
 !#define S_base3 #fdf6e3
 
-! Light
-#define S_base03 #fdf6e3
-#define S_base02 #eee8d5
-#define S_base01 #93a1a1
-#define S_base00 #839496
-#define S_base0 #657b83
-#define S_base1 #586e75
-#define S_base2 #073642
-#define S_base3 #002b36
+!! Light
+!#define S_base03 #fdf6e3
+!#define S_base02 #eee8d5
+!#define S_base01 #93a1a1
+!#define S_base00 #839496
+!#define S_base0 #657b83
+!#define S_base1 #586e75
+!#define S_base2 #073642
+!#define S_base3 #002b36
 
-! Common
-#define S_yellow #b58900
-#define S_orange #cb4b16
-#define S_red #dc322f
-#define S_magenta #d33682
-#define S_violet #6c71c4
-#define S_blue #268bd2
-#define S_cyan #2aa198
-#define S_green #859900
+!! Common
+!#define S_yellow #b58900
+!#define S_orange #cb4b16
+!#define S_red #dc322f
+!#define S_magenta #d33682
+!#define S_violet #6c71c4
+!#define S_blue #268bd2
+!#define S_cyan #2aa198
+!#define S_green #859900
 
-URxvt*background: S_base03
-URxvt*foreground: S_base0
-!URxvt*fading: 60
-!URxvt*fadeColor: S_base03
-URxvt*cursorColor: S_base1
-URxvt*pointerColorBackground:S_base01
-URxvt*pointerColorForeground:S_base1
+!URxvt*background: S_base03
+!URxvt*foreground: S_base0
+!!URxvt*fading: 60
+!!URxvt*fadeColor: S_base03
+!URxvt*cursorColor: S_base1
+!URxvt*pointerColorBackground:S_base01
+!URxvt*pointerColorForeground:S_base1
 
-!! black dark/light
-URxvt*color0: S_base02
-URxvt*color8: S_base03
+!!! black dark/light
+!URxvt*color0: S_base02
+!URxvt*color8: S_base03
 
-!! red dark/light
-URxvt*color1: S_red
-URxvt*color9: S_orange
+!!! red dark/light
+!URxvt*color1: S_red
+!URxvt*color9: S_orange
 
-!! green dark/light
-URxvt*color2: S_green
-URxvt*color10: S_base01
+!!! green dark/light
+!URxvt*color2: S_green
+!URxvt*color10: S_base01
 
-!! yellow dark/light
-URxvt*color3: S_yellow
-URxvt*color11: S_base00
+!!! yellow dark/light
+!URxvt*color3: S_yellow
+!URxvt*color11: S_base00
 
-!! blue dark/light
-URxvt*color4: S_blue
-URxvt*color12: S_base0
+!!! blue dark/light
+!URxvt*color4: S_blue
+!URxvt*color12: S_base0
 
-!! magenta dark/light
-URxvt*color5: S_magenta
-URxvt*color13: S_violet
+!!! magenta dark/light
+!URxvt*color5: S_magenta
+!URxvt*color13: S_violet
 
-!! cyan dark/light
-URxvt*color6: S_cyan
-URxvt*color14: S_base1
+!!! cyan dark/light
+!URxvt*color6: S_cyan
+!URxvt*color14: S_base1
 
-!! white dark/light
-URxvt*color7: S_base2
-URxvt*color15: S_base3
+!!! white dark/light
+!URxvt*color7: S_base2
+!URxvt*color15: S_base3
 !!}}}
 
 !{{{ SshAskpass

@@ -30,9 +30,9 @@
 	"~/.emacs.d"
 	"~/.emacs.d/vendor"
 	;; "~/.emacs.d/vendor/color-theme-ir-black"
-	"~/.emacs.d/vendor/haml-mode"
-	"~/.emacs.d/vendor/sass-mode"
-	"~/.emacs.d/vendor/coffee-mode"
+	;;"~/.emacs.d/vendor/haml-mode"
+	;;"~/.emacs.d/vendor/sass-mode"
+	;;"~/.emacs.d/vendor/coffee-mode"
 	"~/.emacs.d/vendor/smart-tabs-mode"
 	"~/.emacs.d/vendor/nginx-mode"
 	"~/.emacs.d/vendor/yasnippet"
@@ -72,8 +72,8 @@
 ;(require 'color-theme)
 ;(setq color-theme-is-global t)
 ;(color-theme-initialize)
-(require 'color-theme-solarized)
-(color-theme-solarized-light)
+(require 'color-theme-zenburn)
+(color-theme-zenburn)
 
 (global-hl-line-mode 1)
 ;(set-face-background 'hl-line "#353535")
@@ -164,21 +164,21 @@
 (global-set-key (kbd "\C-c C-\\") 'flyspell-correct-word-before-point)
 
 ;; Move tempfiles and auto saves elsewhere
-(defvar user-temporary-file-directory
-  (concat temporary-file-directory user-login-name "/"))
-(make-directory user-temporary-file-directory t)
-(setq backup-by-copying t)
-(setq backup-directory-alist
-	 `(("." . ,user-temporary-file-directory)
-	(,tramp-file-name-regexp nil)))
-(setq auto-save-list-file-prefix
-	 (concat user-temporary-file-directory ".auto-saves-"))
-(setq auto-save-file-name-transforms
-	 `((".*" ,user-temporary-file-directory t)))
+;; (defvar user-temporary-file-directory
+;;   (concat temporary-file-directory user-login-name "/"))
+;; (make-directory user-temporary-file-directory t)
+;; (setq backup-by-copying t)
+;; (setq backup-directory-alist
+;; 	 `(("." . ,user-temporary-file-directory)
+;; 	(,tramp-file-name-regexp nil)))
+;; (setq auto-save-list-file-prefix
+;; 	 (concat user-temporary-file-directory ".auto-saves-"))
+;; (setq auto-save-file-name-transforms
+;;	 `((".*" ,user-temporary-file-directory t)))
 
 ;; Auto save options.
 (setq auto-save-visited-file-name t
-      auto-save-interval 0
+      auto-save-interval 300
       auto-save-timeout 3)
 
 ;; Split window navigation: S-arrow
@@ -239,14 +239,18 @@
 	"*.hrl"
 	"*.mustache"
 	"*.sass"
+	"*.haml"
 	"*.coffee"
 	"*.scss"
+	"*.hs"
 	)
        ffip-patterns))
 
-(global-set-key (kbd "C-c C-f") 'find-file-in-project)
+(global-set-key (kbd "C-x f") 'find-file-in-project)
 
 ;; Modes
+
+(autoload 'ledger-mode "ledger.el" "Ledger mode." t)
 
 (autoload 'php-mode "php-mode.el" "Php mode." t)
 (setq auto-mode-alist (append '(("/*.\.php[345]?$" . php-mode)) auto-mode-alist))
@@ -353,6 +357,10 @@
 ;; (require 'haml-mode)
 
 (add-hook 'sass-mode-hook 
+  '(lambda () (add-hook 'local-write-file-hooks 
+    '(lambda () (save-excursion (untabify (point-min) (point-max)))))))
+
+(add-hook 'haml-mode-hook 
   '(lambda () (add-hook 'local-write-file-hooks 
     '(lambda () (save-excursion (untabify (point-min) (point-max)))))))
 
@@ -564,6 +572,7 @@
     (select-frame (make-frame-on-display x-display-name '((window-system . x))))
     )
   (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

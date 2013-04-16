@@ -1,0 +1,3 @@
+#!/bin/bash
+
+WINEPREFIX=/home/chris/.local/share/wineprefixes/sc4 ~/.PlayOnLinux/wine/linux-x86/1.4/bin/wine "C://Program Files/Origin Games/SimCity 4 Deluxe Edition/Apps/SimCity 4.exe" -f -d:opengl -CPUCount:1 -CustomResolution:enabled -r1918x1066x32 -intro:off -audio:off -music:off

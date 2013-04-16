@@ -22,4 +22,5 @@ case "$1" in
 		;;
 	*)
 		gpg2 --batch -qd "$PWFILE" | grep "$1" | awk -F"\t" '{printf "%s",$3}' | xclip -selection clipboard
+		gpg2 --batch -qd "$PWFILE" | grep "$1" | awk -F"\t" '{printf "%s",$2}' | xclip -selection primary
 esac

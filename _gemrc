@@ -1,11 +1,10 @@
 --- 
 :benchmark: false
 :verbose: true
-gem: --no-ri --no-rdoc --user-install
+gem: --no-rdoc --user-install
 :update_sources: true
 :sources: 
 - https://rubygems.org
 :backtrace: false
 :bulk_threshold: 1000
-#rdoc: --inline-source --line-numbers --format=html --template=hanna
 # vim:ft=yaml

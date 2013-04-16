@@ -1,4 +1,4 @@
-set background=light
+set background=dark
 set go=a
-set guifont=Ubuntu\ Mono\ 10
+set guifont=Ubuntu\ Mono\ 12
 set guicursor+=a:blinkon0

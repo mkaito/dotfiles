@@ -4,7 +4,8 @@ $HOME/dev/bin/dwm-statusbar &!
 
 while true; do
     ~/dev/dwm/dwm > ~/.dwm.log || break
-    #killall -SIGUSR1 conky
+		pkill -SIGHUP conky
+
     # No error logging
     #dwm >/dev/null 2>&1 || break
 done

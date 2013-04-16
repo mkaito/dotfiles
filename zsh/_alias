@@ -1,12 +1,12 @@
 ## -*- mode: sh; tab-width: 4; indent-tabs-mode: t; -*-
-## {{{ Aliases
 
 source ~/dev/dotfiles/zsh/_android.sh
+
+alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
 # Helper function for resolving relative paths
 realpath() { for f in "$@"; do echo ${f}(:A); done }
 
-# {{{ transmission-daemon
 alias tt=transmission-remote
 alias ttl='tt -l'
 
@@ -108,7 +108,6 @@ function tta {
 	[[ ! -z "$location" ]] && args="$args -w $location"
 	tt "$args"
 }
-# }}}
 
 alias yt="noglob clive -f best -c"
 alias ytp="yt --exec 'mplayer %f; rm %f'"
@@ -119,7 +118,7 @@ function ttv() {
 }
 
 function remacs {
-	emacsclient -e "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
+	emacsclient -e "(shutdown-emacs-server)"
 	emacs --daemon
 }
 
@@ -260,12 +259,11 @@ alias g='sudo gem'
 alias gi='sudo gem install'
 
 # Emacs
-#alias e="emacsclient -n"
-#alias ec="e -c"
-#alias ect="emacsclient -nw"
+alias e="emacsclient -n"
+alias ec="e -c"
+alias ect="emacsclient -nw"
 # alias e='emacs'
 # alias ec=e
 # alias ect='emacs -nw'
-# }}}
 
-# vim:ft=zsh:fdm=marker
+# vim:ft=zsh

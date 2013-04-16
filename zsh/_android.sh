@@ -3,7 +3,7 @@ PS_BACKUP_DIR=~/Android/Backup	  # Where to keep backups
 PS_BACKUP_KEEP=60		# Days to keep backups
 PS_BACKUP_ENCRYPT_TO="0x6866852C" # GPG key ID to sign and encrypt to
 
-PS_IP="192.168.0.10"		# The IP your device will be found at, for pinging
+PS_IP="192.168.1.3"		# The IP your device will be found at, for pinging
 PS_SSH="Nexus"			# The SSH host of your phone, or an SSH alias
 PS_STAGING=~/Android/Sync	# The staging folder for sync, sans trailing slash
 PS_SDCARD=/sdcard		# The sync root on the phone, sans trailing slash
