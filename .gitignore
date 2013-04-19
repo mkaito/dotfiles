@@ -4,3 +4,7 @@
 **/*~
 dotemacs/abbrev_defs
 *.elc
+dotemacs/.org-id-locations
+dotemacs/elpa/*
+dotemacs/org-clock-save.el
+dotemacs/url/*

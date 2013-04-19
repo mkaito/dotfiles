@@ -118,3 +118,6 @@
 [submodule "vimconf/bundle/vim-gist"]
 	path = vimconf/bundle/vim-gist
 	url = https://github.com/mattn/gist-vim.git
+[submodule "vimconf/bundle/VimOrganizer"]
+	path = vimconf/bundle/VimOrganizer
+	url = https://github.com/hsitz/VimOrganizer.git

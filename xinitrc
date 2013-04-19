@@ -139,11 +139,14 @@ fi
 # Canto RSS
 checkstart canto-fetch -b -s -i 300 &
 
+# Get the bitcoin miner running in the background
+pgrep -c cgminer || screen -S cgminer -d -m cgminer &
+
 nitrogen --restore &
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
-case "${1:-dwm}" in
+case "${1:-subtle}" in
 	subtle)
 		exec dbus-launch subtle --no-randr > ~/subtle.log 2>&1
 		;;

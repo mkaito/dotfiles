@@ -1,4 +1,4 @@
-;; mkaito's dot-emacs on Arch Linux.
+1;3404;0c1;3404;0c;; mkaito's dot-emacs on Arch Linux.
 ;;
 ;; Large chunks shamelessly copied from anrxc's dotemacs:
 ;;	 http://git.sysphere.org/dotfiles/tree/emacs
@@ -33,13 +33,19 @@
 	;;"~/.emacs.d/vendor/haml-mode"
 	;;"~/.emacs.d/vendor/sass-mode"
 	;;"~/.emacs.d/vendor/coffee-mode"
-	"~/.emacs.d/vendor/smart-tabs-mode"
+	;; "~/.emacs.d/vendor/smart-tabs-mode"
 	"~/.emacs.d/vendor/nginx-mode"
-	"~/.emacs.d/vendor/yasnippet"
-	"~/.emacs.d/vendor/solarized"
+	;; "~/.emacs.d/vendor/yasnippet"
+	;; "~/.emacs.d/vendor/solarized"
 	"/usr/share/ghc-mod-1.11.2/"
 	)
        load-path))
+
+(require 'package)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			 ("marmalade" . "http://marmalade-repo.org/packages/")
+			 ("melpa" . "http://melpa.milkbox.net/packages/")))
+(package-initialize)
 
 ;; Check for stale .elc on startup. Slow, but I only restart Emacs after reboots.
 (byte-recompile-directory "~/.emacs.d/vendor" 0)
@@ -212,41 +218,42 @@
       "M-x "
       (all-completions "" obarray 'commandp))))))
 
-(require 'find-file-in-project)
-(setq ffip-find-options "-not -regex \".*vendor.*\"")
 
-;; Assume default-directory if no project root could be found
-(setq ffip-project-root-function '(lambda ()
-				    (or
-				     (locate-dominating-file default-directory ffip-project-file)
-				     default-directory)))
+;; (require 'find-file-in-project)
+;; (setq ffip-find-options "-not -regex \".*vendor.*\"")
 
-(setq ffip-patterns
-      (append
-       (list
-	"Gemfile"
-	"Procfile"
-	"Rakefile"
-	"Makefile"
-	"*.gpg"
-	"*.org"
-	"config.ru"
-	"*.yaml"
-	"*.yml"
-	"*.watchr"
-	"*.rake"
-	"*.gemspec"
-	"*.hrl"
-	"*.mustache"
-	"*.sass"
-	"*.haml"
-	"*.coffee"
-	"*.scss"
-	"*.hs"
-	)
-       ffip-patterns))
+;; ;; Assume default-directory if no project root could be found
+;; (setq ffip-project-root-function '(lambda ()
+;; 				    (or
+;; 				     (locate-dominating-file default-directory ffip-project-file)
+;; 				     default-directory)))
 
-(global-set-key (kbd "C-x f") 'find-file-in-project)
+;; (setq ffip-patterns
+;;       (append
+;;        (list
+;; 	"Gemfile"
+;; 	"Procfile"
+;; 	"Rakefile"
+;; 	"Makefile"
+;; 	"*.gpg"
+;; 	"*.org"
+;; 	"config.ru"
+;; 	"*.yaml"
+;; 	"*.yml"
+;; 	"*.watchr"
+;; 	"*.rake"
+;; 	"*.gemspec"
+;; 	"*.hrl"
+;; 	"*.mustache"
+;; 	"*.sass"
+;; 	"*.haml"
+;; 	"*.coffee"
+;; 	"*.scss"
+;; 	"*.hs"
+;; 	)
+;;        ffip-patterns))
+
+;; (global-set-key (kbd "C-x f") 'find-file-in-project)
 
 ;; Modes
 
