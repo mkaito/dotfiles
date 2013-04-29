@@ -45,10 +45,10 @@ URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=18,xft:IPAMincho:style=Regular:size=20
 URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=18,xft:IPAMincho:style=Regular:size=20
-!URxvt.transparent            :true
-!URxvt.shading                :50
-!URxvt.blurRadius             :27
-!URxvt.tintColor              :#3f3f3f
+!URxvt.transparent             :true
+!URxvt.shading                 :90
+!URxvt.blurRadius              :27
+!URxvt.tintColor               :#3f3f3f
 
 ! Zenburn color-scheme
 URxvt.background              :#3f3f3f

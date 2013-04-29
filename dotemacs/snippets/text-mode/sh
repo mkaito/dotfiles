@@ -1,5 +1,0 @@
-#key : sh
-#name: Shebang
-#--
-#!/usr/bin/env $1
-$0

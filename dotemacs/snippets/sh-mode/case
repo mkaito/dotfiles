@@ -1,7 +1,0 @@
-#contributor : mkaito <me@mkaito.com>
-#name : Case statement
-#key : case
-# --
-case $1 in
-	 $0
-esac

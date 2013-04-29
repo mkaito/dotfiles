@@ -8,7 +8,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' 
 export BSPWM_SOCKET=~/.bspwm_sock
 export JAVA_FONTS=/usr/share/fonts/TTF
-# wmname LG3D
+wmname LG3D
 export DE=xfce
 
 # Keep the logs
@@ -19,10 +19,10 @@ export gnupglog="${HOME}/.gnupg/gpg-agent.info"
 export WINEPREFIX=${HOME}/.wine_64
 
 # Ibus
-# export GTK_IM_MODULE=ibus
-# export XMODIFIERS=@im=ibus
-# export QT_IM_MODULE=ibus
-# export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
+export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
 
 # MPD runs on a unix socket
 export MPD_HOST=${HOME}/.mpd/mpd.sock
@@ -55,10 +55,10 @@ xset fp rehash &
 hostname=$(uname -n)
 
 function checkstart() {
-	pidof $1 > /dev/null || $@
+	pgrep -c $1 || $@
 }
 
-[[ `hostname` == "archbox" ]] && sudo VBoxClient-all &
+[[ $hostname == "archbox" ]] && sudo VBoxClient-all &
 
 # Source scripts from /etc/X11/xinit/xinitrc.d
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
@@ -72,8 +72,8 @@ fi
 urxvtd -q -o -f
 
 # SSH Agent
-eval `ssh-agent`
-(ssh-add -l || ssh-add) &
+#eval `ssh-agent`
+#(ssh-add -l || ssh-add) &
 
 checkstart bitcoind -daemon
 
@@ -84,7 +84,7 @@ checkstart mpdscribble &
 
 # SSH Tunnels
 ## SSH listening on 2304
-autossh -M 2305 -fNR 2304:localhost:2304 mkaito
+#autossh -M 2305 -fNR 2304:localhost:2304 mkaito
 
 # Dropbox. Used to sync MobileOrg
 #dropboxd &
@@ -99,8 +99,8 @@ if pgrep -u "${USER}" gpg-agent >/dev/null 2>&1; then
   eval `cat $gnupginf`
   eval `cut -d= -f1 $gnupginf | xargs echo export`
 else
-    #eval `gpg-agent --enable-ssh-support --daemon`
-    eval `gpg-agent --daemon`
+    eval `gpg-agent --enable-ssh-support --daemon`
+    #eval `gpg-agent --daemon`
 fi
 
 xsetroot -cursor_name left_ptr
@@ -113,14 +113,14 @@ xset -dpms
 xset s off
 
 # Turn numlock on
-numlockx &
+#numlockx &
 
 # Remove the mouse pointer when it's idle
 # This screws with window focus
 checkstart unclutter -idle 3 -noevents &
 
 # Redshift adjusts monitor colour temperature according to day time
- checkstart redshift -l 28:-13 -t 5600:4500 -m randr &
+checkstart redshift -l 28:-13 -t 5600:4500 -m randr &
 
 # Fix alsa volumes
 if [[ "$hostname" == "hydra" ]]; then
@@ -132,9 +132,9 @@ else
 fi
 
 # Keep the sc2replay folder clean
-#if [[ "$hostname" == "hydra" ]]; then
-	#pgrep 'upload_sc2replays.sh' || $HOME/dev/bin/upload_sc2replays.sh &
-#fi;
+if [[ "$hostname" == "hydra" ]]; then
+	checkstart upload_sc2replays.sh &
+fi;
 
 # Canto RSS
 checkstart canto-fetch -b -s -i 300 &
@@ -146,9 +146,9 @@ nitrogen --restore &
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
-case "${1:-subtle}" in
+case "${1:-dwm}" in
 	subtle)
-		exec dbus-launch subtle --no-randr > ~/subtle.log 2>&1
+		exec subtle --no-randr > ~/subtle.log 2>&1
 		;;
 	bspwm)
 		sxhkd &
@@ -156,11 +156,11 @@ case "${1:-subtle}" in
 		;;
 	dwm) # dwm
 		#conky -c ~/dev/dwm/conkyrc | while read -r; do xsetroot -name "$REPLY"; done &
-		exec dbus-launch ~/dev/bin/startdwm
+		exec ~/dev/bin/startdwm
 		;;
 	wmfs)
-		exec dbus-launch wmfs
+		exec wmfs
 		;;
 	*) # Pop a shell to fix things
-		urxvt
+		exec urxvt
 esac

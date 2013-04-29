@@ -1,5 +1,0 @@
-#contributor : mkaito <me@mkaito.com>
-#name : Bash shebang
-#key : sh
-# --
-#!/usr/bin/env bash

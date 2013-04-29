@@ -1,7 +1,0 @@
-# contributor: Michishige Kaito <me@mkaito.com>
-# key: widget
-# name: Textbox
-# --
-$1widget = widget({ type = "textbox" })
-vicious.register($1widget, vicious.widgets.${2:$1}, "$3")
-$0

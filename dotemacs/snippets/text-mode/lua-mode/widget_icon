@@ -1,7 +1,0 @@
-# contributor: Michishige Kaito <me@mkaito.com>
-# key: widget
-# name: Icon
-# --
-${1:name}icon = widget({ type = "imagebox" })
-$1icon.image = image(beautiful.widget_$1)
-$0
