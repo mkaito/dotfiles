@@ -121,3 +121,9 @@
 [submodule "vimconf/bundle/VimOrganizer"]
 	path = vimconf/bundle/VimOrganizer
 	url = https://github.com/hsitz/VimOrganizer.git
+[submodule "xcompose"]
+	path = xcompose
+	url = https://github.com/kragen/xcompose
+[submodule "vimconf/bundle/vim-localvimrc"]
+	path = vimconf/bundle/vim-localvimrc
+	url = https://github.com/embear/vim-localvimrc.git
