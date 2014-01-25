@@ -88,3 +88,6 @@
 [submodule "vimconf/bundle/haskellmode"]
 	path = vimconf/bundle/haskellmode
 	url = https://github.com/lukerandall/haskellmode-vim.git
+[submodule "vimoutliner"]
+	path = vimconf/bundle/vimoutliner
+	url = git://github.com/vimoutliner/vimoutliner.git
