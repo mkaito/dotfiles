@@ -1,18 +1,12 @@
 [submodule "vimconf/bundle/nerdcommenter"]
 	path = vimconf/bundle/nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
-[submodule "vimconf/bundle/ack"]
-	path = vimconf/bundle/ack
-	url = git://github.com/mileszs/ack.vim.git
 [submodule "vimconf/bundle/repeat"]
 	path = vimconf/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
 [submodule "vimconf/bundle/vim-ruby"]
 	path = vimconf/bundle/vim-ruby
 	url = git://github.com/vim-ruby/vim-ruby.git
-[submodule "vimconf/bundle/vim-liquid"]
-	path = vimconf/bundle/vim-liquid
-	url = git://github.com/tpope/vim-liquid.git
 [submodule "vimconf/bundle/vim-haml"]
 	path = vimconf/bundle/vim-haml
 	url = git://github.com/tpope/vim-haml.git
@@ -22,27 +16,12 @@
 [submodule "dotemacs/vendor/sass-mode"]
 	path = dotemacs/vendor/sass-mode
 	url = git://github.com/nex3/sass-mode.git
-[submodule "vimconf/bundle/vim-colors-solarized"]
-	path = vimconf/bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule "vimconf/bundle/vim-coffee-script"]
-	path = vimconf/bundle/vim-coffee-script
-	url = git://github.com/kchmck/vim-coffee-script.git
-[submodule "vimconf/bundle/tlib"]
-	path = vimconf/bundle/tlib
-	url = https://github.com/tomtom/tlib_vim.git
-[submodule "vimconf/bundle/mw-utils"]
-	path = vimconf/bundle/mw-utils
-	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
 [submodule "dotemacs/vendor/emacs-liquid"]
 	path = dotemacs/vendor/emacs-liquid
 	url = https://github.com/rehanift/Emacs-Liquid.git
 [submodule "irssi/scripts/xdccget"]
 	path = irssi/scripts/xdccget
 	url = https://code.google.com/p/xdccget/
-[submodule "vimconf/bundle/coffee-script"]
-	path = vimconf/bundle/coffee-script
-	url = https://github.com/kchmck/vim-coffee-script.git
 [submodule "dotemacs/vendor/coffee-mode"]
 	path = dotemacs/vendor/coffee-mode
 	url = https://github.com/defunkt/coffee-mode.git
@@ -61,15 +40,9 @@
 [submodule "vimconf/bundle/vim-orgmode"]
 	path = vimconf/bundle/vim-orgmode
 	url = https://github.com/jceb/vim-orgmode.git
-[submodule "vimconf/bundle/speeddating"]
-	path = vimconf/bundle/speeddating
-	url = https://github.com/tpope/vim-speeddating.git
 [submodule "solarized"]
 	path = solarized
 	url = https://github.com/altercation/solarized.git
-[submodule "vimconf/bundle/vim-addon-mw-utils"]
-	path = vimconf/bundle/vim-addon-mw-utils
-	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
 [submodule "vimconf/bundle/vim-snipmate"]
 	path = vimconf/bundle/vim-snipmate
 	url = git://github.com/garbas/vim-snipmate.git
@@ -79,18 +52,9 @@
 [submodule "vimconf/bundle/vim-gnupg"]
 	path = vimconf/bundle/vim-gnupg
 	url = git://gitorious.org/vim-gnupg/vim-gnupg.git
-[submodule "vimconf/bundle/mustache"]
-	path = vimconf/bundle/mustache
-	url = https://github.com/juvenn/mustache.vim.git
-[submodule "vimconf/bundle/vim-css-color"]
-	path = vimconf/bundle/vim-css-color
-	url = https://github.com/ap/vim-css-color.git
 [submodule "vimconf/bundle/vim-ledger"]
 	path = vimconf/bundle/vim-ledger
 	url = https://github.com/ledger/vim-ledger.git
-[submodule "vimconf/bundle/haskellmode-vim"]
-	path = vimconf/bundle/haskellmode-vim
-	url = https://github.com/lukerandall/haskellmode-vim.git
 [submodule "vimconf/bundle/syntastic"]
 	path = vimconf/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
@@ -100,30 +64,27 @@
 [submodule "vimconf/bundle/ctrlp.vim"]
 	path = vimconf/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
-[submodule "vimconf/bundle/tabular"]
-	path = vimconf/bundle/tabular
-	url = https://github.com/godlygeek/tabular.git
 [submodule "zsh/syntax-highlighting"]
 	path = zsh/syntax-highlighting
 	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule "dotemacs/vendor/solarized"]
 	path = dotemacs/vendor/solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized
-[submodule "vimconf/bundle/vim-figitive"]
-	path = vimconf/bundle/vim-figitive
-	url = https://github.com/tpope/vim-fugitive.git
 [submodule "awesome"]
 	path = awesome
 	url = http://git.sysphere.org/awesome-configs
-[submodule "vimconf/bundle/vim-gist"]
-	path = vimconf/bundle/vim-gist
-	url = https://github.com/mattn/gist-vim.git
-[submodule "vimconf/bundle/VimOrganizer"]
-	path = vimconf/bundle/VimOrganizer
-	url = https://github.com/hsitz/VimOrganizer.git
 [submodule "xcompose"]
 	path = xcompose
 	url = https://github.com/kragen/xcompose
-[submodule "vimconf/bundle/vim-localvimrc"]
-	path = vimconf/bundle/vim-localvimrc
-	url = https://github.com/embear/vim-localvimrc.git
+[submodule "vimconf/bundle/vim-vinegar"]
+	path = vimconf/bundle/vim-vinegar
+	url = git://github.com/tpope/vim-vinegar.git
+[submodule "zsh/opp"]
+	path = zsh/opp
+	url = https://github.com/hchbaw/opp.zsh.git
+[submodule "vimconf/bundle/dirsettings"]
+	path = vimconf/bundle/dirsettings
+	url = https://github.com/mantiz/vim-plugin-dirsettings.git
+[submodule "vimconf/bundle/haskellmode"]
+	path = vimconf/bundle/haskellmode
+	url = https://github.com/lukerandall/haskellmode-vim.git

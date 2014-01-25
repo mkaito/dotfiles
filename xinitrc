@@ -6,23 +6,24 @@
 export OOO_FORCE_DESKTOP="gnome"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' 
-export BSPWM_SOCKET=~/.bspwm_sock
+#export BSPWM_SOCKET=~/.bspwm_sock
 export JAVA_FONTS=/usr/share/fonts/TTF
 wmname LG3D
 export DE=xfce
+export LANG="en_US.UTF-8"
 
 # Keep the logs
 export errorlog="${HOME}/.xsession-errors"
 export gnupglog="${HOME}/.gnupg/gpg-agent.info"
 
 # I should probably just move this to .wine
-export WINEPREFIX=${HOME}/.wine_64
+#export WINEPREFIX=${HOME}/.wine_64
 
 # Ibus
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
-export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
+#export GTK_IM_MODULE=ibus
+#export XMODIFIERS=@im=ibus
+#export QT_IM_MODULE=ibus
+#export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
 
 # MPD runs on a unix socket
 export MPD_HOST=${HOME}/.mpd/mpd.sock
@@ -75,8 +76,7 @@ urxvtd -q -o -f
 #eval `ssh-agent`
 #(ssh-add -l || ssh-add) &
 
-checkstart bitcoind -daemon
-
+(sleep 300 && checkstart bitcoind -daemon) &
 
 # Music Player Daemon
 checkstart mpd ~/.mpd/mpd.conf &
@@ -84,10 +84,10 @@ checkstart mpdscribble &
 
 # SSH Tunnels
 ## SSH listening on 2304
-#autossh -M 2305 -fNR 2304:localhost:2304 mkaito
+autossh -M 2305 -fNR 2304:localhost:2304 mkaito
 
 # Dropbox. Used to sync MobileOrg
-#dropboxd &
+dropboxd &
 
 # Start the GNU Emacs daemon
 [[ ! -r "/tmp/emacs${UID}/server" ]] && emacs --daemon 1>/dev/null &
@@ -106,7 +106,7 @@ fi
 xsetroot -cursor_name left_ptr
 
 # Kill the goddamn bell
-xset b 0
+xset b off
 
 # Don't turn the screen off
 xset -dpms
@@ -117,30 +117,36 @@ xset s off
 
 # Remove the mouse pointer when it's idle
 # This screws with window focus
-checkstart unclutter -idle 3 -noevents &
+#checkstart unclutter -idle 3 -noevents &
 
 # Redshift adjusts monitor colour temperature according to day time
-checkstart redshift -l 28:-13 -t 5600:4500 -m randr &
+checkstart redshift -l 28:-13 -t 5600:4000 -m randr &!
 
 # Fix alsa volumes
 if [[ "$hostname" == "hydra" ]]; then
-	(sleep 10 && amixer -c 0 set Center 100+ unmute) &
-	(sleep 10 && amixer -c 0 set LFE 100+ unmute) &
-	(sleep 10 && amixer -c 0 set Side 100+ unmute) &
+	(sleep 10 && amixer -c 0 set Center 100+ unmute) &!
+	(sleep 10 && amixer -c 0 set LFE 100+ unmute) &!
+	(sleep 10 && amixer -c 0 set Side 100+ unmute) &!
 else
-	(sleep 10 && amixer set Master 100+ unmute) &
+	(sleep 10 && amixer set Master 100+ unmute) &!
 fi
 
 # Keep the sc2replay folder clean
-if [[ "$hostname" == "hydra" ]]; then
-	checkstart upload_sc2replays.sh &
-fi;
+#if [[ "$hostname" == "hydra" ]]; then
+	#checkstart upload_sc2replays.sh &!
+#fi;
+
+checkstart generate_ledger_reports &!
 
 # Canto RSS
-checkstart canto-fetch -b -s -i 300 &
+#checkstart canto-fetch -b -s -i 300 &
+checkstart canto-daemon &
+
+# Torrents
+#(sleep 60 && checkstart deluged) &
 
 # Get the bitcoin miner running in the background
-pgrep -c cgminer || screen -S cgminer -d -m cgminer &
+#pgrep -c cgminer || screen -S cgminer -d -m cgminer &
 
 nitrogen --restore &
 

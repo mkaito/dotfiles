@@ -1,5 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/home/chris/dev/blog'
-let g:netrw_dirhist_2='/home/chris/.config/termite'
-let g:netrw_dirhist_3='/home/chris/dev/singerbones/config'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/home/chris'

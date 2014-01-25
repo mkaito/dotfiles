@@ -30,14 +30,15 @@ nnoremap ; :
 vnoremap ; :
 nnoremap / /\v
 vnoremap / /\v
+nnoremap <C-e> :e#<CR>
 set ignorecase
 set smartcase
 set gdefault
 set incsearch
 set showmatch
 nnoremap <leader><space> :noh<cr>
-nnoremap <tab> %
-vnoremap <tab> %
+map <tab> g%
+cmap w!! %!sudo tee > /dev/null %
 
 set wrap
 set textwidth=0
@@ -51,14 +52,16 @@ set formatoptions=qrn1
 " Also switching on highlighting the last used search pattern
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 		syntax on
-		set background=dark
+		let g:zenburn_high_Contrast=1
+		let g:zenburn_alternate_Visual=1
+		let g:zenburn_alternate_Include=1
 		colorscheme zenburn
 		set hlsearch
 endif
 
 set nuw=6
 set number
-set cursorline
+"set cursorline
 set clipboard=unnamedplus			 " X11 System Clipboard
 set autowrite
 set autoread
@@ -161,6 +164,10 @@ function! UpdateFile()
 	endif
 endfunction
 
+au FileType html,xml,xsl source ~/.vim/scripts/closetag.vim
+iabbrev </ </<C-X><C-O>
+inoreabbrev lorem Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+
 " Ruby stuff
 autocmd FileType ruby
 					\ if expand('%') =~# '_test\.rb$' |
@@ -179,25 +186,33 @@ au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
 let g:ledger_maxwidth = 80
 let g:ledger_fillstring = '	»'
 
-" haskellmode-vim
-au BufEnter *.hs compiler ghc
-let g:haddock_browser="/usr/bin/firefox"
+" Markdown
+au BufNewFile,BufRead *.md setf markdown
+
+" Haskellmode
+au Bufenter *.hs compiler ghc
+let g:haddock_browser = "firefox"
 
 " CtrlP
 set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_map = '<c-t>'
-let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_map = '<Leader>t'
+let g:ctrlp_match_window_bottom = 0
+let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_switch_buffer = 0
+
 let g:ctrlp_custom_ignore = {
-	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat$',
-	\ 'file': '\v\.(exe|so|dll)$',
-	\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat|vendor$',
+	\ 'file': '\v\.(exe|so|dll|pyc|wav|mp3|ogg|blend|swp|jpg|gif|png)$',
 	\ }
 
-"let g:ctrlp_user_command = {
-	"\ 'types': {
-		"\ 1: ['.git', 'cd %s && git ls-files'],
-		"\ 2: ['.hg', 'hg --cwd %s locate -I .'],
-		"\ },
-	"\ 'fallback': 'find %s -type f'
-	"\ }
+let g:ctrlp_user_command = {
+	\ 'types': {
+		\ 1: ['.git', 'cd %s && git ls-files'],
+		\ 2: ['.hg', 'hg --cwd %s locate -I .'],
+		\ },
+	\ 'fallback': 'find %s -type f'
+	\ }
+
+iab <expr> ddate strftime("%Y/%m/%d")

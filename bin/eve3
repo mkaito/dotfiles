@@ -1,3 +1,0 @@
-#!/bin/bash
-WINEPREFIX=~/.eveonline ~/.wine-versions/bin/wine explorer /desktop=eveC,1912x1060 "c:\EVE3\eve.exe"
-#WINEPREFIX=~/.eveonline ~/.wine-versions/bin/wine explorer "c:\EVE3\eve.exe"

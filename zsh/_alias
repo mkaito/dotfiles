@@ -1,11 +1,9 @@
-## -*- mode: sh; tab-width: 4; indent-tabs-mode: t; -*-
-
 source ~/dev/dotfiles/zsh/_android.sh
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
-# Helper function for resolving relative paths
-realpath() { for f in "$@"; do echo ${f}(:A); done }
+alias timestamp='date +%s'
+alias ts=timestamp
 
 alias tt=transmission-remote
 alias ttl='tt -l'
@@ -18,7 +16,7 @@ function tts {
 		torrents=()
 
 		while read line; do
-			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
 		done
 
 		torrents=${(j:,:)torrents}
@@ -38,7 +36,7 @@ function ttS {
 		torrents=()
 
 		while read line; do
-			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
 		done
 
 		torrents=${(j:,:)torrents}
@@ -58,7 +56,7 @@ function ttr {
 		torrents=()
 
 		while read line; do
-			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
 		done
 
 		torrents=${(j:,:)torrents}
@@ -73,40 +71,44 @@ function ttr {
 
 function ttm {
 	local torrents
+	local target
 
-	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
 	if [[ ! -t 0 ]]; then
+		# We're being fed on stdin
+
 		torrents=()
 
 		while read line; do
-			torrents+=( $(echo $line | tr -s ' ' | cut -d ' ' -f 1) )
+			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
 		done
 
 		torrents=${(j:,:)torrents}
-		echo "Moving torrents: ${torrents}."
+		target=$(realpath "$1")
+		echo "Moving torrents: ${torrents} -> ${target}."
 	elif [[ ! -z "$1" ]]; then
 		torrents="$1"
+		target=$(realpath "$2")
 	fi
-	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
-	[[ -z "$2" ]] && echo "Please specify a target folder" && return 2
 
-	tt "-t$torrents" --move $(abspath "$2")
+	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
+	[[ -z "$target" ]] && echo "Please specify a target folder" && return 2
+
+	tt "-t${torrents}" --move "${target}"
 }
 
 function ttf {
 	local pattern='*'
 	[[ ! -z "$1" ]] && pattern="$1"
-	ttl | grep -i "$pattern"
+	ttl | egrep -i "$pattern"
 }
 
 function tta {
-	local url='*' location args
-	[[ ! -z "$1" ]] && url="$1"
-	[[ ! -z "$2" ]] && location="$2"
+	local args
+	set -A args
+	[[ ! -z "$1" ]] && args+=("-a" "$1")
+	[[ ! -z "$2" ]] && args+=("-w" "$(realpath $2)")
 
-	args="-a $url"
-	[[ ! -z "$location" ]] && args="$args -w $location"
-	tt "$args"
+	tt "$args[@]"
 }
 
 alias yt="noglob clive -f best -c"
@@ -137,6 +139,9 @@ alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -ico
 
 # Github
 eval "$(hub alias -s)"
+
+# RBenv
+eval "$(rbenv init -)"
 
 # mplayer & youtube
 alias m=mplayer;

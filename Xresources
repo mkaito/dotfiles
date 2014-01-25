@@ -42,21 +42,22 @@ URxvt.url-select.underline    :true
 URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
 !
 ! Appearance
+URxvt.internalBorder:					15
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
-URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=18,xft:IPAMincho:style=Regular:size=20
-URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=18,xft:IPAMincho:style=Regular:size=20
+URxvt.font                    :xft:Droid Sans Mono:style=Regular:size=10,xft:IPAMincho:style=Regular:size=12
+URxvt.boldFont                :xft:Droid Sans Mono:style=Regular:size=10,xft:IPAMincho:style=Regular:size=12
 !URxvt.transparent             :true
 !URxvt.shading                 :90
-!URxvt.blurRadius              :27
-!URxvt.tintColor               :#3f3f3f
+!URxvt.blurRadius              :22
+!URxvt.tintColor               :#1f1f1f
 
 ! Zenburn color-scheme
-URxvt.background              :#3f3f3f
+URxvt.background              :#1f1f1f
 URxvt.foreground              :#dcdccc
 
 ! black + red
 !URxvt.color0                 :#3f3f3f
-URxvt.color0                  :#1E2320
+URxvt.color0                  :#1f1f1f
 URxvt.color1                  :#705050
 
 ! green + yellow

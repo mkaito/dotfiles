@@ -45,6 +45,40 @@
 (scroll-bar-mode -1)
 (setq visible-bell t)
 
+(defvar-local hidden-mode-line-mode nil)
+(defvar-local hide-mode-line nil)
+
+(define-minor-mode hidden-mode-line-mode
+  "Minor mode to hide the mode-line in the current buffer."
+  :init-value nil
+  :global nil
+  :variable hidden-mode-line-mode
+  :group 'editing-basics
+  (if hidden-mode-line-mode
+      (setq hide-mode-line mode-line-format
+	    mode-line-format nil)
+    (setq mode-line-format hide-mode-line
+	  hide-mode-line nil))
+  (force-mode-line-update)
+  (set-window-buffer nil (current-buffer))
+  (when (and (called-interactively-p 'interactive)
+	     hidden-mode-line-mode)
+    (run-with-idle-timer
+     0 nil 'message
+     (concat "Hidden Mode Line Mode enabled.  "
+	     "Use M-x hidden-mode-line-mode RET to make the mode-line appear."))))
+
+;; Activate hidden-mode-line-mode
+(hidden-mode-line-mode 1)
+
+;; Command to toggle the display of the mode-line as a header
+(defun mode-line-in-header ()
+  (interactive)
+  (if (not header-line-format)
+      (setq header-line-format mode-line-format)
+    (setq header-line-format nil)))
+(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
+
 ;;Auto save and backups
 (setq
 backup-by-copying t
@@ -58,6 +92,9 @@ version-control t)
 (setq auto-save-file-name-transforms
 			`((".*" ,temporary-file-directory t)))
 
+;; Fancy automatic buffer cleanup
+(require 'midnight)
+
 ;; Fix dead keys
 (load-library "iso-transl")
 
@@ -65,7 +102,13 @@ version-control t)
 (load-theme 'zenburn t)
 
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "#353535")
+(set-face-background 'hl-line   "#0f0f0f")
+(set-face-background 'default   "#1f1f1f")
+
+;; Always flash for parens and define a more distinctive color
+(show-paren-mode 1)
+(set-face-foreground 'show-paren-match-face "#bc8383")
+(set-face-background 'show-paren-match-face "#1f1f1f")
 
 ;; Support 256 colours in screen
 ;;	 - http://article.gmane.org/gmane.emacs.devel/109504/
@@ -108,9 +151,7 @@ version-control t)
        	"-%-")
       )
 
-;; Always flash for parens and define a more distinctive color
-(show-paren-mode 1)
-(set-face-foreground 'show-paren-match-face "#bc8383")
+
 
 ;; Answer y or n instead of yes or no at prompts
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -404,4 +445,11 @@ version-control t)
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(inhibit-startup-echo-area-message "chris")
  '(safe-local-variable-values (quote ((encoding . utf-8)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
