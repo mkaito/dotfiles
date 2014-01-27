@@ -178,6 +178,8 @@ autocmd FileType ruby
 					\  compiler ruby | setl makeprg=ruby\ -wc\ \"%:p\" |
 					\ endif
 
+autocmd FileType ruby :iabbrev <buffer> do do<CR>end<ESC>O
+
 " Coffee Script mode: Enable folding
 let coffee_folding = 1
 
