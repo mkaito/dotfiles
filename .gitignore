@@ -8,3 +8,7 @@ dotemacs/.org-id-locations
 dotemacs/elpa/*
 dotemacs/org-clock-save.el
 dotemacs/url/*
+dotemacs/projectile-bookmarks.eld
+dotemacs/projectile.cache
+vimconf/haskellmode.config
+vimconf/undo/
