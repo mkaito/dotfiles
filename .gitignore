@@ -12,3 +12,5 @@ dotemacs/projectile-bookmarks.eld
 dotemacs/projectile.cache
 vimconf/haskellmode.config
 vimconf/undo/
+vimconf/viminfo
+vimconf/.netrwhist
