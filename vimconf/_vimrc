@@ -1,3 +1,4 @@
+call dirsettings#Install()
 filetype off
 call pathogen#runtime_append_all_bundles()
 filetype plugin indent on
@@ -66,24 +67,29 @@ set clipboard=unnamedplus			 " X11 System Clipboard
 set autowrite
 set autoread
 
+" Limit the amount of filesystem events
+set nowritebackup
+set nobackup
+"set noswapfile
+
 " Save your backups to a less annoying place than the current directory.
 " If you have .vim-backup in the current directory, it'll use that.
 " Otherwise it saves it to ~/.vim/backup or . if all else fails.
-if isdirectory($HOME . '/.vim/backup') == 0
-  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
-endif
-set backupdir-=.
-set backupdir+=.
-set backupdir-=~/
-set backupdir^=~/.vim/backup/
-set backupdir^=./.vim-backup/
-set backup
+"if isdirectory($HOME . '/.vim/backup') == 0
+  ":silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+"endif
+"set backupdir-=.
+"set backupdir+=.
+"set backupdir-=~/
+"set backupdir^=~/.vim/backup/
+"set backupdir^=./.vim-backup/
+"set backup
 
 " Save your swp files to a less annoying place than the current directory.
 " If you have .vim-swap in the current directory, it'll use that.
 " Otherwise it saves it to ~/.vim/swap, ~/tmp or .
 if isdirectory($HOME . '/.vim/swap') == 0
-  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+	:silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
 endif
 set directory=./.vim-swap//
 set directory+=~/.vim/swap//
@@ -178,7 +184,7 @@ autocmd FileType ruby
 					\  compiler ruby | setl makeprg=ruby\ -wc\ \"%:p\" |
 					\ endif
 
-autocmd FileType ruby :iabbrev <buffer> do do<CR>end<ESC>O
+"autocmd FileType ruby :iabbrev <buffer> do do<CR>end<ESC>O
 
 " Coffee Script mode: Enable folding
 let coffee_folding = 1
@@ -189,7 +195,7 @@ let g:ledger_maxwidth = 80
 let g:ledger_fillstring = '	»'
 
 " Markdown
-au BufNewFile,BufRead *.md setf markdown
+au BufNewFile,BufRead *.md setf markdown setlocal tw=79 fo=tqan
 
 " Haskellmode
 au Bufenter *.hs compiler ghc
@@ -198,23 +204,19 @@ let g:haddock_browser = "firefox"
 " CtrlP
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<Leader>t'
-let g:ctrlp_match_window_bottom = 0
-let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_dotfiles = 0
-let g:ctrlp_switch_buffer = 0
 
 let g:ctrlp_custom_ignore = {
 	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat|vendor$',
 	\ 'file': '\v\.(exe|so|dll|pyc|wav|mp3|ogg|blend|swp|jpg|gif|png)$',
 	\ }
 
-let g:ctrlp_user_command = {
-	\ 'types': {
-		\ 1: ['.git', 'cd %s && git ls-files'],
-		\ 2: ['.hg', 'hg --cwd %s locate -I .'],
-		\ },
-	\ 'fallback': 'find %s -type f'
-	\ }
+"let g:ctrlp_user_command = {
+	"\ 'types': {
+		"\ 1: ['.git', 'cd %s && git ls-files'],
+		"\ 2: ['.hg', 'hg --cwd %s locate -I .'],
+		"\ },
+	"\ 'fallback': 'find %s -type f'
+	"\ }
 
 iab <expr> ddate strftime("%Y/%m/%d")
