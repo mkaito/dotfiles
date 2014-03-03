@@ -91,3 +91,9 @@
 [submodule "vimconf/bundle/ledger"]
 	path = vimconf/bundle/ledger
 	url = https://github.com/ledger/vim-ledger.git
+[submodule "vimconf/bundle/endwise"]
+	path = vimconf/bundle/endwise
+	url = https://github.com/tpope/vim-endwise
+[submodule "vimconf/bundle/ruby-minitest"]
+	path = vimconf/bundle/ruby-minitest
+	url = https://github.com/sunaku/vim-ruby-minitest.git

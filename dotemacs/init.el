@@ -12,11 +12,11 @@
 (package-initialize)
 
 (defvar wanted-packages
-  '(coffee-mode expand-region smart-tabs-mode php-mode
-		gist haml-mode haskell-mode inf-ruby lua-mode
-		markdown-mode paredit projectile js2-mode
-		sass-mode rainbow-mode scss-mode ack-and-a-half
-		yaml-mode zenburn-theme nginx-mode)
+  '(expand-region smart-tabs-mode d-mode flx-ido
+    gist haml-mode haskell-mode inf-ruby lua-mode
+    markdown-mode paredit projectile js2-mode
+    sass-mode rainbow-mode scss-mode ack-and-a-half
+    yaml-mode zenburn-theme nginx-mode flymake)
   "A list of packages to ensure are installed at launch.")
 
 (defun wanted-packages-installed-p ()
@@ -35,7 +35,7 @@
       (package-install p))))
 
 ;; Clean initial buffers, windows.
-(defun buffer-exists (bufname) (not (eq nil (get-buffer bufname)))) 
+(defun buffer-exists (bufname) (not (eq nil (get-buffer bufname))))
 (if (buffer-exists "*Compile-Log*") (kill-buffer "*Compile-Log*"))
 (if (buffer-exists "*Backtrace*") (kill-buffer "*Backtrace*"))
 (delete-other-windows)
@@ -77,20 +77,33 @@
   (if (not header-line-format)
       (setq header-line-format mode-line-format)
     (setq header-line-format nil)))
-(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
+(global-set-key (kbd "C-S-SPC") 'mode-line-in-header)
 
 ;;Auto save and backups
 (setq
-backup-by-copying t
-delete-old-versions t
-kept-new-versions 6
-kept-old-versions 2
-version-control t)
+ backup-by-copying t
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)
 
 (setq backup-directory-alist
-			`((".*" . ,temporary-file-directory)))
+      `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
-			`((".*" ,temporary-file-directory t)))
+      `((".*" ,temporary-file-directory t)))
+
+(defun full-auto-save ()
+  (interactive)
+  (save-excursion
+    (dolist (buf (buffer-list))
+      (set-buffer buf)
+      (if (and (buffer-file-name) (buffer-modified-p))
+	  (basic-save-buffer)))))
+(add-hook 'auto-save-hook 'full-auto-save)
+
+(setq auto-save-interval 50
+      auto-save-timeout 3
+      auto-save-default t)
 
 ;; Fancy automatic buffer cleanup
 (require 'midnight)
@@ -184,8 +197,17 @@ version-control t)
 
 ;; Fuzzy matching and all that jazz
 (require 'ido)
+(require 'flx-ido)
 (ido-mode t)
-(setq ido-enable-flex-matching t) ;; enable fuzzy matching
+(ido-everywhere 1)
+(flx-ido-mode 1)
+
+;; Increase the GC threshold to 20Mb
+(setq gc-cons-threshold 20000000)
+
+;; disable ido faces to see flx highlights
+(setq ido-use-faces nil)
+
 (defadvice completing-read
   (around foo activate)
   (if (boundp 'ido-cur-list)
@@ -209,7 +231,7 @@ version-control t)
 (projectile-global-mode)
 (setq projectile-use-native-indexing t)
 (setq projectile-enable-caching t)
-;; ;;(recentf-mode 1)
+;;(recentf-mode 1)
 
 (setq auto-mode-alist (append '(("/*.\.php[345]?$" . php-mode)) auto-mode-alist))
 
@@ -439,6 +461,30 @@ version-control t)
     (select-frame (make-frame-on-display x-display-name '((window-system . x))))
     )
   (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+
+(require 'flymake)
+(defun flymake-D-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+		     'flymake-create-temp-inplace))
+	 (local-file (file-relative-name
+		      temp-file
+		      (file-name-directory buffer-file-name))))
+    (list "dmd" (list "-c" local-file))))
+
+(add-to-list 'flymake-allowed-file-name-masks
+	     '(".+\\.d$" flymake-D-init
+	       flymake-simple-cleanup flymake-get-real-file-name))
+
+(add-to-list 'flymake-err-line-patterns
+	     '("^\\([^ :]+\\)(\\([0-9]+\\)): \\(.*\\)$" 1 2 nil 3))
+
+(defun flymake-d-load ()
+  (flymake-mode t)
+  (local-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
+  (local-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
+  (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
+
+(add-hook 'd-mode-hook 'flymake-d-load)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
