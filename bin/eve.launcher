@@ -1,0 +1,2 @@
+#!/bin/bash
+WINEPREFIX=~/.local/share/wineprefixes/eve ~/.wine-versions/vanilla-head/bin/wine explorer /desktop=eveA,1912x1054 "c:\EVE\launcher\launcher.exe"

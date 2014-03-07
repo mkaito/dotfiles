@@ -28,6 +28,8 @@ URxvt.urgentOnBell            :true
 URxvt.scrollTtyOutput         :false
 URxvt.scrollWithBuffer        :true
 URxvt.scrollTtyKeypress       :true
+URxvt.inputMethod             :ibus
+URxvt.preeditType             :OverTheSpot
 !
 ! Extensions
 URxvt.perl-lib                :/home/chris/dev/dotfiles/urxvt/:/usr/lib/urxvt/perl/
@@ -44,120 +46,88 @@ URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
 ! Appearance
 URxvt.internalBorder:					15
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
-URxvt.font                    :xft:Droid Sans Mono:style=Regular:size=10,xft:IPAMincho:style=Regular:size=12
-URxvt.boldFont                :xft:Droid Sans Mono:style=Regular:size=10,xft:IPAMincho:style=Regular:size=12
+URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
+URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
 !URxvt.transparent             :true
 !URxvt.shading                 :90
 !URxvt.blurRadius              :22
 !URxvt.tintColor               :#1f1f1f
 
-! Zenburn color-scheme
-URxvt.background              :#1f1f1f
-URxvt.foreground              :#dcdccc
+!! Zenburn color-scheme
+!URxvt.background              :#1f1f1f
+!URxvt.foreground              :#dcdccc
 
-! black + red
-!URxvt.color0                 :#3f3f3f
-URxvt.color0                  :#1f1f1f
-URxvt.color1                  :#705050
+!! black + red
+!!URxvt.color0                 :#3f3f3f
+!URxvt.color0                  :#1f1f1f
+!URxvt.color1                  :#705050
 
-! green + yellow
-URxvt.color2                  :#60b48a
-URxvt.color3                  :#dfaf8f
+!! green + yellow
+!URxvt.color2                  :#60b48a
+!URxvt.color3                  :#dfaf8f
 
-! blue + purple
-URxvt.color4                  :#506070
-URxvt.color5                  :#dc8cc3
+!! blue + purple
+!URxvt.color4                  :#506070
+!URxvt.color5                  :#dc8cc3
 
-! cyan + white
-URxvt.color6                  :#8cd0d3
-URxvt.color7                  :#dcdccc
+!! cyan + white
+!URxvt.color6                  :#8cd0d3
+!URxvt.color7                  :#dcdccc
 
-! bright-black + bright-red
-URxvt.color8                  :#709080
-URxvt.color9                  :#dca3a3
+!! bright-black + bright-red
+!URxvt.color8                  :#709080
+!URxvt.color9                  :#dca3a3
 
-! bright-green + bright-yellow
-URxvt.color10                 :#c3bf9f
-URxvt.color11                 :#f0dfaf
+!! bright-green + bright-yellow
+!URxvt.color10                 :#c3bf9f
+!URxvt.color11                 :#f0dfaf
 
-! bright-blue + bright-purple
-URxvt.color12                 :#94bff3
-URxvt.color13                 :#ec93d3
+!! bright-blue + bright-purple
+!URxvt.color12                 :#94bff3
+!URxvt.color13                 :#ec93d3
 
-! bright-cyan + bright-white
-URxvt.color14                 :#93e0e3
-URxvt.color15                 :#ffffff
+!! bright-cyan + bright-white
+!URxvt.color14                 :#93e0e3
+!URxvt.color15                 :#ffffff
 
-! Solarized
-! Dark
-!#define S_base03 #002b36
-!#define S_base02 #073642
-!#define S_base01 #586e75
-!#define S_base00 #657b83
-!#define S_base0 #839496
-!#define S_base1 #93a1a1
-!#define S_base2 #eee8d5
-!#define S_base3 #fdf6e3
+!! X::erosion
+*background: #181512
+*foreground: #bea492
+*cursorColor: #93a1a1
 
-!! Light
-!#define S_base03 #fdf6e3
-!#define S_base02 #eee8d5
-!#define S_base01 #93a1a1
-!#define S_base00 #839496
-!#define S_base0 #657b83
-!#define S_base1 #586e75
-!#define S_base2 #073642
-!#define S_base3 #002b36
+!! black dark/light
+*color0: #332d29
+*color8: #817267
 
-!! Common
-!#define S_yellow #b58900
-!#define S_orange #cb4b16
-!#define S_red #dc322f
-!#define S_magenta #d33682
-!#define S_violet #6c71c4
-!#define S_blue #268bd2
-!#define S_cyan #2aa198
-!#define S_green #859900
+!! red dark/light
+*color1: #8c644c
+*color9: #9f7155
 
-!URxvt*background: S_base03
-!URxvt*foreground: S_base0
-!!URxvt*fading: 60
-!!URxvt*fadeColor: S_base03
-!URxvt*cursorColor: S_base1
-!URxvt*pointerColorBackground:S_base01
-!URxvt*pointerColorForeground:S_base1
+!! green dark/light
+*color2: #c4be90
+*color10: #bec17e
 
-!!! black dark/light
-!URxvt*color0: S_base02
-!URxvt*color8: S_base03
+!! yellow dark/light
+*color3: #bfba92
+*color11: #fafac0
 
-!!! red dark/light
-!URxvt*color1: S_red
-!URxvt*color9: S_orange
+!! blue dark/light
+! *color4: #293033
+! *color12: #303b40
+*color4: #646a6d
+*color12: #626e74
 
-!!! green dark/light
-!URxvt*color2: S_green
-!URxvt*color10: S_base01
+!! magenta dark/light
+*color5: #6d6871
+*color13: #756f7b
 
-!!! yellow dark/light
-!URxvt*color3: S_yellow
-!URxvt*color11: S_base00
+!! cyan dark/light
+*color6: #3b484a
+*color14: #444d4e
 
-!!! blue dark/light
-!URxvt*color4: S_blue
-!URxvt*color12: S_base0
-
-!!! magenta dark/light
-!URxvt*color5: S_magenta
-!URxvt*color13: S_violet
-
-!!! cyan dark/light
-!URxvt*color6: S_cyan
-!URxvt*color14: S_base1
-
-!!! white dark/light
-!URxvt*color7: S_base2
-!URxvt*color15: S_base3
+!! white dark/light
+*color7: #504339
+*color15: #9a875f
 !!}}}
 
 !{{{ SshAskpass

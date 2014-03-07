@@ -3,34 +3,30 @@ source ~/dev/dotfiles/zsh/opp/opp.zsh
 
 if [[ $TERM == xterm-termite ]]; then
   . /etc/profile.d/vte.sh
-
-  __vte_ps1
-
-  chpwd() {
-    __vte_ps1
-  }
+  __vte_osc7
 fi
 
 # Dat vim mode
-bindkey -v
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
+bindkey -e
+#bindkey -v
+#bindkey '^P' up-history
+#bindkey '^N' down-history
+#bindkey '^?' backward-delete-char
+#bindkey '^h' backward-delete-char
+#bindkey '^w' backward-kill-word
+#bindkey '^r' history-incremental-search-backward
 
-function zle-line-init zle-keymap-select {
-	VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-	RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
-	zle reset-prompt
-}
+#function zle-line-init zle-keymap-select {
+	#VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+	#RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+	#zle reset-prompt
+#}
 
-zle -N zle-line-init
-zle -N zle-keymap-select
-export KEYTIMEOUT=1
+#zle -N zle-line-init
+#zle -N zle-keymap-select
+#export KEYTIMEOUT=1
 
-#setopt emacs
+setopt emacs
 setopt nohup
 setopt autocd
 setopt cdablevars
@@ -50,6 +46,8 @@ autoload -U zmv
 # New style completion system
 fpath=(/home/chris/dev/dotfiles/zsh/completion $fpath)
 autoload -U compinit; compinit
+# Load bash completions
+autoload -U bashcompinit; bashcompinit
 
 # Enable completion caching
 zstyle ':completion:*' use-cache on
@@ -132,20 +130,20 @@ function snap () {
 		echo ": ${fname}.${format}"
 }
 
-function d () {
-	 [ "$1" ] && sid="$1" 
-	 [ "$2" ] && sact="$2" || sact=start
-	 bspath="/etc/rc.d/"
+# function d () {
+# 	 [ "$1" ] && sid="$1" 
+# 	 [ "$2" ] && sact="$2" || sact=start
+# 	 bspath="/etc/rc.d/"
 
-	 if [[ -f "${bspath}${sid}" ]]; then
-			sudo "${bspath}${sid}" "${sact}";
-	 else
-			echo "Service $1 not found"
-	 fi
+# 	 if [[ -f "${bspath}${sid}" ]]; then
+# 			sudo "${bspath}${sid}" "${sact}";
+# 	 else
+# 			echo "Service $1 not found"
+# 	 fi
 
-	 sid=""
-	 sact=""
-}
+# 	 sid=""
+# 	 sact=""
+# }
 
 function preexec () {
 	 # Screen window titles as currently running programs
@@ -214,10 +212,9 @@ function setprompt () {
 # Prompt init
 setprompt
 
-export PERL_LOCAL_LIB_ROOT="/home/chris/perl5";
-export PERL_MB_OPT="--install_base /home/chris/perl5";
-export PERL_MM_OPT="INSTALL_BASE=/home/chris/perl5";
-export PERL5LIB="/home/chris/perl5/lib/perl5/x86_64-linux-thread-multi:/home/chris/perl5/lib/perl5";
-export PATH="/home/chris/perl5/bin:$PATH";
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5";
+export PERL_MB_OPT="--install_base $HOME/perl5";
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5";
+export PERL5LIB="$HOME/perl5/lib/perl5/x86_64-linux-thread-multi:$HOME/perl5/lib/perl5";
 
 # vim:ft=zsh

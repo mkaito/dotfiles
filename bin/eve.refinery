@@ -1,0 +1,5 @@
+#!/bin/bash
+WINEPREFIX=~/.local/share/wineprefixes/eve \
+	~/.wine-versions/vanilla-head/bin/wine \
+	explorer /desktop=eveRefinery,1912x1054 \
+	"c:\EVE\refinery\EveRefinery.exe"

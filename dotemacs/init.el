@@ -92,17 +92,17 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(defun full-auto-save ()
-  (interactive)
-  (save-excursion
-    (dolist (buf (buffer-list))
-      (set-buffer buf)
-      (if (and (buffer-file-name) (buffer-modified-p))
-	  (basic-save-buffer)))))
-(add-hook 'auto-save-hook 'full-auto-save)
+;; (defun full-auto-save ()
+;;   (interactive)
+;;   (save-excursion
+;;     (dolist (buf (buffer-list))
+;;       (set-buffer buf)
+;;       (if (and (buffer-file-name) (buffer-modified-p))
+;; 	  (basic-save-buffer)))))
+;; (add-hook 'auto-save-hook 'full-auto-save)
 
-(setq auto-save-interval 50
-      auto-save-timeout 3
+(setq auto-save-interval 25
+      auto-save-timeout 2
       auto-save-default t)
 
 ;; Fancy automatic buffer cleanup
@@ -230,7 +230,7 @@
 
 (projectile-global-mode)
 (setq projectile-use-native-indexing t)
-(setq projectile-enable-caching t)
+;;(setq projectile-enable-caching t)
 ;;(recentf-mode 1)
 
 (setq auto-mode-alist (append '(("/*.\.php[345]?$" . php-mode)) auto-mode-alist))

@@ -1,4 +1,15 @@
+# -*- mode: sh -*-
 source ~/dev/dotfiles/zsh/_android.sh
+
+##
+# Ultra-fast navigation to any folder in my development tree.
+# TODO: Tab completion, probably from a cache of all unique folder names in the tree.
+function d() {
+    for dir in ~/dev/**/*$1; do
+        [[ -d "$dir" ]] && cd "$dir" && break
+    done
+    # find ~/dev -type d | grep -v ".*\/\..*" | xargs -n1 basename | sort -u >! ~/.devcache
+}
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
@@ -7,6 +18,11 @@ alias ts=timestamp
 
 alias tt=transmission-remote
 alias ttl='tt -l'
+
+function mkcd {
+	mkdir -p $1
+	cd $1
+}
 
 function tts {
 	local torrents
@@ -111,8 +127,8 @@ function tta {
 	tt "$args[@]"
 }
 
-alias yt="noglob clive -f best -c"
-alias ytp="yt --exec 'mplayer %f; rm %f'"
+#alias yt="noglob clive -f best -c"
+#alias ytp="yt --exec 'mplayer %f; rm %f'"
 
 ## Twitch.tv livestreamer shortcut
 function ttv() {
@@ -120,12 +136,13 @@ function ttv() {
 }
 
 function remacs {
-	emacsclient -e "(shutdown-emacs-server)"
+	emacsclient -e "(kill-emacs)"
+	sleep 1
 	emacs --daemon
 }
 
 ## Get a new terminal, in same folder
-alias t='urxvtc'
+alias t='terminal'
 
 ## Serve $PWD with WEBrick
 function serve {
@@ -133,21 +150,18 @@ function serve {
 	ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
 }
 
-alias sr="screen -URDS rtorrent rtorrent"
-alias im="screen -l -UDRS weechat weechat-curses"
-alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
+#alias sr="screen -URDS rtorrent rtorrent"
+#alias im="screen -l -UDRS weechat weechat-curses"
+#alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
 
 # Github
 eval "$(hub alias -s)"
 
-# RBenv
-eval "$(rbenv init -)"
-
 # mplayer & youtube
-alias m=mplayer;
-function yt() {
-	quvi -f best --exec 'mplayer -prefer-ipv4 %u' "$1"
-}
+#alias m=mplayer;
+#function yt() {
+#	quvi -f best --exec 'mplayer -prefer-ipv4 %u' "$1"
+#}
 
 # Archive utilities
 function compress() {
@@ -249,19 +263,19 @@ alias ....='cd ../../..'
 alias lcdoff='xset dpms force off'
 
 # Set the keyboard up
-alias setkb='setxkbmap es; xmodmap ~/.xmodmap'
-alias setm='xset m 1/2 1; xinput --set-prop "pointer:Razer Razer Lachesis" "Device Accel Constant Deceleration" 2; xinput --set-prop "pointer:Razer Razer Lachesis" "Evdev Wheel Emulation Inertia" 15'
+#alias setkb='setxkbmap es; xmodmap ~/.xmodmap'
+#alias setm='xset m 1/2 1; xinput --set-prop "pointer:Razer Razer Lachesis" "Device Accel Constant Deceleration" 2; xinput --set-prop "pointer:Razer Razer Lachesis" "Evdev Wheel Emulation Inertia" 15'
 
 # Coding facility aliases, mostly bundler related
 alias bjek="bundle exec jekyll --auto --server"
 alias be='bundle exec'
-alias beu='bundle exec unicorn'
+alias beu='be unicorn'
 alias ber='be rake'
 alias bec='be compass'
 alias becc='bec compile -c config/compass.rb'
 alias becw='bec watch -c config/compass.rb'
-alias g='sudo gem'
-alias gi='sudo gem install'
+#alias g='sudo gem'
+#alias gi='sudo gem install'
 
 # Emacs
 alias e="emacsclient -n"

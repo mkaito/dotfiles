@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+scrot -q 100 -e "mv $f ~/screenshots/"
