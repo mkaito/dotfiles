@@ -1,7 +1,14 @@
 call dirsettings#Install()
+
 filetype off
+syntax off
+
 call pathogen#runtime_append_all_bundles()
+
 filetype plugin indent on
+
+syntax on
+syntax sync minlines=256
 
 set nocompatible
 
@@ -9,22 +16,32 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set noexpandtab
+set autoindent
 
 set encoding=utf-8
+set termencoding=utf-8
+
+set hidden
 set scrolloff=3
-set autoindent
 set showmode
 set showcmd
-syntax sync minlines=256
-set hidden
-set wildmenu
-set wildmode=list:longest
 set ttyfast
 set ruler
 set backspace=indent,eol,start
 set laststatus=2
 set undofile
-set autoread
+
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.swp,*.bak
+set wildignore+=*.pyc,*.class,*.sln,*.Master,*.csproj,*.csproj.user,*.cache,*.dll,*.pdb,*.min.*
+set wildignore+=*/.git/**/*,*/.hg/**/*,*/.svn/**/*
+set wildignore+=tags
+set wildignore+=*.tar.*
+set wildignorecase
+
+set splitbelow
+set splitright
 
 let mapleader = ","
 let g:mapleader = ","
@@ -43,74 +60,20 @@ nnoremap <leader><space> :noh<cr>
 map <tab> g%
 cmap w!! %!sudo tee > /dev/null %
 
+set statusline=%<\ %n\ %f\ %m%r%y%=\ Line:\ \%l\/\%L\ Column:\ \%c\ 
+
 set wrap
 set textwidth=79
 set formatoptions=qrn1
 "set colorcolumn=79
 
-"set list
-"set listchars=tab:—\ ,eol:¬
-
-" Swith syntax highlighting on, when the terminal has colors
-" Also switching on highlighting the last used search pattern
-"if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-		syntax on
-		"let g:zenburn_high_Contrast=1
-		"let g:zenburn_alternate_Visual=1
-		"let g:zenburn_alternate_Include=1
-		"colorscheme zenburn
-		"set hlsearch
-"endif
-
-" COLORS {
-" syntax highlighting groups
-hi Comment ctermfg=12
-hi Constant ctermfg=15
-hi Identifier ctermfg=4
-hi Statement ctermfg=2
-hi PreProc ctermfg=6
-hi Type ctermfg=1
-hi Special ctermfg=3
-hi Underlined ctermfg=7
-hi Ignore ctermfg=9
-hi Error ctermfg=11
-hi Todo ctermfg=1
-hi Normal ctermfg=none ctermbg=none
-hi NonText ctermfg=0 ctermbg=none
-hi Directory ctermfg=12
-
-hi VertSplit ctermfg=black
-hi StatusLine ctermfg=green
-hi StatusLineNC ctermfg=0
-
-hi Folded ctermbg=0 ctermfg=8
-
-hi Pmenu ctermfg=10 ctermbg=0
-hi PmenuSel ctermfg=0 ctermbg=14
-hi LineNr ctermfg=0 ctermbg=none
-hi CursorLine ctermfg=none ctermbg=none cterm=none
-hi CursorLineNr ctermfg=none ctermbg=0
-hi CursorColumn ctermfg=none ctermbg=0
-
-" Syntax checker colors
-highlight SignColumn ctermbg=none
-hi SyntasticErrorSign ctermfg=1 ctermbg=none
-hi SyntasticWarningSign ctermfg=3 ctermbg=none
-hi SyntasticStyleErrorSign ctermfg=1 ctermbg=none
-hi SyntasticStyleWarningSign ctermfg=3 ctermbg=none
-hi SyntasticErrorLine ctermfg=none ctermbg=none
-hi SyntasticWarningLine ctermfg=none ctermbg=none
-hi SyntasticStyleErrorLine ctermfg=none ctermbg=none
-hi SyntasticStyleWarningLine ctermfg=none ctermbg=none
-hi SpellBad ctermfg=0 ctermbg=3
-hi SpellCap ctermfg=0 ctermbg=1
-
-"}
+set list
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 
 set nuw=6
 set number
-"set cursorline
-set clipboard=unnamedplus			 " X11 System Clipboard
+set cursorline
+set clipboard=unnamedplus				" X11 System Clipboard
 set autowrite
 set autoread
 
@@ -118,19 +81,6 @@ set autoread
 set nowritebackup
 set nobackup
 "set noswapfile
-
-" Save your backups to a less annoying place than the current directory.
-" If you have .vim-backup in the current directory, it'll use that.
-" Otherwise it saves it to ~/.vim/backup or . if all else fails.
-"if isdirectory($HOME . '/.vim/backup') == 0
-  ":silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
-"endif
-"set backupdir-=.
-"set backupdir+=.
-"set backupdir-=~/
-"set backupdir^=~/.vim/backup/
-"set backupdir^=./.vim-backup/
-"set backup
 
 " Save your swp files to a less annoying place than the current directory.
 " If you have .vim-swap in the current directory, it'll use that.
@@ -170,17 +120,14 @@ augroup vimrcEx
 				\ exe "normal g`\"" |
 				\ endif
 
-	au FocusLost * :wa
 	au BufWritePre * :%s/s+$//e	 " Remove trailing whitespace upon saving
+	au FocusLost,InsertLeave * bufdo call functions#AutoSave()
 augroup END
 
-" Clean up trailing whitespace in the active file
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+" Relies on Xresources for colours
+colorscheme terminal
 
 nnoremap <leader>a :Ack
-
-" This will sort a CSS file by selector
-nnoremap <leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
 
 " Select what you just pasted
 nnoremap <leader>v V`]
@@ -204,21 +151,23 @@ nnoremap k gk
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<CR>
 
-" Periodical auto-save
-" Write to disk after 1 second of inactivity, once every 15 seconds.
-au BufRead,BufNewFile * let b:last_autosave=localtime()
-au CursorHold * call UpdateFile()
-au BufWritePre * let b:last_autosave=localtime()
-set updatetime=1000
-function! UpdateFile()
-	if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
-		update
-		let b:last_autosave=localtime()
-	endif
-endfunction
+" " Periodical auto-save
+" " Write to disk after 1 second of inactivity, once every 15 seconds.
+" au BufRead,BufNewFile * let b:last_autosave=localtime()
+" au CursorHold * call UpdateFile()
+" au BufWritePre * let b:last_autosave=localtime()
+" set updatetime=1000
+" function! UpdateFile()
+" 	if exists("b:last_autosave") && ((localtime() - b:last_autosave) >= 15)
+" 		update
+" 		let b:last_autosave=localtime()
+" 	endif
+" endfunction
 
 au FileType html,xml,xsl source ~/.vim/scripts/closetag.vim
 iabbrev </ </<C-X><C-O>
+
+" Vim style lorem ipsum generator
 inoreabbrev lorem Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
 
 " Ruby stuff
@@ -230,8 +179,6 @@ autocmd FileType ruby
 					\ else |
 					\  compiler ruby | setl makeprg=ruby\ -wc\ \"%:p\" |
 					\ endif
-
-"autocmd FileType ruby :iabbrev <buffer> do do<CR>end<ESC>O
 
 " Coffee Script mode: Enable folding
 let coffee_folding = 1
@@ -257,13 +204,5 @@ let g:ctrlp_custom_ignore = {
 	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat|vendor$',
 	\ 'file': '\v\.(exe|so|dll|pyc|wav|mp3|ogg|blend|swp|jpg|gif|png)$',
 	\ }
-
-"let g:ctrlp_user_command = {
-	"\ 'types': {
-		"\ 1: ['.git', 'cd %s && git ls-files'],
-		"\ 2: ['.hg', 'hg --cwd %s locate -I .'],
-		"\ },
-	"\ 'fallback': 'find %s -type f'
-	"\ }
 
 iab <expr> ddate strftime("%Y/%m/%d")
