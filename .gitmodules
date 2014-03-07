@@ -1,6 +1,3 @@
-[submodule "vimconf/bundle/nerdcommenter"]
-	path = vimconf/bundle/nerdcommenter
-	url = git://github.com/scrooloose/nerdcommenter.git
 [submodule "vimconf/bundle/repeat"]
 	path = vimconf/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
@@ -40,9 +37,6 @@
 [submodule "vimconf/bundle/vim-orgmode"]
 	path = vimconf/bundle/vim-orgmode
 	url = https://github.com/jceb/vim-orgmode.git
-[submodule "solarized"]
-	path = solarized
-	url = https://github.com/altercation/solarized.git
 [submodule "vimconf/bundle/vim-snipmate"]
 	path = vimconf/bundle/vim-snipmate
 	url = git://github.com/garbas/vim-snipmate.git
@@ -82,12 +76,6 @@
 [submodule "vimconf/bundle/dirsettings"]
 	path = vimconf/bundle/dirsettings
 	url = https://github.com/mantiz/vim-plugin-dirsettings.git
-[submodule "vimconf/bundle/haskellmode"]
-	path = vimconf/bundle/haskellmode
-	url = https://github.com/lukerandall/haskellmode-vim.git
-[submodule "vimoutliner"]
-	path = vimconf/bundle/vimoutliner
-	url = git://github.com/vimoutliner/vimoutliner.git
 [submodule "vimconf/bundle/ledger"]
 	path = vimconf/bundle/ledger
 	url = https://github.com/ledger/vim-ledger.git
@@ -97,3 +85,12 @@
 [submodule "vimconf/bundle/ruby-minitest"]
 	path = vimconf/bundle/ruby-minitest
 	url = https://github.com/sunaku/vim-ruby-minitest.git
+[submodule "vimconf/bundle/tabular"]
+	path = vimconf/bundle/tabular
+	url = https://github.com/godlygeek/tabular.git
+[submodule "vimconf/bundle/hasksyn"]
+	path = vimconf/bundle/hasksyn
+	url = git://github.com/travitch/hasksyn.git
+[submodule "vimconf/bundle/commentary"]
+	path = vimconf/bundle/commentary
+	url = https://github.com/tpope/vim-commentary.git
