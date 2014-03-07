@@ -13,8 +13,8 @@ set $mod Mod1
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-#font pango:Droid Sans Mono 9
+#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font pango:Ubuntu Mono 9
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
@@ -25,12 +25,11 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 workspace_auto_back_and_forth yes
 
 # When focusing an urgent window, delay removing the urgency hint
-force_display_urgency_hint 500 ms
+#force_display_urgency_hint 500 ms
 
 # Borders
 new_window pixel 3
 new_float pixel 3
-hide_edge_borders none
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -47,6 +46,13 @@ bindsym $mod+F5 exec --no-startup-id terminal -name ranger -e ranger
 bindsym $mod+F7 exec --no-startup-id emacsclient --eval "(make-capture-frame)"
 bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
 
+assign [class="^Firefox$" instance="^Navigator$"] 3
+assign [class="^mail$"] 4
+assign [class="^chat$"] 4
+#assign [class="^ranger$"] 7
+#assign [class="^Gvim$"] 2
+#assign [class="^Emacs$" instance="^emacs$"] 2
+
 for_window [instance="^music$"] floating enable, border pixel 6
 for_window [class="^mpv$"] floating enable, border none
 for_window [class="^Galculator$"] floating enable, border pixel 6
@@ -55,7 +61,7 @@ for_window [class="^Pavucontrol$"] floating enable, border pixel 6
 for_window [class="^Pinentry-gtk-2$"] floating enable, border pixel 6
 for_window [class="^Emacs$" instance="^capture$"] floating enable, border pixel 6
 for_window [class="^Anki$"] floating enable
-for_window [class="^Nitrogen$"] floating enable, border pixel 3
+for_window [class="^Nitrogen$"] floating enable, border pixel 6
 
 # Media keys
 bindsym XF86AudioMute exec --no-startup-id pulseaudio-ctl mute
@@ -65,7 +71,7 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pulseaudio-ctl up
 bindsym XF86AudioPlay exec --no-startup-id ncmpcpp toggle
 bindsym XF86AudioPrev exec --no-startup-id ncmpcpp prev
 bindsym XF86AudioNext exec --no-startup-id ncmpcpp next
-bindsym Print exec --no-startup-id scrot -q 100 -e "mv $f ~/screenshots/ 2>/dev/null"
+bindsym Print exec --no-startup-id screenshot
 # Games
 bindsym $mod+F11 exec --no-startup-id starbound
 bindsym $mod+F12 exec --no-startup-id sc2
@@ -74,7 +80,7 @@ bindsym $mod+F12 exec --no-startup-id sc2
 bindsym $mod+Escape kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec dmenu_run
+bindsym $mod+p exec --no-startup-id dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -163,11 +169,11 @@ bindsym $mod+Control+period move workspace to output right
 bindsym $mod+Control+comma move workspace to output left
 
 # reload the configuration file
-bindsym $mod+Shift+Control+c reload
+bindsym $mod+Control+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+Control+r restart
+bindsym $mod+Control+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+Control+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Control+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
