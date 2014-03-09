@@ -15,7 +15,7 @@ hi NonText ctermfg=0 ctermbg=none
 hi Directory ctermfg=12
 
 hi VertSplit ctermfg=black
-hi StatusLine ctermfg=green
+hi StatusLine ctermfg=black
 hi StatusLineNC ctermfg=0
 
 hi Folded ctermbg=0 ctermfg=8

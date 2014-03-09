@@ -17,6 +17,7 @@ set shiftwidth=2
 set softtabstop=2
 set noexpandtab
 set autoindent
+set nostartofline
 
 set encoding=utf-8
 set termencoding=utf-8
@@ -72,6 +73,7 @@ set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 
 set nuw=6
 set number
+set relativenumber
 set cursorline
 set clipboard=unnamedplus				" X11 System Clipboard
 set autowrite
@@ -121,7 +123,8 @@ augroup vimrcEx
 				\ endif
 
 	au BufWritePre * :%s/s+$//e	 " Remove trailing whitespace upon saving
-	au FocusLost,InsertLeave * bufdo call functions#AutoSave()
+	" au FocusLost,InsertLeave * bufdo call functions#AutoSave()
+	au InsertLeave * :wa
 augroup END
 
 " Relies on Xresources for colours
