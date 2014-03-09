@@ -47,9 +47,9 @@ bindsym $mod+F7 exec --no-startup-id emacsclient --eval "(make-capture-frame)"
 bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
 
 assign [class="^Firefox$" instance="^Navigator$"] 3
-assign [class="^mail$"] 4
-assign [class="^chat$"] 4
-#assign [class="^ranger$"] 7
+assign [instance="^mail$"] 4
+assign [instance="^chat$"] 4
+assign [instance="^ranger$"] 7
 #assign [class="^Gvim$"] 2
 #assign [class="^Emacs$" instance="^emacs$"] 2
 
