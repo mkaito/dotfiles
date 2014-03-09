@@ -16,7 +16,7 @@
     gist haml-mode haskell-mode inf-ruby lua-mode
     markdown-mode paredit projectile js2-mode
     sass-mode rainbow-mode scss-mode ack-and-a-half
-    yaml-mode zenburn-theme nginx-mode flymake)
+    yaml-mode nginx-mode flymake)
   "A list of packages to ensure are installed at launch.")
 
 (defun wanted-packages-installed-p ()
@@ -45,40 +45,6 @@
 (scroll-bar-mode -1)
 (setq visible-bell t)
 
-(defvar-local hidden-mode-line-mode nil)
-(defvar-local hide-mode-line nil)
-
-(define-minor-mode hidden-mode-line-mode
-  "Minor mode to hide the mode-line in the current buffer."
-  :init-value nil
-  :global nil
-  :variable hidden-mode-line-mode
-  :group 'editing-basics
-  (if hidden-mode-line-mode
-      (setq hide-mode-line mode-line-format
-	    mode-line-format nil)
-    (setq mode-line-format hide-mode-line
-	  hide-mode-line nil))
-  (force-mode-line-update)
-  (set-window-buffer nil (current-buffer))
-  (when (and (called-interactively-p 'interactive)
-	     hidden-mode-line-mode)
-    (run-with-idle-timer
-     0 nil 'message
-     (concat "Hidden Mode Line Mode enabled.  "
-	     "Use M-x hidden-mode-line-mode RET to make the mode-line appear."))))
-
-;; Activate hidden-mode-line-mode
-(hidden-mode-line-mode 1)
-
-;; Command to toggle the display of the mode-line as a header
-(defun mode-line-in-header ()
-  (interactive)
-  (if (not header-line-format)
-      (setq header-line-format mode-line-format)
-    (setq header-line-format nil)))
-(global-set-key (kbd "C-S-SPC") 'mode-line-in-header)
-
 ;;Auto save and backups
 (setq
  backup-by-copying t
@@ -92,14 +58,14 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; (defun full-auto-save ()
-;;   (interactive)
-;;   (save-excursion
-;;     (dolist (buf (buffer-list))
-;;       (set-buffer buf)
-;;       (if (and (buffer-file-name) (buffer-modified-p))
-;; 	  (basic-save-buffer)))))
-;; (add-hook 'auto-save-hook 'full-auto-save)
+(defun full-auto-save ()
+  (interactive)
+  (save-excursion
+    (dolist (buf (buffer-list))
+      (set-buffer buf)
+      (if (and (buffer-file-name) (buffer-modified-p))
+	  (basic-save-buffer)))))
+(add-hook 'auto-save-hook 'full-auto-save)
 
 (setq auto-save-interval 25
       auto-save-timeout 2
@@ -112,7 +78,8 @@
 (load-library "iso-transl")
 
 ;; Colour theme initialization
-(load-theme 'zenburn t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'erosion t)
 
 (global-hl-line-mode 1)
 (set-face-background 'hl-line   "#0f0f0f")
@@ -263,9 +230,12 @@
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
 ;; Markdown mode
-(add-to-list 'auto-mode-alist '("\\.markdown\\'\\|\\.mkd\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'\\|\\.mkd\\|\\.md\'" . markdown-mode))
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook
+	  '(lambda ()
+	     (set (make-local-variable 'tab-width) 2)))
 
 ;; Lua mode for awesome wm config files
 (add-to-list 'auto-mode-alist '("\\.lua\\'" . lua-mode))
@@ -491,6 +461,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" default)))
  '(inhibit-startup-echo-area-message "chris")
  '(safe-local-variable-values (quote ((encoding . utf-8)))))
 (custom-set-faces
