@@ -94,3 +94,6 @@
 [submodule "vimconf/bundle/commentary"]
 	path = vimconf/bundle/commentary
 	url = https://github.com/tpope/vim-commentary.git
+[submodule "vimconf/bundle/surround"]
+	path = vimconf/bundle/surround
+	url = https://github.com/tpope/vim-surround.git
