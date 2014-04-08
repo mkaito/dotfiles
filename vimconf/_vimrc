@@ -1,3 +1,5 @@
+set shell=/bin/sh
+
 call dirsettings#Install()
 
 filetype off
@@ -15,7 +17,7 @@ set nocompatible
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set noexpandtab
+set expandtab
 set autoindent
 set nostartofline
 
@@ -124,11 +126,12 @@ augroup vimrcEx
 
 	au BufWritePre * :%s/s+$//e	 " Remove trailing whitespace upon saving
 	" au FocusLost,InsertLeave * bufdo call functions#AutoSave()
-	au InsertLeave * :wa
+	" au InsertLeave * :wa
 augroup END
 
 " Relies on Xresources for colours
-colorscheme terminal
+set background=dark
+colorscheme base16-chalk
 
 nnoremap <leader>a :Ack
 
@@ -186,6 +189,9 @@ autocmd FileType ruby
 " Coffee Script mode: Enable folding
 let coffee_folding = 1
 
+" Haskell
+au FileType haskell setl et
+
 " Ledger
 au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
 let g:ledger_maxwidth = 80
@@ -209,3 +215,5 @@ let g:ctrlp_custom_ignore = {
 	\ }
 
 iab <expr> ddate strftime("%Y/%m/%d")
+
+nnoremap <leader>f :Switch<cr>

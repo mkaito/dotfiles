@@ -41,10 +41,10 @@ URxvt.keysym.M-C-v            :perl:clipboard:paste_escaped
 URxvt.url-select.launcher     :/usr/bin/firefox
 URxvt.url-select.underline    :true
 ! Catch ugly URLs
-URxvt.cutchars                :'"'()*<>[]{|}_-                     :?
+URxvt.cutchars                :'"'()*<>[]{|}_-:?
 !
 ! Appearance
-URxvt.internalBorder:					15
+URxvt.internalBorder          : 15
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
 URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
@@ -53,81 +53,7 @@ URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMinc
 !URxvt.blurRadius              :22
 !URxvt.tintColor               :#1f1f1f
 
-!! Zenburn color-scheme
-!URxvt.background              :#1f1f1f
-!URxvt.foreground              :#dcdccc
-
-!! black + red
-!!URxvt.color0                 :#3f3f3f
-!URxvt.color0                  :#1f1f1f
-!URxvt.color1                  :#705050
-
-!! green + yellow
-!URxvt.color2                  :#60b48a
-!URxvt.color3                  :#dfaf8f
-
-!! blue + purple
-!URxvt.color4                  :#506070
-!URxvt.color5                  :#dc8cc3
-
-!! cyan + white
-!URxvt.color6                  :#8cd0d3
-!URxvt.color7                  :#dcdccc
-
-!! bright-black + bright-red
-!URxvt.color8                  :#709080
-!URxvt.color9                  :#dca3a3
-
-!! bright-green + bright-yellow
-!URxvt.color10                 :#c3bf9f
-!URxvt.color11                 :#f0dfaf
-
-!! bright-blue + bright-purple
-!URxvt.color12                 :#94bff3
-!URxvt.color13                 :#ec93d3
-
-!! bright-cyan + bright-white
-!URxvt.color14                 :#93e0e3
-!URxvt.color15                 :#ffffff
-
-!! X::erosion
-*background: #181512
-*foreground: #bea492
-*cursorColor: #93a1a1
-
-!! black dark/light
-*color0: #332d29
-*color8: #817267
-
-!! red dark/light
-*color1: #8c644c
-*color9: #9f7155
-
-!! green dark/light
-*color2: #c4be90
-*color10: #bec17e
-
-!! yellow dark/light
-*color3: #bfba92
-*color11: #fafac0
-
-!! blue dark/light
-! *color4: #293033
-! *color12: #303b40
-*color4: #646a6d
-*color12: #626e74
-
-!! magenta dark/light
-*color5: #6d6871
-*color13: #756f7b
-
-!! cyan dark/light
-*color6: #3b484a
-*color14: #444d4e
-
-!! white dark/light
-*color7: #504339
-*color15: #9a875f
+#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-chalk.dark.xresources"
 !!}}}
 
 !{{{ SshAskpass

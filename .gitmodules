@@ -55,9 +55,6 @@
 [submodule "vimconf/bundle/ctrlp.vim"]
 	path = vimconf/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
-[submodule "zsh/syntax-highlighting"]
-	path = zsh/syntax-highlighting
-	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule "dotemacs/vendor/solarized"]
 	path = dotemacs/vendor/solarized
 	url = https://github.com/sellout/emacs-color-theme-solarized
@@ -70,9 +67,6 @@
 [submodule "vimconf/bundle/vim-vinegar"]
 	path = vimconf/bundle/vim-vinegar
 	url = git://github.com/tpope/vim-vinegar.git
-[submodule "zsh/opp"]
-	path = zsh/opp
-	url = https://github.com/hchbaw/opp.zsh.git
 [submodule "vimconf/bundle/dirsettings"]
 	path = vimconf/bundle/dirsettings
 	url = https://github.com/mantiz/vim-plugin-dirsettings.git
@@ -106,3 +100,9 @@
 [submodule "vimconf/bundle/fish"]
 	path = vimconf/bundle/fish
 	url = https://github.com/dag/vim-fish
+[submodule "Xresources.d/base16"]
+	path = Xresources.d/base16
+	url = https://github.com/chriskempson/base16-xresources
+[submodule "zsh/antigen"]
+	path = zsh/antigen
+	url = https://github.com/zsh-users/antigen
