@@ -1,53 +1,50 @@
-source ~/dev/dotfiles/zsh/_alias
-source ~/dev/dotfiles/zsh/opp/opp.zsh
+source ~/dev/dotfiles/zsh/antigen/antigen.zsh
 
-if [[ $TERM == xterm-termite ]]; then
-  . /etc/profile.d/vte.sh
-  __vte_osc7
-fi
+# Load the oh-my-zsh's library.
+antigen use oh-my-zsh
 
-# Dat vim mode
-bindkey -e
-#bindkey -v
-#bindkey '^P' up-history
-#bindkey '^N' down-history
-#bindkey '^?' backward-delete-char
-#bindkey '^h' backward-delete-char
-#bindkey '^w' backward-kill-word
-#bindkey '^r' history-incremental-search-backward
+# Bundles from the default repo (robbyrussell's oh-my-zsh).
+antigen bundle git
+# antigen bundle command-not-found
 
-#function zle-line-init zle-keymap-select {
-	#VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-	#RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
-	#zle reset-prompt
-#}
+# Syntax highlighting bundle.
+antigen bundle zsh-users/zsh-syntax-highlighting
 
-#zle -N zle-line-init
-#zle -N zle-keymap-select
-#export KEYTIMEOUT=1
+# Pure prompt
+# antigen bundle sindresorhus/pure
+antigen theme pure
 
-setopt emacs
+# Tell antigen that you're done.
+antigen apply
+
+# bindkey -e
+# setopt emacs
 setopt nohup
 setopt autocd
-setopt cdablevars
-setopt nobgnice
-setopt nobanghist
+# setopt cdablevars
+# setopt nobgnice
 setopt noclobber
-setopt shwordsplit
-setopt interactivecomments
-setopt autopushd pushdminus pushdsilent pushdtohome
-setopt histreduceblanks histignorespace inc_append_history
+# setopt shwordsplit
+# setopt interactivecomments
+# setopt autopushd pushdminus pushdsilent pushdtohome
+# setopt histreduceblanks histignorespace inc_append_history
+
+# This is the default, but since the commands below rely on it, make sure it's
+# bound to what we think it is.
+bindkey "^Q" push-line
+bindkey -s "^[l" "^Qls -l^J"
+bindkey -s "^l" "^Qclear^J"
+
+source ~/dev/dotfiles/zsh/_alias
 
 # Prompt requirements
-setopt extended_glob prompt_subst
-autoload colors zsh/terminfo
-autoload -U zmv
+# setopt extended_glob prompt_subst
+# autoload colors zsh/terminfo
+# autoload -U zmv
 
 # New style completion system
 fpath=(/home/chris/dev/dotfiles/zsh/completion $fpath)
 autoload -U compinit; compinit
-# Load bash completions
-autoload -U bashcompinit; bashcompinit
 
 # Enable completion caching
 zstyle ':completion:*' use-cache on
@@ -86,37 +83,6 @@ zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors
 zstyle ":completion:*" list-colors ""
 
-## create a zkbd compatible hash;
-## to add other keys to this hash, see: man 5 terminfo
-#typeset -A key
-
-#key[Home]=${terminfo[khome]}
-#key[End]=${terminfo[kend]}
-#key[Insert]=${terminfo[kich1]}
-#key[Delete]=${terminfo[kdch1]}
-#key[Up]=${terminfo[kcuu1]}
-#key[Down]=${terminfo[kcud1]}
-#key[Left]=${terminfo[kcub1]}
-#key[Right]=${terminfo[kcuf1]}
-#key[PageUp]=${terminfo[kpp]}
-#key[PageDown]=${terminfo[knp]}
-
-#for k in ${(k)key} ; do
-	## $terminfo[] entries are weird in ncurses application mode...
-	#[[ ${key[$k]} == $'\eO'* ]] && key[$k]=${key[$k]/O/[}
-#done
-#unset k
-
-# setup key accordingly
-#[[ -n "${key[Home]}"    ]]  && bindkey  "${key[Home]}"    beginning-of-line
-#[[ -n "${key[End]}"     ]]  && bindkey  "${key[End]}"     end-of-line
-#[[ -n "${key[Insert]}"  ]]  && bindkey  "${key[Insert]}"  overwrite-mode
-#[[ -n "${key[Delete]}"  ]]  && bindkey  "${key[Delete]}"  delete-char
-#[[ -n "${key[Up]}"      ]]  && bindkey  "${key[Up]}"      up-line-or-history
-#[[ -n "${key[Down]}"    ]]  && bindkey  "${key[Down]}"    down-line-or-history
-#[[ -n "${key[Left]}"    ]]  && bindkey  "${key[Left]}"    backward-char
-#[[ -n "${key[Right]}"   ]]  && bindkey  "${key[Right]}"   forward-char
-
 function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
 function dsync () { rsync -lprt --progress --stats --delete "$1/" "$2/" }
 
@@ -129,92 +95,5 @@ function snap () {
 		convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
 		echo ": ${fname}.${format}"
 }
-
-# function d () {
-# 	 [ "$1" ] && sid="$1" 
-# 	 [ "$2" ] && sact="$2" || sact=start
-# 	 bspath="/etc/rc.d/"
-
-# 	 if [[ -f "${bspath}${sid}" ]]; then
-# 			sudo "${bspath}${sid}" "${sact}";
-# 	 else
-# 			echo "Service $1 not found"
-# 	 fi
-
-# 	 sid=""
-# 	 sact=""
-# }
-
-function preexec () {
-	 # Screen window titles as currently running programs
-	 if [[ "${TERM}" == "screen-256color" ]]; then
-			 local CMD="${1[(wr)^(*=*|sudo|-*)]}"
-			 echo -n "\ek$CMD\e\\"
-	 fi
-}
-
-function setprompt () {
-    if [[ "${terminfo[colors]}" -ge 8 ]]; then
-        colors
-    fi
-    for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-			eval PR_"${color}"="%{${terminfo[bold]}$fg[${(L)color}]%}"
-			eval PR_LIGHT_"${color}"="%{$fg[${(L)color}]%}"
-    done
-    PR_NO_COLOUR="%{${terminfo[sgr0]}%}"
-
-    # Try to use extended characters to look nicer
-    typeset -A altchar
-    set -A altchar ${(s..)terminfo[acsc]}
-    PR_SET_CHARSET="%{${terminfo[enacs]}%}"
-    PR_SHIFT_IN="%{${terminfo[smacs]}%}"
-    PR_SHIFT_OUT="%{${terminfo[rmacs]}%}"
-    PR_HBAR="${altchar[q]:--}"
-    PR_ULCORNER="${altchar[l]:--}"
-    PR_LLCORNER="${altchar[m]:--}"
-    PR_LRCORNER="${altchar[j]:--}"
-    PR_URCORNER="${altchar[k]:--}"
-
-    # Terminal prompt settings
-    case "${TERM}" in
-        dumb) # Simple prompt for dumb terminals
-            unsetopt zle
-            PROMPT='%n@%m:%~%% '
-            ;;
-        linux) # Simple prompt with Zenburn colors for the console
-            echo -en "\e]P01e2320" # zenburn black (normal black)
-            echo -en "\e]P8709080" # bright-black  (darkgrey)
-            echo -en "\e]P1705050" # red           (darkred)
-            echo -en "\e]P9dca3a3" # bright-red    (red)
-            echo -en "\e]P260b48a" # green         (darkgreen)
-            echo -en "\e]PAc3bf9f" # bright-green  (green)
-            echo -en "\e]P3dfaf8f" # yellow        (brown)
-            echo -en "\e]PBf0dfaf" # bright-yellow (yellow)
-            echo -en "\e]P4506070" # blue          (darkblue)
-            echo -en "\e]PC94bff3" # bright-blue   (blue)
-            echo -en "\e]P5dc8cc3" # purple        (darkmagenta)
-            echo -en "\e]PDec93d3" # bright-purple (magenta)
-            echo -en "\e]P68cd0d3" # cyan          (darkcyan)
-            echo -en "\e]PE93e0e3" # bright-cyan   (cyan)
-            echo -en "\e]P7dcdccc" # white         (lightgrey)
-            echo -en "\e]PFffffff" # bright-white  (white)
-            PROMPT='$PR_GREEN%n@%m$PR_WHITE:$PR_YELLOW%l$PR_WHITE:$PR_RED%~$PR_YELLOW%%$PR_NO_COLOUR '
-            ;;
-        *)  # Main prompt
-            PROMPT="$PR_SET_CHARSET$PR_YELLOW%B%n%b@$PR_NO_COLOUR%m %~
-%(!.$PR_RED───$PR_NO_COLOUR.$PR_BLUE───$PR_NO_COLOUR)$PR_NO_COLOUR "
-						RPROMPT=""
-    esac
-}
-
-
-
-# Prompt init
-setprompt
-
-export PERL_LOCAL_LIB_ROOT="$HOME/perl5";
-export PERL_MB_OPT="--install_base $HOME/perl5";
-export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5";
-export PERL5LIB="$HOME/perl5/lib/perl5/x86_64-linux-thread-multi:$HOME/perl5/lib/perl5";
 
 # vim:ft=zsh

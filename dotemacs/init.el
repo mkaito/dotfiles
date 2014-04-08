@@ -58,18 +58,19 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(defun full-auto-save ()
-  (interactive)
-  (save-excursion
-    (dolist (buf (buffer-list))
-      (set-buffer buf)
-      (if (and (buffer-file-name) (buffer-modified-p))
-	  (basic-save-buffer)))))
-(add-hook 'auto-save-hook 'full-auto-save)
+;; (defun full-auto-save ()
+;;   (interactive)
+;;   (save-excursion
+;;     (dolist (buf (buffer-list))
+;;       (set-buffer buf)
+;;       (if (and (buffer-file-name) (buffer-modified-p))
+;; 	  (basic-save-buffer)))))
+;; (add-hook 'auto-save-hook 'full-auto-save)
 
-(setq auto-save-interval 25
-      auto-save-timeout 2
-      auto-save-default t)
+(setq auto-save-interval 0
+      auto-save-timeout 4
+;;      auto-save-default t
+      auto-save-visited-file-name t)
 
 ;; Fancy automatic buffer cleanup
 (require 'midnight)
@@ -322,8 +323,8 @@
 (autoload 'smart-tabs-mode-enable "smart-tabs-mode")
 (autoload 'smart-tabs-advice "smart-tabs-mode")
 
-(setq-default indent-tabs-mode t)
-(setq tab-width 2)
+;; (setq-default indent-tabs-mode t)
+;; (setq tab-width 2)
 
 ;; C/C++
 (add-hook 'c-mode-hook 'smart-tabs-mode-enable)

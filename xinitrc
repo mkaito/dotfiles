@@ -41,7 +41,7 @@ export MPD_PORT=-1
 # [[ -r "${userresources}" ]] && xrdb -merge "${userresources}"
 # [[ -r "${userdefresources}" ]] && xrdb -merge "${userdefresources}"
 # #[[ -r "${usermodmap}" ]]    && xmodmap "${usermodmap}"
-xrdb ~/.Xresources &
+xrdb ~/.Xresources
 
 #setxkbmap es
 #xmodmap ~/.xmodmap
@@ -70,13 +70,13 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 # Start urxvt daemon
-urxvtd -q -o -f
+# urxvtd -q -o -f
 
 # SSH Agent
 #eval `ssh-agent`
 #(ssh-add -l || ssh-add) &
 
-(sleep 300 && checkstart bitcoind -daemon) &
+# (sleep 300 && checkstart bitcoind -daemon) &
 
 # Music Player Daemon
 checkstart mpd ~/.mpd/mpd.conf &
@@ -117,8 +117,8 @@ xset s off
 
 # Remove the mouse pointer when it's idle
 # This screws with window focus
-#checkstart unclutter -idle 3 -root &
-checkstart xbanish &
+# checkstart unclutter -idle 3 -root &
+# checkstart xbanish &
 
 # Redshift adjusts monitor colour temperature according to day time
 checkstart redshift -l 28:-13 -t 5600:4000 -m randr &!

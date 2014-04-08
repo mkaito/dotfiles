@@ -7,9 +7,7 @@
 # <key> is simply passed to grep, and the result is placed in the primary selection buffer for your convenience.
 # As visual cue, the key (first space separated field on the matching line) is printed out.
 
-DECRYPT="gpg2 -qd"
 PWFILE="$HOME/dev/dotfiles/passwords.gpg"
-XCLIP="xclip -selection clipboard"
 
 case "$1" in
 	clear)

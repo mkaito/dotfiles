@@ -11,6 +11,11 @@ function d() {
     # find ~/dev -type d | grep -v ".*\/\..*" | xargs -n1 basename | sort -u >! ~/.devcache
 }
 
+alias p='pass show'
+# alias pc='pass show -c'
+
+alias s='sudo systemctl'
+
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
 alias timestamp='date +%s'

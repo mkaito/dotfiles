@@ -1,4 +1,4 @@
-(setq org-directory "~/.org/")
+(setq org-directory "~/notes/")
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -17,8 +17,8 @@
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-(setq org-crypt-key "98F29617")		; me@mkaito.com
-(add-hook 'org-mode-hook '(lambda () (auto-save-mode 0)))
+(setq org-crypt-key "6866852C")		; me@mkaito.com
+;;(add-hook 'org-mode-hook '(lambda () (auto-save-mode 0)))
 
 ;; Custom key bindings
 (add-hook 'org-mode-hook 
@@ -63,7 +63,7 @@
 
 ;; Files that are included in org-mode agenda
 (setq org-agenda-files
-      (list "~/.org/personal.org" "~/.org/refile.org" "~/.org/work.org")
+      (list "~/notes/personal.org" "~/notes/refile.org" "~/notes/work.org")
       )
 
 ;; Refile targets
