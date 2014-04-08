@@ -10,3 +10,6 @@ dotemacs/org-clock-save.el
 dotemacs/url/*
 dotemacs/projectile-bookmarks.eld
 dotemacs/projectile.cache
+fish/generated_completions/
+fish/fishd.*
+fish/fish*history
