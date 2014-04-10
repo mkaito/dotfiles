@@ -106,3 +106,6 @@
 [submodule "zsh/antigen"]
 	path = zsh/antigen
 	url = https://github.com/zsh-users/antigen
+[submodule "vimconf/bundle/hybrid"]
+	path = vimconf/bundle/hybrid
+	url = https://github.com/w0ng/vim-hybrid

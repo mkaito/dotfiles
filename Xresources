@@ -53,7 +53,7 @@ URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMinc
 !URxvt.blurRadius              :22
 !URxvt.tintColor               :#1f1f1f
 
-#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-chalk.dark.xresources"
+#include "/home/chris/dev/dotfiles/Xresources.d/hybrid.xresources"
 !!}}}
 
 !{{{ SshAskpass
