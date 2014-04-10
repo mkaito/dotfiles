@@ -25,6 +25,8 @@ function ttm
       # and so we have a clean args array to pass down to tt.
       if test (count $argv) -ge 2
         set argv $argv[2..-1]
+      else
+        set -e argv
       end
 
     else
@@ -39,13 +41,15 @@ function ttm
     #  a string "2,3,4,5", passed to transmission-remote as argument to -t
     #  a target path
     if test (count $argv) -ge 2
-      set torrents $argv[1]
+      set tline $argv[1]
       set target (realpath $argv[2])
 
       # Slice the arguments to get rid of those we used
       # and so we have a clean args array to pass down to tt.
       if test (count $argv) -ge 3
         set argv $argv[3..-1]
+      else
+        set -e argv
       end
 
     else

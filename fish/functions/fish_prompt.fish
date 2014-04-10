@@ -2,9 +2,10 @@
 set __fish_git_prompt_showdirtystate 'yes'
 set __fish_git_prompt_showstashstate 'yes'
 set __fish_git_prompt_showupstream 'yes'
-set __fish_git_prompt_color_branch blue
+set __fish_git_prompt_color_branch "#666666"
 set __fish_git_prompt_char_upstream_prefix ""
 set __fish_git_prompt_char_stateseparator ""
+set fish_color_error "red"
 
 # Status Chars
 # set __fish_git_prompt_char_dirtystate '⚡'

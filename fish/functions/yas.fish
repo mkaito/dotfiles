@@ -1,3 +1,3 @@
 function yas
-	sudo yaourt -S $argv
+	yaourt -S $argv
 end
