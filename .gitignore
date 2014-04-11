@@ -13,3 +13,4 @@ dotemacs/projectile.cache
 fish/generated_completions/
 fish/fishd.*
 fish/fish*history
+systemd/default.target.wants/

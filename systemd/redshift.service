@@ -1,0 +1,10 @@
+[Unit]
+Description=Redshift
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/bin/redshift -l 28:-13 -t 6000:4700 -m randr
+Restart=always
+
+[Install]
+WantedBy=default.target

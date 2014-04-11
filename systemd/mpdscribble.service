@@ -1,0 +1,9 @@
+[Unit]
+Description=Music Player Daemon Scribbler
+After=network.target sound.target mpd.service
+
+[Service]
+ExecStart=/bin/mpdscribble --no-daemon
+
+[Install]
+WantedBy=default.target
