@@ -1,3 +1,3 @@
-function s
+function ss
 	sudo systemctl $argv
 end
