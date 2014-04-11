@@ -1,0 +1,38 @@
+# export HISTFILE="$HOME/.zsh_history"
+# export HISTSIZE=10000
+# export SAVEHIST=10000
+# export LESSHISTFILE="-"
+export PAGER="less"
+export READNULLCMD="$PAGER"
+export VISUAL="vim"
+export EDITOR="vim"
+export ALTERNATE_EDITOR=””
+export BROWSER="firefox"
+export XTERM="~/dev/bin/terminal"
+export TERMINAL="$XTERM"
+export PERL_SIGNALS=unsafe
+export WINEDEBUG=-all
+export GOPATH="~/dev/go"
+
+# *env
+export PYENV_ROOT="$HOME/dev/build/pyenv"
+source "$HOME/dev/build/pyenv/versions/2.7.6/bin/virtualenvwrapper.sh"
+eval "$(pyenv init -)"
+eval "$(rbenv init -)"
+
+PATH="$HOME/dev/bin:$GOPATH/bin:$PYENV_ROOT/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$PATH"
+# Remove duplicates
+#PATH=$( echo $PATH | tr ":" "\n" | sort -ru | paste -sd: )
+export PATH
+
+export ANDROIDSDK="/opt/android-sdk"
+export ANDROIDNDK="/opt/android-ndk"
+export ANDROIDNDKVER=r8
+export ANDROIDAPI=8
+
+export LEDGER_FILE="$HOME/ledger/personal.ledger"
+
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5";
+export PERL_MB_OPT="--install_base $HOME/perl5";
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5";
+export PERL5LIB="$HOME/perl5/lib/perl5/x86_64-linux-thread-multi:$HOME/perl5/lib/perl5";
