@@ -45,9 +45,6 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-# Start the GNU Emacs daemon
-[[ ! -r "/tmp/emacs${UID}/server" ]] && DISPLAY='' emacs --daemon -nw --no-splash 1>/dev/null &
-
 # Start the GnuPG agent and enable OpenSSH agent emulation
 gnupginf="${HOME}/.gnupg/gpg-agent.info"
 
@@ -56,7 +53,6 @@ if pgrep -u "${USER}" gpg-agent >/dev/null 2>&1; then
   eval `cut -d= -f1 $gnupginf | xargs echo export`
 else
     eval `gpg-agent --enable-ssh-support --daemon`
-    #eval `gpg-agent --daemon`
 fi
 
 # Fix cursor
