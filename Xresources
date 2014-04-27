@@ -46,8 +46,8 @@ URxvt.cutchars                :'"'()*<>[]{|}_-:?
 ! Appearance
 URxvt.internalBorder          : 15
 !URxvt.font                   :-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
-URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
-URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
+URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.boldFont                :xft:Ubuntu Mono:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
 !URxvt.transparent             :true
 !URxvt.shading                 :90
 !URxvt.blurRadius              :22
