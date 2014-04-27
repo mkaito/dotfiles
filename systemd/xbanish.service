@@ -1,10 +1,10 @@
 [Unit]
-Description=Redshift
+Description=hide the X11 mouse cursor when a key is pressed
 After=graphical.target
 
 [Service]
 Environment=DISPLAY=:0
-ExecStart=/bin/redshift -l 28:-13 -t 5500:3600 -b 0.80:0.92 -m randr
+ExecStart=/bin/xbanish
 Restart=always
 
 [Install]

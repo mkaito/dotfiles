@@ -3,12 +3,10 @@ Description=FlexGet daemon
 After=network.target
 
 [Service]
-Type=simple
-RemainAfterExit=yes
-ExecStart=/bin/flexget daemon start -d
+ExecStart=/bin/flexget daemon start
 ExecStop=/bin/flexget daemon stop
 ExecReload=/usr/bin/flexget daemon reload
-KillMode=process
+Restart=always
 
 [Install]
 WantedBy=default.target
