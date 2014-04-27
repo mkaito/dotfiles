@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+steam steam://rungameid/570 -windowed -h 1055 -w 1912 -novid -console

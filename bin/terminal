@@ -1,4 +1,5 @@
 #!/bin/zsh
+# The urxvt daemon seems to be crashing a lot...
 # urxvtc "$@"
 # if [[ "$?" == "2" ]]; then
 # 	urxvtd -q -o -f

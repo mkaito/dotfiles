@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+WINEPREFIX="/home/chris/.local/share/wineprefixes/steam" \
+  ~/.wine-versions/vanilla-head/bin/wine explorer /desktop=banished,1920x1080 \
+  C:\\\\windows\\\\command\\\\start.exe steam://rungameid/242920
