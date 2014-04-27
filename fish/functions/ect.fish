@@ -1,3 +1,3 @@
 function ect
-	emacsclient -c -nw $argv
+	emacsclient -nw $argv
 end

@@ -1,3 +1,3 @@
 function p
-	pass show -c $argv
+	pass -c $argv
 end

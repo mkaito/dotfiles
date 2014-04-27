@@ -1,11 +1,8 @@
 function tt
 	set -l torrents
 	set -l tline
-	set -l piped
 
 	if not isatty 0
-		set piped true
-
 		while read line
 			# `grep` will only print the matching portion of lines that start with whitespace followed by digits.
 			# `tr` then removes any whitespace.
@@ -23,7 +20,7 @@ function tt
 		end
 	end
 
-	if test $piped = true
+	if test -n $tline
 		command transmission-remote -t$tline $argv
 	else
 		command transmission-remote $argv

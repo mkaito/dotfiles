@@ -1,3 +1,3 @@
 function yasyu
-	sudo yaourt -Syu $argv
+	yaourt -Syu $argv
 end
