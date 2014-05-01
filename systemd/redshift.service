@@ -4,7 +4,7 @@ After=graphical.target
 
 [Service]
 Environment=DISPLAY=:0
-ExecStart=/bin/redshift -l 28:-13 -t 5500:3600 -b 0.80:0.92 -m randr
+ExecStart=/bin/redshift -l 28:-13 -t 5300:3300 -b 0.80:0.91 -m randr
 Restart=always
 
 [Install]
