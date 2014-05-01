@@ -48,14 +48,16 @@ bindsym $mod+F7 exec --no-startup-id emacsclient --eval "(make-capture-frame)"
 bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
 
 assign [class="^Firefox$" instance="^Navigator$"] 3
+assign [class="^Dwb$" instance ="^dwb$"] 3
 assign [instance="^mail$"] 4
 assign [instance="^chat$"] 4
-assign [instance="^ranger$"] 7
+# assign [instance="^ranger$"] 7
 assign [class="^Steam$"] 9
 assign [class="^FTL$"] 5
 assign [class="^starbound$"] 5
-#assign [class="^Gvim$"] 2
-#assign [class="^Emacs$" instance="^emacs$"] 2
+assign [title="^Shadowrun$"] 5
+# assign [class="^Gvim$"] 2
+# assign [class="^Emacs$" instance="^emacs$"] 2
 
 for_window [instance="^music$"] floating enable, border pixel 6
 for_window [class="^mpv$"] floating enable, border none
