@@ -76,6 +76,8 @@ fi
 
 nitrogen --restore &
 
+owncloud &
+
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
 case "${1:-i3}" in
