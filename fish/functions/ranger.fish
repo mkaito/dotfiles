@@ -1,7 +1,7 @@
 function ranger
-	if test -n $RANGER_LEVEL
-    exit
-  else
+	
+    # exit
+  # else
     command ranger
-  end
+  # end
 end

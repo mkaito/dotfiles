@@ -9,6 +9,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
 			 ("melpa" . "http://melpa.milkbox.net/packages/")))
+
 (package-initialize)
 
 (defvar wanted-packages
@@ -16,7 +17,7 @@
     haskell-mode inf-ruby lua-mode markdown-mode paredit projectile
     js2-mode sass-mode rainbow-mode scss-mode ack-and-a-half yaml-mode
     nginx-mode flycheck flycheck-d-unittest flycheck-dmd-dub
-    flycheck-haskell ledger-mode flycheck-ledger)
+    flycheck-haskell ledger-mode flycheck-ledger evil key-chord)
   "A list of packages to ensure are installed at launch.")
 
 (defun wanted-packages-installed-p ()
@@ -80,23 +81,24 @@
 
 ;; Colour theme initialization
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'erosion t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/base16")
+(load-theme 'ultra-pastel t)
 
 (global-hl-line-mode 1)
-(set-face-background 'hl-line   "#0f0f0f")
-(set-face-background 'default   "#1f1f1f")
+;; (set-face-background 'hl-line   "#0f0f0f")
+;; (set-face-background 'default   "#1f1f1f")
 
 ;; Always flash for parens and define a more distinctive color
 (show-paren-mode 1)
-(set-face-foreground 'show-paren-match-face "#bc8383")
-(set-face-background 'show-paren-match-face "#1f1f1f")
+;; (set-face-foreground 'show-paren-match-face "#bc8383")
+;; (set-face-background 'show-paren-match-face "#1f1f1f")
 
 ;; Support 256 colours in screen
 ;;	 - http://article.gmane.org/gmane.emacs.devel/109504/
 (if (not (window-system)) (load "term/rxvt"))
 (defun terminal-init-screen ()
   "Terminal initialization function for screen."
-  Use the rxvt color initialization code.
+  ;; Use the rxvt color initialization code.
   (rxvt-register-default-colors)
   (tty-set-up-initial-frame-faces))
 
@@ -141,6 +143,9 @@
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 
+;; Enable flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 ;; Spell correction
 (require 'ispell)
 (setq ispell-prefer-aspell t
@@ -155,6 +160,25 @@
 (global-set-key (kbd "\C-c C-\\") 'flyspell-correct-word-before-point)
 
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; Evil mode
+;; (require 'evil)
+(evil-mode 1)
+
+;; esc quits
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+;; Chord mode
+(key-chord-mode +1)
+
+;; jj calls normal mode
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
 ;; Split window navigation: S-arrow
 (windmove-default-keybindings)
@@ -457,6 +481,15 @@
 
 ;; (add-hook 'd-mode-hook 'flymake-d-load)
 
+;; Flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'd-mode-hook 'flycheck-dmd-dub-set-include-path)
+(eval-after-load 'flycheck '(require 'flycheck-ledger))
+
+;; Ledger
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+(add-to-list 'auto-mode-alist '("\\.ldg$" . ledger-mode))
+
 ;; Kill the emacs server
 (defun client-save-kill-emacs(&optional display)
   " This is a function that can bu used to shutdown save buffers and 
@@ -544,8 +577,12 @@ nil are ignored."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" default)))
+ '(ansi-color-names-vector ["#120d0a" "#8a626a" "#728560" "#8a7a60" "#686c82" "#b6b6be" "#686c82" "#b9b4b2"])
+ '(ansi-term-color-vector [unspecified "#120d0a" "#8a626a" "#728560" "#8a7a60" "#686c82" "#b6b6be" "#686c82" "#b9b4b2"])
+ '(custom-safe-themes (quote ("1f3031e6ffe1d1a1d49093f338240baac45a72852073e581ff87329a2fe45727" "f6f25be98e22ec45c97a2437901c0cfa32b4d648771e763dcf5dc31d08421544" "de65973c1205745afc380d02b50d0949ff47eb866473262d799537bb143c6589" "9861d7a22fde08b72d5fc070d843e03e225938d82261247da55a6d157629aea7" "aab8981c03c95ea5ac7e17a1fc850381de91197cf65847e0362b980b956dab89" "0ec2eb4d75631837aec3ea3798ff5ce4c94966d164649ff4be04283ac0b9d7a7" "c430336425487e7813041e1fa3af81a06b08296f23558f9af1baae2b37b180ce" "48a64d2e28e7912e6ae4a1ce4b065f62aea58bae442c2ba3c722c5752d317c14" "65ff8408545f9df35794f1a3796bbf12a89aceff135460347a95eae5bf7dab42" "57371db9683e97dd3f0fcd2e6be6bed0e329ef5dd9957dce1c86ee7fd26fab89" "b1c49f140ae5ad0655f5c02d47625bbf6e3eebcd26729c7aec9a77af0448527b" "c9074412e3e19e5265542b457c96799876a2cfbef0ed970f2f791d132cee935e" "7bd1e35f8fc0d48b66f600ea56ad1a915b515ed0a6ab9cc29009a8280a708f57" "5c0f632b36f11f300774e07b3230aeddcc57bf357e85b29d7c85a4af2e467742" "bcedf6e9551266fc4db0bccdc14f6f2bb413139f81b157e5d4e937211b1c5ef5" "23e37a84a8c57bd96365fdc9ec5496ee32823cac36b8550d02623db8c882ee39" "9bac44c2b4dfbb723906b8c491ec06801feb57aa60448d047dbfdbd1a8650897" "d341c86eab8db05fd2a32eb18602cc886c9b352e5c14ed79842a713d9f7b390b" "4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" default)))
  '(inhibit-startup-echo-area-message "chris")
+ '(ledger-post-use-completion-engine :ido)
+ '(ledger-post-auto-adjust-amounts t)
  '(safe-local-variable-values (quote ((encoding . utf-8)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

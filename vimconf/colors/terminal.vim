@@ -18,13 +18,14 @@ hi VertSplit ctermfg=black
 hi StatusLine ctermfg=black
 hi StatusLineNC ctermfg=0
 
-hi Folded ctermbg=0 ctermfg=8
+hi Folded ctermbg=0 ctermfg=12
+hi FoldColumn ctermbg=none ctermfg=8
 
 hi Pmenu ctermfg=10 ctermbg=0
 hi PmenuSel ctermfg=0 ctermbg=14
 hi LineNr ctermfg=0 ctermbg=none
 hi CursorLine ctermfg=none ctermbg=none cterm=none
-hi CursorLineNr ctermfg=none ctermbg=0
+hi CursorLineNr ctermfg=8 ctermbg=0
 hi CursorColumn ctermfg=none ctermbg=0
 
 " Syntax checker colors

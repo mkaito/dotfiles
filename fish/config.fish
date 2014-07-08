@@ -11,13 +11,14 @@ if status -l
   set -x WINEDEBUG -all
   set -x GOPATH ~/dev/go
   set -x LS_COLORS $LS_COLORS':ex=32:di=34'
+	set -x CFLAGS "-std=gnu11 -g -Wall"
 
   set -x PYENV_ROOT ~/dev/build/pyenv
   source $PYENV_ROOT/versions/2.7.6/bin/virtualenvwrappper.sh
   eval (pyenv init -)
   eval (rbenv init -)
 
-  set -x PATH ~/dev/bin $GOPATH/bin $PYENV_ROOT/bin ~/perl5/bin ~/.cabal/bin $PATH
+  set -x PATH ~/dev/bin $GOPATH/bin $PYENV_ROOT/bin ~/perl5/bin ~/.cabal/bin /opt/android-sdk/platform-tools $PATH
 
   set -x ANDROIDSDK /opt/android-sdk
   set -x ANDROIDNDK /opt/android-ndk

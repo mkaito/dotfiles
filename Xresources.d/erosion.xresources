@@ -20,8 +20,8 @@
 *color11: #fafac0
 
 ! blue dark/light
- *color4: #293033
- *color12: #303b40
+!*color4: #293033
+!*color12: #303b40
 *color4: #646a6d
 *color12: #626e74
 
@@ -36,3 +36,4 @@
 ! white dark/light
 *color7: #504339
 *color15: #9a875f
+

@@ -55,8 +55,8 @@ else
     eval `gpg-agent --enable-ssh-support --daemon`
 fi
 
-# Fix cursor
-xsetroot -cursor_name left_ptr
+# Fix cursor and set background
+xsetroot -cursor_name left_ptr -solid "#120d0a"
 
 # Kill the goddamn bell
 xset b off
@@ -74,9 +74,14 @@ else
 	(sleep 10 && amixer set Master 100+ unmute) &!
 fi
 
-nitrogen --restore &
+# nitrogen --restore &
 
-owncloud &
+# owncloud &
+
+autocutsel -selection PRIMARY   -fork
+autocutsel -selection CLIPBOARD -fork
+
+redshift -l 28:-13 -t 5300:3300 -b 0.80:0.91 -m randr &!
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
