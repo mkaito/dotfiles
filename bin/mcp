@@ -1,0 +1,66 @@
+#!/bin/sh
+
+function usage() {
+    echo "$(basename $0) $version
+Music copying helper script. Flatten directory structure and normalize file format
+
+Usage:
+    $(basename $0) /my/polka/folder /my/player/mount/point
+
+Will search /my/polka/folder for known music files, and place a
+flattened copy of the tree at /my/player/mount/point, converting files
+to VBR MP3.
+"
+}
+
+# Require a valid source directory that exists and is readable.
+if [[ ! -z "$1" ]]; then
+    if [[ -d "$1" ]]; then
+	source="$1"
+	shift
+    else
+        echo "Source folder could not be found: $1."; exit 1
+    fi
+else
+    echo "Please specify a source path as first argument"; echo
+    usage
+    exit 1
+fi
+
+# Require a valid target directory that doesn't already exist.
+# TODO: Consider removing the target folder if it exists.
+#   Rationale: We're copying files by design. There should be no data
+#   loss. Might as well make overwriting one step less.
+if [[ ! -z "$1" ]]; then
+    if [[ ! -d "$1" ]]; then
+	target="$1"
+	shift
+    else
+        echo "Target folder already exists: $1."; exit 1
+    fi
+else
+    echo "Please specify a target path as second argument."; echo
+    usage
+    exit 1
+fi
+
+# We've already verified that the target path doesn't already exist.
+mkdir -p "$target"
+
+find "$source" -type f | while read file; do
+    fname=$(basename "$file")
+    tpath="${target}/${fname%.*}.mp3"
+
+    case "$fname" in
+        *.mp3|*.flac|*.ogg|*.m4a|*.mpc)
+	    echo "Processing $file"
+	    # Need to pipe from /dev/null because outer loop is already reading from stdin.
+	    # -qscale 4 should be sufficient for my craptastic portable audio setup.
+	    ffmpeg -loglevel fatal -i "$file" -codec:a libmp3lame -qscale:a 4 "$tpath" </dev/null
+	    ;;
+        *)
+            # This case necessary because otherwise the case above
+            # will match everything. Notice the `:` noop statement.
+            : ;;
+    esac
+done
