@@ -109,3 +109,12 @@
 [submodule "vimconf/bundle/hybrid"]
 	path = vimconf/bundle/hybrid
 	url = https://github.com/w0ng/vim-hybrid
+[submodule "dotemacs/themes/base16"]
+	path = dotemacs/themes/base16
+	url = https://github.com/neil477/base16-emacs.git
+[submodule "vimconf/bundle/goyo"]
+	path = vimconf/bundle/goyo
+	url = https://github.com/junegunn/goyo.vim
+[submodule "vimconf/bundle/limelight"]
+	path = vimconf/bundle/limelight
+	url = https://github.com/junegunn/limelight.vim
