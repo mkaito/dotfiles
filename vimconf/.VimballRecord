@@ -1,2 +1,3 @@
 tComment.vba: call delete('/home/chris/.vim/doc/tComment.txt')|call delete('/home/chris/.vim/plugin/tComment.vim')|call delete('/home/chris/.vim/autoload/tcomment.vim')
 ruby-sinatra-0.2.0.vba: call delete('/home/chris/.vim/ftdetect/ruby-sinatra.vim')|call delete('/home/chris/.vim/snippets/ruby-sinatra.snippets')|call delete('/home/chris/.vim/syntax/ruby-sinatra.vim')
+hilinks.vba: call delete('/home/chris/.vim/plugin/hilinks.vim')|call delete('/home/chris/.vim/doc/hilinks.txt')

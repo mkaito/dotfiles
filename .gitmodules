@@ -127,3 +127,6 @@
 [submodule "vimconf/bundle/javascript"]
 	path = vimconf/bundle/javascript
 	url = https://github.com/pangloss/vim-javascript
+[submodule "vimconf/bundle/coffee-script"]
+	path = vimconf/bundle/coffee-script
+	url = https://github.com/kchmck/vim-coffee-script

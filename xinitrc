@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 #
 # mkaito's X.org init file on Arch GNU/Linux
 

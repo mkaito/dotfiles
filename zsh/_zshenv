@@ -1,7 +1,3 @@
-# export HISTFILE="$HOME/.zsh_history"
-# export HISTSIZE=10000
-# export SAVEHIST=10000
-# export LESSHISTFILE="-"
 export PAGER="less"
 export READNULLCMD="$PAGER"
 export VISUAL="vim"
@@ -12,18 +8,20 @@ export XTERM="~/dev/bin/terminal"
 export TERMINAL="$XTERM"
 export PERL_SIGNALS=unsafe
 export WINEDEBUG=-all
-export GOPATH="~/dev/go"
+export GOPATH="$HOME/dev/go"
+
+
+source /etc/zsh/zprofile
+PATH="$HOME/dev/bin:$GOPATH/bin:$PYENV_ROOT/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$HOME/node_modules/.bin:$PATH"
+# Remove duplicates
+# PATH=$( echo $PATH | tr ":" "\n" | sort -ru | paste -sd: )
+export PATH
 
 # *env
 export PYENV_ROOT="$HOME/dev/build/pyenv"
 source "$HOME/dev/build/pyenv/versions/2.7.6/bin/virtualenvwrapper.sh"
-eval "$(pyenv init -)"
 eval "$(rbenv init -)"
-
-PATH="$HOME/dev/bin:$GOPATH/bin:$PYENV_ROOT/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$PATH"
-# Remove duplicates
-#PATH=$( echo $PATH | tr ":" "\n" | sort -ru | paste -sd: )
-export PATH
+eval "$(pyenv init -)"
 
 export ANDROIDSDK="/opt/android-sdk"
 export ANDROIDNDK="/opt/android-ndk"

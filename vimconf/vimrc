@@ -258,3 +258,14 @@ nnoremap <Leader><space> :Goyo<CR>
 
 " jrnl files
 au BufNewFile,BufRead jrnl* set nolist wrap linebreak | Goyo
+
+" txt files
+au BufEnter *.txt setl tx ts=4 sw=4 fo+=n2
+
+" JSX Linter
+let g:syntastic_javascript_checkers = ['jsxhint']
+
+" Show syntax group at point
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
