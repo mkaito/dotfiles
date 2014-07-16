@@ -118,3 +118,12 @@
 [submodule "vimconf/bundle/limelight"]
 	path = vimconf/bundle/limelight
 	url = https://github.com/junegunn/limelight.vim
+[submodule "vimconf/bundle/conky-syntax"]
+	path = vimconf/bundle/conky-syntax
+	url = https://github.com/smancill/conky-syntax.vim
+[submodule "vimconf/bundle/vim-jsx"]
+	path = vimconf/bundle/vim-jsx
+	url = https://github.com/mxw/vim-jsx
+[submodule "vimconf/bundle/javascript"]
+	path = vimconf/bundle/javascript
+	url = https://github.com/pangloss/vim-javascript

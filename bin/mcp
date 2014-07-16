@@ -27,24 +27,17 @@ else
 	exit 1
 fi
 
-# Require a valid target directory that doesn't already exist.
-# TODO: Consider removing the target folder if it exists.
-#   Rationale: We're copying files by design. There should be no data
-#   loss. Might as well make overwriting one step less.
+# Require a valid target directory.
 if [[ ! -z "$1" ]]; then
-	if [[ ! -d "$1" ]]; then
-		target="$1"
-		shift
-	else
-		echo "Target folder already exists: $1."; exit 1
-	fi
+	target="$1"
+	shift
 else
 	echo "Please specify a target path as second argument."; echo
 	usage
 	exit 1
 fi
 
-# We've already verified that the target path doesn't already exist.
+# Make sure the target exists before trying to write to it.
 mkdir -p "$target"
 
 find "$source" -type f | while read file; do
@@ -55,6 +48,7 @@ find "$source" -type f | while read file; do
 	case "$fname" in
 		*.mp3|*.flac|*.ogg|*.m4a|*.mpc)
 			echo "Processing $file"
+
 			# Need to pipe from /dev/null because outer loop is already reading from stdin.
 			# -qscale 4 should be sufficient for my craptastic portable audio setup.
 			ffmpeg -loglevel fatal -i "$file" -codec:a libmp3lame -qscale:a 4 "$tpath" </dev/null
