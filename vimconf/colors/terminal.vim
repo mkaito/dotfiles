@@ -9,9 +9,10 @@ hi Special ctermfg=3
 hi Underlined ctermfg=7
 hi Ignore ctermfg=9
 hi Error ctermfg=11
-hi Todo ctermfg=1
+hi Todo ctermfg=0 ctermbg=5
 hi Normal ctermfg=none ctermbg=none
-hi NonText ctermfg=0 ctermbg=none
+hi NonText ctermfg=1 ctermbg=none
+hi SpecialKey ctermfg=8 ctermbg=none
 hi Directory ctermfg=12
 
 hi VertSplit ctermfg=black
@@ -29,7 +30,7 @@ hi CursorLineNr ctermfg=8 ctermbg=0
 hi CursorColumn ctermfg=none ctermbg=0
 
 " Syntax checker colors
-highlight SignColumn ctermbg=none
+hi SignColumn ctermbg=none
 hi SyntasticErrorSign ctermfg=1 ctermbg=none
 hi SyntasticWarningSign ctermfg=3 ctermbg=none
 hi SyntasticStyleErrorSign ctermfg=1 ctermbg=none
