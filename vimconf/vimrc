@@ -59,11 +59,11 @@ set smartcase
 set gdefault
 set incsearch
 set showmatch
-nnoremap <leader><space> :noh<cr>
+" nnoremap <leader><space> :noh<cr>
 map <tab> g%
 cmap w!! %!sudo tee > /dev/null %
 
-set statusline=%<\ %n\ %f\ %m%r%y%=\ Line:\ \%l\/\%L\ Column:\ \%c\ 
+set statusline=%<\ %n\ %f\ %{fugitive#statusline()}\ %r%y%m%=\ Line:\ \%l\/\%L\ Column:\ \%c\ 
 
 set wrap
 set textwidth=79
@@ -213,7 +213,7 @@ let g:ctrlp_map = '<Leader>t'
 let g:ctrlp_working_path_mode = 'ra'
 
 let g:ctrlp_custom_ignore = {
-	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat|vendor$',
+	\ 'dir':	'\v[\/]\.(git|hg|svn)|bourbon|neat|vendor|node_modules|bower_components$',
 	\ 'file': '\v\.(exe|so|dll|pyc|wav|mp3|ogg|blend|swp|jpg|gif|png)$',
 	\ }
 
@@ -223,25 +223,21 @@ nnoremap <leader>f :Switch<cr>
 
 " Goyo & Limelight
 function! GoyoBefore()
-	" When using :q in Goyo mode, route it through to Vim
-	" (And actually close the buffer)
-	let b:quitting = 0
-	let b:quitting_bang = 0
-	autocmd QuitPre <buffer> let b:quitting = 1
-	cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
-
-  Limelight
+  let b:quitting = 0
+  let b:quitting_bang = 0
+  autocmd QuitPre <buffer> let b:quitting = 1
+  cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
 endfunction
 
 function! GoyoAfter()
-	" Quit vim if this is the only remaining buffer
-	if b:quitting && len(filter(range(q, bufnr('$')), 'buflisted(v:val)')) == 1
-		if b:quitting_bang
-			qa!
-		else
-			qa
-		endif
-	endif
+  " Quit Vim if this is the only remaining buffer
+  if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+    if b:quitting_bang
+      qa!
+    else
+      qa
+    endif
+  endif
 
   Limelight!
 
@@ -259,11 +255,35 @@ nnoremap <Leader><space> :Goyo<CR>
 " jrnl files
 au BufNewFile,BufRead jrnl* set nolist wrap linebreak | Goyo
 
+" DWB external editor
+au BufNewFile,BufRead $HOME/.cache/dwb/edit* set nolist wrap linebreak fo+=tnq2 | Goyo
+
 " txt files
 au BufEnter *.txt setl tx ts=4 sw=4 fo+=n2
 
-" JSX Linter
+" Syntastic stuff
 let g:syntastic_javascript_checkers = ['jsxhint']
+
+let g:syntastic_html_tidy_ignore_errors = [
+  \ 'trimming empty <span>'
+  \ , ' proprietary attribute "ng-'
+  \ , ' proprietary attribute "ui-'
+  \ , ' proprietary attribute "tv-'
+  \ , '<html> proprietary attribute "class"'
+  \ , 'unescaped & which should be written as &amp;'
+  \ , '<tv-breadcrumbs> is not recognized!'
+  \ , 'discarding unexpected <tv-breadcrumbs>'
+  \ , 'discarding unexpected </tv-breadcrumbs>'
+  \ ]
+
+let g:syntastic_javascript_jsxhint_quiet_messages = {
+	\ "regex": [
+	\						"'React' is not defined.",
+	\						"Missing 'new' prefix when invoking a constructor.",
+	\						"Strings must use singlequote."
+	\					 ]
+	\ }
+
 
 " Show syntax group at point
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
