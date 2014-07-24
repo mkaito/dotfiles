@@ -1,0 +1,9 @@
+[Unit]
+Description=Ibus Daemon
+
+[Service]
+ExecStart=/usr/bin/ibus-daemon -x -r -s
+Restart=always
+
+[Install]
+WantedBy=default.target
