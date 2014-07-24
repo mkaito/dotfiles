@@ -40,6 +40,7 @@ bindsym $mod+F6 exec --no-startup-id terminal -name music -e ncmpcpp
 bindsym $mod+F5 exec --no-startup-id terminal -name ranger -e ranger
 bindsym $mod+F7 exec --no-startup-id emacsclient --eval "(make-capture-frame)"
 bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
+bindsym $mod+F9 exec anki
 
 assign [class="^Firefox$" instance="^Navigator$"] 3
 assign [class="^Dwb$" instance ="^dwb$"] 3

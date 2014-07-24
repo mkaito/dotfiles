@@ -1,7 +1,7 @@
 export PAGER="less"
 export READNULLCMD="$PAGER"
-export VISUAL="vim"
-export EDITOR="vim"
+export EDITOR="emacsclient -nw"
+export VISUAL="emacsclient -c"
 export ALTERNATE_EDITOR=””
 export BROWSER="firefox"
 export XTERM="~/dev/bin/terminal"

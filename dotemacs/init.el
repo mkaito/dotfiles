@@ -1,10 +1,13 @@
-;; mkaito's dot-emacs on Arch Linux.
+;;; dotemacs. --- Do stuff
+;;; Commentary:
 ;;
 ;; Large chunks shamelessly copied from anrxc's dotemacs:
 ;;	 http://git.sysphere.org/dotfiles/tree/emacs
 ;; My Emacs wouldn't be half as pleasant without his help.
 ;;
-(require 'cl)
+
+;;; Code:
+(with-no-warnings (require 'cl))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -13,14 +16,16 @@
 (package-initialize)
 
 (defvar wanted-packages
-  '(expand-region smart-tabs-mode d-mode flx-ido gist haml-mode
+  '(expand-region smart-tabs-mode d-mode flx-ido gist magit haml-mode
     haskell-mode inf-ruby lua-mode markdown-mode paredit projectile
     js2-mode sass-mode rainbow-mode scss-mode ack-and-a-half yaml-mode
     nginx-mode flycheck flycheck-d-unittest flycheck-dmd-dub
-    flycheck-haskell ledger-mode flycheck-ledger evil key-chord)
+    flycheck-haskell ledger-mode flycheck-ledger evil evil-leader
+    evil-numbers evil-surround key-chord smartparens)
   "A list of packages to ensure are installed at launch.")
 
 (defun wanted-packages-installed-p ()
+  "Check whether wanted-packages are all installed."
   (loop for p in wanted-packages
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
@@ -36,7 +41,9 @@
       (package-install p))))
 
 ;; Clean initial buffers, windows.
-(defun buffer-exists (bufname) (not (eq nil (get-buffer bufname))))
+(defun buffer-exists (bufname)
+  "Check whether a buffer BUFNAME exists."
+  (not (eq nil (get-buffer bufname))))
 (if (buffer-exists "*Compile-Log*") (kill-buffer "*Compile-Log*"))
 (if (buffer-exists "*Backtrace*") (kill-buffer "*Backtrace*"))
 (delete-other-windows)
@@ -58,15 +65,6 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-
-;; (defun full-auto-save ()
-;;   (interactive)
-;;   (save-excursion
-;;     (dolist (buf (buffer-list))
-;;       (set-buffer buf)
-;;       (if (and (buffer-file-name) (buffer-modified-p))
-;; 	  (basic-save-buffer)))))
-;; (add-hook 'auto-save-hook 'full-auto-save)
 
 (setq auto-save-interval 0
       auto-save-timeout 4
@@ -148,6 +146,8 @@
 
 ;; Spell correction
 (require 'ispell)
+(defvar ispell-prefer-aspell)
+(defvar ispell-list-command)
 (setq ispell-prefer-aspell t
       ispell-program-name "aspell"
       ispell-list-command "list"
@@ -162,34 +162,87 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Evil mode
-;; (require 'evil)
+(global-evil-leader-mode)
 (evil-mode 1)
-
-;; esc quits
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-
-;; Chord mode
+(global-evil-surround-mode 1)
 (key-chord-mode +1)
+
+;; Make the linter shut up
+(defvar evil-normal-state-map)
+(defvar evil-visual-state-map)
+(defvar evil-insert-state-map)
+(defvar evil-motion-state-map)
+
+;; Set the leader key
+(evil-leader/set-leader "<SPC>")
+
+;; Escape quits everything
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+(define-key evil-normal-state-map           [escape] #'keyboard-quit)
+(define-key evil-visual-state-map           [escape] #'keyboard-quit)
+(define-key minibuffer-local-map            [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map         [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map    [escape] #'minibuffer-keyboard-quit)
+
+;; Miscelaneous bindings
+(evil-leader/set-key
+  "t" 'projectile-find-file
+  "f" 'find-file
+  "b" 'switch-to-buffer
+  "k" 'kill-buffer
+  "g" 'magit-status
+  "cc" 'comment-dwim-line
+  "oa" 'org-agenda-list
+  "ob" 'org-switchb)
 
 ;; jj calls normal mode
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
-;; Split window navigation: S-arrow
-(windmove-default-keybindings)
-(setq windmove-wrap-around t)
+;; C-e to swap to last buffer
+(define-key evil-normal-state-map (kbd "C-e") 'evil-buffer)
+(define-key evil-motion-state-map (kbd "C-e") 'evil-buffer)
+(define-key evil-insert-state-map (kbd "C-e") 'evil-buffer)
+
+;; Sane window navigation
+(define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+
+(define-key evil-motion-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
+(define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
+(define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
+
+;; Good ole number nudging
+(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+
+;; Ledger mode
+(evil-define-key 'normal 'ledger-mode-map (kbd "C-t") 'ledger-toggle-current-transaction)
+(evil-define-key 'normal 'ledger-mode-map (kbd "C-d") 'ledger-insert-effective-date)
+
+;; Enter insert mode in capture windows
+;; (evil-set-initial-state 'org-capture-mode 'insert)
+;; Seems the above doesn't work...
+(add-hook 'org-capture-mode-hook 'evil-insert-state)
 
 ;; Encrypted file editing
 (epa-file-enable)
 
 ;; Fuzzy matching and all that jazz
-(require 'ido)
-(require 'flx-ido)
+(defvar ido-enable-flex-matching)
+(setq ido-enable-flex-matching t)
 (ido-mode t)
 (ido-everywhere 1)
 (flx-ido-mode 1)
@@ -198,51 +251,23 @@
 (setq gc-cons-threshold 20000000)
 
 ;; disable ido faces to see flx highlights
+(defvar ido-use-faces)
 (setq ido-use-faces nil)
 
-(defadvice completing-read
-  (around foo activate)
-  (if (boundp 'ido-cur-list)
-      ad-do-it
-    (setq ad-return-value
- 	  (ido-completing-read
- 	   prompt
- 	   (all-completions "" collection predicate)
- 	   nil require-match initial-input hist def))))
-
-(global-set-key
- "\M-x"
- (lambda ()
-   (interactive)
-   (call-interactively
-    (intern
-     (ido-completing-read
-      "M-x "
-      (all-completions "" obarray 'commandp))))))
-
+;; Projectile mode
 (projectile-global-mode)
+(defvar projectile-use-native-indexing)
 (setq projectile-use-native-indexing t)
-;;(setq projectile-enable-caching t)
+(defvar projectile-enable-caching)
+(setq projectile-enable-caching t)
 ;;(recentf-mode 1)
-
-(setq auto-mode-alist (append '(("/*.\.php[345]?$" . php-mode)) auto-mode-alist))
-
-(setq auto-mode-alist (append '(("/*.\.py$" . python-mode)) auto-mode-alist))
-
-;; ;; SH mode
-(add-hook 'sh-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "C-c C-c") '(lambda ()
-					       "Pipe the buffer through zsh -vx"
-					       (interactive)
-					       (shell-command-on-region (point-min) (point-max) "zsh -vx")))))
 
 ;; Coffee Mode
 (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
 (add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
 
 (defun coffee-custom ()
-  "coffee-mode-hook"
+  "Coffee-mode-hook."
   (set (make-local-variable 'tab-width) 2))
 (add-hook 'coffee-mode-hook '(lambda() (coffee-custom)))
 
@@ -298,6 +323,8 @@
 
 (global-set-key (kbd "M--") 'hippie-expand)
 
+(defvar scss-compile-at-save)
+(defvar scss-output-directory)
 (setq scss-compile-at-save nil
       scss-output-directory "../static/css")
 
@@ -316,17 +343,9 @@
        (comment-or-uncomment-region (line-beginning-position) (line-end-position))
      (comment-dwim arg)))
 
- (global-set-key (kbd "M-;") 'comment-dwim-line)
- (global-set-key (kbd "C-c C-c") 'comment-dwim-line)
-
-(defun unfill-region (begin end)
-  "Remove all linebreaks in a region but leave paragraphs,
-	indented text (quotes,code) and lines starting with an asterix (lists) intakt."
-  (interactive "r")
-  (replace-regexp "\\([^\n]\\)\n\\([^ *\n]\\)" "\\1 \\2" nil begin end))
-
 ;; Renames the current file and updates the buffer
 (defun rename-current-file-or-buffer ()
+  "Rename current file or buffer."
   (interactive)
   (if (not (buffer-file-name))
       (call-interactively 'rename-buffer)
@@ -347,8 +366,8 @@
 (autoload 'smart-tabs-mode-enable "smart-tabs-mode")
 (autoload 'smart-tabs-advice "smart-tabs-mode")
 
-;; (setq-default indent-tabs-mode t)
-;; (setq tab-width 2)
+(setq-default indent-tabs-mode t)
+(setq tab-width 2)
 
 ;; C/C++
 (add-hook 'c-mode-hook 'smart-tabs-mode-enable)
@@ -383,22 +402,22 @@
 	  '(lambda()
 	     (local-set-key (kbd "RET") 'newline-and-indent)))
 
-;; When killing the end of a line, eliminate any indentation of the next line
 (defadvice kill-line (before check-position activate)
+  "When killing the end of a line, eliminate any indentation of the next line."
   (if (and (eolp) (not (bolp)))
       (progn (forward-char 1)
 	     (just-one-space 0)
 	     (backward-char 1))))
 
 (defun open-line-below-and-go-there ()
-  "Open new line below current and place cursor indented"
+  "Open new line below current and place cursor indented."
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
 (global-set-key (kbd "M-RET") 'open-line-below-and-go-there)
 
 (defun iwb ()
-  "indent whole buffer"
+  "Indent whole buffer."
   (interactive)
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil)
@@ -408,14 +427,14 @@
 ;    - key bindings defined below
 ;
 (defun aic-reload-dot-emacs ()
-  "Reload user configuration from .emacs"
+  "Reload user configuration from .emacs."
   (interactive)
   ;; Fails on killing the Messages buffer, workaround:
   (get-buffer-create "*Messages*")
   (load-file "~/.emacs.d/init.el")
 )
 (defun aic-edit-dot-emacs ()
-  "Edit user configuration in .emacs"
+  "Edit user configuration in .emacs."
   (interactive)
   (find-file "~/.emacs.d/init.el")
 )
@@ -425,62 +444,6 @@
 (global-set-key "\C-c\C-r" 'aic-reload-dot-emacs)
 (global-set-key "\C-c\C-e" 'aic-edit-dot-emacs)
 
-(defun sort-words (reverse beg end)
-  "Sort words in region alphabetically, in REVERSE if negative.
-    Prefixed with negative \\[universal-argument], sorts in reverse.
-
-    The variable `sort-fold-case' determines whether alphabetic case
-    affects the sort order.
-
-    See `sort-regexp-fields'."
-  (interactive "*P\nr")
-  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
-
-
-(defun duplicate-line()
-  (interactive)
-  (move-beginning-of-line 1)
-  (kill-line)
-  (yank)
-  (open-line 1)
-  (next-line 1)
-  (yank)
-  )
-(global-set-key (kbd "C-c d") 'duplicate-line)
-
-(defun shutdown-emacs-server () (interactive)
-  (when (not (eq window-system 'x))
-    (message "Initializing x windows system.")
-    (x-initialize-window-system)
-    (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
-    (select-frame (make-frame-on-display x-display-name '((window-system . x))))
-    )
-  (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
-
-;; (require 'flymake)
-;; (defun flymake-D-init ()
-;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;; 		     'flymake-create-temp-inplace))
-;; 	 (local-file (file-relative-name
-;; 		      temp-file
-;; 		      (file-name-directory buffer-file-name))))
-;;     (list "dmd" (list "-c" local-file))))
-
-;; (add-to-list 'flymake-allowed-file-name-masks
-;; 	     '(".+\\.d$" flymake-D-init
-;; 	       flymake-simple-cleanup flymake-get-real-file-name))
-
-;; (add-to-list 'flymake-err-line-patterns
-;; 	     '("^\\([^ :]+\\)(\\([0-9]+\\)): \\(.*\\)$" 1 2 nil 3))
-
-;; (defun flymake-d-load ()
-;;   (flymake-mode t)
-;;   (local-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
-;;   (local-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
-;;   (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
-
-;; (add-hook 'd-mode-hook 'flymake-d-load)
-
 ;; Flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'd-mode-hook 'flycheck-dmd-dub-set-include-path)
@@ -488,105 +451,42 @@
 
 ;; Ledger
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-(add-to-list 'auto-mode-alist '("\\.ldg$" . ledger-mode))
+(add-to-list 'auto-mode-alist '("\\.ldg$"    . ledger-mode))
 
-;; Kill the emacs server
-(defun client-save-kill-emacs(&optional display)
-  " This is a function that can bu used to shutdown save buffers and 
-shutdown the emacs daemon. It should be called using 
-emacsclient -e '(client-save-kill-emacs)'.  This function will
-check to see if there are any modified buffers or active clients
-or frame.  If so an x window will be opened and the user will
-be prompted."
+;;;;;;;;;;;;;;
+;; smartparens
+(require 'smartparens-config)
+(smartparens-global-mode t)
 
-  (let (new-frame modified-buffers active-clients-or-frames)
+;; highlights matching pairs
+(show-smartparens-global-mode t)
 
-    ; Check if there are modified buffers or active clients or frames.
-    (setq modified-buffers (modified-buffers-exist))
-    (setq active-clients-or-frames ( or (> (length server-clients) 1)
-					(> (length (frame-list)) 1)
-				       ))  
+;; Disable overlay highlighting
+(setq sp-highlight-pair-overlay nil
+      sp-highlight-wrap-overlay nil
+      sp-highlight-wrap-tag-overlay nil)
 
-    ; Create a new frame if prompts are needed.
-    (when (or modified-buffers active-clients-or-frames)
-      (when (not (eq window-system 'x))
-	(message "Initializing x windows system.")
-	(x-initialize-window-system))
-      (when (not display) (setq display (getenv "DISPLAY")))
-      (message "Opening frame on display: %s" display)
-      (select-frame (make-frame-on-display display '((window-system . x)))))
-
-    ; Save the current frame.  
-    (setq new-frame (selected-frame))
-
-
-    ; When displaying the number of clients and frames: 
-    ; subtract 1 from the clients for this client.
-    ; subtract 2 from the frames this frame (that we just created) and the default frame.
-    (when ( or (not active-clients-or-frames)
-	       (yes-or-no-p (format "There are currently %d clients and %d frames. Exit anyway?" (- (length server-clients) 1) (- (length (frame-list)) 2)))) 
-      
-      ; If the user quits during the save dialog then don't exit emacs.
-      ; Still close the terminal though.
-      (let((inhibit-quit t))
-             ; Save buffers
-	(with-local-quit
-	  (save-some-buffers)) 
-	      
-	(if quit-flag
-	  (setq quit-flag nil)  
-          ; Kill all remaining clients
-	  (progn
-	    (dolist (client server-clients)
-	      (server-delete-client client))
-		 ; Exit emacs
-	    (kill-emacs))) 
-	))
-
-    ; If we made a frame then kill it.
-    (when (or modified-buffers active-clients-or-frames) (delete-frame new-frame))
-    )
-  )
-
-
-(defun modified-buffers-exist() 
-  "This function will check to see if there are any buffers
-that have been modified.  It will return true if there are
-and nil otherwise. Buffers that have buffer-offer-save set to
-nil are ignored."
-  (let (modified-found)
-    (dolist (buffer (buffer-list))
-      (when (and (buffer-live-p buffer)
-		 (buffer-modified-p buffer)
-		 (not (buffer-base-buffer buffer))
-		 (or
-		  (buffer-file-name buffer)
-		  (progn
-		    (set-buffer buffer)
-		    (and buffer-offer-save (> (buffer-size) 0))))
-		 )
-	(setq modified-found t)
-	)
-      )
-    modified-found
-    )
-  )
+;; js2-mode
+(add-to-list 'auto-mode-alist '("\\.js\\'"  . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector ["#120d0a" "#8a626a" "#728560" "#8a7a60" "#686c82" "#b6b6be" "#686c82" "#b9b4b2"])
- '(ansi-term-color-vector [unspecified "#120d0a" "#8a626a" "#728560" "#8a7a60" "#686c82" "#b6b6be" "#686c82" "#b9b4b2"])
- '(custom-safe-themes (quote ("1f3031e6ffe1d1a1d49093f338240baac45a72852073e581ff87329a2fe45727" "f6f25be98e22ec45c97a2437901c0cfa32b4d648771e763dcf5dc31d08421544" "de65973c1205745afc380d02b50d0949ff47eb866473262d799537bb143c6589" "9861d7a22fde08b72d5fc070d843e03e225938d82261247da55a6d157629aea7" "aab8981c03c95ea5ac7e17a1fc850381de91197cf65847e0362b980b956dab89" "0ec2eb4d75631837aec3ea3798ff5ce4c94966d164649ff4be04283ac0b9d7a7" "c430336425487e7813041e1fa3af81a06b08296f23558f9af1baae2b37b180ce" "48a64d2e28e7912e6ae4a1ce4b065f62aea58bae442c2ba3c722c5752d317c14" "65ff8408545f9df35794f1a3796bbf12a89aceff135460347a95eae5bf7dab42" "57371db9683e97dd3f0fcd2e6be6bed0e329ef5dd9957dce1c86ee7fd26fab89" "b1c49f140ae5ad0655f5c02d47625bbf6e3eebcd26729c7aec9a77af0448527b" "c9074412e3e19e5265542b457c96799876a2cfbef0ed970f2f791d132cee935e" "7bd1e35f8fc0d48b66f600ea56ad1a915b515ed0a6ab9cc29009a8280a708f57" "5c0f632b36f11f300774e07b3230aeddcc57bf357e85b29d7c85a4af2e467742" "bcedf6e9551266fc4db0bccdc14f6f2bb413139f81b157e5d4e937211b1c5ef5" "23e37a84a8c57bd96365fdc9ec5496ee32823cac36b8550d02623db8c882ee39" "9bac44c2b4dfbb723906b8c491ec06801feb57aa60448d047dbfdbd1a8650897" "d341c86eab8db05fd2a32eb18602cc886c9b352e5c14ed79842a713d9f7b390b" "4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" default)))
+ '(custom-safe-themes (quote ("d4ed3b0f53e4b867dcd6afe1e8224c8568bee2295b8e6c5cecca99392cca5bda" "7c2fdd4d512b1fe016292708c454031979e5c38a11a7365efdd12aa4c6ad000e" default)))
  '(inhibit-startup-echo-area-message "chris")
- '(ledger-post-use-completion-engine :ido)
  '(ledger-post-auto-adjust-amounts t)
+ '(ledger-post-use-completion-engine :ido)
  '(safe-local-variable-values (quote ((encoding . utf-8)))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(provide 'init)
+;;; init.el ends here

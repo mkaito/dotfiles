@@ -1,6 +1,6 @@
 
 Emacs.FontBackend:      xft
-Emacs.font:		Ubuntu Mono-10
+Emacs.font:		Ubuntu Mono-11
 
 Xft.dpi:		101
 Xft.antialias:		1
