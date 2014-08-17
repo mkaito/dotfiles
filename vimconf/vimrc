@@ -131,7 +131,7 @@ augroup END
 
 " Relies on Xresources for colours
 set background=dark
-colorscheme terminal
+colorscheme base16-chalk
 
 nnoremap <leader>a :Ack
 
@@ -155,7 +155,7 @@ nnoremap j gj
 nnoremap k gk
 
 " Fast editing of the .vimrc
-map <leader>e :e! ~/.vimrc<CR>
+map <leader>e :e! ~/.vim/vimrc<CR>
 
 " " Periodical auto-save
 " " Write to disk after 1 second of inactivity, once every 15 seconds.
@@ -242,7 +242,7 @@ function! GoyoAfter()
   Limelight!
 
 	" No idea why, but it seems like Limelight messes with my colorscheme
-	colorscheme terminal
+	colorscheme base16-chalk
 endfunction
 
 let g:goyo_callbacks = [function('GoyoBefore'), function('GoyoAfter')]
