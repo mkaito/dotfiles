@@ -1,3 +1,3 @@
 function yard
-	sudo yaourt -Rd $argv
+	yaourt -Rd $argv
 end
