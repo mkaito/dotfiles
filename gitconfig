@@ -1,0 +1,26 @@
+[user]
+	name = Michishige Kaito
+	email = me@mkaito.com
+
+[alias]
+  co = checkout
+  br = branch
+  ci = commit
+  st = status
+  p = push
+
+[core]
+	excludesfile = /home/chris/.gitignore
+
+[github]
+	user = mkaito
+	password = "<6\":7C%j27SIk,4xD:Q#mpCvY!+yH1pfQ00yTIlSYSTc`dXaPX]!76#qX;-fw8'C"
+	token = 82de415995f500ec4da4dc41fed97074
+
+[push]
+	default = simple
+
+[color]
+	ui = true
+[web]
+	browser = /usr/bin/firefox
