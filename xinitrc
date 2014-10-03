@@ -56,7 +56,7 @@ else
 fi
 
 # Fix cursor and set background
-xsetroot -cursor_name left_ptr -solid "#120d0a"
+xsetroot -cursor_name left_ptr -solid "#151515"
 
 # Kill the goddamn bell
 xset b off
