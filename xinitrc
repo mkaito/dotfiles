@@ -27,6 +27,8 @@ export MPD_PORT=-1
 
 xrdb ~/.Xresources
 
+ibus-daemon -x -r -d
+
 [[ -d /usr/share/fonts/local ]] && xset +fp /usr/share/fonts/local
 [[ -d $HOME/.fonts ]] && xset +fp $HOME/.fonts
 xset fp rehash &

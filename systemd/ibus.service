@@ -2,7 +2,7 @@
 Description=Ibus Daemon
 
 [Service]
-ExecStart=/usr/bin/ibus-daemon -x -r -s
+ExecStart=/usr/bin/ibus-daemon -x -r
 Restart=always
 
 [Install]
