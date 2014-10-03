@@ -37,14 +37,20 @@ URxvt.cutchars                :'"'()*<>[]{|}_-:?
 
 URxvt.geometry		      : 120x35
 URxvt.internalBorder          : 15
-URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=10,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
-URxvt.boldFont                :xft:Ubuntu Mono:style=Bold:size=10,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=11,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.boldFont                :xft:Ubuntu Mono:style=Bold:size=11,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt*intensityStyles					:false
 !URxvt.transparent             :true
 !URxvt.shading                 :90
 !URxvt.blurRadius              :22
 !URxvt.tintColor               :#1f1f1f
 
-#include "/home/chris/dev/dotfiles/Xresources.d/ultra_pastel.xresources"
+XTerm*faceName                 :Ubuntu Mono:size=10
+XTerm*faceNameDoubleSize       :xft:Droid Sans Japanese:style=Regular
+XTerm*faceSize		       :10
+XTerm*utf8		       :2
+
+#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-chalk.dark.xresources"
 
 !SshAskpass*Dialog.font:	-b&h-lucida-medium-r-normal-*-*-100-*-*-*-*-iso8859-1
 !SshAskpass*Dialog.font:	-*-inconsolata g-*-*-*-*-17-*-*-*-*-*-*-*
