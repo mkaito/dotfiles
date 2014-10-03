@@ -111,6 +111,9 @@ bindsym $mod+Escape kill
 ## start dmenu (a program launcher)
 bindsym $mod+p exec --no-startup-id dmenu_run
 
+## start passmenu, a dmenu read-only interface to the `pass` password manager
+bindsym $mod+Shift+p exec --no-startup-id passmenu
+
 ## change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
