@@ -54,7 +54,7 @@ assign [title="^Shadowrun$"] 5
 assign [class="^Civ5XP$"] 5
 assign [class="^Dwarf_Fortress$"] 5
 assign [class="^jd-Main$"] 6
-assign [class="^Calibre-gui$"] 10
+assign [class="^libprs500$"] 10
 
 for_window [instance="^music$"] floating enable, border pixel 6
 for_window [class="^mpv$"] floating enable, border none
