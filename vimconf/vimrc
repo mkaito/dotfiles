@@ -195,6 +195,7 @@ au FileType haskell setl et
 " Ledger
 au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
 let g:ledger_maxwidth = 80
+let g:ledger_fold_blanks = 1
 let g:ledger_fillstring = '	»'
 
 " Vimperator textfields
