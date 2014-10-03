@@ -96,9 +96,9 @@ bindsym XF86AudioMute exec --no-startup-id pulseaudio-ctl mute
 bindsym $mod+XF86AudioMute exec --no-startup-id pavucontrol
 bindsym XF86AudioLowerVolume exec --no-startup-id pulseaudio-ctl down
 bindsym XF86AudioRaiseVolume exec --no-startup-id pulseaudio-ctl up
-bindsym XF86AudioPlay exec --no-startup-id ncmpcpp toggle
-bindsym XF86AudioPrev exec --no-startup-id ncmpcpp prev
-bindsym XF86AudioNext exec --no-startup-id ncmpcpp next
+bindsym XF86AudioPlay exec --no-startup-id mpc toggle
+bindsym XF86AudioPrev exec --no-startup-id mpc prev
+bindsym XF86AudioNext exec --no-startup-id mpc next
 bindsym Print exec --no-startup-id screenshot
 
 ## Games

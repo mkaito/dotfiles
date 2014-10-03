@@ -139,3 +139,9 @@
 [submodule "vimconf/bundle/tintin"]
 	path = vimconf/bundle/tintin
 	url = https://github.com/LokiChaos/vim-tintin.git
+[submodule "vimconf/bundle/blade"]
+	path = vimconf/bundle/blade
+	url = git://github.com/xsbeats/vim-blade.git
+[submodule "vimconf/bundle/tmux-navigator"]
+	path = vimconf/bundle/tmux-navigator
+	url = https://github.com/christoomey/vim-tmux-navigator.git
