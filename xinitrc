@@ -77,7 +77,7 @@ fi
 autocutsel -selection PRIMARY   -fork
 autocutsel -selection CLIPBOARD -fork
 
-redshift -l 28:-13 -t 5300:3300 -b 0.80:0.91 -m randr &!
+redshift -l 28:-13 -t 5000:3000 -b 0.78:0.89 -m randr &!
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
