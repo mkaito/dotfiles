@@ -14,3 +14,6 @@ fish/generated_completions/
 fish/fishd.*
 fish/fish*history
 systemd/default.target.wants/
+dotemacs/flycheck_org-clock-save.el
+dotemacs/saveplace.el
+dotemacs/vendor/
