@@ -1,0 +1,28 @@
+out_to_x no
+own_window no
+out_to_console yes
+background no
+max_text_width 0
+update_interval 1
+total_run_times 0
+short_units yes
+use_spacer left
+if_up_strictness address
+override_utf8_locale no
+cpu_avg_samples 2
+text_buffer_size 1024
+mpd_host /home/chris/.mpd/mpd.sock
+
+TEXT
+
+# JSON for i3bar
+[
+	${if_mpd_playing}
+		{
+			"full_text": "${mpd_title}"
+		},
+	${endif}
+	{"full_text": "\uF293 ${fs_used_perc /}%"},
+	{"full_text": "\uF293 ${fs_used_perc /home}%"},
+	{"full_text": "\uF3D6 ${time %d %b %H:%M}"}
+],
