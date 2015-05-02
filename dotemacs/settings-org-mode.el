@@ -62,9 +62,7 @@
 (org-clock-persistence-insinuate)
 
 ;; Files that are included in org-mode agenda
-(setq org-agenda-files
-      (list "~/notes/personal.org" "~/notes/refile.org" "~/notes/work.org")
-      )
+(setq org-agenda-files '("~/notes/"))
 
 ;; Refile targets
 (setq org-refile-targets
@@ -77,9 +75,9 @@
 (define-key global-map "\C-cc" 'org-capture)
 (setq org-capture-templates
       '(("t" "Tarea" entry (file+headline "personal.org" "Tareas urgentes")
-	 "* TODO %?\n  %^{Due date}t\n  %x")
-	("n" "Nota" entry (file+headline "personal.org" "Notas")
-	 "* %?\n  %i\n  %x")))
+				 "* TODO %?\n  %^{Due date}t\n  %x")
+				("n" "Nota" entry (file+headline "personal.org" "Notas")
+				 "* %?\n  %i\n  %x")))
 
 ;; Capture frames
 ;;   - $ emacsclient -e '(make-capture-frame)'
@@ -112,13 +110,38 @@
   (setq truncate-lines nil)
   (org-capture))  
 
-(setq
- diary-show-holidays-flag               t
- calendar-mark-holidays-flag            t
- calendar-christian-all-holidays-flag   t
- calendar-islamic-all-holidays-flag   nil
- calendar-hebrew-all-holidays-flag    nil
- calendar-date-style           "european"
- display-time-24hr-format              t
- display-time-day-and-date            nil
- )
+(setq diary-show-holidays-flag               t
+			calendar-mark-holidays-flag            t
+			calendar-christian-all-holidays-flag   t
+			calendar-islamic-all-holidays-flag   nil
+			calendar-hebrew-all-holidays-flag    nil
+			calendar-date-style           "european"
+			display-time-24hr-format              t
+			display-time-day-and-date            nil)
+
+(defun org-insert-src-block (src-code-type)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+          '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+            "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+            "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+            "scheme" "sqlite")))
+     (list (ido-completing-read "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+END_SRC\n")
+    (previous-line 2)
+    (org-edit-src-code)))
+
+(require 'ob-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted" nil))
+(setq org-src-fontify-natively t
+      org-highlight-latex-and-related '(latex)
+      org-export-dispatch-use-expert-ui t ; non-intrusive export dispatch
+      org-latex-pdf-process               ; for regular export
+      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	"xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))

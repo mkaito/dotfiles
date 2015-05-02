@@ -1,12 +1,12 @@
-;;; dotemacs. --- Do stuff
-;;; Commentary:
+;;; dotemacs. --- do stuff
+;;; commentary:
 ;;
-;; Large chunks shamelessly copied from anrxc's dotemacs:
+;; large chunks shamelessly copied from anrxc's dotemacs:
 ;;	 http://git.sysphere.org/dotfiles/tree/emacs
-;; My Emacs wouldn't be half as pleasant without his help.
+;; my emacs wouldn't be half as pleasant without his help.
 ;;
 
-;;; Code:
+;;; code:
 (with-no-warnings (require 'cl))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -16,12 +16,14 @@
 (package-initialize)
 
 (defvar wanted-packages
-  '(expand-region smart-tabs-mode d-mode flx-ido gist magit haml-mode
-    haskell-mode inf-ruby lua-mode markdown-mode paredit projectile
-    js2-mode sass-mode rainbow-mode scss-mode ack-and-a-half yaml-mode
-    nginx-mode flycheck flycheck-d-unittest flycheck-dmd-dub
-    flycheck-haskell ledger-mode flycheck-ledger evil evil-leader
-    evil-numbers evil-surround key-chord smartparens)
+  '(color-theme-approximate expand-region smart-tabs-mode d-mode
+  flx-ido gist magit haml-mode haskell-mode inf-ruby lua-mode
+  markdown-mode paredit projectile js2-mode sass-mode rainbow-mode
+  scss-mode ack-and-a-half yaml-mode nginx-mode flycheck helm
+  helm-projectile flycheck-d-unittest flycheck-dmd-dub ledger-mode
+  flycheck-ledger flycheck-haskell flycheck-hdevtools evil evil-leader
+  evil-numbers evil-surround evil-nerd-commenter key-chord smartparens
+  exec-path-from-shell guide-key slime indent-guide)
   "A list of packages to ensure are installed at launch.")
 
 (defun wanted-packages-installed-p ()
@@ -32,7 +34,7 @@
 
 (unless (wanted-packages-installed-p)
   ;; check for new packages (package versions)
-  (message "%s" "Emacs is now refreshing its package database...")
+  (message "%s" "emacs is now refreshing its package database...")
   (package-refresh-contents)
   (message "%s" " done.")
   ;; install the missing packages
@@ -40,20 +42,27 @@
     (when (not (package-installed-p p))
       (package-install p))))
 
-;; Clean initial buffers, windows.
+;; Get relevant environment variables from the shell
+(exec-path-from-shell-initialize)
+
+;; clean initial buffers, windows.
+(setq message-log-max nil)
 (defun buffer-exists (bufname)
   "Check whether a buffer BUFNAME exists."
   (not (eq nil (get-buffer bufname))))
-(if (buffer-exists "*Compile-Log*") (kill-buffer "*Compile-Log*"))
-(if (buffer-exists "*Backtrace*") (kill-buffer "*Backtrace*"))
+(if (buffer-exists "*compile-log*") (kill-buffer "*compile-log*"))
+(if (buffer-exists "*backtrace*") (kill-buffer "*backtrace*"))
+(if (buffer-exists "*Messages*") (kill-buffer "*Messages*"))
+(if (buffer-exists "*Warnings*") (kill-buffer "*Warnings*"))
 (delete-other-windows)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (setq visible-bell t)
+(setq ring-bell-function 'ignore)
 
-;;Auto save and backups
+;;auto save and backups
 (setq
  backup-by-copying t
  delete-old-versions t
@@ -71,80 +80,66 @@
 ;;      auto-save-default t
       auto-save-visited-file-name t)
 
-;; Fancy automatic buffer cleanup
+;; fancy automatic buffer cleanup
 (require 'midnight)
 
-;; Fix dead keys
+;; restore cursor position
+(setq-default save-place-file (concat user-emacs-directory "saveplace.el")
+	      save-place t)
+(require 'saveplace)
+
+;; fix dead keys
 (load-library "iso-transl")
 
-;; Colour theme initialization
+;; colour theme initialization
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/base16")
-(load-theme 'ultra-pastel t)
+(load-theme 'base16-chalk-dark t)
+(color-theme-approximate-on)
 
 (global-hl-line-mode 1)
 ;; (set-face-background 'hl-line   "#0f0f0f")
 ;; (set-face-background 'default   "#1f1f1f")
 
-;; Always flash for parens and define a more distinctive color
+;; always flash for parens and define a more distinctive color
 (show-paren-mode 1)
 ;; (set-face-foreground 'show-paren-match-face "#bc8383")
 ;; (set-face-background 'show-paren-match-face "#1f1f1f")
 
-;; Support 256 colours in screen
+;; support 256 colours in screen
 ;;	 - http://article.gmane.org/gmane.emacs.devel/109504/
 (if (not (window-system)) (load "term/rxvt"))
 (defun terminal-init-screen ()
-  "Terminal initialization function for screen."
-  ;; Use the rxvt color initialization code.
+  "terminal initialization function for screen."
+  ;; use the rxvt color initialization code.
   (rxvt-register-default-colors)
   (tty-set-up-initial-frame-faces))
 
-;; Don't show the welcome message
+;; don't show the welcome message
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 
-;; Shut off message buffer
-(setq message-log-max nil)
-(kill-buffer "*Messages*")
-
-;; Show column number in modeline
+;; show column number in modeline
 (setq column-number-mode t)
 
-;; Friendlier copy/paste
+;; Indent guide
+(setq indent-guide-recursive t)
+
+;; friendlier copy/paste
 (setq x-select-enable-clipboard t)
 (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
-;; Modeline setup
-;;	 - somewhat cleaner than default
-(setq mode-line-format
-      '("-"
-       	mode-line-mule-info
-       	mode-line-modified
-       	mode-line-frame-identification
-       	mode-line-buffer-identification
-       	"	 "
-       	global-mode-string
-       	"		%[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
-       	(line-number-mode "L%l--")
-       	(column-number-mode "C%c--")
-       	(-3 . "%p")
-       	"-%-")
-      )
-
-
-
-;; Answer y or n instead of yes or no at prompts
+;; answer y or n instead of yes or no at prompts
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Set executable bit on scripts after saving
+;; set executable bit on scripts after saving
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 
-;; Enable flycheck
+;; enable flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-;; Spell correction
+;; spell correction
 (require 'ispell)
 (defvar ispell-prefer-aspell)
 (defvar ispell-list-command)
@@ -161,30 +156,38 @@
 
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-;; Evil mode
+;; evil mode
 (global-evil-leader-mode)
-(evil-mode 1)
-(global-evil-surround-mode 1)
+(evil-mode +1)
+(global-evil-surround-mode +1)
 (key-chord-mode +1)
 
-;; Make the linter shut up
+;; make the linter shut up
 (defvar evil-normal-state-map)
 (defvar evil-visual-state-map)
 (defvar evil-insert-state-map)
 (defvar evil-motion-state-map)
+(defvar evil-auto-indent)
+(defvar evil-regexp-search)
+(defvar evil-want-C-i-jump)
 
-;; Set the leader key
+;; Evil settings
+(setq evil-auto-indent t)
+(setq evil-regexp-search t)
+(setq evil-want-C-i-jump t)
+
+;; set the leader key
 (evil-leader/set-leader "<SPC>")
 
-;; Escape quits everything
+;; escape quits everything
 (defun minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-In Delete Selection mode, if the mark is active, just deactivate it;
+  "abort recursive edit.
+in delete selection mode, if the mark is active, just deactivate it;
 then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (interactive)
   (if (and delete-selection-mode transient-mark-mode mark-active)
       (setq deactivate-mark t)
-    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (when (get-buffer "*completions*") (delete-windows-on "*completions*"))
     (abort-recursive-edit)))
 (define-key evil-normal-state-map           [escape] #'keyboard-quit)
 (define-key evil-visual-state-map           [escape] #'keyboard-quit)
@@ -194,14 +197,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key minibuffer-local-must-match-map [escape] #'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map    [escape] #'minibuffer-keyboard-quit)
 
-;; Miscelaneous bindings
+;; miscelaneous bindings
 (evil-leader/set-key
-  "t" 'projectile-find-file
-  "f" 'find-file
-  "b" 'switch-to-buffer
-  "k" 'kill-buffer
-  "g" 'magit-status
-  "cc" 'comment-dwim-line
+  "f" 'helm-for-files     ; I have no idea what the difference is between this and the next
+  "e" 'helm-find-files
+  "b" 'helm-mini          ; Apparently, 'mini' means 'buffers'.
+  "t" 'helm-projectile    ; Find file in project
+  "y" 'helm-show-killring ; Recent kills
+  "k" 'kill-buffer        ; What it says on the tin
+  "g" 'magit-status       ; I have yet to get into magit.
+  "c" 'evilnc-comment-or-uncomment-lines
   "oa" 'org-agenda-list
   "ob" 'org-switchb)
 
@@ -228,9 +233,26 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
 
+;; Helm
+(helm-mode 1)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-killring)
+
+;; Slime
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
 ;; Ledger mode
-(evil-define-key 'normal 'ledger-mode-map (kbd "C-t") 'ledger-toggle-current-transaction)
-(evil-define-key 'normal 'ledger-mode-map (kbd "C-d") 'ledger-insert-effective-date)
+(defvar ledger-mode-map)
+(evil-define-key 'normal ledger-mode-map
+  (kbd "C-t") 'ledger-toggle-current-transaction
+  (kbd "C-d") 'ledger-insert-effective-date)
+
+(defvar org-mode-map)
+(evil-define-key 'normal org-mode-map
+  (kbd "<tab>") 'org-cycle
+  (kbd "<M-RET>") 'org-insert-heading
+  (kbd "C-c s i") 'org-insert-src-block)
 
 ;; Enter insert mode in capture windows
 ;; (evil-set-initial-state 'org-capture-mode 'insert)
@@ -272,9 +294,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-hook 'coffee-mode-hook '(lambda() (coffee-custom)))
 
 ;; Haskell mode
-;;(load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;; (load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 ;; YAML mode
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
@@ -283,6 +305,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-to-list 'auto-mode-alist '("\\.markdown\\'\\|\\.mkd\\|\\.md\'" . markdown-mode))
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
 (add-hook 'markdown-mode-hook
 	  '(lambda ()
 	     (set (make-local-variable 'tab-width) 2)))
@@ -294,7 +317,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; Post Mode
 (add-to-list 'auto-mode-alist
-	     '("\\.*mutt-*\\|\\.*pico.*\\|\\.*200\\(T\\)?\\|\\.followup" . mail-mode))
+	     '("\\.*mutt-*" . mail-mode))
 (add-hook 'mail-mode-hook 'auto-fill-mode)
 (add-hook 'mail-mode-hook 'flyspell-mode)
 
@@ -320,6 +343,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; Ruby mode hooks
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook 'ruby-mode-hook 'indent-guide-mode)
+
+;; Python mode
+(add-hook 'python-mode-hook 'indent-guide-mode)
+(setq python-indent-offset nil)
 
 (global-set-key (kbd "M--") 'hippie-expand)
 
@@ -360,61 +388,32 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; \C-x w    = Rename
 (global-set-key (kbd "\C-xw") 'rename-current-file-or-buffer)
 
-;; Indentation
-(autoload 'smart-tabs-mode "smart-tabs-mode"
-  "Intelligently indent with tabs, align with spaces!")
-(autoload 'smart-tabs-mode-enable "smart-tabs-mode")
-(autoload 'smart-tabs-advice "smart-tabs-mode")
-
+;; Tabs, thank you.
 (setq-default indent-tabs-mode t)
-(setq tab-width 2)
-
-;; C/C++
-(add-hook 'c-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice c-indent-line c-basic-offset)
-(smart-tabs-advice c-indent-region c-basic-offset)
-
-;; JavaScript
-(add-hook 'js2-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice js2-indent-line js2-basic-offset)
-
-;; Perl (cperl-mode)
-(add-hook 'cperl-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice cperl-indent-line cperl-indent-level)
-
-;; Python
-(add-hook 'python-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice python-indent-line-1 python-indent)
-
-;; Ruby
-(add-hook 'ruby-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice ruby-indent-line ruby-indent-level)
-
-;; Shell
-(add-hook 'sh-mode-hook 'smart-tabs-mode-enable)
-(smart-tabs-advice sh-indent-line sh-indentation)
+(setq-default tab-width 2)
 
 ;; This should cover mostly everything...
-(define-key global-map (kbd "RET") 'newline-and-indent)
+;; (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; ... but ruby-mode thinks otherwise.
-(add-hook 'ruby-mode-hook
-	  '(lambda()
-	     (local-set-key (kbd "RET") 'newline-and-indent)))
+;; (add-hook 'ruby-mode-hook
+;; 	  '(lambda()
+;; 	     (setq tab-width 2)
+;; 	     (local-set-key (kbd "RET") 'newline-and-indent)))
 
-(defadvice kill-line (before check-position activate)
-  "When killing the end of a line, eliminate any indentation of the next line."
-  (if (and (eolp) (not (bolp)))
-      (progn (forward-char 1)
-	     (just-one-space 0)
-	     (backward-char 1))))
+;; (defadvice kill-line (before check-position activate)
+;;   "When killing the end of a line, eliminate any indentation of the next line."
+;;   (if (and (eolp) (not (bolp)))
+;;       (progn (forward-char 1)
+;; 	     (just-one-space 0)
+;; 	     (backward-char 1))))
 
-(defun open-line-below-and-go-there ()
-  "Open new line below current and place cursor indented."
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-(global-set-key (kbd "M-RET") 'open-line-below-and-go-there)
+;; (defun open-line-below-and-go-there ()
+;;   "Open new line below current and place cursor indented."
+;;   (interactive)
+;;   (move-end-of-line nil)
+;;   (newline-and-indent))
+;; (global-set-key (kbd "M-RET") 'open-line-below-and-go-there)
 
 (defun iwb ()
   "Indent whole buffer."
@@ -447,7 +446,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; Flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'd-mode-hook 'flycheck-dmd-dub-set-include-path)
-(eval-after-load 'flycheck '(require 'flycheck-ledger))
+;; (eval-after-load 'flycheck '(require 'flycheck-ledger))
 
 ;; Ledger
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
@@ -470,16 +469,53 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-to-list 'auto-mode-alist '("\\.js\\'"  . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
 
+;; Helper to right-align modeline values
+(defun mode-line-fill (face reserve)
+  "Return empty space using FACE and leaving RESERVE space on the right."
+  (unless reserve
+    (setq reserve 20))
+  (when (and window-system (eq 'right (get-scroll-bar-mode)))
+    (setq reserve (- reserve 3)))
+  (propertize " "
+              'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+              'face face))
+
+;; Clean modeline
+(setq-default mode-line-format
+      (list
+       ;; Current buffer name
+       "%b "
+       ;; Major mode
+       "[%m] "
+       ;; Modified status
+       "[%*] "
+       ;; Pad for right-aligning
+       (mode-line-fill 'mode-line 15)
+       ;; Cursor position
+       "[l:%4l | c:%2c]"))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("d4ed3b0f53e4b867dcd6afe1e8224c8568bee2295b8e6c5cecca99392cca5bda" "7c2fdd4d512b1fe016292708c454031979e5c38a11a7365efdd12aa4c6ad000e" default)))
+ '(custom-safe-themes
+	 (quote
+		("1e53a10139245e5fbce825610f967d993fb36ba7154d4eea754c5191a9464b70" "d341a4b6446371a5267627fcb3e21798a49112244b2ee9f36ce67f2d900ca46f" "ac263b162c91d0df61285c927b830fb70092946381200be3686a3c9b98e43413" "51bea7765ddaee2aac2983fac8099ec7d62dff47b708aa3595ad29899e9e9e44" "e53cc4144192bb4e4ed10a3fa3e7442cae4c3d231df8822f6c02f1220a0d259a" "9bac44c2b4dfbb723906b8c491ec06801feb57aa60448d047dbfdbd1a8650897" "d4ed3b0f53e4b867dcd6afe1e8224c8568bee2295b8e6c5cecca99392cca5bda" "7c2fdd4d512b1fe016292708c454031979e5c38a11a7365efdd12aa4c6ad000e" default)))
  '(inhibit-startup-echo-area-message "chris")
  '(ledger-post-auto-adjust-amounts t)
  '(ledger-post-use-completion-engine :ido)
- '(safe-local-variable-values (quote ((encoding . utf-8)))))
+ '(markdown-content-type "text/html")
+ '(python-shell-interpreter "/home/chris/.pyenv/shims/python")
+ '(safe-local-variable-values
+	 (quote
+		((org-archive-location . "archive.org::* %s")
+		 (org-archive-location . "~/notes/archive/archived_%s")
+		 (org-archive-location . "archive/archived_%s")
+		 (nil)
+		 (ispell-local-dictionary . spanish)
+		 (markdown-content-type . "text/html")
+		 (encoding . utf-8)))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
