@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Send the JSON header for i3bar
+echo '{"version":1}'
+
+# Begin the neverending story... I mean... array.
+echo '[[],'
+
+exec conky -c $HOME/dev/dotfiles/i3/conkyrc

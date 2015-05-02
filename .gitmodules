@@ -109,9 +109,6 @@
 [submodule "vimconf/bundle/hybrid"]
 	path = vimconf/bundle/hybrid
 	url = https://github.com/w0ng/vim-hybrid
-[submodule "dotemacs/themes/base16"]
-	path = dotemacs/themes/base16
-	url = https://github.com/neil477/base16-emacs.git
 [submodule "vimconf/bundle/goyo"]
 	path = vimconf/bundle/goyo
 	url = https://github.com/junegunn/goyo.vim
@@ -139,9 +136,36 @@
 [submodule "vimconf/bundle/tintin"]
 	path = vimconf/bundle/tintin
 	url = https://github.com/LokiChaos/vim-tintin.git
-[submodule "vimconf/bundle/blade"]
-	path = vimconf/bundle/blade
-	url = git://github.com/xsbeats/vim-blade.git
 [submodule "vimconf/bundle/tmux-navigator"]
 	path = vimconf/bundle/tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator.git
+[submodule "vimconf/bundle/slimv"]
+	path = vimconf/bundle/slimv
+	url = https://github.com/kovisoft/slimv.git
+[submodule "vimconf/bundle/racket"]
+	path = vimconf/bundle/racket
+	url = https://github.com/wlangstroth/vim-racket
+[submodule "vimconf/bundle/rust"]
+	path = vimconf/bundle/rust
+	url = https://github.com/wting/rust.vim
+[submodule "vimconf/bundle/toml"]
+	path = vimconf/bundle/toml
+	url = https://github.com/cespare/vim-toml
+[submodule "vimconf/bundle/indentLine"]
+	path = vimconf/bundle/indentLine
+	url = https://github.com/Yggdroot/indentLine
+[submodule "vimconf/bundle/vimoutliner"]
+	path = vimconf/bundle/vimoutliner
+	url = https://github.com/vimoutliner/vimoutliner.git
+[submodule "vimconf/bundle/pandoc"]
+	path = vimconf/bundle/pandoc
+	url = https://github.com/vim-pandoc/vim-pandoc.git
+[submodule "vimconf/bundle/pandoc-syntax"]
+	path = vimconf/bundle/pandoc-syntax
+	url = https://github.com/vim-pandoc/vim-pandoc-syntax.git
+[submodule "vimconf/bundle/clang-format"]
+	path = vimconf/bundle/clang-format
+	url = https://github.com/rhysd/vim-clang-format.git
+[submodule "spacemacs"]
+	path = spacemacs
+	url = http://github.com/syl20bnr/spacemacs
