@@ -1,4 +1,4 @@
-function tt
+function tt --wraps=transmission-remote
 	set -l torrents
 	set -l tline
 

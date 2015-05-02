@@ -1,13 +1,10 @@
 function fish_prompt --description 'Write out the prompt'
-	
-  set -l last_status $status
-	# set -l tmux_active_session (tmux ls | grep attached | sed -e 's/\([^:]\+\):.*/\1/')
-	# set -l tmux_active_window (tmux lsw | grep \* | sed -e 's/[^ ]\+ \([^\*]\+\)\*.*/\1/')
+	set -l last_status $status
 
   if not set -q __fish_prompt_normal
     set -g __fish_prompt_normal (set_color normal)
   end
-  
+
   # PWD
   set_color cyan
   echo -n (prompt_pwd)
@@ -16,33 +13,19 @@ function fish_prompt --description 'Write out the prompt'
   # Git branch and status
   printf '%s' (__fish_git_prompt ' %s')
 
-	# Print tmux status, if available
-	# if test -n $tmux_active_session
-	# 	set_color green
+	# Long execution times, only shown if last command ran for a second or more.
+	# TODO: Convert to seconds and minutes as number grows.
+  if test \( -n $CMD_DURATION \) -a \( $CMD_DURATION -ge 1000 \)
+    set_color $fish_color_error
+    echo -n " "$CMD_DURATION"ms"
+    set_color normal
+  end
 
-	# 	echo -n " $tmux_active_session"
-
-	# 	## FIXME: This will print the window name even outside a tmux session.
-	# 	# if test -n $tmux_active_window
-	# 	# 	echo -n "/$tmux_active_window"
-	# 	# end
-
-	# 	set_color normal
-	# end
-
-  # Long execution times
-  # if test -n $CMD_DURATION
-  #   set_color $fish_color_error
-  #   echo -n " "$CMD_DURATION
-  #   set_color normal
-  # end
-
-  if not test $last_status -eq 0
+  if test $last_status -ne 0
     set_color red
   else
     set_color green
   end
 
   printf "\n❯ "
-
 end

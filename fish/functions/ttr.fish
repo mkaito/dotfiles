@@ -3,11 +3,13 @@ function ttr
 	set -l tline
 
 	if not isatty 0
+		echo "Reading from stdin"
 		while read line
 			set torrents $torrents (echo $line | grep -Po '^\s*\d+' | tr -d ' ')
 		end
 
 	else
+		echo "Not reading from stdin"
 		if test (count $argv) -ge 1
 			set torrents $argv[1]
 
