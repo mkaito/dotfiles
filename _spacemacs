@@ -1,0 +1,74 @@
+;; -*- mode: dotspacemacs -*-
+;; This file is loaded by Spacemacs at startup.
+;; It must be stored in your home directory.
+
+(defun dotspacemacs/layers ()
+  "Configuration Layers declaration."
+
+  (setq-default
+
+   dotspacemacs-configuration-layer-path '("~/dev/dotfiles/spacemacs-layers/")
+
+   dotspacemacs-configuration-layers
+   '(
+     (git :variables
+          git-gutter-use-fringe t)
+     markdown
+     org
+     syntax-checking
+     c-c++
+     extra-langs
+     )
+
+   dotspacemacs-excluded-packages '()
+   dotspacemacs-delete-orphan-packages t))
+
+(defun dotspacemacs/init ()
+  "Initialization function.  This function is called at the very startup of
+   Spacemacs initialization before layers configuration."
+
+  (setq-default
+
+   dotspacemacs-startup-banner 'random
+   dotspacemacs-always-show-changelog t
+
+   ;; List of items to show in the startup buffer. If nil it is disabled.
+   ;; Possible values are: `recents' `bookmarks' `projects'."
+   dotspacemacs-startup-lists '(recents projects)
+
+   dotspacemacs-themes '(base16-grayscale-dark base16-grayscale-light)
+
+   ;; If non nil the cursor color matches the state color.
+   dotspacemacs-colorize-cursor-according-to-state t
+
+   ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
+   ;; size to make separators look not too crappy.
+   dotspacemacs-default-font '("Terminess Powerline"
+                               :size 14
+                               :weight normal
+                               :width normal
+                               :powerline-scale 1.1)
+
+   ;; If non nil the paste micro-state is enabled. While enabled pressing `p`
+   ;; several times cycle between the kill ring content.
+   dotspacemacs-enable-paste-micro-state t
+
+   ;; If non nil unicode symbols are displayed in the mode line.
+   dotspacemacs-mode-line-unicode-symbols nil
+
+   )
+  ;; User initialization goes here
+  )
+
+(defun dotspacemacs/config ()
+  "Configuration function.  This function is called at the very end of Spacemacs
+   initialization after layers configuration."
+  (global-hl-line-mode -1)
+  (global-linum-mode)
+  (linum-relative-toggle)
+  (setq powerline-default-separator 'arrow)
+  (fringe-mode 0)
+)
+
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
