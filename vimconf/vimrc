@@ -14,10 +14,12 @@ syntax sync minlines=256
 
 set nocompatible
 
+" Spaces instead of tabs
+set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-" set expandtab
+
 set autoindent
 set nostartofline
 
@@ -46,8 +48,12 @@ set wildignorecase
 set splitbelow
 set splitright
 
-let mapleader = ","
-let g:mapleader = ","
+" Show me what I'm doing
+set concealcursor="nc"
+set conceallevel=0
+
+let mapleader = " "
+let g:mapleader = " "
 
 nnoremap ; :
 vnoremap ; :
@@ -63,7 +69,7 @@ set showmatch
 map <tab> g%
 cmap w!! %!sudo tee > /dev/null %
 
-set statusline=%<\ %n\ %f\ %{fugitive#statusline()}\ %r%y%m%=\ Line:\ \%l\/\%L\ Column:\ \%c\ 
+set statusline=%<\ %n\ %f\ %{fugitive#statusline()}\ %r%y%m%=\ Line:\ \%l\/\%L\ Column:\ \%c
 
 set wrap
 set textwidth=79
@@ -124,14 +130,14 @@ augroup vimrcEx
 				\ exe "normal g`\"" |
 				\ endif
 
-	au BufWritePre * :%s/s+$//e	 " Remove trailing whitespace upon saving
+	au BufWritePre * :%s/\s\+$//e	 " Remove trailing whitespace upon saving
 	" au FocusLost,InsertLeave * bufdo call functions#AutoSave()
 	" au InsertLeave * :wa
 augroup END
 
 " Relies on Xresources for colours
 set background=dark
-colorscheme base16-chalk
+colorscheme base16-grayscale
 
 nnoremap <leader>a :Ack
 
@@ -200,6 +206,7 @@ let g:ledger_fillstring = '	»'
 
 " Vimperator textfields
 au BufNewFile,BufRead vimperator-www.reddit.com.tmp setf markdown
+let g:markdown_fenced_languages = ['coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
 
 " Fish mode for funced
 au BufNewFile,BufRead fish_funced.* setf fish
@@ -243,7 +250,7 @@ function! GoyoAfter()
   Limelight!
 
 	" No idea why, but it seems like Limelight messes with my colorscheme
-	colorscheme base16-chalk
+	colorscheme base16-grayscale
 endfunction
 
 let g:goyo_callbacks = [function('GoyoBefore'), function('GoyoAfter')]
@@ -290,3 +297,17 @@ let g:syntastic_javascript_jsxhint_quiet_messages = {
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+" vim-pandoc
+" let g:pandoc#command#autoexec_on_writes = 0
+" let g:pandoc#command#autoexec_command = "Pandoc html5 -s"
+let g:pandoc#syntax#conceal#use = 0
+let g:pandoc#formatting#mode = "h"
+let g:pandoc#folding#level = 10
+nnoremap <F9> :Pandoc pdf<CR>
+nnoremap <F10> :Pandoc! pdf<CR>
+
+" vim-clang-format
+autocmd FileType c,cpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
+let g:clang_format#auto_formatexpr = 1
