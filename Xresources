@@ -1,6 +1,6 @@
 
 Emacs.FontBackend:      xft
-Emacs.font:		Ubuntu Mono-11
+Emacs.font: Terminus-11
 
 Xft.dpi:		101
 Xft.antialias:		1
@@ -24,12 +24,15 @@ URxvt.inputMethod             :ibus
 URxvt.preeditType             :OverTheSpot
 
 URxvt.perl-lib                :/home/chris/dev/dotfiles/urxvt/:/usr/lib/urxvt/perl/
-URxvt.perl-ext-common         :default,url-select,clipboard
-URxvt.keysym.M-u              :perl:url-select:select_next
-URxvt.keysym.M-c              :perl:clipboard:copy
-URxvt.keysym.M-v              :perl:clipboard:paste
-URxvt.keysym.M-C-v            :perl:clipboard:paste_escaped
-URxvt.url-select.launcher     :/usr/bin/firefox
+URxvt.perl-ext-common         :default,url-select,clipboard,selection-pastebin,overlay-osc
+URxvt.keysym.Meta-u           :perl:url-select:select_next
+URxvt.keysym.Meta-c           :perl:clipboard:copy
+URxvt.keysym.Meta-v           :perl:clipboard:paste
+URxvt.keysym.Control-Meta-v   :perl:clipboard:paste_escaped
+URxvt.keysym.Control-Meta-e   :perl:selection-pastebin:remote-pastebin
+URxvt.selection-pastebin.cmd  :rsync -aP % mkaito\072/srv/www/mkaito.com/pastie/
+URxvt.selection-pastebin.url  :http\072\057\057www.mkaito.com/pastie/%
+URxvt.url-select.launcher     :/home/chris/dev/bin/browser
 URxvt.url-select.underline    :true
 
 ! Catch ugly URLs
@@ -37,8 +40,8 @@ URxvt.cutchars                :'"'()*<>[]{|}_-:?
 
 URxvt.geometry		      : 120x35
 URxvt.internalBorder          : 15
-URxvt.font                    :xft:Ubuntu Mono:style=Regular:size=11,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
-URxvt.boldFont                :xft:Ubuntu Mono:style=Bold:size=11,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.font                    :xft:Terminus:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.boldFont                :xft:Terminus:style=Bold:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
 URxvt*intensityStyles					:false
 !URxvt.transparent             :true
 !URxvt.shading                 :90
@@ -50,7 +53,7 @@ XTerm*faceNameDoubleSize       :xft:Droid Sans Japanese:style=Regular
 XTerm*faceSize		       :10
 XTerm*utf8		       :2
 
-#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-chalk.dark.xresources"
+#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-grayscale.dark.xresources"
 
 !SshAskpass*Dialog.font:	-b&h-lucida-medium-r-normal-*-*-100-*-*-*-*-iso8859-1
 !SshAskpass*Dialog.font:	-*-inconsolata g-*-*-*-*-17-*-*-*-*-*-*-*

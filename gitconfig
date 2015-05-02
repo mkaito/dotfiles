@@ -4,10 +4,11 @@
 
 [alias]
   co = checkout
-  br = branch
-  ci = commit
-  st = status
-  p = push
+  b	 = branch
+  c	 = commit
+  s	 = status --short
+  p	 = push
+	lol = log --pretty=oneline --abbrev-commit --graph --decorate
 
 [core]
 	excludesfile = /home/chris/.gitignore

@@ -5,7 +5,7 @@
 ## Fix WM compat for some apps
 export OOO_FORCE_DESKTOP="gnome"
 export _JAVA_AWT_WM_NONREPARENTING=1
-export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' 
+export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dawt.useSystemAAFontSettings=lcd'
 export JAVA_FONTS=/usr/share/fonts/TTF
 wmname LG3D
 export DE=xfce
@@ -22,12 +22,15 @@ export QT_IM_MODULE=ibus
 export GTK_IM_MODULE_FILE=/etc/gtk-2.0/gtk.immodules
 
 # MPD runs on a unix socket
-export MPD_HOST=${HOME}/.mpd/mpd.sock
+export MPD_HOST="${HOME}/.mpd/mpd.sock"
 export MPD_PORT=-1
+
+# DBUS bullshit
+export DBUS_SESSION_BUS_ADDRESS=/run/user/$(id -u)/dbus/user_bus_socket
 
 xrdb ~/.Xresources
 
-ibus-daemon -x -r -d
+ibus-daemon -xrd
 
 [[ -d /usr/share/fonts/local ]] && xset +fp /usr/share/fonts/local
 [[ -d $HOME/.fonts ]] && xset +fp $HOME/.fonts
@@ -56,7 +59,7 @@ else
 fi
 
 # Fix cursor and set background
-xsetroot -cursor_name left_ptr -solid "#151515"
+xsetroot -cursor_name left_ptr -solid "#101010"
 
 # Kill the goddamn bell
 xset b off
@@ -74,17 +77,24 @@ else
 	(sleep 10 && amixer set Master 100+ unmute) &!
 fi
 
-autocutsel -selection PRIMARY   -fork
-autocutsel -selection CLIPBOARD -fork
+autocutsel -selection PRIMARY   -fork &!
+autocutsel -selection CLIPBOARD -fork &!
 
-redshift -l 28:-13 -t 5000:3000 -b 0.78:0.89 -m randr &!
+redshift -l 28:-13 -t 5000:3000 -b 0.80:0.80 -m randr &!
+
+# dropboxd &!
+
+#xbanish &!
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
 case "${1:-i3}" in
-    i3)
-        exec zsh -c "dbus-launch i3"
-        ;;
-    *) # Pop a shell to fix things
-        exec urxvt
-esac
+			dwm)
+				exec startdwm
+				;;
+			i3)
+				exec /home/chris/dev/bin/wm
+				;;
+			*) # Pop a shell to fix things
+				exec urxvt
+		esac
