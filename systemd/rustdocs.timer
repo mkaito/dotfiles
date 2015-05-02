@@ -1,0 +1,9 @@
+[Unit]
+Description=Build rust doc epubs and push to git
+
+[Timer]
+OnCalendar=daily
+Persistent=True
+
+[Install]
+WantedBy=default.target

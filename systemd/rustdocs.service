@@ -1,0 +1,5 @@
+[Unit]
+Description=Build rust docs
+
+[Service]
+ExecStart=/home/chris/dev/bin/build_rust_docs.fish

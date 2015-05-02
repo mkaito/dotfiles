@@ -1,9 +1,9 @@
 [Unit]
-Description=Music Player Daemon Scribbler
-After=network.target sound.target mpd.service
+Description=last.fm updater for MPD
+After=mpd.service
 
 [Service]
-ExecStart=/bin/mpdscribble --no-daemon
+ExecStart=/usr/bin/mpdscribble --no-daemon --conf /home/chris/.mpdscribble/mpdscribble.conf
 
 [Install]
 WantedBy=default.target

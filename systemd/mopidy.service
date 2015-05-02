@@ -1,0 +1,10 @@
+[Unit]
+Description=mopidy
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/mopidy
+Restart=ono-failure
+
+[Install]
+WantedBy=default.target

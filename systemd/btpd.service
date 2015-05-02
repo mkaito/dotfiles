@@ -1,9 +1,0 @@
-[Unit]
-Description=BitTorrent Protocol Daemon
-After=network.target
-
-[Service]
-ExecStart=/bin/btpd --no-daemon --bw-out 527
-
-[Install]
-WantedBy=default.target
