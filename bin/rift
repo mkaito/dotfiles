@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+playonlinux --run "Star Wars: The Old Republic"

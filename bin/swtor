@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+playonlinux --run "Guild Wars 2"
