@@ -166,6 +166,6 @@
 [submodule "vimconf/bundle/clang-format"]
 	path = vimconf/bundle/clang-format
 	url = https://github.com/rhysd/vim-clang-format.git
-[submodule "spacemacs"]
-	path = spacemacs
-	url = http://github.com/syl20bnr/spacemacs
+[submodule "vimconf/bundle/mustache"]
+	path = vimconf/bundle/mustache
+	url = git://github.com/mustache/vim-mustache-handlebars.git
