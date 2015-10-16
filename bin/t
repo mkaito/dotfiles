@@ -1,19 +1,56 @@
-#!/usr/bin/env fish
-# `t` is a wrapper/helper script for the tintin++ MUD client
-set -l ttroot ~/dev/tintin
+#!/usr/bin/env ruby
+#
+# This simple script provides a convenience wrapper for tintin++, the MUD
+# client.
+#
+# I've ended up giving each MUD I play its own folder in `~/dev/tintin`, which
+# acts as a handle. Inside, initialization is done in a file `init.tt`, which
+# defines the session and reads any other files.
 
-if test \( -n $argv \) -a \( -d $ttroot/$argv[1] \)
-	cd $ttroot/$argv[1]
-	if test -f $ttroot/$argv[1]/init.tt
-		tintin -G init.tt
-	else
-		echo 'init.tt not found in $argv[1]'
-	end
-else
-	echo -n 'Please provide a valid mud handle: '
-	for mud in $ttroot/*
-		echo -n (basename $mud)" "
-	end
-	echo '.'
+# Triggers, macros, etc are to be filed in triggers.tt, so we can `#read` the
+# file from a running session without redefining unnecessary things.
+
+require 'pathname'
+
+mud = ARGV.first
+TTROOT = Pathname.new('~/dev/tintin').expand_path
+
+
+##
+# Any folders found in the mud directory are supposed to be mud entries.
+def mudhandles
+  Dir.entries(TTROOT) - [".", ".."]
 end
-# vim:ft=fish
+
+##
+# Change pwd to the corresponding mud folder and run tintin.
+def runmud(mud)
+  Dir.chdir TTROOT + mud
+
+  if File.exist?("init.tt")
+    exec "/usr/bin/tintin -G init.tt"
+
+  else
+    puts "init.tt could not be found for entry #{mud}"
+    exit 127
+  end
+
+end
+
+##
+# Shell completion
+if mud == "--complete"
+  puts mudhandles.join(' ')
+  exit 0
+
+##
+# If a handle was given and the folder exists
+elsif mudhandles.include? mud
+  runmud(mud)
+
+##
+# If no handle given, or one that isn't a mud folder
+else
+    puts "Please provide a valid MUD handle: #{mudhandles.join(' ')}."
+    exit 127
+end

@@ -1,4 +1,7 @@
 #!/bin/bash
-# Run sc2. Aliases don't get on the path, but this can be launched from dmenu.
 
-WINEPREFIX=/home/chris/.local/share/wineprefixes/sc2 ~/.wine-versions/vanilla-head/bin/wine explorer /desktop=sc2,1920x1080 "C://Program Files/StarCraft II/Starcraft II.exe"
+export WINEPREFIX=/home/chris/.local/share/wineprefixes/sc2
+export WINE=wine
+export sc2="C://Program Files/StarCraft II/Starcraft II.exe"
+
+$WINE explorer /desktop=sc2,1920x1080 $sc2

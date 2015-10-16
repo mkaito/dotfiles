@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/zsh
 #
 # mkaito's X.org init file on Arch GNU/Linux
 
 ## Fix WM compat for some apps
 export OOO_FORCE_DESKTOP="gnome"
+export IBUS_ENABLE_SYNC_MODE=1
 export _JAVA_AWT_WM_NONREPARENTING=1
-export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dawt.useSystemAAFontSettings=lcd'
+export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dawt.useSystemAAFontSettings=lcd -Dsun.java2d.opengl=true'
 export JAVA_FONTS=/usr/share/fonts/TTF
 wmname LG3D
 export DE=xfce
@@ -27,6 +28,9 @@ export MPD_PORT=-1
 
 # DBUS bullshit
 export DBUS_SESSION_BUS_ADDRESS=/run/user/$(id -u)/dbus/user_bus_socket
+
+# Enable firefox hardware acceleration
+export MOZ_USE_OMTC=1
 
 xrdb ~/.Xresources
 
@@ -77,24 +81,22 @@ else
 	(sleep 10 && amixer set Master 100+ unmute) &!
 fi
 
-autocutsel -selection PRIMARY   -fork &!
-autocutsel -selection CLIPBOARD -fork &!
+# autocutsel -selection PRIMARY   -fork &!
+# autocutsel -selection CLIPBOARD -fork &!
 
-redshift -l 28:-13 -t 5000:3000 -b 0.80:0.80 -m randr &!
+redshift -l 28:-13 -t 5000:3000 -b 0.85:0.85 -m randr &
 
-# dropboxd &!
-
-#xbanish &!
+# xrandr --output DVI-I-2 --primary &!
 
 # Slim doesn't set the default session, even if it says it does in a comment in the conf file.
 # Using parameter expansion below to set a "default" session instead.
 case "${1:-i3}" in
-			dwm)
-				exec startdwm
-				;;
-			i3)
-				exec /home/chris/dev/bin/wm
-				;;
-			*) # Pop a shell to fix things
-				exec urxvt
-		esac
+    dwm)
+        exec /home/chris/dev/bin/startdwm
+        ;;
+    i3)
+        exec /home/chris/dev/bin/wm
+        ;;
+    *) # Pop a shell to fix things
+        exec urxvt
+esac

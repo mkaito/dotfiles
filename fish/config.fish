@@ -1,10 +1,23 @@
 # Disable greeting message on load
 set -U fish_greeting
+eval sh /usr/share/base16-shell/base16-grayscale.dark.sh
 
-# Set up pyenv
-set -x PATH "$HOME/.pyenv/bin" $PATH
-status --is-interactive; and . (pyenv init -|psub)
-status --is-interactive; and . (pyenv virtualenv-init -|psub)
+set -gx PAGER "less"
+set -gx READNULLCMD "$PAGER"
+set -gx EDITOR "emacsclient -c"
+set -gx VISUAL "emacsclient -c"
+set -gx ALTERNATE_EDITOR ””
+set -gx BROWSER "firefox"
+set -gx XTERM "$HOME/dev/bin/terminal"
+set -gx TERMINAL "$XTERM"
+set -gx PERL_SIGNALS "unsafe"
+set -gx SUDO_EDITOR "emacsclient"
+set -gx PATH $HOME/dev/bin $GOPATH/bin $HOME/perl5/bin $HOME/.cabal/bin $HOME/node_modules/.bin $PATH
+set -gx LEDGER_FILE "$HOME/media/sync/ledger/personal.ledger"
+
+# Set up rbenv
+set -gx RBENV_ROOT $HOME/.rbenv
+status --is-interactive; and . (rbenv init - | psub)
 
 # Colorize man pages
 set -xU LESS_TERMCAP_mb (printf "\e[01;31m")      # begin blinking

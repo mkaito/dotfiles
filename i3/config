@@ -15,7 +15,7 @@ set $mod Mod1
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
 
-font pango:Ubuntu Mono 8
+font pango:Ubuntu Mono, Icons 11
 
 ## Borders
 new_window pixel 2
@@ -25,11 +25,11 @@ hide_edge_borders both
 # Colors
 # Note: The drawn colour around windows is actually the background colour
 #                       border  backgr  text    indicator
-client.background       #101010
-client.focused          #101010 #727272 #b9b9b9 #ababab
-client.focused_inactive #101010 #101010 #b9b9b9 #ababab
-client.unfocused        #101010 #101010 #b9b9b9 #ababab
-client.urgent           #101010 #5e5e5e #b9b9b9 #ababab
+client.background       #151515
+client.focused          #151515 #727272 #b9b9b9 #ababab
+client.focused_inactive #151515 #151515 #b9b9b9 #ababab
+client.unfocused        #151515 #151515 #b9b9b9 #ababab
+client.urgent           #151515 #5e5e5e #b9b9b9 #ababab
 
 ## Tap the key combo for the current workspace to go back to the previous one
 workspace_auto_back_and_forth yes
@@ -41,43 +41,55 @@ mouse_warping none
 floating_modifier $mod
 
 ## Random programs and rules for them
-# Note: `terminal` is ~/dev/bin/terminal, a bash script.
+# Note: `terminal` is ~/dev/bin/terminal, a bash script that launches my terminal.
 bindsym $mod+F1 exec --no-startup-id terminal
 bindsym $mod+F2 exec browser
-bindsym $mod+F3 exec --no-startup-id terminal -name mail -e mutt
-bindsym $mod+F4 exec --no-startup-id terminal -name chat -e weechat-curses
-bindsym $mod+F5 exec --no-startup-id terminal -name ranger -e ranger
-bindsym $mod+F6 exec --no-startup-id terminal -name music -e ncmpcpp
-bindsym $mod+F7 exec --no-startup-id emacsclient --eval "(make-capture-frame)"
+# bindsym $mod+F3 exec --no-startup-id terminal -name mail -e zsh -c mutt
+bindsym $mod+F3 exec --no-startup-id nevermore
+bindsym $mod+F4 exec --no-startup-id terminal -name chat -e zsh -c weechat-curses
+bindsym $mod+F5 exec --no-startup-id terminal -name ranger -e zsh -c ranger
+bindsym $mod+F6 exec --no-startup-id terminal -name music -e zsh -c ncmpcpp
 bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
-bindsym $mod+F9 exec anki
 
-bindsym $mod+t exec --no-startup-id terminal -name torrent -e transmission-remote-cli
-# bindsym $mod+Control+space exec --no-startup-id ibus-toggle.fish
+bindsym $mod+t exec --no-startup-id terminal -name torrent -e zsh -c transmission-remote-cli
 
-## Games
-bindsym $mod+F11 exec --no-startup-id starbound
-bindsym $mod+F12 exec --no-startup-id sc2
+## Emacs
+bindsym $mod+F9 exec --no-startup-id capture
+bindsym $mod+F11 exec --no-startup-id edit-personal-ledger
+bindsym $mod+F12 exec --no-startup-id edit-personal-orgfile
 
+# Browsers. I switch a lot.
 assign [class="^Firefox$" instance="^Navigator$"] 3
 assign [class="^Chromium$" instance="^Chromium$"] 3
+assign [class="^google-chrome-unstable$"] 3
 assign [class="^Browser" instance="^Browser"] 3
 assign [class="^Dwb$" instance ="^dwb$"] 3
+
+# Messaging stuff
 assign [instance="^mail$"] 4
 assign [instance="^chat$"] 4
-# assign [instance="^ranger$"] 7
+assign [instance="^nevermore"] 4
+
+# Gaming
 assign [class="^Steam$"] 9
 assign [class="^FTL$"] 5
 assign [class="^starbound$"] 5
 assign [title="^Shadowrun$"] 5
-# assign [title="^sc2"] 5
-assign [class="^Wine$" instance="^explorer.exe$"] 5
+assign [title="^sc2"] 5
+assign [instance="^explorer.exe$"] 5
 assign [class="^com-ankamagames-wakfu-client-WakfuClient$" instance="^sun-awt-X11-XFramePeer$"] 5
 assign [class="^Civ5XP$"] 5
 assign [class="^Dwarf_Fortress$"] 5
+assign [class="^ffxivlauncher.exe$"] 5
+assign [class="^ffxivboot.exe$"] 5
+assign [class="^ffxiv.exe$"] 5
+assign [class="^LaunchPad.exe$"] 5
+assign [title="^Project Gorgon$"] 5
+
 assign [class="^jd-Main$"] 6
 assign [class="^JDownloader$"] 6
 assign [class="^libprs500$"] 10
+# assign [class="^Wine$" instance="^YNAB 4.exe$"] 8
 
 for_window [instance="^music$"] floating enable, border pixel 6
 for_window [instance="^torrent$"] floating enable, border pixel 6
@@ -87,7 +99,9 @@ for_window [class="^Wine$" instance="^explorer.exe$"] border none
 for_window [class="^Pavucontrol$"] floating enable, border pixel 6
 for_window [instance="^mixer"] floating enable, border pixel 6
 for_window [class="^Pinentry-gtk-2$"] floating enable, border pixel 6
-for_window [class="^Emacs$" instance="^capture$"] floating enable, border pixel 6
+for_window [class="^Emacs$" instance="^personal-org$"] floating enable, border pixel 6
+for_window [class="^Emacs$" instance="^ledger$"] floating enable, border pixel 6, position move center
+for_window [class="^Emacs$" instance="^capture$"] floating enable, border pixel 6, position move center
 for_window [class="^Anki$"] floating enable
 for_window [class="^Nitrogen$"] floating enable, border pixel 6
 for_window [class="^Sxiv$" instance="^sxiv$"] floating enable, border pixel 6
@@ -96,7 +110,10 @@ for_window [class="^Steam$" title="^(?!Steam$)"] floating enable, border pixel 6
 for_window [class="^FTL$"] floating enable, border pixel 6
 for_window [class="^Gvim$" instance="^gvim$" title="^vimperator-secure"] floating enable, border pixel 6
 for_window [class="^URxvt$" instance="^browser-editor$"] floating enable, border pixel 6
+for_window [class="^URxvt$" instance="^browser-editor$"] floating enable, border pixel 6
+for_window [class="^Gvim$" title="^cvim-"] floating enable, border pixel 6
 for_window [class="^Mcomix$" title="^Library$"] floating enable, border pixel 6
+for_window [class="^ffxiv.exe$"] floating disable, border none
 
 # Why the heck would the entire game window be floating by default?
 for_window [class="^Civ5XP$"] floating disable
@@ -117,10 +134,13 @@ workspace 7 output DVI-I-2
 workspace 10 output DVI-I-3
 
 ## Media keys
-bindsym $mod+XF86AudioMute exec --no-startup-id 	terminal -name mixer -e alsamixer
-bindsym XF86AudioMute exec --no-startup-id				amixer set Master toggle
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer set Master unmute 5%-
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer set Master unmute 5%+
+bindsym $mod+XF86AudioMute exec --no-startup-id 	terminal -name mixer -e zsh -c pulsemixer
+# bindsym XF86AudioMute exec --no-startup-id				amixer set Master toggle
+# bindsym XF86AudioLowerVolume exec --no-startup-id amixer set Master unmute 5%-
+# bindsym XF86AudioRaiseVolume exec --no-startup-id amixer set Master unmute 5%+
+bindsym XF86AudioMute exec --no-startup-id				/usr/bin/pulseaudio-ctl mute
+bindsym XF86AudioLowerVolume exec --no-startup-id /usr/bin/pulseaudio-ctl down
+bindsym XF86AudioRaiseVolume exec --no-startup-id /usr/bin/pulseaudio-ctl up
 bindsym XF86AudioPlay exec --no-startup-id 				mpc toggle
 bindsym XF86AudioPrev exec --no-startup-id 				mpc prev
 bindsym XF86AudioNext exec --no-startup-id 				mpc next
@@ -128,6 +148,9 @@ bindsym Print exec --no-startup-id 								screenshot
 
 ## kill focused window
 bindsym $mod+Escape kill
+
+## Toggle mod key
+bindsym $mod+Shift+Tab exec --no-startup-id i3-toggle-mod
 
 ## start dmenu (a program launcher)
 bindsym $mod+p exec --no-startup-id dmenu_run
@@ -269,14 +292,14 @@ bar {
 		font pango:Ubuntu Mono, Icons 11
 
 		colors {
-			background #101010
+			background #151515
 			statusline #ababab
-			separator  #101010
+			separator  #151515
 
-			focused_workspace  #101010 #101010 #b9b9b9
-			active_workspace   #101010 #101010 #424242
-			inactive_workspace #101010 #101010 #626262
-			urgent_workspace   #b9b9b9 #101010 #b9b9b9
+			focused_workspace  #151515 #151515 #b9b9b9
+			active_workspace   #151515 #151515 #424242
+			inactive_workspace #151515 #151515 #626262
+			urgent_workspace   #b9b9b9 #151515 #b9b9b9
 		}
 }
 
@@ -286,20 +309,18 @@ bar {
 		tray_output DVI-I-2
 
 		mode hide
-		modifier Mod4
+		modifier Mod1
 		position top
 
-		font pango:Ubuntu Mono, Icons 11
-
 		colors {
-			background #101010
+			background #151515
 			statusline #ababab
-			separator  #101010
+			separator  #151515
 
-			focused_workspace  #101010 #101010 #b9b9b9
-			active_workspace   #101010 #101010 #424242
-			inactive_workspace #101010 #101010 #626262
-			urgent_workspace   #b9b9b9 #101010 #b9b9b9
+			focused_workspace  #151515 #151515 #b9b9b9
+			active_workspace   #151515 #151515 #424242
+			inactive_workspace #151515 #151515 #626262
+			urgent_workspace   #b9b9b9 #151515 #b9b9b9
 		}
 }
 
@@ -312,16 +333,14 @@ bar {
 		mode dock
 		position top
 
-		font pango:Ubuntu Mono, Icons 11
-
 		colors {
-			background #101010
+			background #151515
 			statusline #ababab
-			separator  #101010
+			separator  #151515
 
-			focused_workspace  #101010 #101010 #b9b9b9
-			active_workspace   #101010 #101010 #424242
-			inactive_workspace #101010 #101010 #626262
-			urgent_workspace   #b9b9b9 #101010 #b9b9b9
+			focused_workspace  #151515 #151515 #b9b9b9
+			active_workspace   #151515 #151515 #424242
+			inactive_workspace #151515 #151515 #626262
+			urgent_workspace   #b9b9b9 #151515 #b9b9b9
 		}
 }

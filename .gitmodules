@@ -169,3 +169,6 @@
 [submodule "vimconf/bundle/mustache"]
 	path = vimconf/bundle/mustache
 	url = git://github.com/mustache/vim-mustache-handlebars.git
+[submodule "spacemacs"]
+	path = spacemacs
+	url = http://github.com/syl20bnr/spacemacs

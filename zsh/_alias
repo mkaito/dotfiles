@@ -14,7 +14,8 @@ function d() {
 alias p='pass show'
 # alias pc='pass show -c'
 
-alias s='sudo systemctl'
+alias ss='sudo systemctl'
+alias ssu='systemctl --user'
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
@@ -70,6 +71,8 @@ function ttS {
 }
 
 function ttr {
+  # ttf finished | gawk '{gsub(/[^[:digit:]]/, "", $1); print $1}' |
+  # xargs -n 1 -I'{}' transmission-remote --torrent '{}' --remove
 	local torrents
 
 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
@@ -145,9 +148,6 @@ function remacs {
 	sleep 1
 	emacs --daemon
 }
-
-## Get a new terminal, in same folder
-alias t='terminal'
 
 ## Serve $PWD with WEBrick
 function serve {
@@ -237,12 +237,12 @@ function currency() {
 }
 
 # aptitude shorthands
-alias ag='sudo aptitude'
-alias agi='ag install'
-alias agu='ag update'
-alias agp='ag purge'
-alias agg='ag safe-upgrade'
-alias ags='aptitude search'
+# alias ag='sudo aptitude'
+# alias agi='ag install'
+# alias agu='ag update'
+# alias agp='ag purge'
+# alias agg='ag safe-upgrade'
+# alias ags='aptitude search'
 
 # Yaourt shorthands
 alias ya='yaourt'
@@ -252,7 +252,7 @@ alias yasy='ya -Sy'
 alias yasyy='ya -Syy'
 alias yard='ya -Rd'
 alias yasyu='ya -Syu'
-alias pacleandep='pacman -Qdtq | sudo xargs pacman -Rs'
+alias yaqdt='ya -Qdt'
 
 # ls shorthands
 alias ls='ls -Fh --color=auto --group-directories-first'
@@ -265,7 +265,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # Turn the display off
-alias lcdoff='xset dpms force off'
+# alias lcdoff='xset dpms force off'
 
 # Set the keyboard up
 #alias setkb='setxkbmap es; xmodmap ~/.xmodmap'

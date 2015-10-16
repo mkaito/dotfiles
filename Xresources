@@ -1,15 +1,15 @@
 
 Emacs.FontBackend:      xft
-Emacs.font: Terminus-11
+Emacs.font: Terminus-12
 
-Xft.dpi:		101
+Xft.dpi:          96
 Xft.antialias:		1
-Xft.hinting:		1
-Xft.rgba:		none
-Xft.autohint:		0
+Xft.hinting:		  1
+Xft.rgba:         rgb
+Xft.autohint:		  0
 Xft.lcdfilter:		lcddefault
-Xft.embolden:           false
-Xft.hintstyle:		hintfull
+Xft.embolden:     false
+Xft.hintstyle:		hintslight
 
 URxvt.iso14755                :false
 URxvt.scrollBar               :false
@@ -38,10 +38,10 @@ URxvt.url-select.underline    :true
 ! Catch ugly URLs
 URxvt.cutchars                :'"'()*<>[]{|}_-:?
 
-URxvt.geometry		      : 120x35
+URxvt.geometry		            : 120x35
 URxvt.internalBorder          : 15
-URxvt.font                    :xft:Terminus:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
-URxvt.boldFont                :xft:Terminus:style=Bold:size=12,xft:IPAMincho:style=Regular:size=12,xft:nanumgothiccoding:style=Regular:size=12
+URxvt.font                    :xft:Terminus:style=Regular:size=12,xft:IPAMincho:style=Regular:size=12
+URxvt.boldFont                :xft:Terminus:style=Bold:size=12,xft:IPAMincho:style=Regular:size=12
 URxvt*intensityStyles					:false
 !URxvt.transparent             :true
 !URxvt.shading                 :90
@@ -53,7 +53,7 @@ XTerm*faceNameDoubleSize       :xft:Droid Sans Japanese:style=Regular
 XTerm*faceSize		       :10
 XTerm*utf8		       :2
 
-#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-grayscale.dark.xresources"
+#include "/home/chris/dev/dotfiles/Xresources.d/base16/base16-grayscale.dark.256.xresources"
 
 !SshAskpass*Dialog.font:	-b&h-lucida-medium-r-normal-*-*-100-*-*-*-*-iso8859-1
 !SshAskpass*Dialog.font:	-*-inconsolata g-*-*-*-*-17-*-*-*-*-*-*-*

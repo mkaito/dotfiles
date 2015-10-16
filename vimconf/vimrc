@@ -12,7 +12,7 @@ filetype plugin indent on
 syntax on
 syntax sync minlines=256
 
-set nocompatible
+"set nocompatible
 
 " Spaces instead of tabs
 set expandtab
@@ -24,13 +24,13 @@ set autoindent
 set nostartofline
 
 set encoding=utf-8
-set termencoding=utf-8
+"set termencoding=utf-8
 
 set hidden
 set scrolloff=3
 set showmode
 set showcmd
-set ttyfast
+"set ttyfast
 set ruler
 set backspace=indent,eol,start
 set laststatus=2
@@ -83,7 +83,7 @@ set nuw=6
 set number
 set relativenumber
 set cursorline
-set clipboard=unnamedplus				" X11 System Clipboard
+set clipboard^=unnamed				" X11 System Clipboard
 set autowrite
 set autoread
 
@@ -137,7 +137,8 @@ augroup END
 
 " Relies on Xresources for colours
 set background=dark
-colorscheme base16-grayscale
+let base16colorspace=256
+colorscheme base16-tomorrow
 
 nnoremap <leader>a :Ack
 

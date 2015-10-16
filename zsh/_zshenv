@@ -1,34 +1,18 @@
 export PAGER="less"
 export READNULLCMD="$PAGER"
-export EDITOR="vim"
-export VISUAL="vim"
+export EDITOR="emacsclient"
+export VISUAL="emacsclient"
 export ALTERNATE_EDITOR=””
 export BROWSER="firefox"
 export XTERM="~/dev/bin/terminal"
 export TERMINAL="$XTERM"
 export PERL_SIGNALS=unsafe
-export WINEDEBUG=-all
 export GOPATH="$HOME/dev/go"
 export SUDO_EDITOR=emacsclient
-export POWWOWDIR="$HOME/powwow"
-export POWWOWPAGER="$PAGER"
-
 
 source /etc/zsh/zprofile
-PATH="$HOME/dev/bin:$GOPATH/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$HOME/node_modules/.bin:$PATH"
-# Remove duplicates
-# PATH=$( echo $PATH | tr ":" "\n" | sort -ru | paste -sd: )
-export PATH
-
-# *env
-eval "$(rbenv init -)"
-
-export ANDROIDSDK="/opt/android-sdk"
-export ANDROIDNDK="/opt/android-ndk"
-export ANDROIDNDKVER=r8
-export ANDROIDAPI=8
-
-export LEDGER_FILE="$HOME/Sync/Finanzas/Contabilidad/ledger/personal.ledger"
+export PATH="$HOME/dev/bin:$GOPATH/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$HOME/node_modules/.bin:$PATH"
+export LEDGER_FILE="$HOME/media/sync/ledger/personal.ledger"
 
 export PERL_LOCAL_LIB_ROOT="$HOME/perl5";
 export PERL_MB_OPT="--install_base $HOME/perl5";

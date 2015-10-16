@@ -6,4 +6,4 @@ echo '{"version":1}'
 # Begin the neverending story... I mean... array.
 echo '[[],'
 
-exec conky -c $HOME/dev/dotfiles/i3/conkyrc
+exec conky -c $HOME/dev/dotfiles/i3/conkyrc | sanitizeutf8

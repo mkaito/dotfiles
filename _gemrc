@@ -1,7 +1,7 @@
 --- 
 :benchmark: false
 :verbose: true
-gem: --no-ri --no-rdoc
+gem: --no-rdoc
 :update_sources: true
 :sources: 
 - https://rubygems.org
