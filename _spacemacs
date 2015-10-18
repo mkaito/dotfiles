@@ -29,8 +29,10 @@
      ruby
      rust
      lua
+     ;; base16-devel
      (shell :variables
-            shell-default-shell 'eshell)
+            shell-default-shell 'eshell
+            shell-default-height 45)
      shell-scripts
      syntax-checking
      nevermore
@@ -72,7 +74,7 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-chalk-dark base16-grayscale-dark base16-tomorrow-dark)
+   dotspacemacs-themes '(base16-grayscale-dark base16-chalk-dark base16-tomorrow-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -158,7 +160,7 @@ before layers configuration."
   ;; User initialization goes here
   )
 
-(defun dotspacemacs/config ()
+(defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
