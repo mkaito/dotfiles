@@ -1,0 +1,16 @@
+alias ec e
+alias ll ls -lh $*
+alias ber bundle exec rake $*
+alias be bundle exec $*
+alias clear eshell-clear-buffer
+alias yass yaourt -Ss $*
+alias yas yaourt -S $*
+alias ff find-file $1
+alias ssu systemctl --user --no-pager $*
+alias ss sudo systemctl --no-pager $*
+alias .. cd ..
+alias emacs find-file $1
+alias e find-file $1
+alias ttl tt -l
+alias ttr tt -t$1 --remove
+alias tt transmission-remote $*
