@@ -17,3 +17,5 @@ systemd/default.target.wants/
 dotemacs/flycheck_org-clock-save.el
 dotemacs/saveplace.el
 dotemacs/vendor/
+eshell/history
+eshell/lastdir
