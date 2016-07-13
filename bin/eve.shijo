@@ -1,5 +1,0 @@
-#!/bin/bash
-WINEPREFIX=~/.local/share/wineprefixes/eve \
-	~/.wine-versions/vanilla-head/bin/wine \
-	explorer /desktop=eveF,1912x1054 \
-	"c:\EVE4\bin\ExeFile.exe"

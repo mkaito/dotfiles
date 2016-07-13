@@ -1,14 +1,171 @@
 #!/bin/bash
-# Start all eve clients
-pgrep -c 'eve\.(kaito|teiko|sanjo|shijo|meigo|gokku)' || ~/dev/bin/eve.launcher
-pgrep -c eve.kaito || ~/dev/bin/eve.kaito &!
-pgrep -c eve.teiko || ~/dev/bin/eve.teiko &!
-#pgrep -c eve.sanjo || ~/dev/bin/eve.sanjo &!
-#pgrep -c eve.shijo || ~/dev/bin/eve.shijo &!
-#pgrep -c eve.meigo || ~/dev/bin/eve.meigo &!
-#pgrep -c eve.gokku || ~/dev/bin/eve.gokku &!
-# Evemon and pyfa:
-pgrep -c pyfa || /usr/bin/pyfa &!
-pgrep -c gtkevemon || gtkevemon &!
-# And the market data uploader
-pgrep -c emdu_console || exec emdu_console --add-eve '~/.eveonline/drive_c/users/chris/Local Settings/Application Data/CCP/EVE/' --enable-deletion
+if [[ -f $HOME/.wine-versions/eve-testing/bin/wine ]]; then
+    export WINE=$HOME/.wine-versions/eve-testing/bin/wine
+else
+    export WINE=$HOME/.wine-versions/eve/bin/wine
+fi
+
+## Launcher Download
+##
+## Get new uri at:
+## https://community.eveonline.com/support/download/
+##
+## Update MD5 with:
+## # curl "$uri" | md5sum
+##
+## Example:
+## ❯ curl "http://binaries.eveonline.com/EveLauncher-1045952.exe" | md5sum
+## % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+## Dload  Upload   Total   Spent    Left  Speed
+## 100 52.2M  100 52.2M    0     0  3642k      0  0:00:14  0:00:14 --:--:-- 3759k
+## 7f65935614254ad3129306bb1f7163ca  -
+
+## Instances
+GAME_INSTANCES=2
+
+## Launcher
+INSTALLER_URL="http://binaries.eveonline.com/EveLauncher-1045952.exe"
+INSTALLER_MD5='7f65935614254ad3129306bb1f7163ca'
+
+## File paths
+LAUNCHER="C://EVE/launcher/evelauncher.exe"
+GAMECLIENT="C://users/Public/Application Data/CCP/EVE/SharedCache/tq/bin/exefile.exe"
+DESKTOP_SIZE="1920x1058"
+
+## Wine settings
+export WINEARCH=win32
+export WINEPREFIX="$HOME/.local/share/wineprefixes/eve"
+export WINEDEBUG=-all
+
+export LD_PRELOAD="libpthread.so.0 libGL.so.1"
+export __GL_THREADED_OPTIMISATIONS=1
+
+export __GL_SYNC_TO_VBLANK=1
+export __GL_SYNC_DISPLAY_DEVICE="DFP-0"
+
+## Dragons be beyond this line
+case "$1" in
+    install)
+        INSTALLER="$HOME/.cache/$(basename $INSTALLER_URL)"
+
+        ## Do not overwrite prefix. Run reset first.
+        if [[ -d "$WINEPREFIX" ]]; then
+            echo "Destination $WINEPREFIX exists. Aborting. Run $(basename $0) reset."
+            exit 1
+        fi
+
+        winetricks corefonts d3dx9_36 vcrun2005 vcrun2008 vcrun2010 d3d11=disabled
+
+        ## "Reboot" wine
+        ${WINE%/*}/wineboot
+
+        if [[ ! -f "$INSTALLER" ]]; then
+            curl -o "$INSTALLER" "$INSTALLER_URL"
+        fi
+
+        if [[ -f "$INSTALLER" ]]; then
+            MD5=$(md5sum "$INSTALLER")
+            if [[ "$MD5" = "$INSTALLER_MD5  $INSTALLER" ]]; then
+                "$WINE" msiexec /i "$INSTALLER"
+            else
+                echo "Installer did not pass md5 check. Removing and downloading again."
+
+                rm "$INSTALLER"
+                curl -o "$INSTALLER" "$INSTALLER_URL"
+                MD5=$(md5sum "$INSTALLER")
+                if [[ "$MD5" = "$INSTALLER_MD5  $INSTALLER" ]]; then
+                    "$WINE" msiexec /i "$INSTALLER"
+                else
+                    echo "Downloaded installer again, still did not pass md5 check. Aborting."
+                fi
+            fi
+        else
+            echo "The installation file could not be found at $INSTALLER"
+        fi
+        ;;
+
+    reset)
+        echo "this will completely remove $WINEPREFIX. This can not be undone."
+        read -p "Are you sure? " -n 1 -r
+
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo
+            echo -n "Nuking wineprefix... "
+            rm -rf "$WINEPREFIX"
+            echo "Done."
+        else
+            echo "Aborting."
+        fi
+        ;;
+
+    version)
+        echo "Wine path: ${WINE%%/bin/wine}"
+        echo "Wine version: $($WINE --version)"
+        ;;
+
+    config)
+        exec "${WINE%/*}/winecfg"
+        ;;
+
+    winetricks)
+        shift
+        exec winetricks $@
+        ;;
+
+    repair)
+        exec "$WINE" "C://EVE/repair.exe"
+        ;;
+
+    ## Kill everything, in case wine hits a snag.
+    kill)
+        ps ux | grep -v grep | grep -v "eve kill" | grep -v "browser" | \
+            grep -i "windows\|wineserver\|exefile\|launcher\|awesomium\|pyfa\|gtkevemon\|winetricks\|winedbg\|explorer.exe" | \
+            awk '{print $2}' | xargs kill
+        ;;
+
+    launch)
+        shift
+
+        ## If used as `$(basename) launch all`, launch as many instances as
+        ## defined at the top, pyfa, gtkevemon, and teamspeak3 (because I keep
+        ## forgetting to launch ts3 and the corp gets angry).
+        if [[ "$1" = "all" ]]; then
+            "$WINE" explorer /desktop=EVE1,${DESKTOP_SIZE} "$GAMECLIENT" >/dev/null &!
+
+            C=2
+            while [[ "$C" -le "$GAME_INSTANCES" ]]; do
+                pgrep -cf "/desktop=EVE${C}" || "$WINE" explorer /desktop=EVE${C},${DESKTOP_SIZE} "$GAMECLIENT" >/dev/null &!
+                ((C++))
+            done
+
+            pgrep -c pyfa >/dev/null || /usr/bin/pyfa >/dev/null &!
+            pgrep -c gtkevemon >/dev/null || gtkevemon >/dev/null &!
+            pgrep -c teamspeak3 >/dev/null || teamspeak3 >/dev/null &!
+        # fi
+        else
+
+            ## Launch an instance of the game.
+            ##
+            ## Usage: `$(basename) launch <number>`
+            ##
+            ## Where <number> should be an integer between 1 and infinity. It's
+            ## just a number to tag the virtual desktop for your window managing
+            ## convenience.
+            ##
+            ## <number> will default to 1.
+
+            DESKTOP=EVE${1:-1},${DESKTOP_SIZE}
+            exec "$WINE" explorer /desktop=${DESKTOP} "$GAMECLIENT" >/dev/null &!
+        fi
+        ;;
+
+    run)
+        shift
+        exec "$WINE" "$@"
+        ;;
+
+    ## TODO: Launch all clients by defaults, move launcher to `eve launcher` or something.
+    *)
+        exec "$WINE" "$LAUNCHER"
+        ;;
+esac
