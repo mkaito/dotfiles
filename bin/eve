@@ -1,8 +1,10 @@
 #!/bin/bash
 if [[ -f $HOME/.wine-versions/eve-testing/bin/wine ]]; then
     export WINE=$HOME/.wine-versions/eve-testing/bin/wine
-else
+elif [[ -f $HOME/.wine-versions/eve/bin/wine ]]; then
     export WINE=$HOME/.wine-versions/eve/bin/wine
+else
+    export WINE=`which wine`
 fi
 
 ## Launcher Download
