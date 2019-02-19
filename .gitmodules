@@ -43,9 +43,6 @@
 [submodule "vimconf/bundle/snipmate-snippets"]
 	path = vimconf/bundle/snipmate-snippets
 	url = https://github.com/honza/snipmate-snippets.git
-[submodule "vimconf/bundle/syntastic"]
-	path = vimconf/bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
 [submodule "luakit/plugins"]
 	path = luakit/plugins
 	url = https://github.com/mason-larobina/luakit-plugins.git
@@ -73,12 +70,6 @@
 [submodule "vimconf/bundle/endwise"]
 	path = vimconf/bundle/endwise
 	url = https://github.com/tpope/vim-endwise
-[submodule "vimconf/bundle/ruby-minitest"]
-	path = vimconf/bundle/ruby-minitest
-	url = https://github.com/sunaku/vim-ruby-minitest.git
-[submodule "vimconf/bundle/tabular"]
-	path = vimconf/bundle/tabular
-	url = https://github.com/godlygeek/tabular.git
 [submodule "vimconf/bundle/hasksyn"]
 	path = vimconf/bundle/hasksyn
 	url = git://github.com/travitch/hasksyn.git
@@ -88,9 +79,6 @@
 [submodule "vimconf/bundle/surround"]
 	path = vimconf/bundle/surround
 	url = https://github.com/tpope/vim-surround.git
-[submodule "vimconf/bundle/switch"]
-	path = vimconf/bundle/switch
-	url = https://github.com/AndrewRadev/switch.vim
 [submodule "vimconf/bundle/base16"]
 	path = vimconf/bundle/base16
 	url = https://github.com/chriskempson/base16-vim.git
@@ -115,9 +103,6 @@
 [submodule "vimconf/bundle/conky-syntax"]
 	path = vimconf/bundle/conky-syntax
 	url = https://github.com/smancill/conky-syntax.vim
-[submodule "vimconf/bundle/vim-jsx"]
-	path = vimconf/bundle/vim-jsx
-	url = https://github.com/mxw/vim-jsx
 [submodule "vimconf/bundle/javascript"]
 	path = vimconf/bundle/javascript
 	url = https://github.com/pangloss/vim-javascript
@@ -136,9 +121,6 @@
 [submodule "vimconf/bundle/tmux-navigator"]
 	path = vimconf/bundle/tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator.git
-[submodule "vimconf/bundle/slimv"]
-	path = vimconf/bundle/slimv
-	url = https://github.com/kovisoft/slimv.git
 [submodule "vimconf/bundle/racket"]
 	path = vimconf/bundle/racket
 	url = https://github.com/wlangstroth/vim-racket
@@ -151,9 +133,6 @@
 [submodule "vimconf/bundle/indentLine"]
 	path = vimconf/bundle/indentLine
 	url = https://github.com/Yggdroot/indentLine
-[submodule "vimconf/bundle/vimoutliner"]
-	path = vimconf/bundle/vimoutliner
-	url = https://github.com/vimoutliner/vimoutliner.git
 [submodule "vimconf/bundle/pandoc"]
 	path = vimconf/bundle/pandoc
 	url = https://github.com/vim-pandoc/vim-pandoc.git
