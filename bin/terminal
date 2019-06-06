@@ -1,8 +1,65 @@
-#!/bin/fish
-# The urxvt daemon seems to be crashing a lot...
-urxvtc $argv
-if test $status -eq 2
-	urxvtd -q -o -f
-	urxvtc $argv
-end
-# exec urxvt "$@"
+#!/usr/bin/env zsh
+
+##
+# Set $terminal to one of:
+#   * urxvt
+#   * st
+#   * termite
+#   * alacritty
+terminal=urxvt
+
+##
+# Set this to prefix all execution arguments.
+# MUST be an array
+# For example, set it to `zsh -ic` to run commands inside a zsh shell
+precmd=(zsh -ic)
+
+##
+# `terminal chat weechat`
+#   => `urxvtc -name chat -e weechat`
+#   => `termite --name=chat -- weechat`
+#   => `st -n chat -e weechat`
+#   => `alacritty -t chat -e weechat`
+declare -a args
+case $terminal in
+  st)
+    if [[ ! -z $1 ]]; then
+      args+=(-n "$1"); shift
+      args+=(-e "${precmd[@]}" "$*")
+    fi
+
+    exec st "${args[@]}"
+    ;;
+
+  urxvt)
+    if [[ ! -z $1 ]]; then
+      args+=(-name "$1"); shift
+      args+=(-e "${precmd[@]}" "$*")
+    fi
+
+    pgrep -c urxvtd || urxvtd -q -o -f
+    exec urxvtc "${args[@]}"
+
+    ;;
+
+  termite)
+    if [[ ! -z $1 ]]; then
+      args+=("--name=$1"); shift
+      args+=("--" "${precmd[@]}" "$*")
+    fi
+
+    exec termite "${args[@]}"
+    ;;
+
+  alacritty)
+    if [[ ! -z $1 ]]; then
+      args+=("--title $1"): shift
+      args+=(-e "${precmd[@]}" "$*")
+    fi
+
+    exec alacritty "${args[@]}"
+    ;;
+  *)
+    exit 1
+    ;;
+esac

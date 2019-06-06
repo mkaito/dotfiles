@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+# Check that we have "modern" getopt
+# /usr/bin/getopt --test || true > /dev/null
+# if [[ $? -ne 4 ]]; then
+#     echo "Your getopt version is non-compliant. Please install enhanced getopt."
+#     exit 1
+# fi
+
+# Strict mode (after getopt check!)
+set -eEu -o pipefail
+IFS=$'\n\t'
+
+# OPTIONS=hm:t:vf
+# LONG_OPTIONS=help,move:,title:,verbose,force
+# PARSED_OPTIONS=$(/usr/bin/getopt --options=$OPTIONS --longoptions=$LONG_OPTIONS --name "$0" -- "$@")
+# # shellcheck disable=SC2181
+# [[ $? -ne 0 ]] && exit 2
+# eval set -- "$PARSED_OPTIONS"
+
+# ## Process arguments
+# while true; do
+#     case "$1" in
+#         -h|--help)
+#             cat<<-EOF
+#             Usage:
+#                 $0 [options] <files>
+
+#             Options:
+#                 -h|--help             Show help
+#                 -m|--move <dest>      Move files to <dest> when done
+#                 -t|--title <title>    Define base title for output files
+#                 -v|--verbose          Trace execution
+#                 -f|--force            Overwrite output files
+# 						EOF
+#             shift
+#             ;;
+#         -m|--move)
+#             MOVE="$2"
+#             shift 2
+#             ;;
+#         -t|--title)
+#             TITLE="$2"
+#             shift 2
+#             ;;
+#         -v|--verbose)
+#             set -x
+#             shift
+#             ;;
+#         -f|--force)
+#             FORCE=1
+#             shift
+#             ;;
+#         *)
+#             break
+#             ;;
+#     esac
+# done
+
+function reencode_file() {
+    if [[ ! -f "$1" ]]; then
+        echo "Input file does not exist: $1"
+        exit 1
+    fi
+
+    local infile outfile outfolder outpath outstring;
+    infile=$(basename "$1")
+    outfile="${TITLE:-${infile%.*}}.recode.mp4"
+    outfolder="${MOVE:-$(dirname "$1")}"
+    outpath="$outfolder/$outfile"
+
+    if [[ -f "$outpath" ]]; then
+        if [[ "${FORCE:-0}" == 1 ]]; then
+            rm -rf "$outpath"
+        else
+            echo File already exists: "$outfile"
+            exit 1
+        fi
+    fi
+
+    # mpv "$1" \
+    #   -ovc libx264 -oac=libvorbis -oacopts qscale=3 \
+    #   -ovcopts preset=fast,crf=22 \
+    #   -o "$outpath"
+
+    # Problem: bakes hardsubs OVER softsubs. Need to remove softsubs.
+    # Problem: subtitles filter doesn't like spaces in file name. Move file to tmp first.
+    ffmpeg -threads 0 \
+           -i "$1" \
+           -c:v libx264 -crf 19 -preset fast -tune stillimage \
+           -c:a aac -q:a 2 -ac 2 -strict -2 \
+           "$outpath"
+
+    # HW Enc
+    # ffmpeg -threads 0 -vaapi_device /dev/dri/renderD128 \
+    #        -i "$1" \
+    #        -vf 'format=nv12,hwupload' \
+    #        -c:v h264_vaapi -compression_level 2 \
+    #        -c:a aac -q:a 2 -ac 2 -strict -2 \
+    #        "$outpath"
+
+    ## Include subtitles
+    # -vf "subtitles=$1"
+
+    ## To select specific streams. First video, then audio.
+    # -map 0:0 -map 0:1
+
+    ## For TV
+    # -pix_fmt yuv420p
+
+    ## Resize
+    # -vf scale=720:-1
+
+    outstring="Done: ${infile} -> ${outfile}"
+    echo "$outstring"
+}
+
+while [[ -n "${1:-}" ]]; do
+    reencode_file "$1"
+    shift
+done

@@ -17,11 +17,6 @@
       ))
 
 ;; I don't want no utf-8 bullets
-(setq my-org-excluded-packages
-      '(
-        org-bullets
-        ))
-
 (defun my-org/init-noflet ()
   "Initialize my package"
   (use-package noflet))

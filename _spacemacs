@@ -7,43 +7,50 @@
   (setq-default
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("/home/chris/dev/dotfiles/spacemacs-layers/")
+   dotspacemacs-configuration-layer-path '("~/dev/dotfiles/spacemacs-layers/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     php
      ;; auto-completion
-     c-c++
+     syntax-checking
+     my-eshell
+     ;; c-c++
      emacs-lisp
      evil-commentary
      finance
      git
-     haskell
+     ;; haskell
+     ;; elm
      html
      javascript
+     pandoc
      markdown
-     ;; my-eshell
      org
      my-org
-     python
+     ;; python
      ruby
-     rust
+     ;; rust
      lua
+     vinegar
+     yaml
+     ;; go
+     ;; dart
      ;; base16-devel
      (shell :variables
             shell-default-shell 'eshell
-            shell-default-height 45)
+            shell-default-height 35)
      shell-scripts
-     syntax-checking
      nevermore
-        )
+     )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(ruby-guard xclip evil-vimish-fold)
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(emmet-mode)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
@@ -74,16 +81,16 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-grayscale-dark base16-chalk-dark base16-tomorrow-dark)
+   dotspacemacs-themes '(wombat)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Terminess Powerline"
-                               :size 13
+   dotspacemacs-default-font '("Hack"
+                               :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -102,16 +109,16 @@ before layers configuration."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; Default value is `cache'.
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location 'nil
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f) is replaced.
-   dotspacemacs-use-ido nil
+   dotspacemacs-use-ido t
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content.
    dotspacemacs-enable-paste-micro-state t
    ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
    ;; the commands bound to the current keystrokes.
-   dotspacemacs-guide-key-delay 0.4
+   dotspacemacs-guide-key-delay 0.6
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil ;; to boost the loading time.
@@ -129,11 +136,11 @@ before layers configuration."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 100
    ;; If non nil unicode symbols are displayed in the mode line.
    dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
@@ -144,7 +151,7 @@ before layers configuration."
    dotspacemacs-smartparens-strict-mode nil
    ;; Select a scope to highlight delimiters. Possible value is `all',
    ;; `current' or `nil'. Default is `all'
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters 'current
    ;; If non nil advises quit functions to keep server open when quitting.
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
@@ -156,8 +163,13 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
 
    ruby-version-manager 'rbenv
+
+   ;; Disable automatic version checks on startup
+   ;; dotspacemacs-check-for-update nil
+
+   ;; do not use https to contact elpa repos
+   dotspacemacs-elpa-https nil
    )
-  ;; User initialization goes here
   )
 
 (defun dotspacemacs/user-config ()
@@ -169,18 +181,42 @@ layers configuration."
   (global-hl-line-mode -1)
   (setq powerline-default-separator 'nil)
   (fringe-mode 0)
-  (setq scheme-program-name "csi")
 
-  ;; Make C-l clear an eshell buffer, like it does in Bash/ZSH
   (defun eshell-clear-buffer ()
     "Clear terminal"
     (interactive)
     (let ((inhibit-read-only t))
       (erase-buffer)
       (eshell-send-input)))
+
   (add-hook 'eshell-mode-hook
             '(lambda()
-               (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+               (setenv "NODE_NO_READLINE" "1")
+               (evil-define-key 'insert eshell-mode-map
+
+                 ;; Make C-d quit the shell in insert mode
+                 (kbd "C-d") 'eshell-life-is-too-much
+
+                 ;; Window navigation in insert state
+                 ;; (kbd "C-h") 'evil-window-left
+                 (kbd "C-j") 'evil-window-down
+                 (kbd "C-k") 'evil-window-up
+                 ;; (kbd "C-l") 'evil-window-right
+
+                 ;; C-l to clear the buffer
+                 (kbd "C-l") 'eshell-clear-buffer
+                 )
+
+               ;; Fix npm output in eshell
+               (add-to-list 'eshell-preoutput-filter-functions
+                            (lambda (output)
+                              (replace-regexp-in-string "\\[?25h" "" output)
+                              (replace-regexp-in-string "\\[1A" "" output)
+                              (replace-regexp-in-string "\\[?25l" "" output)
+                              (replace-regexp-in-string "\\[0G" "" output)))
+               )
+            )
+
 
   ;; Put eshell files where I can keep them
   (setq eshell-directory-name (concat user-home-directory "dev/dotfiles/eshell"))
@@ -198,37 +234,56 @@ layers configuration."
       (add-to-list 'recentf-exclude "mutt-[[:alnum:]]+-[[:digit:]]\\{4\\}-[[:digit:]]\\{5\\}-[[:digit:]]\\{20\\}")
       ))
 
-  ;; I miss vim-vinegar
-  (define-key evil-normal-state-map (kbd "-") 'dired-jump)
-  (eval-after-load 'dired
-    '(define-key dired-mode-map (kbd "-") 'dired-jump))
-
   ;; Edit symlinks in-place rather than following them
   (setq vc-follow-symlinks nil)
 
   ;; Pop shell is nice, but sometimes I want a full screen shell
   (evil-leader/set-key "ass" 'eshell)
-
-  ;; Mail aliases to switch between identities
-  ;; Not actually sure this works. Maybe abbrv better?
-  (define-mail-alias "mkaito" "Michishige Kaito <me@mkaito.com>")
-  (define-mail-alias "chris" "Christian Höppner <chris@mkaito.com>")
+  (defun eshell-project-root ()
+    (interactive)
+    (if (projectile-project-p)
+        (let* ((default-directory (projectile-project-root))
+               (eshell-buffer-name (concat "*eshell: " (file-name-nondirectory (directory-file-name (projectile-project-root))) "*")))
+          (eshell))
+      (let* ((default-directory (if (buffer-file-name)
+                                    (file-name-directory (buffer-file-name))
+                                  (file-name-directory user-home-directory)))
+             (eshell-buffer-name (concat "*eshell: " (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name)))) "*")))
+        (eshell))))
+  (global-set-key [f12] 'eshell-project-root)
 
   ;; Easier window navigation
   (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
   (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
   (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
-)
 
+  ;; Let me paste over regions
+  (delete-selection-mode 1)
+
+  ;; Disable parenthesis highlighting
+  (global-highlight-parentheses-mode 0)
+
+  ;; Configure spaceline
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-modified
+        spaceline-buffer-modified-p nil
+        spaceline-buffer-size-p nil
+        spaceline-global-p nil
+        spaceline-line-p nil
+        spaceline-column-p nil
+        spaceline-line-column-p t
+        spaceline-hud-p nil
+        spaceline-buffer-encoding-abbrev-p nil
+        spaceline-buffer-encoding-p nil)
+
+  ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  ;; Vim-like code folding
+  (evil-vimish-fold-mode 1)
+
+)
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(sp-show-pair-match-face ((t (:background "gray32")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -239,15 +294,31 @@ layers configuration."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(browse-url-browser-function (quote browse-url-generic))
+ '(browse-url-generic-program "~/dev/bin/browser")
+ '(evil-want-Y-yank-to-eol nil)
+ '(js2-skip-preprocessor-directives t)
  '(ledger-reports
    (quote
-    (("bal" "ledger -f %(ledger-file) bal bienes")
-     ("reg" "ledger -f %(ledger-file) reg")
-     ("payee" "ledger -f %(ledger-file) reg @%(payee)")
-     ("account" "ledger -f %(ledger-file) reg %(account)"))))
- '(org-agenda-files
+    (("gastos" "ledger bal gastos")
+     ("balance de bienes al dia" "ledger bal bienes --end tomorrow")
+     ("balance de bienes" "ledger -f /home/chris/media/sync/ledger/personal.ledger bal bienes")
+     ("balance de gastos mes actual" "ledger bal gastos -b \"this month\""))))
+ '(org-agenda-files (quote ("~/notes/")) t)
+ '(package-selected-packages
    (quote
-    ("/home/chris/notes/superguay.org" "/home/chris/notes/BuJo.org" "/home/chris/notes/Calendario.org" "/home/chris/notes/Everquest 2.org")))
+    (php-mode undo-tree ledger-mode flycheck-ledger evil-vimish-fold vimish-fold f base16-tomorrow-theme base16-tomorrow-dark-theme yaml-mode xterm-color xclip ws-butler window-numbering web-mode web-beautify volatile-highlights vi-tilde-fringe toc-org tern tagedit spacemacs-theme spaceline powerline smooth-scrolling smeargle slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-guard rubocop rspec-mode robe restart-emacs rbenv rainbow-delimiters popwin persp-mode pcre2el paradox spinner pandoc-mode hydra page-break-lines ox-pandoc ht orgit org-repo-todo org-present org-pomodoro alert log4e gntp org-plus-contrib open-junk-file notmuch noflet neotree multi-term move-text mmm-mode markdown-toc markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum linum-relative leuven-theme less-css-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors s js2-mode js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-ag haml-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md flycheck-pos-tip pos-tip flycheck pkg-info epl flx-ido flx fish-mode fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-commentary evil-args evil-anzu anzu eval-sexp-fu highlight eshell-prompt-extras esh-help elisp-slime-nav define-word coffee-mode clean-aindent-mode chruby bundler inf-ruby buffer-move bracketed-paste auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build use-package which-key bind-key bind-map evil base16-theme)))
  '(paradox-github-token t)
- '(ring-bell-function (quote ignore) t)
- '(safe-local-variable-values (quote ((ispell-dictionary . "spanish")))))
+ '(ring-bell-function (quote ignore))
+ '(safe-local-variable-values
+   (quote
+    ((ispell-local-dictionary . spanish)
+     (org-archive-location . "archive.org::* %s")
+     (ispell-dictionary . "spanish"))))
+ '(sp-highlight-pair-overlay nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(notmuch-search-unread-face ((t (:weight ultra-bold)))))

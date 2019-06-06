@@ -1,5 +1,5 @@
 [global]
-    font = Ubuntu Mono 8
+    font = Iosevka 12
 
     # allow a small subset of html markup:
     # <b>bold</b>
@@ -9,7 +9,7 @@
     #
     # for a complete reference see http://developer.gnome.org/pango/stable/PangoMarkupFormat.html
     # If markup is not allowed, those tags will be stripped out of the message.
-    allow_markup = yes
+    markup = yes
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -59,7 +59,7 @@
     # right side of the screen.  Y is measured from the top and down respectevly.
     # The width can be negative. In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x3-20-20"
+    geometry = "800x4-20+20"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
@@ -71,7 +71,7 @@
     idle_threshold = 120
 
     # Which monitor should the notifications be displayed on.
-    monitor = 1
+    monitor = 2
 
     # Display notification on focused monitor. Possible modes are:
     # mouse: follow mouse pointer
@@ -96,7 +96,7 @@
 
     # Draw a line of 'separatpr_height' pixel height between two notifications.
     # Set to 0 to disable
-    separator_height = 2
+    separator_height = 1
 
     # padding between text and separator
     padding = 10
@@ -123,9 +123,8 @@
     # browser for opening urls in context menu
     browser = /usr/bin/firefox
 
-[frame]
-    width = 3
-    color = "#aaaaaa"
+    frame_width = 3
+    frame_color = "#aaaaaa"
 
 [shortcuts]
     # shortcuts are specified as [modifier+][modifier+]...key
@@ -149,18 +148,19 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the '#' and following  would be interpreted as a comment.
-    background = "#222222"
+    background = "#2d2d2d"
     foreground = "#888888"
     timeout = 10
 
 [urgency_normal]
-    background = "#285577"
+    background = "#2d2d2d"
     foreground = "#ffffff"
     timeout = 10
 
 [urgency_critical]
-    background = "#900000"
+    background = "#2d2d2d"
     foreground = "#ffffff"
+    frame_color = "#ff0000"
     timeout = 0
 
 
@@ -215,3 +215,7 @@
 #    summary = *twitter.com*
 #    urgency = normal
 #
+
+# Local Variables:
+# mode: conf
+# End:

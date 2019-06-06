@@ -1,0 +1,28 @@
+snippet mk "mkOption"
+$1 = mkOption \{
+	type = types.$2;
+	default = $3;
+	description = ''
+		$0
+	'';
+\};
+endsnippet
+
+snippet s "{};"
+{
+	$0
+};
+endsnippet
+
+snippet '' "'' '';''"
+''
+	$0
+'';
+endsnippet
+
+snippet service "systemd.services."
+systemd.services.$1 = {
+	wantedBy = [ "multi-user.target" ];
+	$0
+};
+endsnippet

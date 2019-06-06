@@ -1,0 +1,4 @@
+#!/bin/bash
+# Sleep until we can reach the server
+while ! ping -q -c 1 v1-0-0-server.tarsnap.com &> /dev/null; do sleep 3; done
+/usr/bin/tarsnap -c -f "$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)" "$HOME"

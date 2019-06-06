@@ -1,11 +1,9 @@
-#!/bin/bash
-if [[ -f $HOME/.wine-versions/eve-testing/bin/wine ]]; then
-    export WINE=$HOME/.wine-versions/eve-testing/bin/wine
-elif [[ -f $HOME/.wine-versions/eve/bin/wine ]]; then
-    export WINE=$HOME/.wine-versions/eve/bin/wine
-else
-    export WINE=`which wine`
-fi
+#!/usr/bin/env bash
+# WINE="$(command -v wine)"
+# export WINE
+
+export WINE='/opt/wine-tkg-opt-git/bin/wine'
+export WINEESYNC=1
 
 ## Launcher Download
 ##
@@ -22,28 +20,27 @@ fi
 ## 100 52.2M  100 52.2M    0     0  3642k      0  0:00:14  0:00:14 --:--:-- 3759k
 ## 7f65935614254ad3129306bb1f7163ca  -
 
-## Instances
+## Settings
 GAME_INSTANCES=2
-
-## Launcher
-INSTALLER_URL="http://binaries.eveonline.com/EveLauncher-1045952.exe"
-INSTALLER_MD5='7f65935614254ad3129306bb1f7163ca'
-
-## File paths
-LAUNCHER="C://EVE/launcher/evelauncher.exe"
-GAMECLIENT="C://users/Public/Application Data/CCP/EVE/SharedCache/tq/bin/exefile.exe"
-DESKTOP_SIZE="1920x1058"
+DESKTOP_SIZE="3840x2117"
 
 ## Wine settings
-export WINEARCH=win32
 export WINEPREFIX="$HOME/.local/share/wineprefixes/eve"
 export WINEDEBUG=-all
 
-export LD_PRELOAD="libpthread.so.0 libGL.so.1"
-export __GL_THREADED_OPTIMISATIONS=1
+## Launcher
+INSTALLER_URL='http://binaries.eveonline.com/EveLauncher-1225328.exe'
+INSTALLER_MD5='97d8604c8ec55a6a0928f28a43b4151e'
 
-export __GL_SYNC_TO_VBLANK=1
-export __GL_SYNC_DISPLAY_DEVICE="DFP-0"
+## File paths
+LAUNCHER="C://EVE/launcher/evelauncher.exe"
+PYFA="C://Program Files/pyfa/pyfa.exe"
+EVERNUS="C:\Program Files\Evernus\x86\evernus.exe"
+
+launch_eve() {
+  num="${1:-1}"
+  pgrep -cf "/desktop=EVE$num" >/dev/null || nohup wine explorer "/desktop=EVE$num,$DESKTOP_SIZE" "$LAUNCHER" &
+}
 
 ## Dragons be beyond this line
 case "$1" in
@@ -51,15 +48,16 @@ case "$1" in
         INSTALLER="$HOME/.cache/$(basename $INSTALLER_URL)"
 
         ## Do not overwrite prefix. Run reset first.
-        if [[ -d "$WINEPREFIX" ]]; then
-            echo "Destination $WINEPREFIX exists. Aborting. Run $(basename $0) reset."
-            exit 1
-        fi
+        # if [[ -d "$WINEPREFIX" ]]; then
+        #     echo "Destination $WINEPREFIX exists. Aborting. Run $(basename $0) reset."
+        #     exit 1
+        # fi
 
-        winetricks corefonts d3dx9_36 vcrun2005 vcrun2008 vcrun2010 d3d11=disabled
+        # winetricks corefonts d3dx9_36 vcrun2005 vcrun2008 vcrun2010 d3d11=disabled
+        winetricks -q dxvk corefonts
 
         ## "Reboot" wine
-        ${WINE%/*}/wineboot
+        # wineserver -w
 
         if [[ ! -f "$INSTALLER" ]]; then
             curl -o "$INSTALLER" "$INSTALLER_URL"
@@ -68,7 +66,7 @@ case "$1" in
         if [[ -f "$INSTALLER" ]]; then
             MD5=$(md5sum "$INSTALLER")
             if [[ "$MD5" = "$INSTALLER_MD5  $INSTALLER" ]]; then
-                "$WINE" msiexec /i "$INSTALLER"
+                "$WINE" "$INSTALLER"
             else
                 echo "Installer did not pass md5 check. Removing and downloading again."
 
@@ -76,7 +74,7 @@ case "$1" in
                 curl -o "$INSTALLER" "$INSTALLER_URL"
                 MD5=$(md5sum "$INSTALLER")
                 if [[ "$MD5" = "$INSTALLER_MD5  $INSTALLER" ]]; then
-                    "$WINE" msiexec /i "$INSTALLER"
+                    "$WINE" "$INSTALLER"
                 else
                     echo "Downloaded installer again, still did not pass md5 check. Aborting."
                 fi
@@ -111,7 +109,7 @@ case "$1" in
 
     winetricks)
         shift
-        exec winetricks $@
+        exec winetricks "$@"
         ;;
 
     repair)
@@ -120,54 +118,58 @@ case "$1" in
 
     ## Kill everything, in case wine hits a snag.
     kill)
+        # shellcheck disable=SC2009
         ps ux | grep -v grep | grep -v "eve kill" | grep -v "browser" | \
             grep -i "windows\|wineserver\|exefile\|launcher\|awesomium\|pyfa\|gtkevemon\|winetricks\|winedbg\|explorer.exe" | \
             awk '{print $2}' | xargs kill
         ;;
 
-    launch)
+     launch)
         shift
 
         ## If used as `$(basename) launch all`, launch as many instances as
-        ## defined at the top, pyfa, gtkevemon, and teamspeak3 (because I keep
-        ## forgetting to launch ts3 and the corp gets angry).
-        if [[ "$1" = "all" ]]; then
-            "$WINE" explorer /desktop=EVE1,${DESKTOP_SIZE} "$GAMECLIENT" >/dev/null &!
+        ## defined at the top
+        if [[ $1 = all ]]; then
+          C=1
+          while [[ $C -le $GAME_INSTANCES ]]; do
+            launch_eve $C
+            [[ $C = 1 ]] && sleep 15
+            ((C++))
+          done
 
-            C=2
-            while [[ "$C" -le "$GAME_INSTANCES" ]]; do
-                pgrep -cf "/desktop=EVE${C}" || "$WINE" explorer /desktop=EVE${C},${DESKTOP_SIZE} "$GAMECLIENT" >/dev/null &!
-                ((C++))
-            done
-
-            pgrep -c pyfa >/dev/null || /usr/bin/pyfa >/dev/null &!
-            pgrep -c gtkevemon >/dev/null || gtkevemon >/dev/null &!
-            pgrep -c teamspeak3 >/dev/null || teamspeak3 >/dev/null &!
-        # fi
+          pgrep -c pyfa >/dev/null || wine "$PYFA" & disown
+          pgrep -c evernus >/dev/null || wine "$EVERNUS" & disown
         else
 
-            ## Launch an instance of the game.
-            ##
-            ## Usage: `$(basename) launch <number>`
-            ##
-            ## Where <number> should be an integer between 1 and infinity. It's
-            ## just a number to tag the virtual desktop for your window managing
-            ## convenience.
-            ##
-            ## <number> will default to 1.
+          ## Launch an instance of the game.
+          ##
+          ## Usage: `$(basename) launch <number>`
+          ##
+          ## Where <number> should be an integer between 1 and infinity. It's
+          ## just a number to tag the virtual desktop for your window managing
+          ## convenience.
+          ##
+          ## <number> will default to 1.
 
-            DESKTOP=EVE${1:-1},${DESKTOP_SIZE}
-            exec "$WINE" explorer /desktop=${DESKTOP} "$GAMECLIENT" >/dev/null &!
+          launch_eve "$1"
         fi
         ;;
 
     run)
         shift
-        exec "$WINE" "$@"
+        exec wine "$@"
+        ;;
+
+    pyfa)
+        exec wine "$PYFA"
+        ;;
+
+    evernus)
+        exec wine "$EVERNUS"
         ;;
 
     ## TODO: Launch all clients by defaults, move launcher to `eve launcher` or something.
     *)
-        exec "$WINE" "$LAUNCHER"
+        launch_eve
         ;;
 esac

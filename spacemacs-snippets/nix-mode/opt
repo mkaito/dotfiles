@@ -1,0 +1,9 @@
+# name: mkOption {};
+# --
+$1 = mkOption {
+  type = types.$2;
+  default = $3;
+  description = ''
+    $0
+  '';
+};

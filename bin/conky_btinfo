@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+class Device
+  @@icon = "\uF025"
+
+  def initialize(mac)
+    @mac = mac
+  end
+
+  def raw_info
+    @raw = `bluetoothctl info #{@mac}`
+  end
+
+  def name
+    @name ||= raw_info.match(/\s+Name: (.*)$/) { |m| m.captures.first }
+  end
+
+  def connected?
+    raw_info.match(/\s+Connected: (.*)$/) { |m| m.captures.first } == "yes"
+  end
+
+  def icon
+    @@icon
+  end
+end
+
+# TODO: Read device MAC from args.
+# TODO: Print out icons for connection status.
+# TODO: Maybe respond to clicks to connect/disconnect.

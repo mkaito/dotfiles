@@ -1,10 +1,15 @@
---- 
-:benchmark: false
-:verbose: true
+---
+benchmark: false
+verbose: true
 gem: --no-rdoc
-:update_sources: true
-:sources: 
+update_sources: true
+sources:
 - https://rubygems.org
-:backtrace: false
-:bulk_threshold: 1000
+backtrace: false
+bulk_threshold: 1000
+
 # vim:ft=yaml
+
+;; Local Variables:
+;; mode: yaml
+;; End:

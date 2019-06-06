@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+VirtualBox --comment "win10" --startvm "67ca868d-924e-46ea-8067-ce0bb6ee9eac"

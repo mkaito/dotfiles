@@ -1,0 +1,4 @@
+#!/bin/zsh
+# Run cataclysm inside urxvt, but disable Intensity Styles, lest some things will be invisible.
+# Set the application name for window manager tagging.
+exec urxvtc -is -name cataclysm -e /usr/bin/cataclysm

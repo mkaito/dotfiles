@@ -1,153 +1,149 @@
 # -*- mode: sh -*-
 source ~/dev/dotfiles/zsh/_android.sh
-
-##
-# Ultra-fast navigation to any folder in my development tree.
-# TODO: Tab completion, probably from a cache of all unique folder names in the tree.
-function d() {
-    for dir in ~/dev/**/*$1; do
-        [[ -d "$dir" ]] && cd "$dir" && break
-    done
-    # find ~/dev -type d | grep -v ".*\/\..*" | xargs -n1 basename | sort -u >! ~/.devcache
-}
-
-alias p='pass show'
-# alias pc='pass show -c'
+source ~/dev/nix/mkaito/factorio_helpers.sh
+source ~/dev/dotfiles/zsh/nix.sh
 
 alias ss='sudo systemctl'
 alias ssu='systemctl --user'
+alias suspend='ss suspend'
+alias jc='sudo journalctl'
+alias jcu='journalctl --user'
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
 alias timestamp='date +%s'
 alias ts=timestamp
 
-alias tt=transmission-remote
-alias ttl='tt -l'
+# alias tt=transmission-remote
+# alias ttl='tt -l'
 
 function mkcd {
-	mkdir -p $1
-	cd $1
+  command mkdir -p "$1"
+  cd "$1"
 }
 
-function tts {
-	local torrents
+alias mkdir='mkdir -p'
 
-	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-	if [[ ! -t 0 ]]; then
-		torrents=()
+# function tts {
+# 	local torrents
 
-		while read line; do
-			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-		done
+# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+# 	if [[ ! -t 0 ]]; then
+# 		torrents=()
 
-		torrents=${(j:,:)torrents}
-		echo "Starting torrents: ${torrents}."
-	elif [[ ! -z "$1" ]]; then
-		torrents="$1"
-	fi
+# 		while read line; do
+# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+# 		done
 
-	tt -t${torrents:-all} -s
-}
+# 		torrents=${(j:,:)torrents}
+# 		echo "Starting torrents: ${torrents}."
+# 	elif [[ ! -z "$1" ]]; then
+# 		torrents="$1"
+# 	fi
 
-function ttS {
-	local torrents
+# 	tt -t${torrents:-all} -s
+# }
 
-	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-	if [[ ! -t 0 ]]; then
-		torrents=()
+# function ttS {
+# 	local torrents
 
-		while read line; do
-			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-		done
+# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+# 	if [[ ! -t 0 ]]; then
+# 		torrents=()
 
-		torrents=${(j:,:)torrents}
-		echo "Stopping torrents: ${torrents}."
-	elif [[ ! -z "$1" ]]; then
-		torrents="$1"
-	fi
+# 		while read line; do
+# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+# 		done
 
-	tt -t${torrents:-all} -S ${2}
-}
+# 		torrents=${(j:,:)torrents}
+# 		echo "Stopping torrents: ${torrents}."
+# 	elif [[ ! -z "$1" ]]; then
+# 		torrents="$1"
+# 	fi
 
-function ttr {
-  # ttf finished | gawk '{gsub(/[^[:digit:]]/, "", $1); print $1}' |
-  # xargs -n 1 -I'{}' transmission-remote --torrent '{}' --remove
-	local torrents
+# 	tt -t${torrents:-all} -S ${2}
+# }
 
-	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-	if [[ ! -t 0 ]]; then
-		torrents=()
+# function ttr {
+#   # ttf finished | gawk '{gsub(/[^[:digit:]]/, "", $1); print $1}' |
+#   # xargs -n 1 -I'{}' transmission-remote --torrent '{}' --remove
+# 	local torrents
 
-		while read line; do
-			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-		done
+# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+# 	if [[ ! -t 0 ]]; then
+# 		torrents=()
 
-		torrents=${(j:,:)torrents}
-		echo "Removing torrents: ${torrents}."
-	elif [[ ! -z "$1" ]]; then
-		torrents="$1"
-	fi
-	[[ -z "$torrents" ]] && echo "Won't remove all torrents!" && return 2
+# 		while read line; do
+# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+# 		done
 
-	tt -t${torrents} -r
-}
+# 		torrents=${(j:,:)torrents}
+# 		echo "Removing torrents: ${torrents}."
+# 	elif [[ ! -z "$1" ]]; then
+# 		torrents="$1"
+# 	fi
+# 	[[ -z "$torrents" ]] && echo "Won't remove all torrents!" && return 2
 
-function ttm {
-	local torrents
-	local target
+# 	tt -t${torrents} -r
+# }
 
-	if [[ ! -t 0 ]]; then
-		# We're being fed on stdin
+# function ttm {
+# 	local torrents
+# 	local target
 
-		torrents=()
+# 	if [[ ! -t 0 ]]; then
+# 		# We're being fed on stdin
 
-		while read line; do
-			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-		done
+# 		torrents=()
 
-		torrents=${(j:,:)torrents}
-		target=$(realpath "$1")
-		echo "Moving torrents: ${torrents} -> ${target}."
-	elif [[ ! -z "$1" ]]; then
-		torrents="$1"
-		target=$(realpath "$2")
-	fi
+# 		while read line; do
+# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+# 		done
 
-	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
-	[[ -z "$target" ]] && echo "Please specify a target folder" && return 2
+# 		torrents=${(j:,:)torrents}
+# 		target=$(realpath "$1")
+# 		echo "Moving torrents: ${torrents} -> ${target}."
+# 	elif [[ ! -z "$1" ]]; then
+# 		torrents="$1"
+# 		target=$(realpath "$2")
+# 	fi
 
-	tt "-t${torrents}" --move "${target}"
-}
+# 	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
+# 	[[ -z "$target" ]] && echo "Please specify a target folder" && return 2
 
-function ttf {
-	local pattern='*'
-	[[ ! -z "$1" ]] && pattern="$1"
-	ttl | egrep -i "$pattern"
-}
+# 	tt "-t${torrents}" --move "${target}"
+# }
 
-function tta {
-	local args
-	set -A args
-	[[ ! -z "$1" ]] && args+=("-a" "$1")
-	[[ ! -z "$2" ]] && args+=("-w" "$(realpath $2)")
+# function ttf {
+# 	local pattern='*'
+# 	[[ ! -z "$1" ]] && pattern="$1"
+# 	ttl | egrep -i "$pattern"
+# }
 
-	tt "$args[@]"
-}
+# function tta {
+# 	local args
+# 	set -A args
+# 	[[ ! -z "$1" ]] && args+=("-a" "$1")
+# 	[[ ! -z "$2" ]] && args+=("-w" "$(realpath $2)")
+
+# 	tt "$args[@]"
+# }
 
 #alias yt="noglob clive -f best -c"
 #alias ytp="yt --exec 'mplayer %f; rm %f'"
 
 ## Twitch.tv livestreamer shortcut
 function ttv() {
-	livestreamer http://www.twitch.tv/$1 $2
+  local s="${1:-x5_pig}"
+  local q="${2:-best}"
+	streamlink -p mpv http://www.twitch.tv/"$s" "$q"
 }
 
-function remacs {
-	emacsclient -e "(kill-emacs)"
-	sleep 1
-	emacs --daemon
-}
+# function remacs {
+# 	emacsclient -e "(kill-emacs)"
+# 	sleep 1
+# 	emacs --daemon
+# }
 
 ## Serve $PWD with WEBrick
 function serve {
@@ -160,7 +156,7 @@ function serve {
 #alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
 
 # Github
-eval "$(hub alias -s)"
+eval "$(hub alias -s zsh)"
 
 # mplayer & youtube
 #alias m=mplayer;
@@ -168,69 +164,12 @@ eval "$(hub alias -s)"
 #	quvi -f best --exec 'mplayer -prefer-ipv4 %u' "$1"
 #}
 
-# Archive utilities
-function compress() {
-	if [[ ! -z "$1" ]]; then
-		fn="$1"
-		shift
-	else
-		echo "Please provide an archive name"
-		return 65
-	fi
-
-	# Process flags
-	while [[ $1 == -* ]]; do
-
-	done
-
-	if [[ -z "$1" ]]; then
-		echo "Please provide a list of files or directories to compress"
-		return 65
-	fi
-
-	case $fn in
-	*.tar.gz)       tar czf $fn $@                              ;;
-	*.tar.bz2)      tar cjf $fn $@                              ;;
-	*.zip | *.cbz)  zip -r $fn $@                               ;;
-	*.7z)           7z a -t7z -m0=lzma -mx=9 -mfb=64 $fn $@     ;;
-	*)              echo "Please provide a valid archive kind: *.tar.gz, *.tar.bz2, *.zip, *.cbz, *.7z"; return 65 ;;
-	esac
-}
-
-function extract() {
-	while [ ! -z "$1" ]; do
-		if [ -f "$1" ]; then
-			case "$1" in
-				*.tbz2 | *.tar.bz2) tar -xjf  "$1"      ;;
-				*.txz | *.tar.xz)   tar -xJf  "$1"      ;;
-				*.tgz | *.tar.gz)   tar -xzf  "$1"      ;;
-				*.tar | *.cbt)      tar -xf   "$1"      ;;
-				*.zip | *.cbz)      unzip      "$1"     ;;
-				*.rar | *.cbr)      unrar x    "$1"     ;;
-				*.arj)              unarj x    "$1"     ;;
-				*.ace)              unace x    "$1"     ;;
-				*.bz2)              bunzip2    "$1"     ;;
-				*.xz)               unxz       "$1"     ;;
-				*.gz)               gunzip     "$1"     ;;
-				*.7z)               7z x       "$1"     ;;
-				*.Z)                uncompress "$1"     ;;
-				*.gpg)       gpg2 -d "$1" | tar -xvzf - ;;
-				*) echo 'Error: I have no idea wtf you tried to feed me there.' ;;
-			esac
-		else
-			echo 'Error: "$1" is not a valid file for extraction'
-		fi
-
-		shift
-	done
-}
-
 # function calc () { awk "BEGIN { print $* }" }
 function calculate () { echo "$@" | bc -l ; }
 alias calc='noglob calculate'
 
 # Fix file and folder permissions recursively under .
-alias fixperm="find . -type d -exec chmod 755 {} \;; find . -type f -exec chmod 644 {} \;"
+alias fixperm="find . -type d -exec chmod 755 {} \; && find . -type f -exec chmod 644 {} \;"
 
 function currency() {
 	wget -qO- "http://www.google.com/finance/converter?a=$1&from=$2&to=$3&hl=es" |  sed '/res/!d;s/<[^>]*>//g';
@@ -245,14 +184,21 @@ function currency() {
 # alias ags='aptitude search'
 
 # Yaourt shorthands
-alias ya='yaourt'
-alias yas='ya -S'
-alias yass='ya -Ss'
-alias yasy='ya -Sy'
-alias yasyy='ya -Syy'
-alias yard='ya -Rd'
-alias yasyu='ya -Syu'
-alias yaqdt='ya -Qdt'
+# alias ya='yaourt'
+# alias yas='ya -S'
+# alias yass='ya -Ss'
+# alias yasy='ya -Sy'
+# alias yasyy='ya -Syy'
+# alias yard='ya -Rd'
+# alias yasyu='ya -Syu'
+# alias yaqdt='ya -Qdt'
+
+# Yay shorthands
+alias yas='yay -S'
+alias yass='yay -Ss'
+alias yasy='yay -Sy'
+alias yasyy='yay -Syy'
+alias yard='yay -Rcsu'
 
 # ls shorthands
 alias ls='ls -Fh --color=auto --group-directories-first'
@@ -264,30 +210,54 @@ alias lla='la -lh'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-# Turn the display off
-# alias lcdoff='xset dpms force off'
-
-# Set the keyboard up
-#alias setkb='setxkbmap es; xmodmap ~/.xmodmap'
-#alias setm='xset m 1/2 1; xinput --set-prop "pointer:Razer Razer Lachesis" "Device Accel Constant Deceleration" 2; xinput --set-prop "pointer:Razer Razer Lachesis" "Evdev Wheel Emulation Inertia" 15'
-
 # Coding facility aliases, mostly bundler related
-alias bjek="bundle exec jekyll --auto --server"
+alias bjek='bundle exec jekyll --auto --server'
 alias be='bundle exec'
 alias beu='be unicorn'
 alias ber='be rake'
 alias bec='be compass'
 alias becc='bec compile -c config/compass.rb'
 alias becw='bec watch -c config/compass.rb'
-#alias g='sudo gem'
-#alias gi='sudo gem install'
+alias crowdin='java -jar ~/dev/bin/crowdin-cli.jar'
+
+# Neovim
+alias vim='nvim'
 
 # Emacs
-alias e="emacsclient -n"
-alias ec="e -c"
-alias ect="emacsclient -nw"
+alias e='emacsclient -n'
+alias ec='e -c'
+alias ect='emacsclient -nw'
 # alias e='emacs'
 # alias ec=e
 # alias ect='emacs -nw'
+
+# Crypto helpers
+function clipencrypt() {
+  local -a recipients
+  while [[ ! -z $1 ]]; do
+    recipients+=( '-r' "$1" )
+    shift
+  done
+
+  xclip -o -selection clipboard | gpg -eao - "${(@)recipients}" | xclip -i -selection clipboard
+}
+
+alias ce=clipencrypt
+
+function beeper() {
+  local duration bleep
+  bleep="$HOME/documents/sc2/chime.mp3"
+  interval=$(( ${1:-25} - 1 ))
+
+  while true; do
+    mpv --quiet "$bleep"
+    sleep "$interval"
+  done
+}
+
+# Screen toggling
+
+alias ssingle='xrandr --output DisplayPort-1 --off'
+alias smulti='xrandr --output DisplayPort-1 --auto --pos 3840x0 --rotate right --output DisplayPort-0 --pos 0x890'
 
 # vim:ft=zsh

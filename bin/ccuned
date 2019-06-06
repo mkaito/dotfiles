@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec wine "C://users/Public/cmasmenos/ccUNED.exe"

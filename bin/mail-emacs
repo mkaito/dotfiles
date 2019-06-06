@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+exec emacsclient --create-frame --frame-parameters='(quote (name . "mail"))' -e '(notmuch-open-inbox)'

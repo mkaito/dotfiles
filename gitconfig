@@ -1,6 +1,7 @@
 [user]
-	name = Michishige Kaito
-	email = me@mkaito.com
+  name = Michishige Kaito
+  email = me@mkaito.com
+	signingkey = 0x3A7302D87411E61E
 
 [alias]
   co = checkout
@@ -8,20 +9,39 @@
   c	 = commit
   s	 = status --short
   p	 = push
-	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+  lol = log --pretty=oneline --abbrev-commit --graph --decorate
+  lg = log --color --graph --pretty=format:'%G? %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  bd = ! git branch --merged | egrep -v '(^*|master|devel)' | xargs git branch -d
 
 [core]
-	excludesfile = /home/chris/.gitignore
+  excludesfile = /home/chris/.gitignore
 
 [github]
-	user = mkaito
-	password = "<6\":7C%j27SIk,4xD:Q#mpCvY!+yH1pfQ00yTIlSYSTc`dXaPX]!76#qX;-fw8'C"
-	token = 82de415995f500ec4da4dc41fed97074
+  user = mkaito
+  password = "<6\":7C%j27SIk,4xD:Q#mpCvY!+yH1pfQ00yTIlSYSTc`dXaPX]!76#qX;-fw8'C"
+  token = 82de415995f500ec4da4dc41fed97074
 
 [push]
-	default = simple
+  default = simple
 
 [color]
-	ui = true
+  ui = true
+
 [web]
-	browser = /usr/bin/firefox
+  browser = /usr/bin/firefox
+
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = false
+	keepBackup = false
+[mergetool "vimdiff"]
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
+[includeIf "gitdir:~/dev/serokell/"]
+  path = .gitconfig-serokell
+[pager]
+	tag = false
+	branch = false
+[diff]
+	renameLimit = 2000

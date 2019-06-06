@@ -1,0 +1,4 @@
+#!/bin/zsh
+cd ~/dev/build/lcurse
+source venv/bin/activate
+./lcurse

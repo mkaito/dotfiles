@@ -41,7 +41,7 @@ case "$1" in
         fi
 
         INSTALLER_URI="http://glyph.dyn.triongames.com/glyph/live/GlyphInstall.exe"
-        INSTALLER_MD5="cdd61d84d94360143a416fce384de96f"
+        INSTALLER_MD5="1eff886704cf84829f28ca1ef944f91d"
         INSTALLER="$HOME/.cache/$(basename $INSTALLER_URI)"
 
         winetricks vd=1920x1080 vcrun2012 d3dx9 d3dx9_43 \

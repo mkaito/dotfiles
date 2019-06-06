@@ -1,0 +1,9 @@
+[Unit]
+Description=Run offlineimap full sync
+
+[Timer]
+OnBootSec=15
+OnUnitActiveSec=5m
+
+[Install]
+WantedBy=default.target

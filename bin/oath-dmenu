@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+creds=$(ykman oath list)
+cred=$(echo "$creds" | rofi -dmenu -p 'Credential' -i)
+code=$(ykman oath code --single "$cred")
+echo "$code" | xclip -i -selection clipboard
+notify-send 'OTP Ready' "$cred"
+

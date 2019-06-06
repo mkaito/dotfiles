@@ -3,7 +3,7 @@
 $HOME/dev/bin/dwm-statusbar &!
 
 while true; do
-	dbus-launch ~/dev/dwm/dwm > ~/.dwm.log || break
+	~/dev/dwm/dwm > ~/.dwm.log || break
 	pkill -SIGHUP conky
 
 	# No error logging

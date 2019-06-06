@@ -4,3 +4,6 @@
 .bundle/*
 *.elc
 .#*
+Session.vim
+result*
+.direnv.*

@@ -1,0 +1,17 @@
+#!/usr/bin/fish
+
+notmuch new
+
+# Archive my own mails
+notmuch tag -inbox from:me@mkaito.com or from:chris@mkaito.com
+
+# Mailing lists
+notmuch tag -inbox +ankidroid -- to:public-forum@ankidroid.org tag:inbox
+notmuch tag -inbox +ankidroid -- to:anki-android@googlegroups.com tag:inbox
+notmuch tag -inbox +mongodb -- to:mongodb-user@googlegroups.com tag:inbox
+notmuch tag -inbox +arch-general -- to:arch-general@archlinux.org tag:inbox
+notmuch tag -inbox +couchdb -- to:user@couchdb.apache.org tag:inbox
+notmuch tag -inbox +couchdb -- to:user@couchdb.apache.org tag:inbox
+
+# Get spam off my case
+notmuch tag -inbox +spam folder:spam

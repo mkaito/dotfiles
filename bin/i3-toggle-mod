@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Toggle i3 mod variable between Mod1 and Mod4, for gaming purposes.
+
+i3file=$HOME/.i3/config
+
+if grep --quiet "Mod1" $i3file; then
+    sed -ie 's/Mod1/Mod4/' $i3file
+    i3 reload
+    notify-send "Toggled i3 mod key to Mod4"
+else
+    sed -ie 's/Mod4/Mod1/' $i3file
+    i3 reload
+    notify-send "Toggled i3 mod key to Mod1"
+fi

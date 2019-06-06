@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# run_scaled --sleep=3 --scale=1.5
+exec "$HOME"/dev/build/Scelight/Scelight-linux.sh

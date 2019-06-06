@@ -1,4 +1,7 @@
-set shell=/bin/sh
+unlet! skip_defaults_vim
+" source $VIMRUNTIME/defaults.vim
+
+set shell=/usr/bin/bash
 
 call dirsettings#Install()
 
@@ -14,8 +17,8 @@ syntax sync minlines=256
 
 "set nocompatible
 
-" Spaces instead of tabs
-set expandtab
+" Tabs instead of spaces
+set noexpandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -69,7 +72,7 @@ set showmatch
 map <tab> g%
 cmap w!! %!sudo tee > /dev/null %
 
-set statusline=%<\ %n\ %f\ %{fugitive#statusline()}\ %r%y%m%=\ Line:\ \%l\/\%L\ Column:\ \%c
+set statusline=%<\ %f\ %{fugitive#statusline()}\ %r%y%m%=\ Line:\ \%l\/\%L\ Column:\ \%c
 
 set wrap
 set textwidth=79
@@ -83,7 +86,7 @@ set nuw=6
 set number
 set relativenumber
 set cursorline
-set clipboard^=unnamed				" X11 System Clipboard
+set clipboard^=unnamed					" X11 System Clipboard
 set autowrite
 set autoread
 
@@ -135,10 +138,14 @@ augroup vimrcEx
 	" au InsertLeave * :wa
 augroup END
 
+" Fix cursor when entering/leaving from ZSH
+" autocmd VimEnter * silent exec "! echo -ne '\e[2 q'"
+" autocmd VimLeave * silent exec "! echo -ne '\e[6 q'"
+
 " Relies on Xresources for colours
 set background=dark
 let base16colorspace=256
-colorscheme base16-tomorrow
+colorscheme base16-grayscale-dark
 
 nnoremap <leader>a :Ack
 
@@ -251,7 +258,7 @@ function! GoyoAfter()
   Limelight!
 
 	" No idea why, but it seems like Limelight messes with my colorscheme
-	colorscheme base16-grayscale
+	colorscheme base16-tomorrow-night
 endfunction
 
 let g:goyo_callbacks = [function('GoyoBefore'), function('GoyoAfter')]

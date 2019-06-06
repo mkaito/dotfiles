@@ -1,3 +1,5 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+set -euxo pipefail
 
-scrot -u -q 100 -e 'mv $f ~/media/images/screenshots/'
+maim -i "$(xdotool getactivewindow)" | xclip -selection clipboard -t image/png
+notify-send 'Screenshot' 'Image copied to clipboard'

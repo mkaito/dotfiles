@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+# exec emacsclient --create-frame --frame-parameters='( (name . "editor") (width . 100) (height . 40) )' "$@"
+exec terminal editor nvim "$@"

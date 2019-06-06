@@ -46,12 +46,12 @@ find "$source" -type f | while read file; do
 	tpath="${target}/${fname%.*}.mp3"
 
 	case "$fname" in
-		*.mp3|*.flac|*.ogg|*.m4a|*.mpc)
+		*.mp3|*.flac|*.ogg|*.m4a|*.mpc|*.m4b)
 			echo "Processing $file"
 
 			# Need to pipe from /dev/null because outer loop is already reading from stdin.
 			# -qscale 4 should be sufficient for my craptastic portable audio setup.
-			ffmpeg -loglevel fatal -i "$file" -codec:a libmp3lame -qscale:a 4 "$tpath" </dev/null
+			ffmpeg -loglevel fatal -i "$file" -codec:a libmp3lame -qscale:a 6 "$tpath" </dev/null
 			;;
 		*)
 			# This case necessary because otherwise the case above

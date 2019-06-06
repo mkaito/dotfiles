@@ -1,0 +1,88 @@
+#!/usr/bin/env zsh
+##
+# Synopsis:
+#   $ publish <from path> [to path]
+#
+#   rsync to HTTP server under [to path], copy url to clipboard
+
+set -euo pipefail
+
+TARGET_HOST=adalind
+BASE_PATH=public
+SELECTION=clipboard
+TMPDIR="$(mktemp -d)"
+
+urlencode() {
+  printf %s "$1" | jq -s -R -r @uri
+}
+
+_ext() {
+  case "$1" in
+    *.tar.gz)
+      echo 'tar.gz'
+      ;;
+    *.tar.bz2)
+      echo 'tar.bz2'
+      ;;
+    *.tar.xz)
+      echo 'tar.xz'
+      ;;
+    *)
+      echo "${1##*.}"
+      ;;
+  esac
+}
+
+optimize() {
+  [[ -z "$1" ]] && return
+  outfile="${TMPDIR}/$(sha1sum "$1" | awk '{print $1}')"
+
+  case "$1" in
+    *.png)
+      outfile="${outfile}.png"
+      pngcrush -q -new "$1" "$outfile"
+      ;;
+    *)
+      ext=$(_ext "$1")
+      outfile="${outfile}.${ext}"
+      cp "$1" "${outfile}"
+      ;;
+  esac
+
+  echo "$outfile"
+}
+
+if [[ -z ${1:-} ]]; then
+  echo "Please provide path to upload"
+  exit 1
+fi
+
+if [[ ! -e $1 ]]; then
+  echo "Can not find path at $1"
+  exit 127
+else
+  from="$(optimize "$1")"
+fi
+
+if [[ ! -z ${2:-} ]]; then
+  to="$2/"
+fi
+
+# Cleanup even on error
+function cleanup {
+    rm -rf "$TMPDIR"
+}
+trap cleanup EXIT
+
+ssh "$TARGET_HOST" mkdir -p "$BASE_PATH"/"${to:-}"
+rsync -rvzP "$from" "$TARGET_HOST":"$BASE_PATH"/"${to:-}"
+urlsafe="$(urlencode "$(basename "$from")")"
+url="https://files.mkaito.net/${to:-}$urlsafe"
+echo -n "$url" | xclip -selection "$SELECTION"
+
+if [[ -t 0 ]]; then
+  echo "Copied to remote: $url"
+else
+  notify-send "File published" "$(basename "$from")"
+fi
+# vim:ft=zsh

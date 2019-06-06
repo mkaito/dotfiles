@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+set -euxo pipefail
+if [[ ! -t 0 ]]; then
+  notify-send "Screengrab activated" "Click window or drag region"
+fi
+
+maim -s | xclip -selection clipboard -t image/png
+notify-send 'Screenshot' 'Image copied to clipboard'

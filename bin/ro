@@ -1,0 +1,72 @@
+#!/bin/bash
+if [[ -f $HOME/.wine-versions/ro-testing/bin/wine ]]; then
+		WINE=$HOME/.wine-versions/ro-testing/bin/wine
+elif [[ -f $HOME/.wine-versions/ro/bin/wine ]]; then
+		WINE=$HOME/.wine-versions/ro/bin/wine
+else
+		WINE=$( which wine )
+fi
+
+export WINE
+
+## File paths
+DESKTOP_SIZE="1920x1057"
+
+## Wine settings
+export WINEARCH=win32
+export WINEPREFIX="$HOME/.local/share/wineprefixes/ro"
+export WINEDEBUG=-all
+
+export LD_PRELOAD="libpthread.so.0 libGL.so.1"
+export __GL_THREADED_OPTIMISATIONS=1
+
+export __GL_SYNC_TO_VBLANK=1
+export __GL_SYNC_DISPLAY_DEVICE="DFP-0"
+
+
+case "$1" in
+		prepare)
+				winetricks mfc42 # "vd=$DESKTOP_SIZE"
+				;;
+
+		reset)
+				echo "this will completely remove $WINEPREFIX. This can not be undone."
+				read -p "Are you sure? " -n 1 -r
+
+				if [[ $REPLY =~ ^[Yy]$ ]]; then
+						echo
+						echo -n "Nuking wineprefix... "
+						rm -rf "$WINEPREFIX"
+						echo "Done."
+				else
+						echo "Aborting."
+				fi
+				;;
+
+		version)
+				echo "Wine path: ${WINE%%/bin/wine}"
+				echo "Wine version: $($WINE --version)"
+				;;
+
+		config)
+				exec "${WINE%/*}/winecfg"
+				;;
+
+		winetricks)
+				shift
+				exec winetricks "$@"
+				;;
+
+		kill)
+				pkill -KILL -f "windows|steam|wineserver|awesomium|winetricks|winedbg|explorer.exe|heRO.exe"
+				;;
+
+		run)
+				shift
+				exec "$WINE" "$@"
+				;;
+
+		*)
+				exec "$WINE" explorer "/desktop=ro,$DESKTOP_SIZE" "C://Games/heRO/heROpatcher.exe"
+				;;
+esac

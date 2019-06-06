@@ -1,0 +1,6 @@
+#!/bin/bash
+export WINEPREFIX=$HOME/.wine_YNAB4
+export WINE=wine
+# explorer /desktop=ynab,1920x1080 
+
+$WINE	"c:\Program Files (x86)\YNAB 4\YNAB 4.exe"

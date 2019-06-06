@@ -1,23 +1,49 @@
 export PAGER="less"
 export READNULLCMD="$PAGER"
-export EDITOR="emacsclient"
-export VISUAL="emacsclient"
-export ALTERNATE_EDITOR=””
-export BROWSER="firefox"
-export XTERM="~/dev/bin/terminal"
+export EDITOR="nvim"
+export GIT_EDITOR="$EDITOR"
+export SUDO_EDITOR="nvim"
+export VISUAL="$EDITOR"
+export ALTERNATE_EDITOR=""
+export BROWSER="$HOME/dev/dotfiles/bin/browser"
+export XTERM="$HOME/bin/terminal"
+export TERMCMD="$XTERM"
 export TERMINAL="$XTERM"
 export PERL_SIGNALS="unsafe"
 export GOPATH="$HOME/dev/go"
-export SUDO_EDITOR="emacsclient"
+export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
 
-source /etc/zsh/zprofile
-export PATH="$HOME/dev/bin:$GOPATH/bin:$HOME/perl5/bin:$HOME/.cabal/bin:$HOME/node_modules/.bin:$PATH"
+# Wayland & HiDPI
+# export GDK_BACKEND=wayland
+# export QT_QPA_PLATFORM=waylang-egl
+# export CLUTTER_BACKEND=wayland
+# export SDL_VIDEODRIVER=wayland
+
+
+# Borg backup to rsync.net
+export BORG_REPO="backup:borg/hydra"
+export BORG_REMOTE_PATH="borg1"
+export BORG_PASSPHRASE="Cs6BMgMTcYMDPqjeSCTtdIh1cG90iLnPi6nGnmhecTs39yDaqGQPFJHkcWo60A92bkXrs5Q9Abz5opav5NzztL1gOIa0yqBGXQoatGNha53xBTj99prAIP20ae3o96oH"
+
+# source /etc/zsh/zprofile
+if [[ -z $PATH_FIXED ]]; then
+  export PATH="$HOME/dev/dotfiles/bin:$PATH:$HOME/.local/bin:$HOME/.cabal/bin:$GOPATH/bin"
+  export PATH_FIXED=1
+fi
 export LEDGER_FILE="$HOME/media/sync/ledger/personal.ledger"
 
-# Rbenv completion and functions
+# Ruby
 eval "$(rbenv init -)"
 
-export PERL_LOCAL_LIB_ROOT="$HOME/perl5";
-export PERL_MB_OPT="--install_base $HOME/perl5";
-export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5";
-export PERL5LIB="$HOME/perl5/lib/perl5/x86_64-linux-thread-multi:$HOME/perl5/lib/perl5";
+## Nixops wrapper config
+export NO_LOCALDIR="$HOME/dev/serokell/deployer"
+
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS="--reverse --inline-info"
+
+export NIX_PAGER=cat
+
+# eval "$(op signin my)"
+
+# Bitwarden CLI
+export BW_SESSION="DkN5cJUOftpo5I6kFW53vhuRspxHeiq8JnNzHLXv5rodQNkCyfMyBgM7G3dnhOrFggJSH0q+hXcXhc/RckveUg=="

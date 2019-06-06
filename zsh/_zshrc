@@ -50,6 +50,8 @@ zle-line-init() {
 }
 zle -N zle-line-init
 
+eval "$(fasd --init auto)"
+
 BASE16_SHELL="/usr/share/base16-shell/base16-grayscale.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
@@ -131,5 +133,7 @@ function snap () {
 		convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
 		echo ": ${fname}.${format}"
 }
+
+. ~/dev/dotfiles/zsh/todoist_functions.sh
 
 # vim:ft=zsh

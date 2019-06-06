@@ -1,0 +1,10 @@
+[Unit]
+Description=Notify about tracks played by mpd
+After=mpd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mpd-notification -H %h/.mpd/mpd.sock -m %h/media/music
+
+[Install]
+WantedBy=default.target

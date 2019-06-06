@@ -1,0 +1,4 @@
+#!/bin/fish
+
+cd ~/media/sync/ledger
+exec emacsclient --create-frame --frame-parameters='( (name . "ledger") (width . 100) (height . 40) )' personal.ledger

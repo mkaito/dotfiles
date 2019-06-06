@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# remove old tarsnap archives
+
+# Copyright (c) 2015-2018 Jason W Ryan
+# The MIT License (MIT) http://opensource.org/licenses/MIT
+
+# number of archives to retain
+keep=6
+machine=$(hostname)
+
+red=$'\e[1;31m'
+yel=$'\e[1;33m'
+cyn=$'\e[1;36m'
+end=$'\e[0m'
+tmpfile=$(mktemp -t tarsnap.XXXXXX)
+
+trap "rm '${tmpfile}'" EXIT INT TERM
+
+# must be run as root
+if (( EUID != 0 )); then
+  printf "%s\n" "You must be root to run this."
+  exit 1
+fi
+
+# generate list
+tarsnap --list-archives > "$tmpfile"
+
+# sort by descending date, format is: ddmmyy_hh:mm
+{
+  rm "$tmpfile" && cut -d- -f2 |\
+    sort -k 1.5,1.6 -k 1.3,1.4 -k 1.2,1.1 > "$tmpfile"
+} < "$tmpfile"
+
+# populate the list
+mapfile -t archives < "$tmpfile"
+
+# print the full list
+printf "${cyn}%s${end}\n" "Current archives:"
+printf "%s\n" "${archives[@]}"
+
+# identify oldest archives
+remove=$(( ${#archives[@]} - keep ))
+if (( remove > 0 )); then
+  mapfile -t -n "$remove" targets < "$tmpfile"
+else
+  unset targets
+fi
+
+# if there is at least one to remove
+if (( ${#targets[@]} >= 1 )); then
+  printf "${red}%s${end}\n" "Archives to delete:"
+  printf "%s\n" "${targets[@]}"
+
+  read -p "Proceed with deletion? [${red}Y${end}/N] " YN
+
+  if [[ ${YN^^} == "Y" ]]; then
+    for archive in "${targets[@]}"; do
+      tarsnap -d --no-print-stats -f "${machine,}-${archive}"
+    done && printf "${yel}%s${end}\n" "Archives successfully deleted..."
+
+    printf "\n${cyn}%s${end}\n" "Remaining archives:"
+    tarsnap --list-archives
+  else
+    printf "${yel}%s${end}\n" "Operation aborted"
+  fi
+else
+  printf "\n%s\n" "Nothing to do"
+  exit 0
+fi
+
+# vim:set ts=2 sts=2 sw=2 et:

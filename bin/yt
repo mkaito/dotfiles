@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# This script aims to improve the UX of the yt-utilities program, by wrapping it
+# to provide configuration and POSIX compliant option parsing.
+#
+# Note: OSX getopt does not support --long-option-names. Install GNU getopt using Macports:
+#   * Install MacPorts (http://www.macports.org)
+#   * `sudo port install getopt`
+#   * Make sure that `/opt/local/bin` is ahead of your shell $PATH
+#
+# TODO: getopt
+# TODO: rc file
+
+set -euo pipefail
+IFS=$'\n\t'
+
+## Serokell yt-utilities wrapper config
+export SEROKELL_SLACK_TOKEN='xoxp-9411943863-301669824912-310618901735-6d90d1357c874ffb4ea6cf1142d147c8'
+export SEROKELL_YT_TOKEN='perm:Q2hyaXM=.eXR1dGlscw==.L2Fc03DSQ0AKsEYpwDSS3uLKE18cdg'
+
+usage() {
+    cat <<EOF
+
+EOF
+}
+
+declare -a args;
+cmd="${1:-dry}"
+
+args[0]=$cmd
+args+=(--file ~/notes/serokell/tasks.org --yt-token "$SEROKELL_YT_TOKEN")
+
+if [[ "$cmd" != "local" ]]; then
+  args+=(--user Chris)
+fi
+
+if [[ "$cmd" == "export" ]]; then
+  args+=(--slack-token "$SEROKELL_SLACK_TOKEN")
+fi
+
+if [[ -n ${2:-} ]]; then
+  args+=(--since "$2")
+fi
+
+"$HOME/dev/serokell/yt-utilities/result/bin/yt" -- org "${args[@]}"

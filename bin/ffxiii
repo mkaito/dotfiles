@@ -1,0 +1,61 @@
+#!/bin/bash
+if [[ -f $HOME/.wine-versions/ffxiii-testing/bin/wine ]]; then
+    export WINE=$HOME/.wine-versions/ffxiii-testing/bin/wine
+elif [[ -f $HOME/.wine-versions/ffxiii/bin/wine ]]; then
+    export WINE=$HOME/.wine-versions/ffxiii/bin/wine
+else
+    export WINE=`which wine`
+fi
+
+## File paths
+STEAM="C://Program Files/Steam/Steam.exe"
+GAME="C://windows//command//start.exe steam://rungameid/292120"
+DESKTOP_SIZE="1920x1058"
+
+## Wine settings
+export WINEARCH=win32
+export WINEPREFIX="$HOME/.local/share/wineprefixes/ffxiii"
+# export WINEDEBUG=-all
+export WINEDEBUG=+dinput
+
+export LD_PRELOAD="libpthread.so.0 libGL.so.1"
+export __GL_THREADED_OPTIMISATIONS=1
+
+export __GL_SYNC_TO_VBLANK=1
+export __GL_SYNC_DISPLAY_DEVICE="DFP-0"
+
+
+case "$1" in
+    version)
+        echo "Wine path: ${WINE%%/bin/wine}"
+        echo "Wine version: $($WINE --version)"
+        ;;
+
+    config)
+        exec "${WINE%/*}/winecfg"
+        ;;
+
+    winetricks)
+        shift
+        exec winetricks $@
+        ;;
+
+    kill)
+        ps ux | grep -v grep | grep -v "eve kill" | grep -v "browser" | \
+            grep -i "windows\|steam\|wineserver\|exefile\|launcher\|awesomium\|pyfa\|gtkevemon\|winetricks\|winedbg\|explorer.exe" | \
+            awk '{print $2}' | xargs kill
+        ;;
+
+    steam)
+        exec "$WINE" "$STEAM"
+        ;;
+
+    run)
+        shift
+        exec "$WINE" "$@"
+        ;;
+
+    *)
+        exec "$WINE" "C://windows//command//start.exe" "steam://rungameid/292120"
+        ;;
+esac

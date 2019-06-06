@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-# WINEPATH='/opt/wine-tkg-git-sc2-4.0.r9.g60f0f503'
-# export WINE="$WINEPATH/bin/wine"
-WINE="$(command -v wine)"
-export WINE
-export WINEPREFIX="$HOME/.local/share/wineprefixes/sc2"
-export WINEDEBUG=-all
+# shellcheck disable=SC2155
+export WINEPREFIX="$HOME/.local/share/wineprefixes/$(basename "$0")"
+export WINEDEBUG='-all'
 export WINEESYNC=1
+export WINE='/opt/wine-tkg-opt-git/bin/wine'
+
+# export GALLIUM_HUD='fps'
+# export DXVK_HUD='devinfo,fps,version'
+export DXVK_STATE_CACHE_PATH="$WINEPREFIX"
+export PULSE_LATENCY_MSEC=60
+export __GL_SHADER_DISK_CACHE=1
+export __GL_SHADER_DISK_CACHE_PATH="$WINEPREFIX"
 
 export SC2="C://Program Files (x86)/StarCraft II/Support64/SC2Switcher_x64.exe"
 export LAUNCHPAD="C://Program Files (x86)/Battle.net/Battle.net Launcher.exe"
@@ -14,7 +19,7 @@ export LAUNCHPAD="C://Program Files (x86)/Battle.net/Battle.net Launcher.exe"
 case "$1" in
     install)
         INSTALLER_URL='https://www.battle.net/download/getInstallerForGame?os=win&locale=enUS&version=LIVE&gameProgram=STARCRAFT_2'
-        INSTALLER_MD5='2fe83831f3f71bdc2928967aaba9b79e'
+        INSTALLER_MD5='a78068e83bd05f1413f45c0ee75ba479'
 
         INSTALLER="$HOME/.cache/sc2_setup.exe"
 
@@ -24,8 +29,8 @@ case "$1" in
             exit 1
         fi
 
-        winetricks win10 corefonts d3dcompiler_43 d3dcompiler_47 galliumnine02
-        wineserver -w
+        # d9vk won't work until mesa 19.1
+        winetricks -q win10 d3dcompiler_43 d3dcompiler_47 galliumnine
 
         if [[ ! -f "$INSTALLER" ]]; then
             curl -o "$INSTALLER" -L "$INSTALLER_URL"
@@ -77,7 +82,6 @@ case "$1" in
 
     config)
         exec "${WINE%/*}/winecfg"
-        # exec winecfg
         ;;
 
     winetricks)
@@ -86,6 +90,7 @@ case "$1" in
         ;;
 
     kill)
+        # shellcheck disable=SC2009
         ps ux | grep -v grep | grep -v "sc2 kill\\|qutebrowser\\|firefox\\|chrome\\|chromium" | \
             grep -i "windows\\|wineserver\\|sc2\\|starcraft\\|.exe\\|battle.net\\|wineconsole\\|awesomium\\|winetricks\\|winedbg\\|explorer.exe" | \
             awk '{print $2}' | xargs kill -KILL
@@ -97,14 +102,12 @@ case "$1" in
         ;;
 
     launcher)
-        exec "$WINE" "$LAUNCHPAD" -Displaymode 1
+        exec "$WINE" "$LAUNCHPAD"
         ;;
 
     *)
-      # taskset -c 0-2
-      "$WINE" "$SC2" -Displaymode 1
-      ;;
-
+        exec "$WINE" "$SC2"
+        ;;
 
 esac
 

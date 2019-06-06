@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+exec libreoffice "$HOME/dev/Nutrición/Dieta 2019.ods"
