@@ -1,0 +1,127 @@
+set realname = 'Christian Höppner'
+# set signature = "~/.signature|"
+unset signature
+
+set sendmail = "/usr/bin/msmtp"
+set use_from=yes
+
+set mail_check = 90
+set timeout = 15
+unset imap_passive
+set imap_keepalive = 30
+
+bind index,pager \Cx next-unread-mailbox
+
+macro index J '<save-message>=sa/<enter>y'
+
+macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
+macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+
+macro compose A "<attach-message>?<toggle-mailboxes>" "attach message(s) to this message"
+
+macro index a '<save-message>=Archive<enter>y'
+macro index A '<pipe-message>git am<enter>j'
+
+## Mail account config. Last one is opened by default
+
+# Tweag mail
+set my_tweag_pass = "`pass show work/tweag/email-app`"
+set my_tweag_source = ~/.mutt/accounts/christian.hoppner@tweag.io
+source $my_tweag_source
+folder-hook  $folder "source $my_tweag_source"
+send-hook "%C AccountTweag" "source $my_tweag_source"
+reply-hook "~t $from" "source $my_tweag_source"
+
+# Old personal mail
+# set my_legacy_pass = "`pass show personal/email/mkaito.com`"
+# set my_legacy_source = ~/.mutt/accounts/chris@mkaito.com
+# source $my_legacy_source
+# folder-hook  $folder "source $my_legacy_source"
+# send-hook "%C AccountLegacy" "source $my_legacy_source"
+# reply-hook "~t $from" "source $my_legacy_source"
+
+# ADMT
+# set my_admt_pass = "`pass show work/admt/email-app`"
+# set my_admt_source = ~/.mutt/accounts/mkaito@admt.im
+# source $my_admt_source
+# folder-hook  $folder "source $my_admt_source"
+# send-hook "%C AccountAdmt" "source $my_admt_source"
+# reply-hook "~t $from" "source $my_admt_source"
+
+# Personal mail
+set my_personal_pass = "`pass show personal/email/mkaito.net`"
+set my_personal_source = ~/.mutt/accounts/chris@mkaito.net
+source $my_personal_source
+folder-hook  $folder "source $my_personal_source"
+send-hook "%C AccountPersonal" "source $my_personal_source"
+reply-hook "~t $from" "source $my_personal_source"
+
+# Fetch mail shortcut
+bind index G imap-fetch-mail
+
+# Mailing lists
+subscribe arch-general@archlinux.org arch-announce@archlinux.org
+subscribe ~sircmpwn/sr.ht-announce@lists.sr.ht ~sircmpwn/aerc@lists.sr.ht
+subscribe ~mkaito/imap_unseen@lists.sr.ht ~mkaito/dust-dev@lists.sr.ht
+subscribe ~mkaito/beancounter@lists.sr.ht
+
+set index_format="%2C %Z %D %-17.17n (%3l) %s"
+set pager_format="%S [%C/%m] %l %n: %s"
+set date_format="%Y-%m-%d %l:%M %p"
+
+set header_cache = ~/.mutt/cache/headers
+set message_cachedir = ~/.mutt/cache/bodies
+set certificate_file = ~/.mutt/certificates
+
+set alias_file=~/.mutt/aliases                # Keep aliases in this file.
+source ~/.mutt/aliases                        # And read them in.
+set query_command="abook --mutt-query '%s'"   # address book
+set ispell="aspell -e -c"                     # Ispell sucks. Long live aspell.
+set allow_8bit                                # leave all the bits alone :)
+set postpone=ask-no                           # Ask about postponing.
+set delete=yes                                # Just Do It
+set move=yes                                  # Don't bug me
+set include=yes                               # Include the message in replies.
+set edit_headers                              # I want to edit the message headers.
+set copy=yes                                  # Keep copies of outgoing mail...
+set mime_forward=ask-yes                      # Forward attached or in body? Ask.
+set nobeep                                    # We don't need no beeping software.
+set nosmart_wrap                              # Don't want smart wrapping.
+set nomarkers                                 # Don't want any wrap markers.
+set pager_context=3                           # Display 3 lines of context in pager.
+set nostrict_threads                          # Lets have some fuzzy threading.
+set envelope_from=yes                         # add sender with -f
+set sendmail_wait=-1                          # Don't wait around for sendmail.
+set nopipe_decode                             # Don't decode messages when piping.
+set tilde                                     # Fill out messages with '~'.
+set read_inc=50                               # Read counter ticks every 50 msgs.
+set write_inc=50                              # Write counter ticks every 50 msgs.
+set noconfirmappend                           # Just append, don't hassle me.
+set pager_stop                                # Don't skip msgs on next page.
+set pager_index_lines=1                       # Start off with index footer in pager.
+                                              # Where to find the mailcap.
+set sort = 'threads'
+set sort_aux = reverse-last-date-received
+set sort_re
+
+# My Editor
+set editor='nvim'
+# set editor='emacsclient -nw %s'
+
+# MIME
+auto_view text/html
+alternative_order text/plain text/enriched text/html     # save html for last
+bind attach <return> view-mailcap
+
+# gpg --use-agent Stuffs
+set pgp_autosign=yes
+set pgp_replyencrypt=yes
+set pgp_timeout=1800
+set pgp_good_sign="^gpg: Good signature from"
+set pgp_use_gpg_agent=yes
+set pgp_default_key=0x3A7302D87411E61E
+# set pgp_sign_as=0x3A7302D87411E61E
+
+source /usr/share/doc/neomutt/samples/gpg.rc
+source ~/.mutt/colors/base16-chalk.muttrc
+source ~/.mutt/colors/patch-highlight.muttrc

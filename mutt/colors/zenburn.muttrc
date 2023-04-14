@@ -1,0 +1,54 @@
+## Zenburn
+## general-doesn't-fit stuff
+#color normal     white default
+#color error      color115 default
+#color markers    color142 default
+#color tilde      color108 default
+#color status     color253 color234
+
+## index stuff
+#color indicator  color108 default
+#color tree       color109 default
+#color index      color188 default ~A
+#color index      color188 default ~N
+#color index      color188 default ~O
+#color index      color174 default ~F
+#color index      color174 default ~D
+
+## header stuff
+#color hdrdefault color223 default
+#color header     color223 default "^Subject"
+
+## gpg stuff
+#color body       color188 default "^gpg: Good signature.*"
+#color body       color115 color234 "^gpg: BAD signature.*"
+#color body       color174 default "^gpg: Can't check signature.*"
+#color body       color174 default "^-----BEGIN PGP SIGNED MESSAGE-----"
+#color body       color174 default "^-----BEGIN PGP SIGNATURE-----"
+#color body       color174 default "^-----END PGP SIGNED MESSAGE-----"
+#color body       color174 default "^-----END PGP SIGNATURE-----"
+#color body       color174 default "^Version: GnuPG.*"
+#color body       color174 default "^Comment: .*"
+
+## url, email and web stuff
+#color body       color174 default "(finger|ftp|http|https|news|telnet)://[^ >]*"
+#color body       color174 default "<URL:[^ ]*>"
+#color body       color174 default "www\\.[-.a-z0-9]+\\.[a-z][a-z][a-z]?([-_./~a-z0-9]+)?"
+#color body       color174 default "mailto: *[^ ]+\(\\i?subject=[^ ]+\)?"
+#color body       color174 default "[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"
+
+## misc body stuff
+#color attachment color174 default #Add-ons to the message
+#color signature  color223 default
+
+## quote levels
+#color quoted     color108 default
+#color quoted1    color116 default
+#color quoted2    color247 default
+#color quoted3    color108 default
+#color quoted4    color116 default
+#color quoted5    color247 default
+#color quoted6    color108 default
+#color quoted7    color116 default
+#color quoted8    color247 default
+#color quoted9    color108 default
