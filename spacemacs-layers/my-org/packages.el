@@ -11,12 +11,17 @@
 ;;; License: GPLv3
 
 (setq my-org-packages
-    '(
-      ;; package names go here
-      noflet
-      ))
+      '(
+        ;; package names go here
+        noflet
+        ox-bb
+        ))
 
 ;; I don't want no utf-8 bullets
 (defun my-org/init-noflet ()
   "Initialize my package"
   (use-package noflet))
+
+(defun my-org/init-ox-bb ()
+  "Initialize da package"
+  (use-package ox-bb))

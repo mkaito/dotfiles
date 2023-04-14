@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: React functional component
+# key: rfc
+# --
+import React from "react";
+
+const `(file-name-base buffer-file-name)` = () => {
+  return (
+    $0
+  );
+};
+
+export default `(file-name-base buffer-file-name)`;

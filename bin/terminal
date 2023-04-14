@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+set -euo pipefail
 
 ##
 # Set $terminal to one of:
@@ -6,7 +7,13 @@
 #   * st
 #   * termite
 #   * alacritty
-terminal=urxvt
+#   * foot
+#   * kitty
+if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
+  terminal=foot
+else
+  terminal=alacritty
+fi
 
 ##
 # Set this to prefix all execution arguments.
@@ -20,10 +27,11 @@ precmd=(zsh -ic)
 #   => `termite --name=chat -- weechat`
 #   => `st -n chat -e weechat`
 #   => `alacritty -t chat -e weechat`
+#   => `foot -a chat -- weechat`
 declare -a args
 case $terminal in
   st)
-    if [[ ! -z $1 ]]; then
+    if [[ -n ${1:-} ]]; then
       args+=(-n "$1"); shift
       args+=(-e "${precmd[@]}" "$*")
     fi
@@ -32,7 +40,7 @@ case $terminal in
     ;;
 
   urxvt)
-    if [[ ! -z $1 ]]; then
+    if [[ -n ${1:-} ]]; then
       args+=(-name "$1"); shift
       args+=(-e "${precmd[@]}" "$*")
     fi
@@ -43,7 +51,7 @@ case $terminal in
     ;;
 
   termite)
-    if [[ ! -z $1 ]]; then
+    if [[ -n ${1:-} ]]; then
       args+=("--name=$1"); shift
       args+=("--" "${precmd[@]}" "$*")
     fi
@@ -52,13 +60,32 @@ case $terminal in
     ;;
 
   alacritty)
-    if [[ ! -z $1 ]]; then
-      args+=("--title $1"): shift
+    if [[ -n ${1:-} ]]; then
+      args+=(--class "$1"); shift
       args+=(-e "${precmd[@]}" "$*")
     fi
 
     exec alacritty "${args[@]}"
     ;;
+
+  foot)
+    if [[ -n ${1:-} ]]; then
+      args+=("--app-id=$1"); shift
+      args+=("--" "${precmd[@]}" "$*")
+    fi
+
+    exec foot "${args[@]}"
+    ;;
+
+  kitty)
+    if [[ -n ${1:-} ]]; then
+      args+=("--class=$1"); shift
+      args+=("--" "${precmd[@]}" "$*")
+    fi
+
+    exec kitty "${args[@]}"
+    ;;
+
   *)
     exit 1
     ;;

@@ -1,10 +1,11 @@
 (with-eval-after-load 'org
-	(require 'org-notmuch)
+	;; (require 'org-notmuch)
   (require 'org-tempo)
+  (require 'ox-bb)
 	(setq calendar-week-start-day 1)
 	(setq org-directory "~/notes/")
-	(setq org-default-notes-file (concat org-directory "refile.org"))
-	(setq org-refile-targets '((org-agenda-files :level . 1)))
+	(setq org-default-notes-file (concat org-directory "inbox.org"))
+	(setq org-refile-targets '((nil :level . 2)))
 	(setq org-read-date-prefer-future 'time)
 	(setq org-clock-persist 'history)
 	(org-clock-persistence-insinuate)
@@ -15,6 +16,7 @@
 	(setq org-hide-leading-stars t)
 	(setq org-startup-indented t)
 	(setq org-startup-folded t)
+	(setq org-startup-with-inline-images t)
   (setq org-duration-format (quote h:mm))
 
   (setq org-agenda-clock-consistency-checks
@@ -34,23 +36,19 @@
 				'(
 					;; Algo que requiere una acción en el futuro
 					("t" "Tarea" entry (file+headline "BuJo.org" "Tareas")
-					 "* TODO %?\nSCHEDULED: %^{Para cuándo}t\n %i\n %a\n %x")
+					 "* TODO %?\nSCHEDULED: %^{Schedule}t\n %i\n %a\n %x")
 
 					;; Una entrada de tiempo para Serokell
-					("s" "Serokell Management" entry (file+headline "serokell/tasks.org" "Management")
-					 "* TODO %?\n%^{Para cuándo}t\n%i\n%a\n%x")
-
-					;; Una entrada de tiempo para Serokell
-					("s" "Serokell Infrastructure" entry (file+headline "serokell/tasks.org" "Infrastructure")
-					 "* TODO %?\n%^{Para cuándo}t\n%i\n%a\n%x")
+					("s" "Serokell Task" entry (file+headline "serokell/tasks.org" "Inbox")
+					 "* TODO %?\nSCHEDULED: %^{Schedule}t\n%i\n%a\n%x")
 
 					;; Algo que me gustaría recordar, que no requiere acción.
-					("n" "Nota" entry (file+headline "BuJo.org" "Notas")
-					 "* %?\n%i\n%a\n%x")
+					;; ("n" "Nota" entry (file+headline "BuJo.org" "Notas")
+					;;  "* %?\n%i\n%a\n%x")
 
 					;; Algo que requiere un bloque de tiempo definido en el calendario
-					("c" "Calendario" entry (file+headline "Calendario.org" "Calendario")
-					 "* %?\n%^{Cuándo?}T\n%i\n%x")
+					;; ("c" "Calendario" entry (file+headline "Calendario.org" "Calendario")
+					;;  "* %?\n%^{Cuándo?}T\n%i\n%x")
 				))
 
 	;; Popup capture window

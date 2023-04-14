@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+TOKEN=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
+
+QUERY=$(cat <<-EOF
+{
+	repository(name: "nixpkgs", owner: "NixOS") {
+		pullRequests(last: 1, states: OPEN) {
+			nodes {
+				number
+			}
+		}
+	}
+}
+EOF
+)
+DATA=$(jq -n --arg query "$QUERY" '{ query : $query }')
+result=$(curl -sS -H "Authorization: token $TOKEN" -d "$DATA" https://api.github.com/graphql | jq '.data.repository.pullRequests.nodes[].number')
+mapfile -t sequence < <(seq "$result" | shuf)
+
+next() {
+	candidates=( "${sequence[@]:$1:100}" )
+
+	QUERY=$(
+		echo '{ repository(name: "nixpkgs", owner: "NixOS") {'
+		for candidate in "${candidates[@]}"; do
+			echo "n$candidate: issueOrPullRequest(number: $candidate) { ... on PullRequest { url state } }"
+		done
+		echo '} }'
+	)
+}
+
+randompr() {
+	next "$1"
+	DATA=$(jq -n --arg query "$QUERY" '{ query : $query }')
+	result=$(curl -sS -H "Authorization: token $TOKEN" -d "$DATA" https://api.github.com/graphql \
+		| jq -r '.data.repository[] | select(.state == "OPEN") | .url' | head -1)
+
+	if [ -z "$result" ]; then
+		randompr "$(( $1 + 100 ))"
+	else
+		echo "$result"
+	fi
+}
+
+xdg-open "$(randompr 0)"

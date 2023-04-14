@@ -1,5 +1,15 @@
 #!/usr/bin/env zsh
-set -euxo pipefail
+set -euo pipefail
 
-maim -i "$(xdotool getactivewindow)" | xclip -selection clipboard -t image/png
-notify-send 'Screenshot' 'Image copied to clipboard'
+if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
+    grim -g "$(swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | wl-copy -t 'image/png'
+else
+    maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+fi
+notify-send "Screenshot" "Screenshot taken, copied to clipboard."
+
+# out="${XDG_RUNTIME_DIR:-/tmp}/$(date +%s).png"
+# maim -i $(xdotool getactivewindow) "$out"
+# notify-send "Publishing screenshot" "Screenshot taken, processing..."
+# publish "$out"
+# rm -f "$out"

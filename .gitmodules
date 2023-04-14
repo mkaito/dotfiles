@@ -151,3 +151,6 @@
 [submodule "vimconf/bundle/FastFold"]
 	path = vimconf/bundle/FastFold
 	url = git@github.com:Konfekt/FastFold.git
+[submodule "nvim/astronvim_user"]
+	path = nvim/astronvim_user
+	url = git@github.com:mkaito/astronvim-config.git

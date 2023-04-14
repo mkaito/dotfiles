@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+beep() {
+  mpv --no-video "$HOME/dev/dotfiles/bin/beep.mp3" >/dev/null 2>&1
+}
+
+if [[ -n $1 ]]; then
+  while true; do
+    sleep "$1"
+    beep
+  done
+else
+  beep
+fi
+

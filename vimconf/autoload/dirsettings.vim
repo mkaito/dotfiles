@@ -1,1 +1,0 @@
-/home/chris/dev/dotfiles/vimconf/bundle/dirsettings/autoload/dirsettings.vim

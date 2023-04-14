@@ -1,9 +1,8 @@
-.sass-cache
 *.swp
 *.un~
-.bundle/*
 *.elc
 .#*
-Session.vim
-result*
 .direnv.*
+.direnv/
+*.key
+*.nixops

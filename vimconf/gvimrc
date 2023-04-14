@@ -1,5 +1,0 @@
-set guiheadroom=0
-set background=dark
-set guioptions=Pcp
-set guifont=Ubuntu\ Mono\ 12
-set guicursor+=a:blinkon0

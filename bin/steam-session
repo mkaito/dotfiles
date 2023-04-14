@@ -22,6 +22,7 @@ export STEAM_PID
 export STEAM_DE_PID=$$
 export WM_NAME
 export X_SECONDARY="DisplayPort-1"
+export LD_PRELOAD="/usr/lib/libgio-2.0.so.0 /usr/lib/libglib-2.0.so.0"
 
 ## Define logging function
 INFO(){ echo "INFO: $*" | tee -a /tmp/steam-de.$UID.log; }
@@ -39,27 +40,27 @@ function get_path(){
 function steam_shutdown(){
         steam -shutdown &
         count=0
-        while [ -d /proc/$OLD_STEAM_PID ]; do
+        while [ -d /proc/"$OLD_STEAM_PID" ]; do
             sleep 0.1
             ((count++==100)) && break
         done
 }
 
 function steam_stopped(){
-    if [ -f $HOME/.steampid ]; then
-            read OLD_STEAM_PID < $HOME/.steampid
-            if [ ! -d /proc/$OLD_STEAM_PID ]; then
+    if [ -f "$HOME"/.steampid ]; then
+            read -r OLD_STEAM_PID < "$HOME"/.steampid
+            if [ ! -d /proc/"$OLD_STEAM_PID" ]; then
                 unset OLD_STEAM_PID
-                rm -f $HOME/.steampid
+                rm -f "$HOME"/.steampid
             else
                 steam_shutdown
             fi
     fi
     PIDS_TO_KILL=(
-        $OLD_STEAM_PID
-        $(pidof steam)
-        $(pidof steam.sh)
-        $(pidof MainThrd)
+        "$OLD_STEAM_PID"
+        "$(pidof steam)"
+        "$(pidof steam.sh)"
+        "$(pidof MainThrd)"
     )
 
     ((${#PIDS_TO_KILL[@]} == 0)) && return
@@ -68,8 +69,8 @@ function steam_stopped(){
     INFO "Pids to kill: ${PIDS_TO_KILL[*]}"
     for pid in "${PIDS_TO_KILL[@]}"; do
             while ((PID > 1)) && [ -d "/proc/$PID" ]; do
-                    kill $pid &> /dev/null && sleep 1
-                    kill -s 9 $pid &> /dev/null
+                    kill "$pid" &> /dev/null && sleep 1
+                    kill -s 9 "$pid" &> /dev/null
             done
     done
 }
@@ -82,9 +83,9 @@ function disable_joysticks() {
     find /dev/input -name "js*" | \
     while read -r dev; do
         # Get the name of the joystick model
-        name="`udevadm info --query=property --name=$dev | grep ID_VENDOR_ENC | cut -c15- -` `udevadm info --query=property --name=$dev | grep ID_MODEL_ENC | cut -c14- -`"
+        name="$(udevadm info --query=property --name="$dev" | grep ID_VENDOR_ENC | cut -c15- -) $(udevadm info --query=property --name="$dev" | grep ID_MODEL_ENC | cut -c14- -)"
         # Escape \ sequences
-        name="`echo -e "$name"`"
+        name="$(echo -e "$name")"
         # Disable the joystick
         xinput --list | grep "$name" | grep -Pwo "id=[0-9]*" | grep -Pwo "[0-9]*" | xargs xinput --disable
     done
@@ -97,8 +98,8 @@ function kill_OpenBox(){
 function kill_XFWM4(){
         [ -z "$XFWM4_PID" ] && return
         [ ! -d "/proc/$XFWM4_PID" ] && return
-        kill $XFWM4_PID &> /dev/null && sleep 1
-        kill -s 9 $XFWM4_PID &> /dev/null
+        kill "$XFWM4_PID" &> /dev/null && sleep 1
+        kill -s 9 "$XFWM4_PID" &> /dev/null
 }
 
 function steam_de_exit(){
@@ -116,8 +117,7 @@ trap steam_de_exit SIGINT SIGTERM EXIT
 
 ## Main
 INFO "Initialization"
-# Vars to switch logic
-# if supported things found
+# Vars to switch logic if supported things found
 export STEAM STEAM_NATIVE
 export OPTIRUN PRIMUSRUN
 export NVIDIA_SETTINGS
@@ -193,7 +193,7 @@ else
 fi
 INFO "Check: gnome-settings-daemon $STATUS"
 
-if [ ! -z "$STEAM_NATIVE" ]; then
+if [ -n "$STEAM_NATIVE" ]; then
         INFO "Use steam-native instead of steam"
         PROGRAM="$STEAM_NATIVE"
 else
@@ -201,14 +201,14 @@ else
         PROGRAM="$STEAM"
 fi
 
-if [ ! -z "$OPTIRUN" ] || [ ! -z "$PRIMUSRUN" ]; then
-        if [ ! -z "$PRIMUSRUN" ]; then
+if [ -n "$OPTIRUN" ] || [ -n "$PRIMUSRUN" ]; then
+        if [ -n "$PRIMUSRUN" ]; then
                 INFO "Use primusrun instead of optirun"
                 export vblank_mode=0
-                PREFIX="$OPTIRUN -b primus"
+                PREFIX="$PREFIX $OPTIRUN -b primus"
         else
                 INFO "Use optirun instead of primusrun"
-                PREFIX="$OPTIRUN"
+                PREFIX="$PREFIX $OPTIRUN"
         fi
 fi
 
@@ -231,13 +231,13 @@ case $WM_NAME in
 esac
 
 
-if [ ! -z "$NVIDIA_SETTINGS" ] || [ ! -z "$GNOME_SETTINGS_DAEMON" ]; then
+if [ -n "$NVIDIA_SETTINGS" ] || [ -n "$GNOME_SETTINGS_DAEMON" ]; then
         INFO "Start basic video settings process"
-        if [ ! -z "$NVIDIA_SETTINGS" ]; then
+        if [ -n "$NVIDIA_SETTINGS" ]; then
                 INFO "Run nvidia-settings"
                 nvidia-settings -l
         fi
-        if [ ! -z "$GNOME_SETTINGS_DAEMON" ]; then
+        if [ -n "$GNOME_SETTINGS_DAEMON" ]; then
                 INFO "Run gnome-settings-daemon"
                 gnome-settings-daemon &
         fi
@@ -254,20 +254,20 @@ INFO "Disable: screen blanking"
 xset s off
 
 INFO "Disable secondary monitor"
-xrandr --output $X_SECONDARY --off
+xrandr --output "$X_SECONDARY" --off
 
 INFO "Execute Steam"
 INFO "Exec line: $PREFIX $PROGRAM $STEAM_ARGS"
-if [ ! -z "$PREFIX" ]; then
-        $PREFIX $PROGRAM $STEAM_ARGS &
+if [ -n "$PREFIX" ]; then
+        "$PREFIX" "$PROGRAM" "$STEAM_ARGS" &
 else
-        $PROGRAM $STEAM_ARGS &
+        "$PROGRAM" "$STEAM_ARGS" &
 fi
 
 INFO "Wait until steam window will be visible"
 while ! check_steam_window; do
     sleep 0.5
-    read STEAM_PID < $HOME/.steampid
+    read -r STEAM_PID < "$HOME"/.steampid
     if [ ! -d "/proc/$STEAM_PID" ]; then
         zenity --error --text "Ops! Steam had some trouble to run. That can be a problem with steam itself or with your configuration."
         ERRO "Ops! Steam had some trouble to run. That can be a problem with steam itself or with your configuration."

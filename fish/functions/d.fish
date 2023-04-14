@@ -1,1 +1,0 @@
-/home/chris/.config/fisherman/fasd/functions/d.fish

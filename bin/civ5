@@ -1,2 +1,0 @@
-#! /usr/bin/env bash
-taskset -c 0-8 steam steam://rungameid/8930

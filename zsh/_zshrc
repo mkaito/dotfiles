@@ -1,88 +1,72 @@
-source /usr/share/zsh/scripts/zgen/zgen.zsh
+fpath=("$HOME/dev/dotfiles/zsh/completion" "$(brew --prefix)/share/zsh/site-functions" $fpath)
 
-# # Load the oh-my-zsh's library.
-# antigen use oh-my-zsh
+source "${HOME}/dev/build/zgenom/zgenom.zsh"
 
-# # Bundles from the default repo (robbyrussell's oh-my-zsh).
-# antigen bundle git
-# # antigen bundle command-not-found
+if ! zgenom saved; then
+    echo "Creating a zgenom save"
 
-# # Syntax highlighting bundle.
-# # antigen bundle zsh-users/zsh-syntax-highlighting
-# antigen bundle jimmijj/zsh-syntax-highlighting
-# antigen bundle tarruda/zsh-autosuggestions
-
-# # Pure prompt
-# # antigen bundle sindresorhus/pure
-# antigen bundle mafredri/zsh-async
-# antigen bundle sindresorhus/pure
-# # antigen theme pure
-
-# # Tell antigen that you're done.
-# antigen apply
-
-# check if there's no init script
-if ! zgen saved; then
-    echo "Creating a zgen save"
-
-    zgen oh-my-zsh
+    zgenom oh-my-zsh
 
     # plugins
-    zgen oh-my-zsh plugins/git
-    zgen oh-my-zsh plugins/sudo
+    zgenom ohmyzsh plugins/sudo
+    zgenom ohmyzsh plugins/asdf
+    zgenom ohmyzsh plugins/git-escape-magic
 
-    # zgen load zsh-users/zsh-syntax-highlighting
-    zgen load mafredri/zsh-async
-    zgen load sindresorhus/pure
+    zgenom load zsh-users/zsh-syntax-highlighting
+    zgenom load mafredri/zsh-async
+
+    # Prompt
+    # zgenom load sindresorhus/pure
+    # zgenom load spaceship-prompt/spaceship-vi-mode
+    zgenom load spaceship-prompt/spaceship-prompt spaceship
 
     # completions
-    zgen load zsh-users/zsh-completions src
+    # zgenom load zsh-users/zsh-completions src
 
-    # Fish-style auto-suggestions
-    zgen load tarruda/zsh-autosuggestions
+    # FZF history search
+    zgenom load unixorn/fzf-zsh-plugin
+    zgenom load Aloxaf/fzf-tab
+
+    # Automatically activate virtualenvs
+    # zgenom load se-jaeger/zsh-activate-py-environment
+
+    # Better vi mode
+    # zgen load jeffreytse/zsh-vi-mode
 
     # save all to init script
-    zgen save
+    zgenom save
 fi
 
-zle-line-init() {
-    zle autosuggest-start
+# Vi mode config
+function zvm_after_lazy_keybindings() {
+    zvm_bindkey viins '^R' fzf-history-widget
+    zvm_bindkey viins '^S' fzf-history-widget
+    zvm_bindkey viins '^Q' push-line
 }
-zle -N zle-line-init
 
-eval "$(fasd --init auto)"
+# Show git stash in the prompt
+zstyle :prompt:pure:git:stash show yes
 
-BASE16_SHELL="/usr/share/base16-shell/base16-grayscale.dark.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+eval "$(direnv hook zsh)"
 
-# Bindkey -e
-# setopt emacs
 setopt nohup
 setopt autocd
-# setopt cdablevars
-# setopt nobgnice
 setopt noclobber
-# setopt shwordsplit
-# setopt interactivecomments
-# setopt autopushd pushdminus pushdsilent pushdtohome
-# setopt histreduceblanks histignorespace inc_append_history
+setopt autopushd pushdminus pushdsilent pushdtohome
+setopt histreduceblanks histignorespace inc_append_history
 
 # This is the default, but since the commands below rely on it, make sure it's
 # bound to what we think it is.
 bindkey "^Q" push-line
 bindkey -s "^[l" "^Qls -l^J"
-# bindkey -s "^l" "^Qclear^J"
+bindkey -s "^l" "^Qclear^J"
 
 source ~/dev/dotfiles/zsh/_alias
 
-# Prompt requirements
-# setopt extended_glob prompt_subst
-# autoload colors zsh/terminfo
-# autoload -U zmv
+autoload -Uz compinit; compinit
 
-# New style completion system
-fpath=(/home/chris/dev/dotfiles/zsh/completion $fpath)
-autoload -U compinit; compinit
+# z jump
+eval "$(zoxide init zsh)"
 
 # Enable completion caching
 zstyle ':completion:*' use-cache on
@@ -92,17 +76,13 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' hosts off
 
 # Quick completions
-compdef '_dispatch git git' hub
 compdef gpg2=gpg
-
-_get_passwords() {
-		reply=(clear `pw complete`)
-}
-compctl -K _get_passwords pw
 
 # God bless _gnu_generic
 compdef _gnu_generic transmission-remote
-compdef _gnu_generic bitcoind
+
+# git-fixup
+zstyle ':completion:*:*:git:*' user-commands fixup:'Create a fixup commit'
 
 #  * List of completers to use
 zstyle ":completion:*" completer _complete _match _approximate
@@ -121,19 +101,16 @@ zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors
 zstyle ":completion:*" list-colors ""
 
-function web ()   { "${BROWSER}" "http://yubnub.org/parser/parse?command=${*}" }
-function dsync () { rsync -lprt --progress --stats --delete "$1/" "$2/" }
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-function snap () {
-		[ "$2" ] && tmout="$2"  || tmout=5
-		[ "$3" ] && format="$3" || format=png
-		fname="${HOME}/$1-`date +%d%m%y-%H%M`"
-		for ((i=${tmout}; i>=1; i--)) do; echo -n "${i}.. "; sleep 1; done
-		import -window root -quality 100 "${fname}.${format}"
-		convert -resize "15%" "${fname}.${format}" "${fname}.th.${format}"
-		echo ": ${fname}.${format}"
-}
+# 1Password shell plugins
+source /Users/mkaito/.config/op/plugins.sh
 
-. ~/dev/dotfiles/zsh/todoist_functions.sh
+# Solar Monkey shell helpers
+# source /Users/mkaito/dev/solarmonkey/rainforest/commands.bash
+source /Users/mkaito/dev/solarmonkey/app/commands.bash
+
+# asdf config
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
 
 # vim:ft=zsh

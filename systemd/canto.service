@@ -1,9 +1,0 @@
-[Unit]
-Description=Canto RSS Daemon
-After=network.target
-
-[Service]
-ExecStart=/bin/canto-daemon
-
-[Install]
-WantedBy=default.target

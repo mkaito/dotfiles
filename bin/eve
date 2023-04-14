@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# WINE="$(command -v wine)"
-# export WINE
-
-export WINE='/opt/wine-tkg-opt-git/bin/wine'
-export WINEESYNC=1
-
 ## Launcher Download
 ##
 ## Get new uri at:
@@ -12,21 +6,22 @@ export WINEESYNC=1
 ##
 ## Update MD5 with:
 ## # curl "$uri" | md5sum
-##
-## Example:
-## ❯ curl "http://binaries.eveonline.com/EveLauncher-1045952.exe" | md5sum
-## % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-## Dload  Upload   Total   Spent    Left  Speed
-## 100 52.2M  100 52.2M    0     0  3642k      0  0:00:14  0:00:14 --:--:-- 3759k
-## 7f65935614254ad3129306bb1f7163ca  -
 
 ## Settings
 GAME_INSTANCES=2
-DESKTOP_SIZE="3840x2117"
+# DESKTOP_SIZE="3840x2117"
 
 ## Wine settings
+# export WINE='/opt/wine-tkg-opt-git/bin/wine'
+export WINE="$(command -v wine)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/eve"
 export WINEDEBUG=-all
+export WINEESYNC=1
+
+export DXVK_STATE_CACHE_PATH="$WINEPREFIX"
+export PULSE_LATENCY_MSEC=60
+export __GL_SHADER_DISK_CACHE=1
+export __GL_SHADER_DISK_CACHE_PATH="$WINEPREFIX"
 
 ## Launcher
 INSTALLER_URL='http://binaries.eveonline.com/EveLauncher-1225328.exe'
@@ -34,12 +29,11 @@ INSTALLER_MD5='97d8604c8ec55a6a0928f28a43b4151e'
 
 ## File paths
 LAUNCHER="C://EVE/launcher/evelauncher.exe"
-PYFA="C://Program Files/pyfa/pyfa.exe"
-EVERNUS="C:\Program Files\Evernus\x86\evernus.exe"
 
 launch_eve() {
-  num="${1:-1}"
-  pgrep -cf "/desktop=EVE$num" >/dev/null || nohup wine explorer "/desktop=EVE$num,$DESKTOP_SIZE" "$LAUNCHER" &
+  # num="${1:-1}"
+  # pgrep -cf "/desktop=EVE$num" >/dev/null || nohup wine explorer "/desktop=EVE$num,$DESKTOP_SIZE" "$LAUNCHER" &
+  "$WINE" "$LAUNCHER" &
 }
 
 ## Dragons be beyond this line
@@ -48,16 +42,12 @@ case "$1" in
         INSTALLER="$HOME/.cache/$(basename $INSTALLER_URL)"
 
         ## Do not overwrite prefix. Run reset first.
-        # if [[ -d "$WINEPREFIX" ]]; then
-        #     echo "Destination $WINEPREFIX exists. Aborting. Run $(basename $0) reset."
-        #     exit 1
-        # fi
+        if [[ -d "$WINEPREFIX" ]]; then
+            echo "Destination $WINEPREFIX exists. Aborting. Run $(basename "$0") reset."
+            exit 1
+        fi
 
-        # winetricks corefonts d3dx9_36 vcrun2005 vcrun2008 vcrun2010 d3d11=disabled
-        winetricks -q dxvk corefonts
-
-        ## "Reboot" wine
-        # wineserver -w
+        winetricks -q dxvk corefonts dotnet40 dotnet461 winhttp
 
         if [[ ! -f "$INSTALLER" ]]; then
             curl -o "$INSTALLER" "$INSTALLER_URL"
@@ -109,7 +99,7 @@ case "$1" in
 
     winetricks)
         shift
-        exec winetricks "$@"
+        exec /usr/bin/winetricks "$@"
         ;;
 
     repair)
@@ -124,51 +114,41 @@ case "$1" in
             awk '{print $2}' | xargs kill
         ;;
 
-     launch)
+    launch)
         shift
 
         ## If used as `$(basename) launch all`, launch as many instances as
         ## defined at the top
         if [[ $1 = all ]]; then
-          C=1
-          while [[ $C -le $GAME_INSTANCES ]]; do
-            launch_eve $C
-            [[ $C = 1 ]] && sleep 15
-            ((C++))
-          done
+            C=1
+            while [[ $C -le $GAME_INSTANCES ]]; do
+                launch_eve $C
+                [[ $C = 1 ]] && sleep 15
+                ((C++))
+            done
 
-          pgrep -c pyfa >/dev/null || wine "$PYFA" & disown
-          pgrep -c evernus >/dev/null || wine "$EVERNUS" & disown
+            # pgrep -c pyfa >/dev/null || wine "$PYFA" & disown
         else
 
-          ## Launch an instance of the game.
-          ##
-          ## Usage: `$(basename) launch <number>`
-          ##
-          ## Where <number> should be an integer between 1 and infinity. It's
-          ## just a number to tag the virtual desktop for your window managing
-          ## convenience.
-          ##
-          ## <number> will default to 1.
+            ## Launch an instance of the game.
+            ##
+            ## Usage: `$(basename) launch <number>`
+            ##
+            ## Where <number> should be an integer between 1 and infinity. It's
+            ## just a number to tag the virtual desktop for your window managing
+            ## convenience.
+            ##
+            ## <number> will default to 1.
 
-          launch_eve "$1"
+            launch_eve "$1"
         fi
         ;;
 
     run)
         shift
-        exec wine "$@"
+        exec "$WINE" "$@"
         ;;
 
-    pyfa)
-        exec wine "$PYFA"
-        ;;
-
-    evernus)
-        exec wine "$EVERNUS"
-        ;;
-
-    ## TODO: Launch all clients by defaults, move launcher to `eve launcher` or something.
     *)
         launch_eve
         ;;

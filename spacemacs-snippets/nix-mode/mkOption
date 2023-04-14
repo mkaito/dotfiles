@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: mkOption
+# key: mko
+# --
+mkOption {
+  type = with types; $2;
+  default = $3;
+  description = ''
+    $0
+  '';
+};

@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-TARGET_HOST=adalind
+TARGET_HOST=stargazer
 BASE_PATH=public
 SELECTION=clipboard
 TMPDIR="$(mktemp -d)"
@@ -27,6 +27,9 @@ _ext() {
     *.tar.xz)
       echo 'tar.xz'
       ;;
+    *.tar.zstd)
+        echo 'tar.xz'
+        ;;
     *)
       echo "${1##*.}"
       ;;
@@ -80,9 +83,7 @@ urlsafe="$(urlencode "$(basename "$from")")"
 url="https://files.mkaito.net/${to:-}$urlsafe"
 echo -n "$url" | xclip -selection "$SELECTION"
 
-if [[ -t 0 ]]; then
-  echo "Copied to remote: $url"
-else
-  notify-send "File published" "$(basename "$from")"
-fi
+echo "Copied to remote: $url"
+notify-send "File published" "$(basename "$from")"
+
 # vim:ft=zsh

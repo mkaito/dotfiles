@@ -11,8 +11,8 @@ prompt="pass"
 password=$(gopass ls --flat | rofi -dmenu -p "$prompt")
 [[ -n $password ]] || exit
 
-gopass show -c "$password" 2>/dev/null
+gopass -c "$password" 2>/dev/null
 if [[ $typeit -eq 1 ]]; then
   sleep 1
-  xdotool type "$(xclip -o)"
+  xdotool type "$(xclip -selection clipboard -o)"
 fi

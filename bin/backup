@@ -1,4 +1,22 @@
 #!/bin/bash
+## Tarsnap:
 # Sleep until we can reach the server
-while ! ping -q -c 1 v1-0-0-server.tarsnap.com &> /dev/null; do sleep 3; done
-/usr/bin/tarsnap -c -f "$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)" "$HOME"
+# while ! ping -q -c 1 v1-0-0-server.tarsnap.com &> /dev/null; do sleep 3; done
+# /usr/bin/tarsnap -c -f "$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)" "$HOME"
+
+## Borg to rsync
+#shellcheck disable=SC1090
+source ~/.zshenv
+
+# Create archive
+borg create -v --stats --compression lz4 ---progress --one-file-system \
+     ::'{hostname}-{now:%Y-%m-%d %H:%M}' /home/chris          \
+     --exclude "/home/chris/.cache"                           \
+     --exclude "/home/chris/.ccache"                          \
+     --exclude "/home/chris/.local/share/wineprefixes"        \
+     --exclude "/home/chris/dev/build"                        \
+     --exclude "/home/chris/dev/**/*/target"                  \
+     --exclude "/home/chris/media"                            \
+     --exclude "/home/chris/Games"                            \
+     --exclude "/home/chris/*.mkv"                            \
+     --exclude "/home/chris/VirtualBox\ VMs"                  \

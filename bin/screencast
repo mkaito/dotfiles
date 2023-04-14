@@ -1,37 +1,40 @@
 #!/usr/bin/env zsh
 
-rec="$HOME/.cache/screencast-$(date +%Y%m%d-%H%M).rec.mkv"
+mkdir -p "$HOME/media/screen/cast"
+# rec="$HOME/media/screencast/$(date +%Y%m%d-%H%M).rec.mkv"
+rec="$HOME/screencast/$(date +%Y%m%d-%H%M).rec.mkv"
 
 function record() {
-	ffmpeg -v info\
-		-f x11grab -s 3840x2160 -i :0.0+3840,0 \
-		-f pulse -i "alsa_output.pci-0000_0d_00.3.analog-stereo.monitor"\
-		-f pulse -i "alsa_input.usb-BLUE_MICROPHONE_Blue_Snowball_201306-00.analog-mono"\
-		-vcodec libx264 -preset ultrafast -tune zerolatency -crf 0\
-		-acodec pcm_s16le -strict -2\
-		-filter_complex 'amerge, pan=2c| c0=0.3*c0+3*c2 | c1=0.3*c1+3*c2'\
-		"$rec"
+  ffmpeg -v info \
+         -video_size 3840x2113 -framerate 60 -f x11grab -i :0.0+0,937 \
+         -f pulse -i "bluez_sink.CC_98_8B_35_1C_10.a2dp_sink.monitor" -ac 2 \
+         -f pulse -i "alsa_input.usb-BLUE_MICROPHONE_Blue_Snowball_201306-00.mono-fallback" \
+         -filter_complex 'amerge, pan=2c| c0=0.3*c0+3*c2 | c1=0.3*c1+3*c2' \
+         -c:a pcm_s16le -strict -2 \
+         -preset ultrafast -crf 0 -tune zerolatency \
+         "$rec"
 }
 
 function recompress() {
-	[[ ! -r "$1" ]] && echo "File not found or not readable: $1." && return 127
+    [[ ! -r "$1" ]] && echo "File not found or not readable: $1." && return 127
 
-	## Mux to video
-	fp="${1%.*}.recomp.mkv"
-	[[ -f $fp ]] && mv -f "$fp" "${fp}.bak"
-	# This is gonna take a while
-	ffmpeg -i $1 -vcodec libx264 -crf 19 -preset veryslow -tune film -acodec flac -strict -2 $fp
-
+    ## Mux to video
+    fp="${1%.*}.recomp.mkv"
+    [[ -f $fp ]] && mv -f "$fp" "${fp}.bak"
+    # This is gonna take a while
+    ffmpeg -i $1 -vcodec libx264 -crf 22 -preset fast -tune film -acodec flac -strict -2 -threads 0 $fp
 }
 
 case $1 in
-	recompress)
-		recompress $2
-		;;
-	record)
-		record $2
-		;;
-	*)
-		echo "Usage: $0 [record|recompress]"
-		;;
+    recompress)
+        shift
+        recompress "$@"
+        ;;
+    record)
+        shift
+        record "$@"
+        ;;
+    *)
+        echo "Usage: $0 [record|recompress]"
+        ;;
 esac

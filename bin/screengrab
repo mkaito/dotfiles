@@ -1,8 +1,22 @@
 #!/usr/bin/env zsh
-set -euxo pipefail
+set -euo pipefail
+
 if [[ ! -t 0 ]]; then
   notify-send "Screengrab activated" "Click window or drag region"
 fi
 
-maim -s | xclip -selection clipboard -t image/png
+if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
+    grim -g "$(slurp -d)" -t png -l 8 - | wl-copy -t image/png
+else
+    maim -s | xclip -selection clipboard -t image/png
+fi
+
 notify-send 'Screenshot' 'Image copied to clipboard'
+
+# out="${XDG_RUNTIME_DIR:-/tmp}/$(date +%s).png"
+# maim -s "$out"
+# notify-send "Publishing screenshot" "Screenshot taken, processing..."
+# publish "$out"
+# rm -f "$out"
+
+# notify-send 'Screenshot' "$out"

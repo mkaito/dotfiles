@@ -1,3 +1,24 @@
 #!/usr/bin/env bash
 
-VirtualBox --comment "win10" --startvm "67ca868d-924e-46ea-8067-ce0bb6ee9eac"
+VBoxManage startvm "win10"  #"7c4f2b59-3d74-4393-8e19-e77da7e57273"
+
+
+# WINIMG=~/media/inbox/Win10_1909_English_x64.iso
+# VIRTIMG=~/media/inbox/virtio-win-0.1.173.iso
+# SOCKET='/tmp/vm_spice.socket'
+# qemu-system-x86_64 --enable-kvm -drive driver=raw,file="$HOME/vm/win10.img",if=virtio,cache=none -m 8G \
+#                    -daemonize \
+#                    -vga none -device qxl-vga,vgamem_mb=64 \
+#                    -device virtio-serial-pci \
+#                    -spice unix,addr="$SOCKET",disable-ticketing \
+#                    -device virtserialport,chardev=spicechannel0,name=com.redhat.spice.0 \
+#                    -chardev spicevmc,id=spicechannel0,name=vdagent \
+#                    -net nic,model=virtio -net user \
+#                    -net user,smb="$HOME" \
+#                    -cdrom "$WINIMG" \
+#                    -drive file="$VIRTIMG",index=3,media=cdrom \
+#                    -rtc base=localtime,clock=host \
+#                    -cpu host,hv_relaxed,hv_spinlocks=0x1fff,hv_vapic,hv_time -smp cores=8,threads=16 \
+#                    -usb -device usb-tablet
+
+# spicy --uri="spice+unix://$SOCKET"

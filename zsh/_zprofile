@@ -1,0 +1,46 @@
+# shellcheck shell=bash
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# For each path, check that it exists and isn't already in PATH
+PATHS=(\
+  "$HOME/dev/dotfiles/bin" \
+  "$HOME/.local/bin" \
+  "$HOME/.cabal/bin" \
+  "$HOME/.cargo/bin" \
+  "$GOPATH/bin" \
+  )
+
+if [[ $OSTYPE =~ darwin* ]]; then
+  # This is ridiculous, but it's the only way to get the GNU versions of these
+  PATHS+=( \
+    "/opt/homebrew/opt/coreutils/libexec/gnubin" \
+    "/opt/homebrew/opt/gawk/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-getopt/bin" \
+    "/opt/homebrew/opt/gnu-indent/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-sed/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-tar/libexec/gnubin" \
+    "/opt/homebrew/opt/grep/libexec/gnubin" \
+    "/opt/homebrew/opt/findutils/libexec/gnubin" \
+  )
+fi
+
+for p in "${PATHS[@]}"; do
+  case ":$PATH:" in
+    *":$p:"*) :;;
+    *) [[ -d $p ]] && PATH="$p:$PATH" ;;
+  esac
+done
+
+export PATH
+
+# Google Cloud SDK
+source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
+# Nix
+# if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+#   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+# fi
+
+# End Nix

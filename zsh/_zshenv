@@ -5,45 +5,40 @@ export GIT_EDITOR="$EDITOR"
 export SUDO_EDITOR="nvim"
 export VISUAL="$EDITOR"
 export ALTERNATE_EDITOR=""
-export BROWSER="$HOME/dev/dotfiles/bin/browser"
-export XTERM="$HOME/bin/terminal"
-export TERMCMD="$XTERM"
-export TERMINAL="$XTERM"
-export PERL_SIGNALS="unsafe"
-export GOPATH="$HOME/dev/go"
-export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
 
-# Wayland & HiDPI
-# export GDK_BACKEND=wayland
-# export QT_QPA_PLATFORM=waylang-egl
-# export CLUTTER_BACKEND=wayland
-# export SDL_VIDEODRIVER=wayland
+if [[ $OSTYPE =~ "darwin*" ]]; then
+    export HOMEBREW_NO_ANALYTICS=1
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 
+elif [[ $OSTYPE == "linux-gnu" ]]; then
+    export BROWSER="$HOME/dev/dotfiles/bin/browser"
+    export XTERM="$HOME/bin/terminal"
+    export TERMCMD="$XTERM"
+    export TERMINAL="$XTERM"
+    export PERL_SIGNALS="unsafe"
 
-# Borg backup to rsync.net
-export BORG_REPO="backup:borg/hydra"
-export BORG_REMOTE_PATH="borg1"
-export BORG_PASSPHRASE="Cs6BMgMTcYMDPqjeSCTtdIh1cG90iLnPi6nGnmhecTs39yDaqGQPFJHkcWo60A92bkXrs5Q9Abz5opav5NzztL1gOIa0yqBGXQoatGNha53xBTj99prAIP20ae3o96oH"
+    export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
+    export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
 
-# source /etc/zsh/zprofile
-if [[ -z $PATH_FIXED ]]; then
-  export PATH="$HOME/dev/dotfiles/bin:$PATH:$HOME/.local/bin:$HOME/.cabal/bin:$GOPATH/bin"
-  export PATH_FIXED=1
+    # HW accelerated video
+    export LIBVA_DRIVER_NAME=nvidia
+    export VDPAU_DRIVER=nvidia
+
+    export BORG_REPO="backup:borg/hydra"
+    export BORG_REMOTE_PATH="borg1"
+    export BORG_PASSPHRASE="Cs6BMgMTcYMDPqjeSCTtdIh1cG90iLnPi6nGnmhecTs39yDaqGQPFJHkcWo60A92bkXrs5Q9Abz5opav5NzztL1gOIa0yqBGXQoatGNha53xBTj99prAIP20ae3o96oH"
 fi
-export LEDGER_FILE="$HOME/media/sync/ledger/personal.ledger"
 
-# Ruby
-eval "$(rbenv init -)"
-
-## Nixops wrapper config
-export NO_LOCALDIR="$HOME/dev/serokell/deployer"
+# Go
+[[ -d $HOME/dev/go ]] && export GOPATH="$HOME/dev/go"
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS="--reverse --inline-info"
 
 export NIX_PAGER=cat
 
-# eval "$(op signin my)"
+# Compress xz faster and better
+export XZ_OPT='-8 -T0'
 
-# Bitwarden CLI
-export BW_SESSION="DkN5cJUOftpo5I6kFW53vhuRspxHeiq8JnNzHLXv5rodQNkCyfMyBgM7G3dnhOrFggJSH0q+hXcXhc/RckveUg=="
+# Allow NPM "global" package installations for the current user
+export npm_config_prefix="$HOME/.local"

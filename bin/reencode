@@ -87,7 +87,7 @@ function reencode_file() {
     # Problem: subtitles filter doesn't like spaces in file name. Move file to tmp first.
     ffmpeg -threads 0 \
            -i "$1" \
-           -c:v libx264 -crf 19 -preset fast -tune stillimage \
+           -c:v libx264 -crf 22 -preset fast \
            -c:a aac -q:a 2 -ac 2 -strict -2 \
            "$outpath"
 

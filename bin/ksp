@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+INSTANCES="$HOME/Games/KSP/Instances"
+
+INAME="${1:-MildlyModded}"
+
+IPATH="$INSTANCES/$INAME"
+
+cd "$IPATH"
+
+exec gamescope -H 2160 -- gamemoderun "./KSP.x86_64" -popupwindow

@@ -1,168 +1,127 @@
-# -*- mode: sh -*-
-source ~/dev/dotfiles/zsh/_android.sh
-source ~/dev/nix/mkaito/factorio_helpers.sh
 source ~/dev/dotfiles/zsh/nix.sh
 
 alias ss='sudo systemctl'
 alias ssu='systemctl --user'
-alias suspend='ss suspend'
-alias jc='sudo journalctl'
-alias jcu='journalctl --user'
+alias jj='sudo journalctl'
+alias jju='journalctl --user'
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
 alias timestamp='date +%s'
 alias ts=timestamp
 
-# alias tt=transmission-remote
-# alias ttl='tt -l'
+alias tt=transmission-remote
+alias ttl='tt -l'
 
-function mkcd {
+function mc {
   command mkdir -p "$1"
   cd "$1"
 }
 
-alias mkdir='mkdir -p'
+function tts {
+  local torrents
 
-# function tts {
-# 	local torrents
+  # [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+  if [[ ! -t 0 ]]; then
+    torrents=()
 
-# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-# 	if [[ ! -t 0 ]]; then
-# 		torrents=()
+    while read line; do
+      torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+    done
 
-# 		while read line; do
-# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-# 		done
+    torrents=${(j:,:)torrents}
+    echo "Starting torrents: ${torrents}."
+  elif [[ ! -z "$1" ]]; then
+    torrents="$1"
+  fi
 
-# 		torrents=${(j:,:)torrents}
-# 		echo "Starting torrents: ${torrents}."
-# 	elif [[ ! -z "$1" ]]; then
-# 		torrents="$1"
-# 	fi
-
-# 	tt -t${torrents:-all} -s
-# }
-
-# function ttS {
-# 	local torrents
-
-# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-# 	if [[ ! -t 0 ]]; then
-# 		torrents=()
-
-# 		while read line; do
-# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-# 		done
-
-# 		torrents=${(j:,:)torrents}
-# 		echo "Stopping torrents: ${torrents}."
-# 	elif [[ ! -z "$1" ]]; then
-# 		torrents="$1"
-# 	fi
-
-# 	tt -t${torrents:-all} -S ${2}
-# }
-
-# function ttr {
-#   # ttf finished | gawk '{gsub(/[^[:digit:]]/, "", $1); print $1}' |
-#   # xargs -n 1 -I'{}' transmission-remote --torrent '{}' --remove
-# 	local torrents
-
-# 	# [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
-# 	if [[ ! -t 0 ]]; then
-# 		torrents=()
-
-# 		while read line; do
-# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-# 		done
-
-# 		torrents=${(j:,:)torrents}
-# 		echo "Removing torrents: ${torrents}."
-# 	elif [[ ! -z "$1" ]]; then
-# 		torrents="$1"
-# 	fi
-# 	[[ -z "$torrents" ]] && echo "Won't remove all torrents!" && return 2
-
-# 	tt -t${torrents} -r
-# }
-
-# function ttm {
-# 	local torrents
-# 	local target
-
-# 	if [[ ! -t 0 ]]; then
-# 		# We're being fed on stdin
-
-# 		torrents=()
-
-# 		while read line; do
-# 			torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
-# 		done
-
-# 		torrents=${(j:,:)torrents}
-# 		target=$(realpath "$1")
-# 		echo "Moving torrents: ${torrents} -> ${target}."
-# 	elif [[ ! -z "$1" ]]; then
-# 		torrents="$1"
-# 		target=$(realpath "$2")
-# 	fi
-
-# 	[[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
-# 	[[ -z "$target" ]] && echo "Please specify a target folder" && return 2
-
-# 	tt "-t${torrents}" --move "${target}"
-# }
-
-# function ttf {
-# 	local pattern='*'
-# 	[[ ! -z "$1" ]] && pattern="$1"
-# 	ttl | egrep -i "$pattern"
-# }
-
-# function tta {
-# 	local args
-# 	set -A args
-# 	[[ ! -z "$1" ]] && args+=("-a" "$1")
-# 	[[ ! -z "$2" ]] && args+=("-w" "$(realpath $2)")
-
-# 	tt "$args[@]"
-# }
-
-#alias yt="noglob clive -f best -c"
-#alias ytp="yt --exec 'mplayer %f; rm %f'"
-
-## Twitch.tv livestreamer shortcut
-function ttv() {
-  local s="${1:-x5_pig}"
-  local q="${2:-best}"
-	streamlink -p mpv http://www.twitch.tv/"$s" "$q"
+  tt -t${torrents:-all} -s
 }
 
-# function remacs {
-# 	emacsclient -e "(kill-emacs)"
-# 	sleep 1
-# 	emacs --daemon
-# }
+function ttS {
+  local torrents
 
-## Serve $PWD with WEBrick
-function serve {
-	port="${1:-3000}"
-	ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
+  # [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+  if [[ ! -t 0 ]]; then
+    torrents=()
+
+    while read line; do
+      torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+    done
+
+    torrents=${(j:,:)torrents}
+    echo "Stopping torrents: ${torrents}."
+  elif [[ ! -z "$1" ]]; then
+    torrents="$1"
+  fi
+
+  tt -t${torrents:-all} -S ${2}
 }
 
-#alias sr="screen -URDS rtorrent rtorrent"
-#alias im="screen -l -UDRS weechat weechat-curses"
-#alias gnex='emulator -avd gnex -scale auto -no-boot-anim -cpu-delay 0 -qemu -icount auto'
+function ttr {
+  local torrents
 
-# Github
-eval "$(hub alias -s zsh)"
+  # [[-t 0]] = stdin (fd 0) is open and associated with a terminal device.
+  if [[ ! -t 0 ]]; then
+    torrents=()
 
-# mplayer & youtube
-#alias m=mplayer;
-#function yt() {
-#	quvi -f best --exec 'mplayer -prefer-ipv4 %u' "$1"
-#}
+    while read line; do
+      torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+    done
+
+    torrents=${(j:,:)torrents}
+    echo "Removing torrents: ${torrents}."
+  elif [[ ! -z "$1" ]]; then
+    torrents="$1"
+  fi
+  [[ -z "$torrents" ]] && echo "Won't remove all torrents!" && return 2
+
+  tt -t${torrents} -r
+}
+
+function ttm {
+  local torrents
+  local target
+
+  [[ -z "$1" ]] && echo "Please specify a target folder" && return 2
+  mkdir -p "$1"
+  target=$(realpath "$1")
+
+  if [[ ! -t 0 ]]; then
+    # We're being fed on stdin
+
+    torrents=()
+
+    while read line; do
+      torrents+=( $(echo $line | grep -Po '^\s*\d+' | tr -d ' ') )
+    done
+
+    torrents=${(j:,:)torrents}
+    echo "Moving torrents: ${torrents} -> ${target}."
+  elif [[ ! -z "$1" ]]; then
+    torrents="$1"
+    target=$(realpath "$2")
+  fi
+
+  [[ -z "$torrents" ]] && echo "Won't move all torrents!" && return 2
+
+  tt "-t${torrents}" --move "${target}"
+}
+
+function ttf {
+  local pattern='*'
+  [[ ! -z "$1" ]] && pattern="$1"
+  ttl | egrep -i "$pattern"
+}
+
+function tta {
+  local args
+  set -A args
+  [[ ! -z "$1" ]] && args+=("-a" "$1")
+  [[ ! -z "$2" ]] && args+=("-w" "$(realpath $2)")
+
+  tt "$args[@]"
+}
 
 # function calc () { awk "BEGIN { print $* }" }
 function calculate () { echo "$@" | bc -l ; }
@@ -171,54 +130,96 @@ alias calc='noglob calculate'
 # Fix file and folder permissions recursively under .
 alias fixperm="find . -type d -exec chmod 755 {} \; && find . -type f -exec chmod 644 {} \;"
 
-function currency() {
-	wget -qO- "http://www.google.com/finance/converter?a=$1&from=$2&to=$3&hl=es" |  sed '/res/!d;s/<[^>]*>//g';
-}
-
-# aptitude shorthands
-# alias ag='sudo aptitude'
-# alias agi='ag install'
-# alias agu='ag update'
-# alias agp='ag purge'
-# alias agg='ag safe-upgrade'
-# alias ags='aptitude search'
-
-# Yaourt shorthands
-# alias ya='yaourt'
-# alias yas='ya -S'
-# alias yass='ya -Ss'
-# alias yasy='ya -Sy'
-# alias yasyy='ya -Syy'
-# alias yard='ya -Rd'
-# alias yasyu='ya -Syu'
-# alias yaqdt='ya -Qdt'
-
 # Yay shorthands
 alias yas='yay -S'
 alias yass='yay -Ss'
 alias yasy='yay -Sy'
 alias yasyy='yay -Syy'
+alias yasyu='yay -Syyu --devel --noconfirm'
 alias yard='yay -Rcsu'
 
+# Homebrew shorthands
+alias b='brew'
+alias bu='brew update && brew outdated'
+alias bg='brew upgrade && brew cleanup'
+alias bs='brew search'
+alias bi='brew install'
+function br() {
+  [[ -z $1 ]] && echo 'No target provided' && exit 1
+  brew remove "$@"
+  brew cleanup
+}
+
 # ls shorthands
-alias ls='ls -Fh --color=auto --group-directories-first'
-alias ll='ls -lh'
-alias la='ls -a'
+alias l='gls -Fh --color=auto --group-directories-first'
+alias ll='l -lh'
+alias la='l -a'
 alias lla='la -lh'
+
+# git shorthands
+function gf() {
+  if [[ -z $1 ]]; then
+    git fixup
+  else
+    git commit --fixup="$1"
+  fi
+}
+alias g=git
+alias ga='g add'
+alias gap='g add -p'
+alias gb='g b'
+alias gc-='g co -'
+alias gc='g c'
+alias gca='g c --amend'
+alias gco='g co'
+alias gcob='g co -b'
+alias gd='g diff'
+alias gfu='g fetch --all --prune'
+alias gl='g l'
+alias glp='g l -p'
+alias gp='g push'
+alias gpp='g push --force-with-lease'
+alias gppt='g push --force-with-lease --follow-tags'
+alias gpt='g push --follow-tags'
+alias gr='g rebase'
+alias gri='g rebase --interactive --autosquash'
+alias grc='g rebase --continue'
+alias gra='g rebase --abort'
+alias g_='g reset'
+alias g_h='g reset --hard'
+alias g_s='g reset --soft'
+alias g_m='g reset --mixed'
+alias gs='g status --short'
+alias gss='g status'
+alias gu='g pull'
+alias gz='g stash'
+alias gza='g stash push'
+alias gzau='g stash push --include-untracked'
+alias gzb='g stash branch'
+alias gzc='g stash clear'
+alias gzd='g stash drop'
+alias gzl='g stash list'
+alias gzp='g stash pop'
+alias gzs='g stash show --include-untracked'
+
+# gh shorthands
+alias ghb='gh browse'
+alias ghpv='gh pr view -w'
+
+# docker and docker-compose
+alias d='docker'
+alias dc='docker-compose'
+alias dcr='dc run'
+alias dcd='dc down'
+alias dcu='dc up'
+alias dcud='dcu -d'
+alias dt='dc logs -f --tail=100'
 
 # Moving around
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
-# Coding facility aliases, mostly bundler related
-alias bjek='bundle exec jekyll --auto --server'
-alias be='bundle exec'
-alias beu='be unicorn'
-alias ber='be rake'
-alias bec='be compass'
-alias becc='bec compile -c config/compass.rb'
-alias becw='bec watch -c config/compass.rb'
-alias crowdin='java -jar ~/dev/bin/crowdin-cli.jar'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
 
 # Neovim
 alias vim='nvim'
@@ -227,11 +228,12 @@ alias vim='nvim'
 alias e='emacsclient -n'
 alias ec='e -c'
 alias ect='emacsclient -nw'
-# alias e='emacs'
-# alias ec=e
-# alias ect='emacs -nw'
 
-# Crypto helpers
+# Ruby, bundler, rails, etc
+alias rake='noglob rake'
+alias be='bundle exec'
+
+# Cryptography helpers
 function clipencrypt() {
   local -a recipients
   while [[ ! -z $1 ]]; do
@@ -244,20 +246,15 @@ function clipencrypt() {
 
 alias ce=clipencrypt
 
-function beeper() {
-  local duration bleep
-  bleep="$HOME/documents/sc2/chime.mp3"
-  interval=$(( ${1:-25} - 1 ))
+# Linux Xorg screen helpers
+output_left="DP-2"
+output_right="DP-0"
+alias ssingle="xrandr --output $output_right --off"
+alias snormal="xrandr --output $output_right --auto --pos 3840x0 --rotate right --output $output_left --auto --pos 0x1000"
+alias s1440="xrandr --output $output_right --auto --pos 2560x0 --rotate right --output $output_left --mode "2560x1440" --pos 0x1180"
+alias s1080="xrandr --output $output_right --auto --pos 1920x0 --rotate right --output $output_left --mode "1920x1080" --pos 0x1400"
 
-  while true; do
-    mpv --quiet "$bleep"
-    sleep "$interval"
-  done
-}
-
-# Screen toggling
-
-alias ssingle='xrandr --output DisplayPort-1 --off'
-alias smulti='xrandr --output DisplayPort-1 --auto --pos 3840x0 --rotate right --output DisplayPort-0 --pos 0x890'
+# Show packages updated today, do not include Haskell library spam
+alias updated='grep upgraded /var/log/pacman.log | grep -v "haskell-" | grep "$(date '+%Y-%m-%d')"'
 
 # vim:ft=zsh

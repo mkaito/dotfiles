@@ -1,28 +1,33 @@
 [user]
-  name = Michishige Kaito
-  email = me@mkaito.com
-	signingkey = 0x3A7302D87411E61E
+  name = Christian Höppner
+  email = chris@mkaito.net
+  signingkey = 0x3A7302D87411E61E
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 
 [alias]
-  co = checkout
-  b	 = branch
-  c	 = commit
-  s	 = status --short
-  p	 = push
-  lol = log --pretty=oneline --abbrev-commit --graph --decorate
-  lg = log --color --graph --pretty=format:'%G? %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  bd = ! git branch --merged | egrep -v '(^*|master|devel)' | xargs git branch -d
+  co  = checkout
+  cob = checkout -b
+  b   = branch
+  c   = commit
+  s   = status --short
+  ss  = status
+  p   = push
+  pt  = push --follow-tags
+  pp  = push --force-with-lease
+  ppt = push --force-with-lease --follow-tags
+  l  = log --color --graph --pretty=format:'%G? %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
 [core]
-  excludesfile = /home/chris/.gitignore
-
-[github]
-  user = mkaito
-  password = "<6\":7C%j27SIk,4xD:Q#mpCvY!+yH1pfQ00yTIlSYSTc`dXaPX]!76#qX;-fw8'C"
-  token = 82de415995f500ec4da4dc41fed97074
+  excludesfile = /Users/mkaito/.gitignore
+  autocrlf = input
 
 [push]
-  default = simple
+  default = current
 
 [color]
   ui = true
@@ -30,18 +35,37 @@
 [web]
   browser = /usr/bin/firefox
 
-[merge]
-  tool = vimdiff
-[mergetool]
-  prompt = false
-	keepBackup = false
-[mergetool "vimdiff"]
-  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[includeIf "gitdir:~/dev/solarmonkey/"]
+  path = .gitconfig-solarmonkey
 
-[includeIf "gitdir:~/dev/serokell/"]
-  path = .gitconfig-serokell
 [pager]
-	tag = false
-	branch = false
+  tag = false
+  branch = false
+
 [diff]
-	renameLimit = 2000
+  renameLimit = 2000
+
+[sendemail]
+  smtpserver = /usr/bin/msmtp
+  smtpserveroption=-a
+  smtpserveroption=mkaito.net
+
+[pull]
+  rebase = true
+
+[init]
+  defaultBranch = master
+
+[rebase]
+	autoSquash = true
+
+[fixup]
+  commit = true
+  menu = fzf --height '60%' \
+    --bind 'tab:toggle-preview' \
+    --preview 'git show --color {+1}' \
+    --preview-window=up:80% \
+    --prompt 'Select commit: '
+
+[maintenance]
+	repo = /Users/mkaito/dev/solarmonkey/app
