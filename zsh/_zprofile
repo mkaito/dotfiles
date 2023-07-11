@@ -22,6 +22,7 @@ if [[ $OSTYPE =~ darwin* ]]; then
     "/opt/homebrew/opt/gnu-tar/libexec/gnubin" \
     "/opt/homebrew/opt/grep/libexec/gnubin" \
     "/opt/homebrew/opt/findutils/libexec/gnubin" \
+    "/opt/homebrew/opt/postgresql@15/bin" \
   )
 fi
 
@@ -38,9 +39,18 @@ export PATH
 source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 
+# rbenv
+eval "$(rbenv init - zsh)"
+
+# pyenv
+eval "$(pyenv init -)"
+
+# nodenv
+eval "$(nodenv init -)"
+
 # Nix
-# if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-#   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-# fi
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
 
 # End Nix

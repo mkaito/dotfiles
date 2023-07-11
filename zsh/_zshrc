@@ -110,7 +110,4 @@ source /Users/mkaito/.config/op/plugins.sh
 # source /Users/mkaito/dev/solarmonkey/rainforest/commands.bash
 source /Users/mkaito/dev/solarmonkey/app/commands.bash
 
-# asdf config
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-
 # vim:ft=zsh
