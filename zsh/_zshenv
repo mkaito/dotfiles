@@ -6,11 +6,7 @@ export SUDO_EDITOR="nvim"
 export VISUAL="$EDITOR"
 export ALTERNATE_EDITOR=""
 
-if [[ $OSTYPE =~ "darwin*" ]]; then
-    export HOMEBREW_NO_ANALYTICS=1
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-
-elif [[ $OSTYPE == "linux-gnu" ]]; then
+if [[ $OSTYPE == "linux-gnu" ]]; then
     export BROWSER="$HOME/dev/dotfiles/bin/browser"
     export XTERM="$HOME/bin/terminal"
     export TERMCMD="$XTERM"
@@ -23,19 +19,10 @@ elif [[ $OSTYPE == "linux-gnu" ]]; then
     # HW accelerated video
     export LIBVA_DRIVER_NAME=nvidia
     export VDPAU_DRIVER=nvidia
-
-    export BORG_REPO="backup:borg/hydra"
-    export BORG_REMOTE_PATH="borg1"
-    export BORG_PASSPHRASE="Cs6BMgMTcYMDPqjeSCTtdIh1cG90iLnPi6nGnmhecTs39yDaqGQPFJHkcWo60A92bkXrs5Q9Abz5opav5NzztL1gOIa0yqBGXQoatGNha53xBTj99prAIP20ae3o96oH"
 fi
-
-# Go
-[[ -d $HOME/dev/go ]] && export GOPATH="$HOME/dev/go"
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS="--reverse --inline-info"
-
-export NIX_PAGER=cat
 
 # Compress xz faster and better
 export XZ_OPT='-8 -T0'

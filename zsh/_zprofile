@@ -1,14 +1,17 @@
 # shellcheck shell=bash
 
+export HOMEBREW_NO_ANALYTICS=1
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 # For each path, check that it exists and isn't already in PATH
 PATHS=(\
   "$HOME/dev/dotfiles/bin" \
   "$HOME/.local/bin" \
-  "$HOME/.cabal/bin" \
   "$HOME/.cargo/bin" \
-  "$GOPATH/bin" \
   )
 
 if [[ $OSTYPE =~ darwin* ]]; then

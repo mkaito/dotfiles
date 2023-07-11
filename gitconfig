@@ -21,6 +21,7 @@
   pp  = push --force-with-lease
   ppt = push --force-with-lease --follow-tags
   l  = log --color --graph --pretty=format:'%G? %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  recent = ! git reflog | grep -Eio 'moving from ([^[:space:]]+)' | awk '{ print $3 }' | awk ' !x[$0]++' | grep -Ev '^[a-f0-9]{40}$' | head -n5
 
 [core]
   excludesfile = /Users/mkaito/.gitignore

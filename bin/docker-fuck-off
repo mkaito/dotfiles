@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+## 
+# What docker system prune should have been.
+
+set -euo pipefail
+
+docker container prune --force
+docker image prune --all --force
+docker volume prune --all --force
+docker network prune --force
+
+echo 'All done!'

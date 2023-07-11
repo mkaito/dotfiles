@@ -47,8 +47,6 @@ function zvm_after_lazy_keybindings() {
 # Show git stash in the prompt
 zstyle :prompt:pure:git:stash show yes
 
-eval "$(direnv hook zsh)"
-
 setopt nohup
 setopt autocd
 setopt noclobber
@@ -105,9 +103,5 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 # 1Password shell plugins
 source /Users/mkaito/.config/op/plugins.sh
-
-# Solar Monkey shell helpers
-# source /Users/mkaito/dev/solarmonkey/rainforest/commands.bash
-source /Users/mkaito/dev/solarmonkey/app/commands.bash
 
 # vim:ft=zsh

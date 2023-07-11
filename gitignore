@@ -6,3 +6,4 @@
 .direnv/
 *.key
 *.nixops
+.history/

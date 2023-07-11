@@ -81,9 +81,9 @@ ssh "$TARGET_HOST" mkdir -p "$BASE_PATH"/"${to:-}"
 rsync -rvzP "$from" "$TARGET_HOST":"$BASE_PATH"/"${to:-}"
 urlsafe="$(urlencode "$(basename "$from")")"
 url="https://files.mkaito.net/${to:-}$urlsafe"
-echo -n "$url" | xclip -selection "$SELECTION"
+echo -n "$url" | pbcopy "$SELECTION"
 
 echo "Copied to remote: $url"
-notify-send "File published" "$(basename "$from")"
+# notify-send "File published" "$(basename "$from")"
 
 # vim:ft=zsh
