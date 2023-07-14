@@ -19,3 +19,4 @@ dotemacs/saveplace.el
 dotemacs/vendor/
 eshell/history
 eshell/lastdir
+.DS_Store
