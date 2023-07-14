@@ -157,13 +157,6 @@ alias la='l -a'
 alias lla='la -lh'
 
 # git shorthands
-function gf() {
-  if [[ -z $1 ]]; then
-    git fixup
-  else
-    git commit --fixup="$1"
-  fi
-}
 alias g=git
 alias g_='g reset'
 alias g_h='g reset --hard'
@@ -179,6 +172,7 @@ alias gcan='g c --amend --no-edit'
 alias gco='g co'
 alias gcob='g co -b'
 alias gd='g diff'
+alias gf='git fixup'
 alias gfu='g fetch --all --prune'
 alias gl='g l'
 alias glp='g l -p'
@@ -203,6 +197,7 @@ alias gzl='g stash list'
 alias gzp='g stash push'
 alias gzpu='g stash push --include-untracked'
 alias gzs='g stash show --include-untracked'
+alias lg='lazygit'
 
 # gh shorthands
 alias ghb='gh browse'

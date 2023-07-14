@@ -70,3 +70,5 @@
 
 [maintenance]
 	repo = /Users/mkaito/dev/solarmonkey/app
+
+# vim: ft=gitconfig
