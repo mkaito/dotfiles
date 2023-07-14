@@ -22,7 +22,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
 fi
 
 export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS="--reverse --inline-info"
+export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"
 
 # Compress xz faster and better
 export XZ_OPT='-8 -T0'

@@ -99,6 +99,12 @@ zstyle ":completion:*:cd:*" ignore-parents parent pwd
 #  * Complete with colors
 zstyle ":completion:*" list-colors ""
 
+# fzf-tab config
+zstyle ':fzf-tab:*' fzf-bindings \
+	'ctrl-j:down' \
+	'ctrl-k:up' \
+	'ctrl-l:accept'
+
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # 1Password shell plugins
