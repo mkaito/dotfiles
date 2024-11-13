@@ -113,7 +113,7 @@ This function should only modify configuration layer settings."
              python-backend 'lsp
              python-lsp-server 'pyright
              python-formatter 'black)
-     ruby
+     (ruby :variables ruby-version-manager 'rbenv)
      rust
      (shell :variables
             shell-default-shell 'vterm

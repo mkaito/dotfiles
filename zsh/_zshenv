@@ -6,20 +6,28 @@ export SUDO_EDITOR="nvim"
 export VISUAL="$EDITOR"
 export ALTERNATE_EDITOR=""
 
-if [[ $OSTYPE == "linux-gnu" ]]; then
-    export BROWSER="$HOME/dev/dotfiles/bin/browser"
-    export XTERM="$HOME/bin/terminal"
-    export TERMCMD="$XTERM"
-    export TERMINAL="$XTERM"
-    export PERL_SIGNALS="unsafe"
+case "$OSTYPE" in
+    linux*)
+        export BROWSER="$HOME/dev/dotfiles/bin/browser"
+        export XTERM="$HOME/bin/terminal"
+        export TERMCMD="$XTERM"
+        export TERMINAL="$XTERM"
+        export PERL_SIGNALS="unsafe"
 
-    export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
-    export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
+        export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
+        export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
 
-    # HW accelerated video
-    export LIBVA_DRIVER_NAME=nvidia
-    export VDPAU_DRIVER=nvidia
-fi
+        # HW accelerated video
+        # export LIBVA_DRIVER_NAME=nvidia
+        # export VDPAU_DRIVER=nvidia
+        ;;
+
+    darwin*)
+        export HOMEBREW_NO_ENV_HINTS=1
+        ;;
+
+esac
+
 
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"

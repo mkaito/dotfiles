@@ -40,7 +40,7 @@ fi
 # Vi mode config
 function zvm_after_lazy_keybindings() {
     zvm_bindkey viins '^R' fzf-history-widget
-    zvm_bindkey viins '^S' fzf-history-widget
+    # zvm_bindkey viins '^S' fzf-history-widget
     zvm_bindkey viins '^Q' push-line
 }
 
@@ -111,3 +111,4 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 source /Users/mkaito/.config/op/plugins.sh
 
 # vim:ft=zsh
+function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}

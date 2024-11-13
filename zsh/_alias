@@ -131,12 +131,12 @@ alias calc='noglob calculate'
 alias fixperm="find . -type d -exec chmod 755 {} \; && find . -type f -exec chmod 644 {} \;"
 
 # Yay shorthands
-alias yas='yay -S'
-alias yass='yay -Ss'
-alias yasy='yay -Sy'
-alias yasyy='yay -Syy'
-alias yasyu='yay -Syyu --devel --noconfirm'
-alias yard='yay -Rcsu'
+# alias yas='yay -S'
+# alias yass='yay -Ss'
+# alias yasy='yay -Sy'
+# alias yasyy='yay -Syy'
+# alias yasyu='yay -Syyu --devel --noconfirm'
+# alias yard='yay -Rcsu'
 
 # Homebrew shorthands
 alias b='brew'
@@ -230,6 +230,7 @@ alias ect='emacsclient -nw'
 # Ruby, bundler, rails, etc
 alias rake='noglob rake'
 alias be='bundle exec'
+alias ber='noglob bundle exec rake'
 
 # Cryptography helpers
 function clipencrypt() {
@@ -254,5 +255,15 @@ alias s1080="xrandr --output $output_right --auto --pos 1920x0 --rotate right --
 
 # Show packages updated today, do not include Haskell library spam
 alias updated='grep upgraded /var/log/pacman.log | grep -v "haskell-" | grep "$(date '+%Y-%m-%d')"'
+
+# Yazi wrapper that changes cwd on exit
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
 # vim:ft=zsh
