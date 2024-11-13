@@ -1,0 +1,18 @@
+
+[window]
+startup_mode = "Maximized"
+decorations = "Transparent"
+padding = { x = 0, y = 24 }
+
+[font]
+size = 16
+normal = { family = "Iosevka Custom", style = "Extralight" }
+
+[env]
+TERM = "alacritty-direct"
+
+[general]
+import = [
+  "~/.config/alacritty/tokyonight_night.toml",
+  "~/.config/alacritty/keybinds.toml",
+]

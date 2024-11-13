@@ -1,0 +1,2 @@
+[keyboard]
+bindings = [{ key = "F", mods = "Command|Shift", action = "ToggleFullscreen" }]
