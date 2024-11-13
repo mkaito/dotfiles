@@ -1,3 +1,0 @@
-#!/usr/bin/zsh
-
-exec emacsclient -e '(make-capture-frame)'

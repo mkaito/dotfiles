@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-cd $HOME/dev/build/PySpy
-exec env GDK_SCALE=2 GDK_DPI_SCALE=0.5 python3 __main__.py

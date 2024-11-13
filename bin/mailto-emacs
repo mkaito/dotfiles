@@ -1,2 +1,0 @@
-#!/bin/bash
-exec emacsclient -c --eval "(browse-url-mail \"mailto:$@\")"
