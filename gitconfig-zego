@@ -1,0 +1,18 @@
+[user]
+  name = Christian Höppner
+  email = christian.hoppner@zego.com
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINxeJOqHgubGuMv05aXKSYoTcyxmb8/Tg1WoT0DyrJ14
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
+
+[core]
+  sshCommand = "ssh -i ~/.ssh/id_ed25519_zego.pub"
+
+# vim: set ft=gitconfig:
