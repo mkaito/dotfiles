@@ -1,6 +1,0 @@
-# name: <% unless  ...  -%> $. <% end -%>
-# key: %unless
-# --
-<% unless ${cond} -%>
-    $0
-<% end -%>
