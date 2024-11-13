@@ -43,24 +43,8 @@ done
 
 export PATH
 
-# Google Cloud SDK
-# source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-# source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
-
-# rbenv
-# eval "$(rbenv init - zsh)"
-
-# pyenv
-# NB: Replaced by uv
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# nodenv
-# eval "$(nodenv init -)"
-
 # mise en place
 eval "$(/Users/mkaito/.local/bin/mise activate zsh)"
-eval "$(/Users/mkaito/.local/bin/mise activate zsh --shims)"
 
 # GPG agent and SSH_AUTH_SOCK
 # export GPG_TTY=$(tty)
