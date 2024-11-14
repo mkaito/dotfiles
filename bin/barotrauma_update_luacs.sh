@@ -1,12 +1,23 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
+set -x
 
 REPO="evilfactory/LuaCsForBarotrauma"
 ARTIFACT_NAME="luacsforbarotrauma_patch_mac_client.zip"
 DOWNLOAD_DIR="$HOME/Downloads"
-BAROTRAUMA_DIR="$HOME/Library/Application Support/Steam/steamapps/common/Barotrauma"
-TARGET_DIR="$BAROTRAUMA_DIR/Barotrauma.app/Contents/MacOS"
+BAROTRAUMA_DIR_MACOS="$HOME/Library/Application Support/Steam/steamapps/common/Barotrauma/Barotrauma.app/Contents/MacOS"
+BAROTRAUMA_DIR_LINUX="$HOME/.steam/steam/steamapps/common/Barotrauma"
+
+
+case "$OSTYPE" in
+    linux*)
+      TARGET_DIR="$BAROTRAUMA_DIR_LINUX"
+      ;;
+    darwin*)
+      TARGET_DIR="$BAROTRAUMA_DIR_MACOS"
+      ;;
+  esac
 
 if ! command -v gh &>/dev/null; then
   echo "** Error: 'gh' command not found. Please install GitHub CLI." >&2
@@ -22,8 +33,8 @@ if gh auth status 2>&1 | grep -q "You are not logged into any GitHub hosts"; the
   gh auth login
 fi
 
-if [[ ! -d "$BAROTRAUMA_DIR" ]]; then
-  echo "** Error: Barotrauma is not installed. Directory '$BAROTRAUMA_DIR' does not exist." >&2
+if [[ ! -d "$TARGET_DIR" ]]; then
+  echo "** Error: Barotrauma is not installed. Directory '$TARGET_DIR' does not exist." >&2
   exit 1
 fi
 

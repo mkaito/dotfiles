@@ -5,8 +5,8 @@ decorations = "Transparent"
 padding = { x = 0, y = 24 }
 
 [font]
-size = 16
-normal = { family = "Iosevka Custom", style = "Extralight" }
+size = 12
+normal = { family = "Iosevka", style = "Extralight" }
 
 [env]
 TERM = "alacritty-direct"
