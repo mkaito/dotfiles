@@ -20,3 +20,7 @@ dotemacs/vendor/
 eshell/history
 eshell/lastdir
 .DS_Store
+nushell/history.txt
+nushell/vendor/autoload/starship.nu
+nushell/vendor/autoload/zoxide.nu
+nushell/vendor/use/mise.nu

@@ -24,6 +24,7 @@ wezterm.on("update-right-status", function(window, _)
 	window:set_right_status(name or "")
 end)
 
+config.default_prog = { "/opt/homebrew/bin/nu", "-l" }
 config.term = "wezterm"
 config.color_scheme = "tokyonight_night"
 config.audible_bell = "Disabled"
