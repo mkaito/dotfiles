@@ -32,7 +32,3 @@ path add "~/dev/dotfiles/bin"
 let mise_path = $nu.default-config-dir | path join "vendor/use/mise.nu"
 ^mise activate nu | save $mise_path --force
 
-# argc-completions
-$env.ARGC_COMPLETIONS_ROOT = '/Users/mkaito/dev/build/argc-completions'
-$env.ARGC_COMPLETIONS_PATH = ($env.ARGC_COMPLETIONS_ROOT + '/completions/macos:' + $env.ARGC_COMPLETIONS_ROOT + '/completions')
-$env.PATH = ($env.PATH | prepend ($env.ARGC_COMPLETIONS_ROOT + '/bin'))

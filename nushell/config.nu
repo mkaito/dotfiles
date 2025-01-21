@@ -22,7 +22,9 @@ $env.config.buffer_editor = "nvim"
 
 starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
 zoxide init nushell | save -f ($nu.data-dir | path join "vendor/autoload/zoxide.nu")
-use ($nu.default-config-dir | path join "vendor/use/mise.nu")
+
+# Custom completions from nu-scripts
+use ($nu.data-dir | path join "vendor/scripts/custom-completions/git/git-completions.nu")
 
 # Theme
 source ($nu.data-dir | path join "themes/tokyonight.nu")

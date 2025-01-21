@@ -148,3 +148,6 @@
 [submodule "vimconf/bundle/FastFold"]
 	path = vimconf/bundle/FastFold
 	url = git@github.com:Konfekt/FastFold.git
+[submodule "nushell/scripts"]
+	path = nushell/vendor/scripts
+	url = https://github.com/nushell/nu_scripts.git
