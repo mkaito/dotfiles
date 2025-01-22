@@ -7,9 +7,6 @@ if command -v direnv &>/dev/null; then
   eval "$(direnv hook zsh)"
 fi
 
-# Make asdf golang shut up
-export ASDF_GOLANG_MOD_VERSION_ENABLED=true
-
 # For each path, check that it exists and isn't already in PATH
 PATHS=(\
   "$HOME/dev/dotfiles/bin" \
@@ -44,7 +41,7 @@ done
 export PATH
 
 # mise en place
-eval "$(/Users/mkaito/.local/bin/mise activate zsh)"
+eval "$(/opt/homebrew/bin/mise activate zsh)"
 
 # GPG agent and SSH_AUTH_SOCK
 # export GPG_TTY=$(tty)

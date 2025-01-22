@@ -9,29 +9,17 @@ if ! zgenom saved; then
 
     # plugins
     zgenom ohmyzsh plugins/sudo
-    zgenom ohmyzsh plugins/asdf
     zgenom ohmyzsh plugins/git-escape-magic
 
     zgenom load zsh-users/zsh-syntax-highlighting
     zgenom load mafredri/zsh-async
 
     # Prompt
-    # zgenom load sindresorhus/pure
-    # zgenom load spaceship-prompt/spaceship-vi-mode
-    zgenom load spaceship-prompt/spaceship-prompt spaceship
-
-    # completions
-    # zgenom load zsh-users/zsh-completions src
+    zgenom load sindresorhus/pure
 
     # FZF history search
     zgenom load unixorn/fzf-zsh-plugin
     zgenom load Aloxaf/fzf-tab
-
-    # Automatically activate virtualenvs
-    # zgenom load se-jaeger/zsh-activate-py-environment
-
-    # Better vi mode
-    # zgen load jeffreytse/zsh-vi-mode
 
     # save all to init script
     zgenom save
@@ -40,7 +28,6 @@ fi
 # Vi mode config
 function zvm_after_lazy_keybindings() {
     zvm_bindkey viins '^R' fzf-history-widget
-    # zvm_bindkey viins '^S' fzf-history-widget
     zvm_bindkey viins '^Q' push-line
 }
 
