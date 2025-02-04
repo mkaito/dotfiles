@@ -199,6 +199,20 @@ alias gzpu='g stash push --include-untracked'
 alias gzs='g stash show --include-untracked'
 alias lg='lazygit'
 
+# git commit alias that allows writing oneliners without quoting
+gcm() {
+  local opts=()
+
+  # Collect all arguments starting with '-' as options
+  while [[ "$1" == -* ]]; do
+    opts+=("$1")
+    shift
+  done
+
+  # The rest becomes the commit message
+  git commit "${opts[@]}" -m "$*"
+}
+
 # gh shorthands
 alias ghb='gh browse'
 alias ghpv='gh pr view -w'
