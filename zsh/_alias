@@ -177,6 +177,7 @@ alias gfu='g fetch --all --prune'
 alias gl='g l'
 alias glp='g l -p'
 alias gm='g merge'
+alias gm-='gm -'
 alias gp='g push'
 alias gpp='g push --force-with-lease'
 alias gppt='g push --force-with-lease --follow-tags'
@@ -200,7 +201,8 @@ alias gzs='g stash show --include-untracked'
 alias lg='lazygit'
 
 # git commit alias that allows writing oneliners without quoting
-gcm() {
+alias gcm='noglob gcommit'
+gcommit() {
   local opts=()
 
   # Collect all arguments starting with '-' as options
