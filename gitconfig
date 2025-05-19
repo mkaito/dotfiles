@@ -19,6 +19,9 @@
 	process = git-lfs filter-process
 	required = true
 
+[column]
+  ui = auto
+
 [alias]
   co  = checkout
   cob = checkout -b
@@ -36,6 +39,7 @@
   sshCommand = "ssh -i ~/.ssh/id_ed25519_1password.pub"
   excludesfile = /Users/mkaito/.gitignore
   autocrlf = input
+  untrackedCache = true
 
 [push]
   default = current
@@ -52,20 +56,43 @@
 
 [diff]
   renameLimit = 2000
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
 
 [sendemail]
   smtpserver = /usr/bin/msmtp
   smtpserveroption=-a
   smtpserveroption=mkaito.net
 
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
+
 [pull]
   rebase = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+
+[merge]
+  conflictstyle = zdiff3
 
 [init]
   defaultBranch = master
 
 [rebase]
 	autoSquash = true
+
+[branch]
+  sort = -committerdate
+
+[tag]
+  sort = version:refname
 
 [fixup]
   commit = true
@@ -77,3 +104,8 @@
 
 [includeIf "gitdir:~/dev/stx/zego/"]
   path = .gitconfig-zego
+
+[includeIf "gitdir:~/dev/stx/tails/"]
+  path = .gitconfig-tails
+
+# vim: set ft=gitconfig:

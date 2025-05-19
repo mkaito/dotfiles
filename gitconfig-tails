@@ -1,0 +1,18 @@
+[user]
+  name = Christian Höppner
+  email = christian.hoppner@tails.com
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETqRXrR0lzjNUjumCP7lvk2dgB6sINSs8T7rumCrpLs
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
+
+[core]
+  sshCommand = "ssh -i ~/.ssh/id_ed25519_tails.pub"
+
+# vim: set ft=gitconfig:
