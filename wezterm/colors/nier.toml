@@ -1,0 +1,44 @@
+[colors]
+foreground = "#FFF5E1"    # Pale Cream: primary text
+background = "#3B2E2A"    # Dark Brown: main background
+cursor_bg = "#D2B48C"     # Tan: cursor background
+cursor_border = "#D2B48C" # Tan: cursor border
+cursor_fg = "#3B2E2A"     # Dark Brown: cursor text
+selection_bg = "#C19A6B"  # Faded Orange: selection background
+selection_fg = "#FFF5E1"  # Pale Cream: selection text
+split = "#8B8680"         # Warm Grey: split divider
+compose_cursor = "#704214" # Sepia: compose cursor
+scrollbar_thumb = "#6E665E" # Muted Olive: scrollbar thumb
+
+ansi = ["#3B2E2A", "#704214", "#6E665E", "#D2B48C", "#8B8680", "#C19A6B", "#F5F5DC", "#FFF5E1"]
+brights = ["#3B2E2A", "#704214", "#6E665E", "#D2B48C", "#8B8680", "#C19A6B", "#F5F5DC", "#FFF5E1"]
+
+[colors.tab_bar]
+inactive_tab_edge = "#6E665E"  # Muted Olive: inactive tab edge
+background = "#3B2E2A"         # Dark Brown: tab bar background
+
+[colors.tab_bar.active_tab]
+fg_color = "#3B2E2A"  # Dark Brown: active tab text
+bg_color = "#D2B48C"  # Tan: active tab background
+
+[colors.tab_bar.inactive_tab]
+fg_color = "#8B8680"  # Warm Grey: inactive tab text
+bg_color = "#6E665E"  # Muted Olive: inactive tab background
+
+[colors.tab_bar.inactive_tab_hover]
+fg_color = "#D2B48C"  # Tan: inactive tab hover text
+bg_color = "#6E665E"  # Muted Olive: inactive tab hover background
+
+[colors.tab_bar.new_tab_hover]
+fg_color = "#C19A6B"  # Faded Orange: new tab hover text
+bg_color = "#3B2E2A"  # Dark Brown: new tab hover background
+intensity = "Bold"
+
+[colors.tab_bar.new_tab]
+fg_color = "#C19A6B"  # Faded Orange: new tab text
+bg_color = "#3B2E2A"  # Dark Brown: new tab background
+
+[metadata]
+aliases = []
+author = "generated"
+name = "nier_dark"
