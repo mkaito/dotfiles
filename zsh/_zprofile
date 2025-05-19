@@ -40,9 +40,6 @@ done
 
 export PATH
 
-# mise en place
-eval "$(/opt/homebrew/bin/mise activate zsh)"
-
 # GPG agent and SSH_AUTH_SOCK
 # export GPG_TTY=$(tty)
 # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)

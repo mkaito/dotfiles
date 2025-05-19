@@ -40,6 +40,11 @@ setopt noclobber
 setopt autopushd pushdminus pushdsilent pushdtohome
 setopt histreduceblanks histignorespace inc_append_history
 
+# Save history basically forever
+HISTFILE=~/.zsh_history
+HISTSIZE=999999999
+SAVEHIST=$HISTSIZE
+
 # This is the default, but since the commands below rely on it, make sure it's
 # bound to what we think it is.
 bindkey "^Q" push-line
@@ -97,5 +102,9 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # 1Password shell plugins
 source /Users/mkaito/.config/op/plugins.sh
 
-# vim:ft=zsh
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
+
+# mise en place
+eval "$(/opt/homebrew/bin/mise activate zsh)"
+
+# vim:ft=zsh

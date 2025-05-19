@@ -151,7 +151,7 @@ function br() {
 }
 
 # ls shorthands
-alias l='gls -Fh --color=auto --group-directories-first'
+alias l='ls -Fh --color=auto --group-directories-first'
 alias ll='l -lh'
 alias la='l -a'
 alias lla='la -lh'
