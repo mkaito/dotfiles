@@ -10,7 +10,7 @@ set -euo pipefail
 #   * foot
 #   * kitty
 if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
-  terminal=foot
+  terminal=alacritty
 else
   terminal=alacritty
 fi

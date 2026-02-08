@@ -1,4 +1,6 @@
-fpath=("$HOME/dev/dotfiles/zsh/completion" "$(brew --prefix)/share/zsh/site-functions" $fpath)
+fpath=("$HOME/dev/dotfiles/zsh/completion" $fpath)
+
+# "$(brew --prefix)/share/zsh/site-functions" 
 
 source "${HOME}/dev/build/zgenom/zgenom.zsh"
 
@@ -16,6 +18,11 @@ if ! zgenom saved; then
 
     # Prompt
     zgenom load sindresorhus/pure
+    # zgenom load spaceship-prompt/spaceship-vi-mode
+    zgenom load spaceship-prompt/spaceship-prompt spaceship
+
+    # completions
+    # zgenom load zsh-users/zsh-completions src
 
     # FZF history search
     zgenom load unixorn/fzf-zsh-plugin
@@ -99,9 +106,10 @@ zstyle ':fzf-tab:*' fzf-bindings \
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
-
 # mise en place
-eval "$(/opt/homebrew/bin/mise activate zsh)"
+MISE="$(command -v mise)"
+eval "$($MISE activate zsh)"
+
+function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
 
 # vim:ft=zsh

@@ -1,17 +1,17 @@
 [user]
 	name = Christian Höppner
 	email = chris@mkaito.net
-  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICF2HUMJT5CjS+Uz/PSBKXI/kKI9EAsxQh/Nnz+ANq+B
+  ; signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICF2HUMJT5CjS+Uz/PSBKXI/kKI9EAsxQh/Nnz+ANq+B
 
-[gpg]
-  format = ssh
+; [gpg]
+;   format = ssh
 
-[gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-	allowedSignersFile = /Users/mkaito/.ssh/allowed_signers
+; [gpg "ssh"]
+;   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+; 	allowedSignersFile = /Users/mkaito/.ssh/allowed_signers
 
-[commit]
-  gpgsign = true
+; [commit]
+;   gpgsign = true
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -104,16 +104,10 @@
     --preview-window=up:80% \
     --prompt 'Select commit: '
 
-[includeIf "gitdir:~/dev/stx/zego/"]
-  path = .gitconfig-zego
-
-[includeIf "gitdir:~/dev/stx/tails/"]
-  path = .gitconfig-tails
-
 [includeIf "gitdir:~/dev/stx/internal/"]
   path = .gitconfig-stx
 
-[includeIf "gitdir:~/dev/stx/anibiome/"]
-  path = .gitconfig-stx
+[safe]
+	directory = /mnt/windows/Users/chris/source/repos/SE/mods/UDSERebalance
 
 # vim: set ft=gitconfig:

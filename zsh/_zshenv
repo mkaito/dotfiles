@@ -5,6 +5,9 @@ export GIT_EDITOR="$EDITOR"
 export SUDO_EDITOR="nvim"
 export VISUAL="$EDITOR"
 export ALTERNATE_EDITOR=""
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"
+
 
 case "$OSTYPE" in
     linux*)
@@ -14,12 +17,16 @@ case "$OSTYPE" in
         export TERMINAL="$XTERM"
         export PERL_SIGNALS="unsafe"
 
-        export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
+        # export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
         export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
 
-        # HW accelerated video
-        # export LIBVA_DRIVER_NAME=nvidia
-        # export VDPAU_DRIVER=nvidia
+        # Compress xz faster and better
+        export XZ_OPT='-8 -T0'
+
+        if [[ -z $PATH_FIXED ]]; then
+            export PATH="$HOME/dev/dotfiles/bin:$HOME/.local/bin:$HOME/.cabal/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
+            export PATH_FIXED=1
+        fi
         ;;
 
     darwin*)
@@ -29,11 +36,3 @@ case "$OSTYPE" in
 esac
 
 
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"
-
-# Compress xz faster and better
-export XZ_OPT='-8 -T0'
-
-# Allow NPM "global" package installations for the current user
-export npm_config_prefix="$HOME/.local"

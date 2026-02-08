@@ -1,65 +1,59 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
-IFS=$'\n\t'
-set -x
 
+# Configuration
 REPO="evilfactory/LuaCsForBarotrauma"
-ARTIFACT_NAME="luacsforbarotrauma_patch_mac_client.zip"
 DOWNLOAD_DIR="$HOME/Downloads"
-BAROTRAUMA_DIR_MACOS="$HOME/Library/Application Support/Steam/steamapps/common/Barotrauma/Barotrauma.app/Contents/MacOS"
-BAROTRAUMA_DIR_LINUX="$HOME/.steam/steam/steamapps/common/Barotrauma"
 
-
+# Detect platform and set artifact + target directory
 case "$OSTYPE" in
-    linux*)
-      TARGET_DIR="$BAROTRAUMA_DIR_LINUX"
-      ;;
-    darwin*)
-      TARGET_DIR="$BAROTRAUMA_DIR_MACOS"
-      ;;
-  esac
+  linux*)
+    ARTIFACT="luacsforbarotrauma_patch_linux_client.zip"
+    TARGET="$HOME/.steam/steam/steamapps/common/Barotrauma"
+    ;;
+  darwin*)
+    ARTIFACT="luacsforbarotrauma_patch_mac_client.zip"
+    TARGET="$HOME/Library/Application Support/Steam/steamapps/common/Barotrauma/Barotrauma.app/Contents/MacOS"
+    ;;
+  *)
+    echo "Unsupported OS: $OSTYPE" >&2
+    exit 1
+    ;;
+esac
 
-if ! command -v gh &>/dev/null; then
-  echo "** Error: 'gh' command not found. Please install GitHub CLI." >&2
-  exit 1
-fi
+# Prerequisites
+for cmd in gh jq unzip; do
+  command -v "$cmd" >/dev/null || { echo "Install '$cmd' first." >&2; exit 1; }
+done
 
-if ! command -v jq &>/dev/null; then
-  echo "** Error: 'jq' command not found. Please install jq." >&2
-  exit 1
-fi
-
-if gh auth status 2>&1 | grep -q "You are not logged into any GitHub hosts"; then
+# Ensure GitHub CLI is authenticated
+if gh auth status 2>&1 | grep -q 'You are not logged into'; then
   gh auth login
 fi
 
-if [[ ! -d "$TARGET_DIR" ]]; then
-  echo "** Error: Barotrauma is not installed. Directory '$TARGET_DIR' does not exist." >&2
-  exit 1
-fi
+# Verify installation path
+[[ -d "$TARGET" ]] || { echo "Barotrauma not found at: $TARGET" >&2; exit 1; }
 
-LATEST_RELEASE=$(gh release view latest --repo "$REPO" --json tagName,publishedAt | jq -r '. | .tagName + " " + .publishedAt')
+# Get latest release info
+tag=$(gh release view latest --repo "$REPO" --json tagName --jq .tagName)
+published=$(gh release view latest --repo "$REPO" --json publishedAt --jq .publishedAt)
+date=${published%%T*}
 
-TAG=$(echo "$LATEST_RELEASE" | awk '{print $1}')
-DATE=$(echo "$LATEST_RELEASE" | awk '{print $2}' | sed 's/T.*//')
+# Get commit SHA
+full_sha=$(gh api "repos/$REPO/git/ref/tags/$tag" --jq .object.sha)
+short_sha=${full_sha:0:7}
 
-COMMIT_SHA=$(gh api "repos/$REPO/git/ref/tags/$TAG" --jq '.object.sha')
+# Build filenames
+new_file="luacsforbarotrauma_patch_${OSTYPE#darwin*linux*}_${date}_${short_sha}.zip"
+dest="$DOWNLOAD_DIR/$new_file"
 
-SHORT_SHA=$(echo "$COMMIT_SHA" | cut -c1-7)
-
-NEW_FILENAME="luacsforbarotrauma_patch_mac_client_${DATE}_${SHORT_SHA}.zip"
-
-if [[ -f "$DOWNLOAD_DIR/$NEW_FILENAME" ]]; then
-  echo "** File $DOWNLOAD_DIR/$NEW_FILENAME already exists. Skipping download."
+# Download if missing
+if [[ ! -f "$dest" ]]; then
+  gh release download "$tag" --repo "$REPO" --pattern "$ARTIFACT" --dir "$DOWNLOAD_DIR"
+  mv "$DOWNLOAD_DIR/$ARTIFACT" "$dest"
 else
-  gh release download "$TAG" --repo "$REPO" --pattern "$ARTIFACT_NAME" --dir "$DOWNLOAD_DIR" --clobber
-
-  mv "$DOWNLOAD_DIR/$ARTIFACT_NAME" "$DOWNLOAD_DIR/$NEW_FILENAME"
+  echo "Already have: $new_file"
 fi
 
-if unzip -o "$DOWNLOAD_DIR/$NEW_FILENAME" -d "$TARGET_DIR"; then
-  echo "** Download and unpack complete. Files have been moved to $TARGET_DIR"
-else
-  echo "** Error: Failed to unzip $NEW_FILENAME" >&2
-  exit 1
-fi
+# Apply patch
+unzip -o "$dest" -d "$TARGET" && echo "Patched: $TARGET" || { echo "Unzip failed." >&2; exit 1; }

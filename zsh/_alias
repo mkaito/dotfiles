@@ -131,24 +131,24 @@ alias calc='noglob calculate'
 alias fixperm="find . -type d -exec chmod 755 {} \; && find . -type f -exec chmod 644 {} \;"
 
 # Yay shorthands
-# alias yas='yay -S'
-# alias yass='yay -Ss'
-# alias yasy='yay -Sy'
-# alias yasyy='yay -Syy'
-# alias yasyu='yay -Syyu --devel --noconfirm'
-# alias yard='yay -Rcsu'
+alias yas='yay -S'
+alias yass='yay -Ss'
+alias yasy='yay -Sy'
+alias yasyy='yay -Syy'
+alias yasyu='yay -Syyu --devel --noconfirm'
+alias yard='yay -Rcsu'
 
 # Homebrew shorthands
-alias b='brew'
-alias bu='brew update && brew outdated'
-alias bg='brew upgrade && brew cleanup'
-alias bs='brew search'
-alias bi='brew install'
-function br() {
-  [[ -z $1 ]] && echo 'No target provided' && exit 1
-  brew remove "$@"
-  brew cleanup
-}
+# alias b='brew'
+# alias bu='brew update && brew outdated'
+# alias bg='brew upgrade && brew cleanup'
+# alias bs='brew search'
+# alias bi='brew install'
+# function br() {
+#   [[ -z $1 ]] && echo 'No target provided' && exit 1
+#   brew remove "$@"
+#   brew cleanup
+# }
 
 # ls shorthands
 alias l='ls -Fh --color=auto --group-directories-first'
@@ -281,5 +281,10 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+
+alias cal='cal -m'
+
+alias mnt='udisksctl mount -b'
+alias umnt='udisksctl unmount -b'
 
 # vim:ft=zsh

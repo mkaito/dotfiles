@@ -2,11 +2,12 @@
 set -euo pipefail
 
 if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
-    grim -g "$(swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | wl-copy -t 'image/png'
+    # grim -g "$(swaymsg -t get_tree | jq -j '.. | select(.type?) | select(.focused).rect | "\(.x),\(.y) \(.width)x\(.height)"')" - | wl-copy -t 'image/png'
+    hyprshot -m window -m active --clipboard-only
 else
     maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
 fi
-notify-send "Screenshot" "Screenshot taken, copied to clipboard."
+notify-send "Window Screenshot" "Window screenshot taken, copied to clipboard."
 
 # out="${XDG_RUNTIME_DIR:-/tmp}/$(date +%s).png"
 # maim -i $(xdotool getactivewindow) "$out"

@@ -35,7 +35,7 @@ config.font_size = 16
 config.enable_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = false
-config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+-- config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.native_macos_fullscreen_mode = true
 
 config.window_padding = {
