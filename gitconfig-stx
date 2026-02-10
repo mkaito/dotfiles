@@ -1,0 +1,18 @@
+[user]
+  name = Christian Höppner
+  email = christian.hoppner@stxnext.pl
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINl3UpCyXgXh62Emvz5TyusE/RU5UNipU77ra7ZeL+ya
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
+
+[core]
+  sshCommand = "ssh -i ~/.ssh/id_ed25519_stx.pub"
+
+# vim: set ft=gitconfig:

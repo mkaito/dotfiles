@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-defaults delete -g ApplePressAndHoldEnabled
+defaults delete -g ApplePressAndHoldEnabled || true
 
 enable_apps=(
   com.apple.TextEdit
@@ -15,6 +15,7 @@ disable_apps=(
   com.apple.Terminal
   com.mitchellh.ghostty
   org.alacritty
+  com.todesktop.230313mzl4w4u92
 )
 
 # 4. Apply per-app settings

@@ -17,8 +17,8 @@ PATHS=(\
   )
 
 if [[ $OSTYPE =~ darwin* ]]; then
-  # This is ridiculous, but it's the only way to get the GNU versions of these
   PATHS+=( \
+    # This is ridiculous, but it's the only way to get the GNU versions of these
     "/opt/homebrew/opt/coreutils/libexec/gnubin" \
     "/opt/homebrew/opt/gawk/libexec/gnubin" \
     "/opt/homebrew/opt/gnu-getopt/bin" \
@@ -27,7 +27,11 @@ if [[ $OSTYPE =~ darwin* ]]; then
     "/opt/homebrew/opt/gnu-tar/libexec/gnubin" \
     "/opt/homebrew/opt/grep/libexec/gnubin" \
     "/opt/homebrew/opt/findutils/libexec/gnubin" \
-    "/opt/homebrew/opt/postgresql@16/bin" \
+    "/opt/homebrew/opt/postgresql@17/bin" \
+    "/opt/homebrew/opt/mozjpeg/bin" \
+    "/opt/homebrew/share/google-cloud-sdk/bin" \
+    # Rancher desktop
+    "$HOME/.rd/bin" \
   )
 fi
 

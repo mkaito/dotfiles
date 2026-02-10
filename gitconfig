@@ -34,12 +34,14 @@
   pp  = push --force-with-lease
   ppt = push --force-with-lease --follow-tags
   l  = log --color --graph --pretty=format:'%G? %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  nuke = clean -fdx
 
 [core]
   sshCommand = "ssh -i ~/.ssh/id_ed25519_1password.pub"
   excludesfile = /Users/mkaito/.gitignore
-  autocrlf = input
+	autocrlf = input
   untrackedCache = true
+	safecrlf = warn
 
 [push]
   default = current
@@ -107,5 +109,11 @@
 
 [includeIf "gitdir:~/dev/stx/tails/"]
   path = .gitconfig-tails
+
+[includeIf "gitdir:~/dev/stx/internal/"]
+  path = .gitconfig-stx
+
+[includeIf "gitdir:~/dev/stx/anibiome/"]
+  path = .gitconfig-stx
 
 # vim: set ft=gitconfig:
