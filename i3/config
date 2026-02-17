@@ -9,7 +9,7 @@ set $foreground #c7ccd1
 set $dim        #747c84
 set $urgent     #f3f4f5
 
-set $left  DisplayPort-0
+set $left  DisplayPort-2
 set $right DisplayPort-1
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -85,6 +85,12 @@ assign [class="^Opera" instance ="^Opera"] 3
 assign [class="^qutebrowser$" instance ="^qutebrowser$"] 3
 assign [class="^Google-chrome-unstable$" instance="^google-chrome-unstable"] 3
 
+# Make Firefox dialogs float
+for_window [window_role="Dialog"] floating enable
+for_window [window_role="GtkFileChooserDialog"] floating enable
+for_window [class="Firefox" title="^.*Firefox$"] floating enable
+for_window [class="Firefox" window_type="dialog"] floating enable
+
 # Messaging stuff
 assign [instance="^mail$"] 4
 assign [instance="^chat$"] 4
@@ -114,7 +120,6 @@ assign [class="^surviving mars"] 5
 
 # Stellaris
 assign [class="^stellaris$"] 5
-# for_window [class="^stellaris$"] floating disable, border none, fullscreen enable
 
 assign [title="^sc2"] 5
 assign [title="^Scelight"] scelight
@@ -128,12 +133,6 @@ assign [title="^cataclysm$"] 5
 assign [instance="^ffxivlauncher.exe$"] 5
 assign [instance="^ffxivboot.exe$"] 5
 assign [instance="^ffxiv.exe$"] 5
-# assign [class="^nel$"] 5
-# assign [class="^LaunchPad.exe$"] 5
-# assign [title="^Project Gorgon$"] 5
-# assign [title="^Client_tos.exe$"] 5
-# assign [title="^Oddworld"] 5
-# assign [title="^launcher.exe$"] 5
 
 ## EVE Online
 assign [class="^evelauncher.exe$"] 5
@@ -178,7 +177,7 @@ assign [instance="^calibre-gui$"] Calibre
 # gimp
 assign [class="Gimp"] gimp
 for_window [title="GIMP Startup"] move workspace gimp
-for_window [window_role="gimp-toolbox"] floating disable; layout stacking; move left; resize shrink right 31px or 31 ppt
+# for_window [window_role="gimp-toolbox"] floating disable; layout stacking; move left; resize shrink right 31px or 31 ppt
 
 # Workaround for Spotify not setting window hints on tag
 for_window [class="^Spotify$"] move to workspace Spotify
@@ -423,8 +422,8 @@ bindsym $mod+r mode "resize"
 
 ## Right monitor
 bar {
-  output DisplayPort-0
-    tray_output DisplayPort-0
+  output $right
+    tray_output $right
     status_command $HOME/dev/dotfiles/bin/conky-i3bar primary
     workspace_buttons yes
 
@@ -445,7 +444,7 @@ bar {
 
 ## Left monitor
 bar {
-  output DisplayPort-1
+  output $left
 
     mode dock
     status_command $HOME/dev/dotfiles/bin/conky-i3bar secondary

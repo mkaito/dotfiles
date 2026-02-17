@@ -1,3 +1,0 @@
-#!/bin/bash
-exec qt-wrap /usr/bin/polymc "$@"
-

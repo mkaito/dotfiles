@@ -1,2 +1,0 @@
-#!/bin/bash
-exec qt-wrap /usr/bin/telegram-desktop "$@"
