@@ -99,9 +99,6 @@ zstyle ':fzf-tab:*' fzf-bindings \
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# 1Password shell plugins
-source /Users/mkaito/.config/op/plugins.sh
-
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
 
 # mise en place
