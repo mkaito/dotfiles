@@ -25,11 +25,11 @@ wezterm.on("update-right-status", function(window, _)
 end)
 
 -- config.default_prog = { "/opt/homebrew/bin/fish" }
-config.term = "wezterm"
+-- config.term = "wezterm"
 config.color_scheme = "tokyonight_night"
 config.audible_bell = "Disabled"
 
-config.font = wezterm.font("Iosevka Custom", { weight = "ExtraLight" })
+config.font = wezterm.font("Iosevka Term SS02", { weight = "ExtraLight" })
 config.font_size = 16
 
 config.enable_tab_bar = true
