@@ -1,0 +1,30 @@
+# Linux-only desktop environment configs
+{{ if ne .chezmoi.os "linux" }}
+.config/i3
+.config/polybar
+.config/dunst
+.config/eww
+.config/rofi
+.config/rc
+.config/zsh/conf.d/linux.zsh
+.config/mutt
+.config/MangoHud
+.config/mpd
+.local/bin/mailto-mutt
+.xinitrc
+{{ end }}
+
+# Gentoo-only (detected via /etc/os-release ID)
+{{ if ne .chezmoi.osRelease.id "gentoo" }}
+.config/zsh/conf.d/gentoo.zsh
+{{ end }}
+
+# aldheim-only
+{{ if ne .chezmoi.hostname "aldheim" }}
+.config/zsh/conf.d/aldheim.zsh
+{{ end }}
+
+# macOS-only
+{{ if ne .chezmoi.os "darwin" }}
+.config/zsh/conf.d/macos.zsh
+{{ end }}

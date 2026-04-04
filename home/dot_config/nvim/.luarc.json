@@ -1,0 +1,5 @@
+{
+  "diagnostic": {
+    "globals": ["s", "i", "t"]
+  }
+}

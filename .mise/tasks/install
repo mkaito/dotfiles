@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# mise description="Bootstrap chezmoi dotfiles on a new machine"
+set -euo pipefail
+
+REPO="$MISE_PROJECT_ROOT"
+CHEZMOI_LINK="$HOME/.local/share/chezmoi"
+
+# Ensure vendor submodules (zgenom, tokyonight.nvim) are present
+git -C "$REPO" submodule update --init --recursive
+
+# Link chezmoi source dir to this repo
+if [[ ! -e "$CHEZMOI_LINK" ]]; then
+    mkdir -p "$(dirname "$CHEZMOI_LINK")"
+    ln -sf "$REPO" "$CHEZMOI_LINK"
+    echo "Linked $CHEZMOI_LINK -> $REPO"
+elif [[ -L "$CHEZMOI_LINK" && "$(readlink "$CHEZMOI_LINK")" == "$REPO" ]]; then
+    echo "$CHEZMOI_LINK already correctly linked"
+elif [[ -L "$CHEZMOI_LINK" ]]; then
+    echo "Warning: $CHEZMOI_LINK points to $(readlink "$CHEZMOI_LINK"), expected $REPO"
+    echo "Re-linking..."
+    ln -sf "$REPO" "$CHEZMOI_LINK"
+else
+    echo "Error: $CHEZMOI_LINK exists and is not a symlink — cannot proceed" >&2
+    exit 1
+fi
+
+chezmoi apply

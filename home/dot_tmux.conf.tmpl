@@ -1,0 +1,145 @@
+unbind C-b
+set -g prefix C-a
+bind C-a last-window
+
+set -g base-index 1
+set -g pane-base-index 1
+# set-option -g history-limit 10000
+
+# Do NOT start a login shell because MacOS does weird things in /etc/zprofile that breaks PATH ordering.
+set-option -g default-command "$SHELL"
+
+# true colours support
+set -ga terminal-overrides ",*256col*:Tc"
+set -ga terminal-overrides ",xterm-256color:Tc"
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+
+# underscore colours - needs tmux-3.0
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+
+# Fix nvim redraw issues
+set -as terminal-overrides ',*:indn@'
+
+# Allow toggling the status bar
+set -g status on
+bind t set status
+
+# Automatically renumber windows as they are closed
+set-option -g renumber-windows on
+
+# Do not automatically rename windows
+set-option -g allow-rename off
+
+# Fix the escape key delay
+set -sg escape-time 0
+
+setw -g mode-keys vi
+setw -g mouse off
+
+# Swap windows left and right
+bind -n C-S-Left swap-window -t -1\; select-window -t -1
+bind -n C-S-Right swap-window -t +1\; select-window -t +1
+
+# Pane resizing
+bind -r h resize-pane -L 5
+bind -r j resize-pane -D 5
+bind -r k resize-pane -U 5
+bind -r l resize-pane -R 5
+
+# Set pwd to current pane's path
+bind C-c attach -c "#{pane_current_path}"
+
+# Remove current window name from rename-window prompt
+bind , command-prompt "rename-window '%%'"
+
+# Pane joining
+# bind S choose-window "join-pane -v -s '%%'"
+bind v choose-window "join-pane -h -s '%%'"
+
+# Window cycling
+bind -r n next-window
+bind -r p previous-window
+
+# Window swapping
+bind S choose-tree -O name -w "swap-window -t '%%'"
+bind s choose-tree -O name -s "switch-client -t '%%'"
+
+# Clear the screen with <prefix>C-l
+bind C-l send-keys 'C-l'
+
+# Status bar on bottom
+# set-option -g status-position top
+
+# default statusbar colors
+set-option -g status-style fg=white,bg=black,default
+
+# default window title colors
+set-window-option -g window-status-style fg=white,bg=default,dim
+
+# active window title colors
+set-window-option -g window-status-current-style fg=cyan,bg=default,dim
+
+# command/message line colors
+set-option -g message-style fg=white,bg=black,bright
+
+# # Refresh the status bar every 30 seconds.
+set-option -g status-interval 30
+
+# The status bar itself.
+set -g status-justify centre
+set -g status-left-length 40
+set -g status-left "#[bg=black]#{session_name} #{=22:pane_title}"
+# set -g status-right "#(cat /tmp/gtd) #[fg=white]%d %b %R"
+# set -g status-right ""
+
+set-option -g display-time 1000
+
+# Reload source file
+bind-key r source-file ~/.tmux.conf \; display-message "Configuration reloaded"
+
+# Fix cursors in tmux
+set -g -a terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
+
+# '@pane-is-vim' is a pane-local option that is set by the plugin on load,
+# and unset when Neovim exits or suspends; note that this means you'll probably
+# not want to lazy-load smart-splits.nvim, as the variable won't be set until
+# the plugin is loaded
+
+# Smart pane switching with awareness of Neovim splits.
+bind-key -n C-h if -F "#{@pane-is-vim}" 'send-keys C-h'  'select-pane -L'
+bind-key -n C-j if -F "#{@pane-is-vim}" 'send-keys C-j'  'select-pane -D'
+bind-key -n C-k if -F "#{@pane-is-vim}" 'send-keys C-k'  'select-pane -U'
+bind-key -n C-l if -F "#{@pane-is-vim}" 'send-keys C-l'  'select-pane -R'
+
+# Smart pane resizing with awareness of Neovim splits.
+bind-key -n M-h if -F "#{@pane-is-vim}" 'send-keys M-h' 'resize-pane -L 3'
+bind-key -n M-j if -F "#{@pane-is-vim}" 'send-keys M-j' 'resize-pane -D 3'
+bind-key -n M-k if -F "#{@pane-is-vim}" 'send-keys M-k' 'resize-pane -U 3'
+bind-key -n M-l if -F "#{@pane-is-vim}" 'send-keys M-l' 'resize-pane -R 3'
+
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if -F \"#{@pane-is-vim}\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if -F \"#{@pane-is-vim}\" 'send-keys C-\\\\'  'select-pane -l'"
+
+bind-key -T copy-mode-vi 'C-h' select-pane -L
+bind-key -T copy-mode-vi 'C-j' select-pane -D
+bind-key -T copy-mode-vi 'C-k' select-pane -U
+bind-key -T copy-mode-vi 'C-l' select-pane -R
+bind-key -T copy-mode-vi 'C-\' select-pane -l
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-open'
+
+source-file {{ .chezmoi.sourceDir | dir }}/vendor/tokyonight.nvim/extras/tmux/tokyonight_night.tmux
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+# vim: ft=tmux

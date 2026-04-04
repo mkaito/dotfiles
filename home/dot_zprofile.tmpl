@@ -1,0 +1,48 @@
+# PATH setup lives here, not in .zshenv, because on macOS /etc/zprofile
+# (Homebrew's path_helper) resets PATH between .zshenv and .zshrc.
+# .zprofile runs after /etc/zprofile and wins.
+
+PATHS=(\
+  "$HOME/.local/bin" \
+  )
+
+{{ if eq .chezmoi.os "darwin" -}}
+export HOMEBREW_NO_ANALYTICS=1
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+PATHS+=( \
+    # This is ridiculous, but it's the only way to get the GNU versions of these
+    "/opt/homebrew/opt/coreutils/libexec/gnubin" \
+    "/opt/homebrew/opt/gawk/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-getopt/bin" \
+    "/opt/homebrew/opt/gnu-indent/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-sed/libexec/gnubin" \
+    "/opt/homebrew/opt/gnu-tar/libexec/gnubin" \
+    "/opt/homebrew/opt/grep/libexec/gnubin" \
+    "/opt/homebrew/opt/findutils/libexec/gnubin" \
+    "/opt/homebrew/opt/postgresql@17/bin" \
+    "/opt/homebrew/opt/mozjpeg/bin" \
+    "/opt/homebrew/share/google-cloud-sdk/bin" \
+)
+{{ end -}}
+
+for p in "${PATHS[@]}"; do
+  case ":$PATH:" in
+    *":$p:"*) :;;
+    *) [[ -d $p ]] && PATH="$p:$PATH" ;;
+  esac
+done
+
+export PATH
+
+{{ if eq .chezmoi.os "linux" -}}
+# Start X session if logged in on tty1
+if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
+  # See ~/.xinitrc
+  exec startx
+fi
+{{ end -}}
+
+# GPG agent and SSH_AUTH_SOCK
+# export GPG_TTY=$(tty)
+# export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)

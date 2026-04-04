@@ -1,0 +1,98 @@
+set realname = 'Christian Höppner'
+unset signature
+
+set sendmail = "/usr/bin/msmtp"
+set use_from = yes
+
+set mail_check = 90
+set timeout = 15
+unset imap_passive
+set imap_keepalive = 30
+
+bind index,pager \Cx next-unread-mailbox
+
+macro index J '<save-message>=sa/<enter>y'
+
+macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
+macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+
+macro compose A "<attach-message>?<toggle-mailboxes>" "attach message(s) to this message"
+
+macro index a '<save-message>=Archive<enter>y'
+macro index A '<pipe-message>git am<enter>j'
+
+## Mail accounts
+#
+# Add accounts using the following pattern. The last sourced account is
+# opened by default. Credentials via 1password CLI:
+#
+#   set my_example_pass   = "`op read 'op://Personal/AccountName/password'`"
+#   set my_example_source = ~/.config/mutt/accounts/user@example.com
+#   source $my_example_source
+#   folder-hook  $folder                 "source $my_example_source"
+#   send-hook    "%C AccountExample"     "source $my_example_source"
+#   reply-hook   "~t $from"              "source $my_example_source"
+
+# Fetch mail shortcut
+bind index G imap-fetch-mail
+
+# Mailing lists
+# subscribe user@lists.example.com
+
+set index_format = "%2C %Z %D %-17.17n (%3l) %s"
+set pager_format = "%S [%C/%m] %l %n: %s"
+set date_format  = "%Y-%m-%d %l:%M %p"
+
+set header_cache    = ~/.cache/mutt/headers
+set message_cachedir = ~/.cache/mutt/bodies
+set certificate_file = ~/.config/mutt/certificates
+
+set alias_file = ~/.config/mutt/aliases
+source ~/.config/mutt/aliases
+set query_command = "abook --mutt-query '%s'"
+set ispell = "aspell -e -c"
+
+set allow_8bit
+set postpone        = ask-no
+set delete          = yes
+set move            = yes
+set include         = yes
+set edit_headers
+set copy            = yes
+set mime_forward    = ask-yes
+set nobeep
+set nosmart_wrap
+set nomarkers
+set pager_context   = 3
+set nostrict_threads
+set envelope_from   = yes
+set sendmail_wait   = -1
+set nopipe_decode
+set tilde
+set read_inc        = 50
+set write_inc       = 50
+set noconfirmappend
+set pager_stop
+set pager_index_lines = 1
+set sort            = 'threads'
+set sort_aux        = reverse-last-date-received
+set sort_re
+
+set editor = 'nvim'
+
+# MIME
+auto_view text/html
+alternative_order text/plain text/enriched text/html
+bind attach <return> view-mailcap
+
+# PGP
+set pgp_autosign        = yes
+set pgp_replyencrypt    = yes
+set pgp_timeout         = 1800
+set pgp_good_sign       = "^gpg: Good signature from"
+set pgp_use_gpg_agent   = yes
+# set pgp_default_key   = 0x...   # set this in your account file
+
+source /usr/share/doc/neomutt/samples/gpg.rc
+source ~/.config/mutt/colors/base16-chalk.muttrc
+source ~/.config/mutt/colors/patch-highlight.muttrc

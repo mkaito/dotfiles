@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+xrandr --output DisplayPort-1 --primary --pos 0x1000 --output DisplayPort-2 --rotate right --pos 3840x0
+xset r rate 220 40
+numlockx &
+nitrogen --restore &
+
+## This needs to run after i3 starts, so it gets executed in i3 config instead of here.
+# openrc --user graphical
+
+i3
+
+## Switch back to default runlevel
+openrc --user default

@@ -1,27 +1,11 @@
+# Editor artifacts
 *.old
-*/emacs-starter-kit/*
-*/auto-save-list/*
 **/*~
-dotemacs/abbrev_defs
-*.elc
-dotemacs/.org-id-locations
-dotemacs/elpa/*
-dotemacs/org-clock-save.el
-dotemacs/url/*
-dotemacs/projectile-bookmarks.eld
-dotemacs/projectile.cache
-fish/generated_completions/
-fish/fishd.*
-fish/fish*history
-systemd/default.target.wants/
-dotemacs/flycheck_org-clock-save.el
-dotemacs/saveplace.el
-dotemacs/vendor/
-eshell/history
-eshell/lastdir
 .DS_Store
-nushell/history.txt
-nushell/vendor/autoload/starship.nu
-nushell/vendor/autoload/zoxide.nu
-nushell/vendor/use/mise.nu
-rc/logs/
+
+# Tool caches
+.claude/
+
+# chezmoi-managed runtime data (not config)
+home/dot_config/rc/log/
+home/dot_config/mutt/cache/
