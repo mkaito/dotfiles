@@ -11,7 +11,6 @@ export HOMEBREW_NO_ANALYTICS=1
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 PATHS+=( \
-    # This is ridiculous, but it's the only way to get the GNU versions of these
     "/opt/homebrew/opt/coreutils/libexec/gnubin" \
     "/opt/homebrew/opt/gawk/libexec/gnubin" \
     "/opt/homebrew/opt/gnu-getopt/bin" \
@@ -38,11 +37,8 @@ export PATH
 {{ if eq .chezmoi.os "linux" -}}
 # Start X session if logged in on tty1
 if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
-  # See ~/.xinitrc
   exec startx
 fi
 {{ end -}}
 
-# GPG agent and SSH_AUTH_SOCK
-# export GPG_TTY=$(tty)
-# export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+# vim:ft=zsh

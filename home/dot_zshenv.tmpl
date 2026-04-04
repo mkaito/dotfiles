@@ -1,16 +1,11 @@
 export PAGER="less"
-export READNULLCMD="$PAGER"
 export EDITOR="nvim"
 export GIT_EDITOR="$EDITOR"
 export SUDO_EDITOR="nvim"
 export VISUAL="$EDITOR"
-export ALTERNATE_EDITOR=""
+
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"
-
-if command -v direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
-fi
 
 {{ if eq .chezmoi.os "linux" -}}
 export BROWSER="$HOME/.local/bin/browser"
@@ -24,7 +19,6 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
 
-# Compress xz faster and better
 export XZ_OPT='-8 -T0'
 
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then

@@ -9,10 +9,11 @@ set -euo pipefail
 #   * alacritty
 #   * foot
 #   * kitty
+#   * wezterm
 if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
-  terminal=alacritty
+  terminal=wezterm
 else
-  terminal=alacritty
+  terminal=wezterm
 fi
 
 ##
@@ -84,6 +85,15 @@ case $terminal in
     fi
 
     exec kitty "${args[@]}"
+    ;;
+
+  wezterm)
+    if [[ -n ${1:-} ]]; then
+      args+=(--class "$1"); shift
+      args+=("--" "${precmd[@]}" "$*")
+    fi
+
+    exec wezterm start "${args[@]}"
     ;;
 
   *)
