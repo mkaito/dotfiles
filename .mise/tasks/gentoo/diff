@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# mise description="Diff repo Gentoo config against live /etc"
+set -euo pipefail
+
+if [[ "$(hostname -s)" != "aldheim" ]]; then
+    echo "Error: this task is only for aldheim (got $(hostname -s))" >&2
+    exit 1
+fi
+
+SYSTEM_CONFIG="$MISE_PROJECT_ROOT/system/gentoo/config"
+FILTER="$MISE_PROJECT_ROOT/system/gentoo/rsync-filter"
+
+# -ni:  dry run + itemize (only prints changed items)
+# -c:   checksum comparison (timestamps differ between repo and /etc)
+# Lines starting with '.' are metadata-only differences (e.g. ownership); skip them.
+_diff_portage() {
+    rsync -anic --no-group --filter="merge $FILTER" "$@" | grep -E '^[><c*]' || echo "(none)"
+}
+
+_diff_etc() {
+    rsync -anic --no-group \
+        --files-from=<(find "$SYSTEM_CONFIG/etc/" -not -path '*/portage/*' -type f -printf '%P\n') \
+        "$@" | grep -E '^[><c*]' || echo "(none)"
+}
+
+echo "==> portage: repo -> /etc/portage (would be applied by gentoo:install):"
+_diff_portage "$SYSTEM_CONFIG/etc/portage/" /etc/portage/
+
+echo ""
+echo "==> portage: /etc/portage -> repo (untracked system changes; capture with gentoo:pull):"
+_diff_portage /etc/portage/ "$SYSTEM_CONFIG/etc/portage/"
+
+echo ""
+echo "==> etc: repo -> /etc (tracked files, would be applied by gentoo:install):"
+_diff_etc "$SYSTEM_CONFIG/etc/" /etc/
+
+echo ""
+echo "==> etc: /etc -> repo (tracked files changed on system; capture with gentoo:pull):"
+_diff_etc /etc/ "$SYSTEM_CONFIG/etc/"

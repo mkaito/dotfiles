@@ -1,0 +1,11 @@
+#!/bin/sh
+# chezmoi:template:left-delimiter="{{" right-delimiter="}}"
+set -e
+
+{{ if eq .chezmoi.os "darwin" -}}
+brew install {{ range .packages.darwin }}{{ . }} {{ end }}
+
+{{ else if eq .chezmoi.osRelease.id "gentoo" -}}
+sudo emerge -n {{ range .packages.gentoo }}{{ . }} {{ end }}
+
+{{ end -}}

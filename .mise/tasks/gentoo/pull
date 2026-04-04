@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# mise description="Pull live /etc changes back into the repo"
+set -euo pipefail
+
+if [[ "$(hostname -s)" != "aldheim" ]]; then
+    echo "Error: this task is only for aldheim (got $(hostname -s))" >&2
+    exit 1
+fi
+
+SYSTEM_CONFIG="$MISE_PROJECT_ROOT/system/gentoo/config"
+FILTER="$MISE_PROJECT_ROOT/system/gentoo/rsync-filter"
+
+echo "==> Syncing /etc/portage -> $SYSTEM_CONFIG/etc/portage/"
+rsync -av --delete --filter="merge $FILTER" \
+    /etc/portage/ "$SYSTEM_CONFIG/etc/portage/"
+
+echo "==> Syncing /etc (non-portage tracked files) -> $SYSTEM_CONFIG/etc/"
+rsync -av \
+    --files-from=<(find "$SYSTEM_CONFIG/etc/" -not -path '*/portage/*' -type f -printf '%P\n') \
+    /etc/ "$SYSTEM_CONFIG/etc/"
+
+echo "Done. Review changes with git diff, then commit."

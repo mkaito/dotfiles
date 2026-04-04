@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<longdescription>
+		udev rules granting access to the 8BitDo USB Wireless Adapter (U2W)
+		via hidraw for both the 2.4 GHz dongle and Bluetooth modes.
+	</longdescription>
+</pkgmetadata>

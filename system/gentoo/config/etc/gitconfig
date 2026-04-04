@@ -1,0 +1,3 @@
+[safe]
+	directory = /var/db/repos/guru
+	directory = /var/db/repos/steam-overlay

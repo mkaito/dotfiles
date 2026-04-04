@@ -1,0 +1,2 @@
+x11-base/xorg-server udev
+x11-misc/polybar i3wm mpd ipc network -alsa

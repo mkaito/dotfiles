@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<longdescription>
+		JDownloader 2 is a Java-based download manager that simplifies
+		downloading files from file hosting services. This package installs
+		the bootstrap JAR; JDownloader manages its own updates at runtime.
+	</longdescription>
+</pkgmetadata>

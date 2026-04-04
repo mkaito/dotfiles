@@ -1,0 +1,19 @@
+packages:
+  gentoo:
+    - app-editors/neovim
+    - app-shells/fzf
+    - app-shells/zoxide
+    - sys-apps/fd
+    - dev-util/direnv
+    - x11-misc/xclip
+    - net-p2p/transmission
+    - sys-fs/udisks
+    - x11-terms/wezterm
+    - www-client/firefox
+
+  darwin:
+    - neovim
+    - fzf
+    - zoxide
+    - fd
+    - direnv

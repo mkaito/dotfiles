@@ -1,0 +1,4 @@
+distfiles/
+metadata/md5-cache/
+*.pyc
+__pycache__/

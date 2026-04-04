@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# mise description="Deploy Gentoo system config to /etc"
+set -euo pipefail
+
+if [[ "$(hostname -s)" != "aldheim" ]]; then
+    echo "Error: this task is only for aldheim (got $(hostname -s))" >&2
+    exit 1
+fi
+
+if [[ $EUID -ne 0 ]]; then
+    exec sudo MISE_PROJECT_ROOT="$MISE_PROJECT_ROOT" "$0" "$@"
+fi
+
+SYSTEM_CONFIG="$MISE_PROJECT_ROOT/system/gentoo/config"
+FILTER="$MISE_PROJECT_ROOT/system/gentoo/rsync-filter"
+
+echo "==> Deploying /etc/portage..."
+rsync -av --delete --filter="merge $FILTER" \
+    "$SYSTEM_CONFIG/etc/portage/" /etc/portage/
+
+echo "==> Deploying /etc (non-portage)..."
+rsync -av --exclude=portage/ "$SYSTEM_CONFIG/etc/" /etc/
+
+echo "==> Writing local overlay config..."
+cat > /etc/portage/repos.conf/local.conf <<EOF
+[local]
+location = $MISE_PROJECT_ROOT/system/gentoo/overlay
+auto-sync = no
+EOF
+
+echo "Done."
