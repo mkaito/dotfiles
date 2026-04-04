@@ -15,11 +15,9 @@ conky.config={
 };
 conky.text = [[
 [
-  {"full_text": "${if_match "${exec playerctl-quiet.sh status}" == "Playing"}\uF144 ${exec playerctl-quiet.sh metadata artist} - ${exec playerctl-quiet.sh metadata title} $endif"},
-  {"full_text": "${if_match "$moc_state" == "PLAY"}\uF144 $moc_artist - $moc_song $endif"},
-  {"full_text": "\uF0C8 $memperc% \uF108 $cpu%${hwmon k10temp temp 1}°C -${hwmon amdgpu temp 1}°C"},
-  {"full_text": "\uF103 ${downspeed enp3s0} \uF102 ${upspeed enp3s0}"},
-  {"full_text": "\uF3E0 ${fs_free /}/${fs_free /home/chris/media}"},
+  {"full_text": "\ue266 $memperc% \uF4BC  $cpu% |${hwmon k10temp temp 1}°C -${hwmon amdgpu temp 1}°C"},
+  {"full_text": "\uF103 ${downspeed enp7s0} \uF102 ${upspeed enp7s0}"},
+  {"full_text": "\uF0A0 ${fs_free /}/${fs_free /home/chris/media}"},
   {"full_text": "\uF017 ${time %H:%M} \uF073 ${time %d.%m}"}
 ],
 ]]

@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+
+description="Music Player Daemon"
+
+MPD_CONF="${MPD_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/mpd/mpd.conf}"
+
+command="/usr/bin/mpd"
+command_args="--no-daemon ${MPD_CONF}"
+command_background=true
+pidfile="${XDG_RUNTIME_DIR}/mpd.pid"
+supervisor=supervise-daemon
+output_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/mpd.log"
+error_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/mpd.err"
+
+depend() {
+  need pipewire
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+    exec sudo "$0" "$@"
+fi
+
+cd /usr/src/linux
+
+make olddefconfig
+make -j$(nproc) CC="ccache gcc" 
+
+make modules_install 
+make install

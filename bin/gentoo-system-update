@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+if [[ $EUID -ne 0 ]]; then
+    exec sudo "$0" "$@"
+fi
+
+echo ">>> Syncing portage tree..."
+eix-sync || { echo ">>> Sync failed, retrying..."; eix-sync; }
+
+echo ">>> Updating @world..."
+emerge -auNDUv --with-bdeps=y @world
+
+echo ">>> Removing obsolete packages..."
+emerge --depclean
+
+echo ">>> Checking for broken reverse dependencies..."
+revdep-rebuild
+
+echo ">>> Checking for config file updates..."
+dispatch-conf
+
+echo ">>> Done."

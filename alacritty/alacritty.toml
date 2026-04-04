@@ -6,7 +6,7 @@ padding = { x = 0, y = 24 }
 
 [font]
 size = 12
-normal = { family = "Iosevka", style = "Extralight" }
+normal = { family = "IosevkaTermSS02 Nerd Font", style = "Extralight" }
 
 [env]
 TERM = "alacritty-direct"
@@ -16,3 +16,8 @@ import = [
   "~/.config/alacritty/tokyonight_night.toml",
   "~/.config/alacritty/keybinds.toml",
 ]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"

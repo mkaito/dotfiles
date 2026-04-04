@@ -1,22 +1,40 @@
-#!/bin/bash
-## Tarsnap:
-# Sleep until we can reach the server
-# while ! ping -q -c 1 v1-0-0-server.tarsnap.com &> /dev/null; do sleep 3; done
-# /usr/bin/tarsnap -c -f "$(uname -n)-$(date +%Y-%m-%d_%H-%M-%S)" "$HOME"
+#!/usr/bin/env bash
+set -euo pipefail
 
-## Borg to rsync
 #shellcheck disable=SC1090
 source ~/.zshenv
 
-# Create archive
-borg create -v --stats --compression lz4 ---progress --one-file-system \
-     ::'{hostname}-{now:%Y-%m-%d %H:%M}' /home/chris          \
-     --exclude "/home/chris/.cache"                           \
-     --exclude "/home/chris/.ccache"                          \
-     --exclude "/home/chris/.local/share/wineprefixes"        \
-     --exclude "/home/chris/dev/build"                        \
-     --exclude "/home/chris/dev/**/*/target"                  \
-     --exclude "/home/chris/media"                            \
-     --exclude "/home/chris/Games"                            \
-     --exclude "/home/chris/*.mkv"                            \
-     --exclude "/home/chris/VirtualBox\ VMs"                  \
+BACKUP_DEST="/mnt/steamtwo/backup"
+LOG_FILE="${BACKUP_DEST}/backup_$(date +%Y%m%d_%H%M%S).log"
+
+# Verify destination is mounted
+if ! mountpoint -q /mnt/steamtwo; then
+    echo "ERROR: /mnt/steamtwo is not mounted. Aborting."
+    exit 1
+fi
+
+mkdir -p "${BACKUP_DEST}"
+
+echo "Starting backup at $(date)" | tee "${LOG_FILE}"
+
+sudo rsync -aAXHvx --delete \
+    --exclude='/proc/*' \
+    --exclude='/sys/*' \
+    --exclude='/dev/*' \
+    --exclude='/run/*' \
+    --exclude='/tmp/*' \
+    --exclude='/var/tmp/*' \
+    --exclude='/var/cache/pacman/pkg/*' \
+    --exclude='/lost+found' \
+    --exclude='/swapfile' \
+    --exclude='/nix' \
+    --exclude='/opt' \
+    / "${BACKUP_DEST}/root/" \
+    2>&1 | tee -a "${LOG_FILE}"
+
+sudo rsync -aAXHvx --delete \
+    --exclude='chris/.cache/*' \
+    /home/ "${BACKUP_DEST}"/home/ \
+    2>&1 | tee -a /mnt/steamtwo/backup/backup_home_$(date +%Y%m%d_%H%M%S).log
+
+echo "Backup completed at $(date)" | tee -a "${LOG_FILE}"

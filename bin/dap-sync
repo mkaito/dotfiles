@@ -1,0 +1,357 @@
+#!/usr/bin/env python3
+"""
+dap-sync: Sync music and playlists to DAP SD cards.
+
+DAP folder structure (~/media/music/dap/<device>/):
+  Music/     - symlinks to artists/albums/tracks in the music library
+  Playlists/ - symlinks to MPD playlist files
+
+Each device has a DeviceProfile encapsulating card paths and playlist
+entry formatting, keeping all device-specific quirks out of the sync logic.
+"""
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable
+
+# ── Configuration ──────────────────────────────────────────────────────────────
+
+MUSIC_ROOT = Path("~/media/music").expanduser()
+DAP_BASE = MUSIC_ROOT / "dap"
+CARD_BASE = Path("/run/media") / os.environ.get("USER", "chris")
+
+AUDIO_EXTENSIONS = {
+    ".flac",
+    ".mp3",
+    ".ogg",
+    ".opus",
+    ".wav",
+    ".aiff",
+    ".aif",
+    ".m4a",
+    ".dsf",
+    ".dff",
+}
+
+# ── Device profiles ────────────────────────────────────────────────────────────
+
+
+@dataclass
+class DeviceProfile:
+    label: str  # SD card volume label
+    music_dir: str  # Music directory on card
+    playlist_dir: str  # Playlist directory on card
+    format_entry: Callable[[str], str]  # Rewrites a relative path for M3U
+
+
+def _shanling_mtouch_entry(path: str) -> str:
+    """MTouch OS requires Windows-style A:\\ paths with backslash separators."""
+    return "A:\\Music\\" + path.replace("/", "\\")
+
+
+DEVICES: dict[str, DeviceProfile] = {
+    "m1plus": DeviceProfile(
+        label="0D46-4F01",
+        music_dir="Music",
+        playlist_dir="_explaylist_data",
+        format_entry=_shanling_mtouch_entry,
+    ),
+}
+
+# ── Validation ─────────────────────────────────────────────────────────────────
+
+
+class ValidationError(Exception):
+    pass
+
+
+def _broken_symlinks(directory: Path) -> list[str]:
+    return [
+        f"broken symlink in {directory.name}/: {e.name} -> {os.readlink(e)}"
+        for e in directory.iterdir()
+        if e.is_symlink() and not e.exists()
+    ]
+
+
+def validate_environment(targets: dict[str, Path]) -> None:
+    errors = []
+
+    if not shutil.which("rsync"):
+        errors.append("rsync not found in PATH")
+    if not MUSIC_ROOT.is_dir():
+        errors.append(f"MUSIC_ROOT not found: {MUSIC_ROOT}")
+    if not DAP_BASE.is_dir():
+        errors.append(f"DAP_BASE not found: {DAP_BASE}")
+
+    for device, mountpoint in targets.items():
+        if not mountpoint.is_dir():
+            errors.append(f"[{device}] mountpoint does not exist: {mountpoint}")
+        elif not os.path.ismount(mountpoint):
+            errors.append(f"[{device}] nothing mounted at: {mountpoint}")
+        elif not os.access(mountpoint, os.W_OK):
+            errors.append(f"[{device}] mountpoint not writable: {mountpoint}")
+
+    if errors:
+        for e in errors:
+            print(f"[error] {e}", file=sys.stderr)
+        raise ValidationError("environment validation failed")
+
+
+def validate_device(device: str) -> list[str]:
+    dap_dir = DAP_BASE / device
+    music_dir = dap_dir / "Music"
+    playlists_dir = dap_dir / "Playlists"
+
+    if not dap_dir.is_dir():
+        return [f"DAP folder not found: {dap_dir}"]
+
+    errors = []
+    for d, label in [(music_dir, "Music/"), (playlists_dir, "Playlists/")]:
+        if not d.is_dir():
+            errors.append(f"{label} directory not found: {d}")
+        else:
+            errors.extend(_broken_symlinks(d))
+
+    return errors
+
+
+# ── Collection ─────────────────────────────────────────────────────────────────
+
+
+def collect_music_files(music_dir: Path) -> set[Path]:
+    files = set()
+    for entry in music_dir.iterdir():
+        if not entry.is_symlink():
+            continue
+        target = entry.resolve()
+        if target.is_dir():
+            files.update(
+                f
+                for f in target.rglob("*")
+                if f.is_file() and f.suffix.lower() in AUDIO_EXTENSIONS
+            )
+        elif target.is_file() and target.suffix.lower() in AUDIO_EXTENSIONS:
+            files.add(target)
+        else:
+            print(
+                f"  [warn] skipping symlink to non-audio target: {entry.name}",
+                file=sys.stderr,
+            )
+    return files
+
+
+def collect_playlist_data(
+    playlists_dir: Path,
+    profile: DeviceProfile,
+) -> tuple[set[Path], dict[str, list[str]]]:
+    audio_files = set()
+    card_playlists = {}
+
+    for entry in playlists_dir.iterdir():
+        if entry.suffix.lower() != ".m3u":
+            continue
+
+        target = entry.resolve() if entry.is_symlink() else entry
+        card_entries = []
+
+        with open(target, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                raw = line.strip()
+                if not raw or raw.startswith("#"):
+                    continue
+                candidate = MUSIC_ROOT / raw
+                if candidate.is_file():
+                    audio_files.add(candidate)
+                    card_entries.append(profile.format_entry(raw))
+                else:
+                    print(
+                        f"  [warn] '{entry.name}': missing file, skipping: {raw}",
+                        file=sys.stderr,
+                    )
+
+        card_playlists[entry.name] = card_entries
+
+    return audio_files, card_playlists
+
+
+# ── Sync ───────────────────────────────────────────────────────────────────────
+
+
+def run_rsync(
+    files: set[Path], mountpoint: Path, profile: DeviceProfile, dry_run: bool
+) -> int:
+    src = str(MUSIC_ROOT) + "/"
+    dst = str(mountpoint / profile.music_dir) + "/"
+
+    relative = sorted(str(f.relative_to(MUSIC_ROOT)) for f in files)
+
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".txt", delete=False, encoding="utf-8"
+    ) as tmp:
+        tmp.write("\n".join(relative) + "\n")
+        tmp_path = tmp.name
+
+    cmd = [
+        "rsync",
+        "--recursive",
+        "--copy-links",
+        "--delete-missing-args",
+        "--files-from",
+        tmp_path,
+        "--out-format=%n",
+    ]
+    if dry_run:
+        cmd.append("--dry-run")
+    cmd += [src, dst]
+
+    print(f"  rsync: {src} -> {dst}")
+    try:
+        return subprocess.run(cmd).returncode
+    finally:
+        os.unlink(tmp_path)
+
+
+def write_card_playlists(
+    card_playlists: dict[str, list[str]],
+    mountpoint: Path,
+    profile: DeviceProfile,
+    dry_run: bool,
+) -> None:
+    dest_dir = mountpoint / profile.playlist_dir
+    if not dry_run:
+        dest_dir.mkdir(exist_ok=True)
+
+    for name, entries in card_playlists.items():
+        if dry_run:
+            print(
+                f"  [dry-run] would write: {profile.playlist_dir}/{name} ({len(entries)} tracks)"
+            )
+        else:
+            (dest_dir / name).write_text("\n".join(entries) + "\n", encoding="utf-8")
+            print(f"  wrote: {profile.playlist_dir}/{name} ({len(entries)} tracks)")
+
+
+# ── Device sync ────────────────────────────────────────────────────────────────
+
+
+def sync_device(device: str, mountpoint: Path, dry_run: bool) -> bool:
+    print(f"\n-- {device} -> {mountpoint} --")
+
+    profile = DEVICES[device]
+    dap_dir = DAP_BASE / device
+
+    errors = validate_device(device)
+    if errors:
+        for e in errors:
+            print(f"  [error] {e}", file=sys.stderr)
+        print(f"  skipping {device}", file=sys.stderr)
+        return False
+
+    print("  scanning Music/ symlinks...")
+    music_files = collect_music_files(dap_dir / "Music")
+    print(f"  {len(music_files)} audio files via Music/ symlinks")
+
+    print("  scanning Playlists/ symlinks...")
+    playlist_files, card_playlists = collect_playlist_data(
+        dap_dir / "Playlists", profile
+    )
+    print(
+        f"  {len(playlist_files)} audio files via playlists, {len(card_playlists)} playlists"
+    )
+
+    all_files = music_files | playlist_files
+    print(f"  {len(all_files)} total unique files to sync")
+
+    if not all_files and not card_playlists:
+        print("  nothing to sync")
+        return True
+
+    rc = run_rsync(all_files, mountpoint, profile, dry_run)
+    if rc != 0:
+        print(f"  [error] rsync exited with code {rc}", file=sys.stderr)
+        return False
+
+    if card_playlists:
+        write_card_playlists(card_playlists, mountpoint, profile, dry_run)
+
+    print(f"  done: {device}")
+    return True
+
+
+# ── Entry point ────────────────────────────────────────────────────────────────
+
+
+def find_mounted_devices() -> dict[str, Path]:
+    return {
+        device: CARD_BASE / profile.label
+        for device, profile in DEVICES.items()
+        if (CARD_BASE / profile.label).is_dir()
+        and os.path.ismount(CARD_BASE / profile.label)
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Sync music to DAP SD cards")
+    parser.add_argument(
+        "devices", nargs="*", help="Devices to sync (default: all mounted)"
+    )
+    parser.add_argument(
+        "--dry-run", "-n", action="store_true", help="Preview without changes"
+    )
+    parser.add_argument(
+        "--list", action="store_true", help="List devices and mount status"
+    )
+    args = parser.parse_args()
+
+    if args.list:
+        mounted = find_mounted_devices()
+        for device, profile in DEVICES.items():
+            mp = CARD_BASE / profile.label
+            status = f"mounted at {mp}" if device in mounted else "not mounted"
+            print(f"  {device} ({profile.label}): {status}")
+        return
+
+    mounted = find_mounted_devices()
+
+    if args.devices:
+        unknown = set(args.devices) - set(DEVICES)
+        if unknown:
+            print(
+                f"[error] unknown device(s): {', '.join(sorted(unknown))}",
+                file=sys.stderr,
+            )
+            print(f"configured: {', '.join(DEVICES)}", file=sys.stderr)
+            sys.exit(1)
+        targets = {d: CARD_BASE / DEVICES[d].label for d in args.devices}
+    else:
+        targets = {d: CARD_BASE / DEVICES[d].label for d in mounted}
+
+    if not targets:
+        print("No configured DAP devices are currently mounted.")
+        sys.exit(0)
+
+    try:
+        validate_environment(targets)
+    except ValidationError:
+        sys.exit(1)
+
+    results = {
+        device: sync_device(device, mp, args.dry_run) for device, mp in targets.items()
+    }
+
+    print("\n-- summary --")
+    for device, ok in results.items():
+        print(f"  {device}: {'ok' if ok else 'FAILED'}")
+
+    if not all(results.values()):
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

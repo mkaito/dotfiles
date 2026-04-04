@@ -1,0 +1,172 @@
+;; ==========================================================
+;; Variables
+;; ==========================================================
+
+(defpoll time-utc :interval "30s"
+  :initial "..."
+  `TZ=UTC date +%H:%M`)
+
+(defpoll time-poland :interval "30s"
+  :initial "..."
+  `TZ=Europe/Warsaw date +%H:%M`)
+
+(defpoll time-pacific :interval "30s"
+  :initial "..."
+  `TZ=America/Los_Angeles date +%H:%M`)
+
+(defpoll temps :interval "3s"
+  :initial "{\"cpu_temp\":0,\"gpu_temp\":0,\"gpu_load\":0}"
+  `~/.config/eww/scripts/temps.sh`)
+
+(defpoll disk-json :interval "60s"
+  :initial "[]"
+  `~/.config/eww/scripts/disk-info.sh`)
+
+;; ==========================================================
+;; Calendar popup
+;; ==========================================================
+
+(defwidget clock-row [label time]
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 12
+    (label :class "clock-label" :text label :width 160 :halign "start")
+    (label :class "clock-time"  :text time  :halign "end")))
+
+(defwidget calendar-widget []
+  (box :orientation "v"
+       :class "calendar-container"
+       :spacing 16
+    (calendar :class "cal"
+              :show-details true
+              :show-heading true
+              :show-day-names true)
+    (box :orientation "v"
+         :class "world-clocks"
+         :spacing 4
+      (label :class "clocks-header" :text "World Clocks" :halign "start")
+      (clock-row :label "UTC"     :time time-utc)
+      (clock-row :label "Poland"  :time time-poland)
+      (clock-row :label "Pacific" :time time-pacific))))
+
+(defwindow calendar-popup
+  :monitor "DisplayPort-1"
+  :geometry (geometry :x "-16px"
+                      :y "60px"
+                      :anchor "top right")
+  :stacking "fg"
+  :windowtype "dialog"
+  :wm-ignore true
+  (calendar-widget))
+
+;; ==========================================================
+;; System monitor popup
+;; ==========================================================
+
+;; --- Reusable stat row ---
+
+(defwidget stat-row [label value ?unit]
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 6
+    (label :class "stat-label" :text label :halign "start")
+    (label :class "stat-value" :text "${value}${unit ?: ''}" :halign "end")))
+
+;; --- Disk bar (reused from before) ---
+
+(defwidget disk-bar [mount size used avail pcent]
+  (box :orientation "v"
+       :class "disk-entry"
+       :spacing 2
+    (box :orientation "h"
+         :space-evenly false
+         :spacing 8
+      (label :class "disk-mount" :text mount :halign "start" :hexpand true)
+      (label :class "disk-detail" :text "${used} / ${size}" :halign "end"))
+    (progress :class {pcent > 90 ? "disk-bar-crit"
+                    : pcent > 75 ? "disk-bar-warn"
+                    : "disk-bar-ok"}
+              :value pcent
+              :orientation "h")))
+
+;; --- Main system widget ---
+
+(defwidget system-widget []
+  (box :orientation "v"
+       :class "system-container"
+       :spacing 8
+       :space-evenly false
+
+    ;; CPU + GPU stats
+    (box :orientation "v" :spacing 6
+      ;; CPU row
+      (box :orientation "h" :space-evenly false :spacing 8
+        (label :class "stat-label" :text "CPU" :width 60)
+        (label :class {EWW_CPU.avg > 80 ? "load-crit"
+                     : EWW_CPU.avg > 50 ? "load-warn"
+                     : "load-ok"}
+               :text "${round(EWW_CPU.avg, 0)}%" :width 60)
+        (progress :class {EWW_CPU.avg > 80 ? "load-bar-crit"
+                        : EWW_CPU.avg > 50 ? "load-bar-warn"
+                        : "load-bar-ok"}
+                  :value {EWW_CPU.avg}
+                  :orientation "h"
+                  :hexpand true
+                  :vexpand false
+                  :valign "center")
+        (label :class "stat-value" :text "${temps.cpu_temp}°C" :width 80 :halign "end"))
+      ;; GPU row
+      (box :orientation "h" :space-evenly false :spacing 8
+        (label :class "stat-label" :text "GPU" :width 60)
+        (label :class {temps.gpu_load > 80 ? "load-crit"
+                     : temps.gpu_load > 50 ? "load-warn"
+                     : "load-ok"}
+               :text "${temps.gpu_load}%" :width 60)
+        (progress :class {temps.gpu_load > 80 ? "load-bar-crit"
+                        : temps.gpu_load > 50 ? "load-bar-warn"
+                        : "load-bar-ok"}
+                  :value {temps.gpu_load}
+                  :orientation "h"
+                  :hexpand true
+                  :vexpand false
+                  :valign "center")
+        (label :class "stat-value" :text "${temps.gpu_temp}°C" :width 80 :halign "end")))
+
+    ;; Memory
+    (box :orientation "v" :spacing 4 :class "section"
+      (box :orientation "h" :space-evenly false
+        (label :class "section-header" :text "Memory" :halign "start" :hexpand true)
+        (label :class "stat-value" :text "${round(EWW_RAM.used_mem / 1073741824, 1)} / ${round(EWW_RAM.total_mem / 1073741824, 1)} GB" :halign "end"))
+      (progress :class {EWW_RAM.used_mem_perc > 90 ? "mem-bar-crit"
+                      : EWW_RAM.used_mem_perc > 75 ? "mem-bar-warn"
+                      : "mem-bar-ok"}
+                :value {EWW_RAM.used_mem_perc}
+                :orientation "h"
+                :vexpand false))
+
+    ;; Network
+    (box :orientation "v" :spacing 4 :class "section"
+      (label :class "section-header" :text "Network" :halign "start")
+      (box :orientation "h" :space-evenly true
+        (stat-row :label "󰁅" :value {round(EWW_NET.enp7s0.NET_DOWN / 1024, 0)} :unit " KB/s")
+        (stat-row :label "󰁝"   :value {round(EWW_NET.enp7s0.NET_UP / 1024, 0)}   :unit " KB/s")))
+
+    ;; Disks
+    (box :orientation "v" :spacing 4 :class "section"
+      (label :class "section-header" :text "Disks" :halign "start")
+      (for entry in disk-json
+        (disk-bar :mount {entry.mount}
+                  :size {entry.size}
+                  :used {entry.used}
+                  :avail {entry.avail}
+                  :pcent {entry.pcent})))))
+
+(defwindow system-popup
+  :monitor "DisplayPort-2"
+  :geometry (geometry :x "-16px"
+                      :y "60px"
+                      :anchor "top right")
+  :stacking "fg"
+  :windowtype "dialog"
+  :wm-ignore true
+  (system-widget))

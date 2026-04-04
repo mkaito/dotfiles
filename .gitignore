@@ -24,3 +24,4 @@ nushell/history.txt
 nushell/vendor/autoload/starship.nu
 nushell/vendor/autoload/zoxide.nu
 nushell/vendor/use/mise.nu
+rc/logs/

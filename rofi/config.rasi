@@ -1,0 +1,14 @@
+configuration {
+  modi:             "run,drun,window";
+  case-sensitive:   false;
+  cycle:            true;
+  scroll-method:    0;
+  normalize-match:  true;
+  show-icons:       false;
+  steal-focus:      false;
+  matching:         "fuzzy";
+  tokenize:         true;
+  font:             "IosevkaTermSS02 Nerd Font 20";
+}
+
+@theme "tokyonight"

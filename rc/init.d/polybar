@@ -1,0 +1,14 @@
+#!/sbin/openrc-run
+bar_name="${RC_SVCNAME#polybar.}"
+description="Polybar status bar (${bar_name})"
+command="/usr/bin/polybar"
+command_args="${bar_name} -c ${XDG_CONFIG_HOME:-$HOME/.config}/polybar/config.ini"
+command_background=true
+pidfile="${XDG_RUNTIME_DIR}/polybar-${bar_name}.pid"
+supervisor=supervise-daemon
+output_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/polybar-${bar_name}.log"
+error_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/polybar-${bar_name}.err"
+
+depend() {
+  want eww
+}

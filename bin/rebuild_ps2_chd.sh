@@ -76,9 +76,9 @@ convert_iso_in_place() {
 export -f rebuild_chd_in_place convert_iso_in_place is_dvd_chd verify_chd mktemp_near log
 
 # 1) Rebuild all .chd under cwd (extract + reconvert in-place)
-while IFS= read -r -d '' f; do
-  rebuild_chd_in_place "$f"
-done < <(find . -type f -name '*.chd' -print0)
+# while IFS= read -r -d '' f; do
+#   rebuild_chd_in_place "$f"
+# done < <(find . -type f -name '*.chd' -print0)
 
 # 2) Convert all .iso under cwd to .chd (in-place: replace .iso with .chd)
 while IFS= read -r -d '' f; do

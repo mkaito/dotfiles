@@ -1,4 +1,7 @@
+source ~/.zshenv
+
+# Start X session if logged in on tty1
 if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
   # See ~/.xinitrc
-  # exec startx
+  exec startx
 fi

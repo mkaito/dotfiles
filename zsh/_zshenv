@@ -8,6 +8,15 @@ export ALTERNATE_EDITOR=""
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS="--reverse --inline-info --cycle --bind ctrl-j:down,ctrl-k:up,ctrl-l:accept"
 
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
+
+# For each path, check that it exists and isn't already in PATH
+PATHS=(\
+  "$HOME/dev/dotfiles/bin" \
+  "$HOME/.local/bin" \
+  )
 
 case "$OSTYPE" in
     linux*)
@@ -17,22 +26,54 @@ case "$OSTYPE" in
         export TERMINAL="$XTERM"
         export PERL_SIGNALS="unsafe"
 
+        # export GDK_SCALE=2
+        # export GDK_DPI_SCALE=0.5
+        # export QT_AUTO_SCREEN_SCALE_FACTOR=1
+        # export QT_SCALE_FACTOR=1
+        # export QT_FONT_DPI=192
+        # export ELECTRON_FORCE_DEVICE_SCALE_FACTOR=2
+        export XCURSOR_SIZE=48
+        export QT_QPA_PLATFORMTHEME=qt5ct
+
         # export SSH_AUTH_SOCK="/run/user/1000/gnupg/S.gpg-agent.ssh"
         export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd_hrgb -Dswing.aatext=true"
 
         # Compress xz faster and better
         export XZ_OPT='-8 -T0'
 
-        if [[ -z $PATH_FIXED ]]; then
-            export PATH="$HOME/dev/dotfiles/bin:$HOME/.local/bin:$HOME/.cabal/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
-            export PATH_FIXED=1
+        if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && [ -n "$XDG_RUNTIME_DIR" ]; then
+            export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
         fi
         ;;
 
     darwin*)
-        export HOMEBREW_NO_ENV_HINTS=1
+        export HOMEBREW_NO_ANALYTICS=1
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+
+        PATHS+=( \
+            # This is ridiculous, but it's the only way to get the GNU versions of these
+            "/opt/homebrew/opt/coreutils/libexec/gnubin" \
+            "/opt/homebrew/opt/gawk/libexec/gnubin" \
+            "/opt/homebrew/opt/gnu-getopt/bin" \
+            "/opt/homebrew/opt/gnu-indent/libexec/gnubin" \
+            "/opt/homebrew/opt/gnu-sed/libexec/gnubin" \
+            "/opt/homebrew/opt/gnu-tar/libexec/gnubin" \
+            "/opt/homebrew/opt/grep/libexec/gnubin" \
+            "/opt/homebrew/opt/findutils/libexec/gnubin" \
+            "/opt/homebrew/opt/postgresql@17/bin" \
+            "/opt/homebrew/opt/mozjpeg/bin" \
+            "/opt/homebrew/share/google-cloud-sdk/bin" \
+        )
         ;;
 
 esac
 
+for p in "${PATHS[@]}"; do
+  case ":$PATH:" in
+    *":$p:"*) :;;
+    *) [[ -d $p ]] && PATH="$p:$PATH" ;;
+  esac
+done
+
+export PATH
 

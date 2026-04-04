@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+INSTALL_DIR="${HOME}/.steam/root/compatibilitytools.d"
+API_URL="https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"
+
+usage() {
+    echo "Usage: $0 [-f|--force] [VERSION]"
+    echo "  No argument: install latest release"
+    echo "  '10'       : install latest GE-Proton10-X"
+    echo "  '10-32'    : install GE-Proton10-32 specifically"
+    echo "  -f|--force : overwrite if already installed"
+    exit 1
+}
+
+parse_release() {
+    local release="$1"
+    tag=$(echo "$release" | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+    download_url=$(echo "$release" | grep "browser_download_url.*tar.gz" | grep -v "sha512sum" | head -1 | cut -d'"' -f4)
+}
+
+main() {
+    local version_arg=""
+    local force=0
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)  usage ;;
+            -f|--force) force=1 ; shift ;;
+            -*)         echo "Unknown flag: $1" ; usage ;;
+            *)          version_arg="$1" ; shift ;;
+        esac
+    done
+
+    local tag=""
+    local download_url=""
+
+    mkdir -p "$INSTALL_DIR"
+
+    if [[ -z "$version_arg" ]]; then
+        local release
+        release=$(curl -s "${API_URL}/latest")
+        parse_release "$release"
+    else
+        version_arg="${version_arg#GE-Proton}"
+        version_arg="${version_arg#ge-proton}"
+
+        if [[ "$version_arg" == *"-"* ]]; then
+            tag="GE-Proton${version_arg}"
+        else
+            local releases
+            releases=$(curl -s "${API_URL}?per_page=100")
+            tag=$(echo "$releases" | grep '"tag_name"' | grep -i "\"GE-Proton${version_arg}-" | head -1 | cut -d'"' -f4)
+            if [[ -z "$tag" ]]; then
+                echo "Error: No release found matching '${version_arg}'"
+                exit 1
+            fi
+        fi
+
+        local release
+        release=$(curl -s "${API_URL}/tags/${tag}")
+        parse_release "$release"
+    fi
+
+    if [[ -z "$tag" || -z "$download_url" ]]; then
+        echo "Error: Could not determine release or download URL"
+        exit 1
+    fi
+
+    if [[ -d "${INSTALL_DIR}/${tag}" ]]; then
+        if [[ "$force" -eq 0 ]]; then
+            echo "${tag} is already installed. Use -f|--force to overwrite."
+            exit 0
+        else
+            echo "Overwriting existing installation of ${tag}."
+            rm -rf "${INSTALL_DIR:?}/${tag}"
+        fi
+    fi
+
+    local tarball="${tag}.tar.gz"
+    echo "Installing ${tag} to ${INSTALL_DIR}"
+    echo "Downloading ${download_url}..."
+    curl -L --progress-bar -o "/tmp/${tarball}" "$download_url"
+    echo "Extracting..."
+    tar -xzf "/tmp/${tarball}" -C "$INSTALL_DIR"
+    rm "/tmp/${tarball}"
+    echo "Done. Restart Steam and select ${tag} in compatibility settings."
+}
+
+main "$@"

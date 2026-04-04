@@ -1,0 +1,273 @@
+// ==========================================================
+// TokyoNight Night palette
+// ==========================================================
+
+$bg:           #1a1b26;
+$bg-dark:      #16161e;
+$bg-highlight: #292e42;
+$fg:           #c0caf5;
+$fg-dark:      #a9b1d6;
+$comment:      #565f89;
+$blue:         #7aa2f7;
+$cyan:         #7dcfff;
+$green:        #9ece6a;
+$yellow:       #e0af68;
+$red:          #f7768e;
+$magenta:      #bb9af7;
+$black:        #15161e;
+
+// ==========================================================
+// Global
+// ==========================================================
+
+* {
+  all: unset;
+  font-family: "IosevkaTermSS02 Nerd Font";
+  font-size: 28px;
+  color: $fg;
+}
+
+// ==========================================================
+// Calendar popup
+// ==========================================================
+
+.calendar-container {
+  background-color: $bg;
+  border: 2px solid $bg-highlight;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+calendar {
+  color: $fg;
+  padding: 8px;
+}
+
+calendar.header {
+  color: $blue;
+  font-weight: bold;
+}
+
+calendar.highlight {
+  color: $yellow;
+  font-weight: bold;
+}
+
+calendar:selected {
+  color: $bg;
+  background-color: $blue;
+  border-radius: 6px;
+}
+
+calendar:indeterminate {
+  color: $comment;
+}
+
+calendar.button {
+  color: $fg-dark;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+calendar.button:hover {
+  background-color: $bg-highlight;
+}
+
+.world-clocks {
+  border-top: 1px solid $bg-highlight;
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.clocks-header {
+  color: $blue;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.clock-label {
+  color: $comment;
+}
+
+.clock-time {
+  color: $fg;
+  font-weight: bold;
+}
+
+// ==========================================================
+// System monitor popup
+// ==========================================================
+
+.system-container {
+  background-color: $bg;
+  border: 2px solid $bg-highlight;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 420px;
+}
+
+.section {
+  border-top: 1px solid $bg-highlight;
+  padding-top: 12px;
+  margin-top: 6px;
+}
+
+.section-header {
+  color: $blue;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: $comment;
+}
+
+.stat-value {
+  color: $fg;
+  font-weight: bold;
+}
+
+// CPU graph
+
+// CPU stats
+
+.load-ok {
+  color: $green;
+  font-weight: bold;
+}
+
+.load-warn {
+  color: $yellow;
+  font-weight: bold;
+}
+
+.load-crit {
+  color: $red;
+  font-weight: bold;
+}
+
+progressbar.load-bar-ok trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.load-bar-ok trough progress {
+  background-color: $green;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.load-bar-warn trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.load-bar-warn trough progress {
+  background-color: $yellow;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.load-bar-crit trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.load-bar-crit trough progress {
+  background-color: $red;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+// Memory progress bars
+
+progressbar.mem-bar-ok trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.mem-bar-ok trough progress {
+  background-color: $green;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.mem-bar-warn trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.mem-bar-warn trough progress {
+  background-color: $yellow;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.mem-bar-crit trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.mem-bar-crit trough progress {
+  background-color: $red;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+// Disk progress bars
+
+.disk-entry {
+  padding: 2px 0;
+}
+
+.disk-mount {
+  color: $fg;
+  font-weight: bold;
+}
+
+.disk-detail {
+  color: $comment;
+  font-size: 22px;
+}
+
+progressbar.disk-bar-ok trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.disk-bar-ok trough progress {
+  background-color: $green;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.disk-bar-warn trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.disk-bar-warn trough progress {
+  background-color: $yellow;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.disk-bar-crit trough {
+  background-color: $bg-highlight;
+  border-radius: 4px;
+  min-height: 14px;
+}
+
+progressbar.disk-bar-crit trough progress {
+  background-color: $red;
+  border-radius: 4px;
+  min-height: 14px;
+}

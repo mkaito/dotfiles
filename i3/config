@@ -4,13 +4,14 @@
 
 set $mod Mod1
 
-set $background #1c2023
-set $foreground #c7ccd1
-set $dim        #747c84
-set $urgent     #f3f4f5
+set $background #1a1b26
+set $foreground #c0caf5
+set $dim        #414868
+set $accent     #7aa2f7
+set $urgent     #f7768e
 
-set $left  DisplayPort-2
-set $right DisplayPort-1
+set $left  DisplayPort-1
+set $right DisplayPort-2
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -23,7 +24,7 @@ set $right DisplayPort-1
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
 
-font pango:Iosevka Medium, Icons 12
+font pango:IosevkaTermSS02 Nerd Font 10
 
 ## Borders
 new_window pixel 3
@@ -32,12 +33,12 @@ hide_edge_borders both
 
 # Colors
 # Note: The drawn colour around windows is actually the background colour
-#                       border        backgr      text        indicator
+# class                 border      background  text        indicator   child_border
 client.background       $background
-client.focused          $background   $dim        $foreground $background
-client.focused_inactive $background   $background $foreground $background
-client.unfocused        $background   $background $foreground $background
-client.urgent           $background   $urgent     $foreground $background
+client.focused          $dim        $accent     $foreground $dim        $dim
+client.focused_inactive $background $background $foreground $background $background
+client.unfocused        $background $background $foreground $background $background
+client.urgent           $background $urgent     $foreground $background $background
 
 ## Tap the key combo for the current workspace to go back to the previous one
 workspace_auto_back_and_forth yes
@@ -72,24 +73,13 @@ bindsym $mod+F12 exec --no-startup-id edit-personal-orgfile
 ## Assign apps to workspaces.
 ## First match overrides.
 
-# Browsers. I switch a lot.
-assign [class="^Firefox$" instance="^Navigator$"] 3
-assign [class="^Firefox Beta$" instance="^Navigator$"] 3
-assign [class="^Firefox Developer Edition$" instance="^Navigator$"] 3
-assign [class="^Chromium-browser$" instance="^chromium-browser$"] 3
-assign [class="^google-chrome-unstable$"] 3
+# Browsers.
+assign [class="^firefox$" instance="^Navigator$"] 3
 assign [class="^Google-chrome$"] 3
-assign [class="^Browser" instance="^Browser"] 3
-assign [class="^Dwb$" instance ="^dwb$"] 3
-assign [class="^Opera" instance ="^Opera"] 3
-assign [class="^qutebrowser$" instance ="^qutebrowser$"] 3
-assign [class="^Google-chrome-unstable$" instance="^google-chrome-unstable"] 3
 
 # Make Firefox dialogs float
 for_window [window_role="Dialog"] floating enable
 for_window [window_role="GtkFileChooserDialog"] floating enable
-for_window [class="Firefox" title="^.*Firefox$"] floating enable
-for_window [class="Firefox" window_type="dialog"] floating enable
 
 # Messaging stuff
 assign [instance="^mail$"] 4
@@ -98,8 +88,10 @@ assign [instance="^nevermore"] 4
 assign [class="^TeamSpeak 3$"] TS3
 assign [class="^Mumble$"] Mumble
 assign [class="^discord"] Discord
+assign [class="^vesktop"] Discord
 assign [class="^Slack"] Slack
 assign [class="^Zulip"] Zulip
+assign [class="^Telegram"] Telegram
 
 # Anki
 assign [class="^Anki$"] Anki
@@ -110,16 +102,13 @@ assign [class="^VirtualBox Manager$"] vbox
 assign [class="^Zeal$"] zeal
 
 # Gaming
-assign [class="^Steam$"] Steam
+assign [class="^steam$"] Steam
 assign [class="^FTL$"] 5
-assign [title="^Starship Theory$"] 5
 assign [title="^RimWorld"] 5
-assign [class="^starbound$"] 5
 assign [title="^Shadowrun$"] 5
-assign [class="^surviving mars"] 5
+assign [class="^steam_app_"] 5
+assign [class="^X4"] 5
 
-# Stellaris
-assign [class="^stellaris$"] 5
 
 assign [title="^sc2"] 5
 assign [title="^Scelight"] scelight
@@ -247,36 +236,18 @@ workspace TS3 output $right
 workspace gimp output $left
 workspace vbox output $right
 
-# # EVE Online layout
-# ## Miners and combat toons on left
-# workspace Kaito output DVI-I-3
-# workspace Sanjo output DVI-I-3
-# workspace Meigo output DVI-I-3
-# workspace Gokku output DVI-I-3
-# ## Haulers and indy toons on right
-# workspace Shijo output DVI-I-2
-# workspace Teiko output DVI-I-2
-# ## Tools on right screen
-# workspace Pyfa output DVI-I-2
-# workspace EVEMon output DVI-I-2
 
-## Media keys
-bindsym $mod+XF86AudioMute exec --no-startup-id 	terminal mixer pulsemixer
-bindsym XF86AudioMute exec --no-startup-id				pulsemixer --toggle-mute
-bindsym XF86AudioLowerVolume exec --no-startup-id pulsemixer --change-volume -5
-bindsym XF86AudioRaiseVolume exec --no-startup-id pulsemixer --change-volume +5
+# Media keys
+bindsym $mod+XF86AudioMute   exec --no-startup-id	terminal mixer wiremix
+bindsym XF86AudioMute        exec --no-startup-id	wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
 
-# Spotify
-bindsym XF86AudioPlay exec --no-startup-id 				playerctl play-pause
-bindsym XF86AudioPause exec --no-startup-id 			playerctl play-pause
-bindsym XF86AudioPrev exec --no-startup-id 				playerctl previous
-bindsym XF86AudioNext exec --no-startup-id 				playerctl next
-
-# Mocp
-# bindsym XF86AudioPlay exec --no-startup-id 				mocp --toggle-pause
-# bindsym XF86AudioPause exec --no-startup-id 			mocp --toggle-pause
-# bindsym XF86AudioPrev exec --no-startup-id 				mocp --previous
-# bindsym XF86AudioNext exec --no-startup-id 				mocp --next
+# mpd
+bindsym XF86AudioPlay exec --no-startup-id		mpc toggle
+bindsym XF86AudioPause exec --no-startup-id		mpc toggle
+bindsym XF86AudioPrev exec --no-startup-id		mpc prev
+bindsym XF86AudioNext exec --no-startup-id		mpc next
 
 bindsym Print exec --no-startup-id 								screenshot
 bindsym Shift+Print exec --no-startup-id 					screengrab
@@ -289,22 +260,15 @@ bindsym $mod+Shift+Tab exec --no-startup-id i3-toggle-mod
 
 ## start dmenu (a program launcher)
 bindsym $mod+p exec --no-startup-id rofi -show run
-
-## start passmenu, a dmenu read-only interface to the `pass` password manager
-bindsym $mod+Shift+p exec --no-startup-id gopassmenu
-bindsym $mod+Ctrl+p exec --no-startup-id gopassmenu --type
-# bindsym $mod+Ctrl+p exec --no-startup-id rofi -modi 1pass:rofi-1pass -show 1pass
-# bindsym $mod+Ctrl+p exec --no-startup-id bwmenu
-
-## start yubikey-oath-dmenu, a dmenu wrapper to get an OATH key from your Yubikey
-bindsym $mod+Shift+Ctrl+p exec --no-startup-id oath-dmenu
+bindsym $mod+Shift+p exec --no-startup-id rofi -show drun
+bindsym $mod+Tab exec --no-startup-id rofi -show window
 
 ## change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
-bindsym $mod+Tab [urgent="oldest"] focus
+# bindsym $mod+Tab [urgent="oldest"] focus
 # bindsym $mod+Tab exec --no-startup-id i3-focus-last.py --switch
 
 ## alternatively, you can use the cursor keys:
@@ -420,44 +384,4 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-## Right monitor
-bar {
-  output $right
-    tray_output $right
-    status_command $HOME/dev/dotfiles/bin/conky-i3bar primary
-    workspace_buttons yes
-
-    mode dock
-    position top
-
-    colors {
-      background $background
-      statusline $dim
-      separator  $background
-
-      focused_workspace   $background  $background  $foreground
-      active_workspace    $background  $background  $dim
-      inactive_workspace  $background  $background  $dim
-      urgent_workspace    $urgent      $urgent      $background
-    }
-}
-
-## Left monitor
-bar {
-  output $left
-
-    mode dock
-    status_command $HOME/dev/dotfiles/bin/conky-i3bar secondary
-    position top
-
-    colors {
-      background $background
-      statusline $dim
-      separator  $background
-
-      focused_workspace   $background  $background  $foreground
-      active_workspace    $background  $background  $dim
-      inactive_workspace  $background  $background  $dim
-      urgent_workspace    $urgent      $urgent      $background
-    }
-}
+exec --no-startup-id openrc --user graphical

@@ -4,7 +4,7 @@ conky.config={
   out_to_console = true,
   background = false,
   max_text_width = 0,
-  update_interval = 3,
+  update_interval = 0.2,
   total_run_times = 0,
   short_units = true,
   use_spacer = "left",
@@ -16,9 +16,10 @@ conky.config={
 
 conky.text = [[
 [
-  {"full_text": "\uF0E0 ${new_mails /home/chris/Maildir/Private/INBOX}/${new_mails /home/chris/Maildir/Haven/INBOX}/${new_mails /home/chris/Maildir/Serokell/INBOX}/${new_mails /home/chris/Maildir/uned/INBOX}"},
+  {"full_text": "${if_match "${exec mpc status | grep -c playing}" == "1"}\uF144 ${exec mpc current -f "%artist% - %title%"} $endif"},
+  {"full_text": "${exec xkblayout-state print %s}"},
   {"full_text": "U:${utime %H:%M}"},
-  {"full_text": "M:${tztime Europe/Moscow %H:%M}"},
+  {"full_text": "P:${tztime Europe/Warsaw %H:%M}"},
   {"full_text": "S:${tztime America/Los_Angeles %H:%M}"}
 ],
 ]]

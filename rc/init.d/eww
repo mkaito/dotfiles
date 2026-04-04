@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+description="Eww widget daemon"
+command="/usr/bin/eww"
+command_args="daemon --no-daemonize"
+command_background=true
+pidfile="${XDG_RUNTIME_DIR}/eww.pid"
+supervisor=supervise-daemon
+output_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/eww.log"
+error_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/eww.err"
+
+depend() {
+  need dbus
+}

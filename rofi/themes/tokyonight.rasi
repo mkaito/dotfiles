@@ -1,0 +1,157 @@
+/**
+ * ROFI Color theme
+ * Theme: TokyoNight Night
+ * Based on folke/tokyonight.nvim night palette
+ */
+
+* {
+    selected-normal-foreground:  #7aa2f7;
+    foreground:                  #c0caf5;
+    normal-foreground:           @foreground;
+    alternate-normal-background: rgba ( 26, 27, 38, 0 % );
+    red:                         #f7768e;
+    selected-urgent-foreground:  #c0caf5;
+    blue:                        #7aa2f7;
+    urgent-foreground:           #f7768e;
+    alternate-urgent-background: rgba ( 26, 27, 38, 0 % );
+    active-foreground:           #9ece6a;
+    selected-active-foreground:  #9ece6a;
+    alternate-active-background: rgba ( 26, 27, 38, 0 % );
+    background:                  #1a1b26ee;
+    bordercolor:                 #292e42;
+    alternate-normal-foreground: #a9b1d6;
+    normal-background:           rgba ( 26, 27, 38, 0 % );
+    selected-normal-background:  #292e42;
+    border-color:                @bordercolor;
+    spacing:                     2;
+    separatorcolor:              #292e42;
+    urgent-background:           rgba ( 26, 27, 38, 0 % );
+    selected-urgent-background:  #f7768e;
+    alternate-urgent-foreground: @urgent-foreground;
+    background-color:            rgba ( 0, 0, 0, 0 % );
+    alternate-active-foreground: @active-foreground;
+    active-background:           rgba ( 26, 27, 38, 0 % );
+    selected-active-background:  #292e42;
+}
+window {
+    background-color: @background;
+    border:           2;
+    border-radius:    12;
+    padding:          16;
+    border-color:     @bordercolor;
+    width:            640px;
+}
+mainbox {
+    border:  0;
+    padding: 0;
+}
+message {
+    border:       2px 0px 0px;
+    border-color: @separatorcolor;
+    padding:      1px;
+}
+textbox {
+    text-color: @foreground;
+}
+listview {
+    fixed-height: 0;
+    lines:        12;
+    border:       1px 0px 0px;
+    border-color: @separatorcolor;
+    spacing:      2px;
+    scrollbar:    true;
+    padding:      8px 0px 0px;
+}
+element {
+    border:        0;
+    padding:       8px 12px;
+    border-radius: 6;
+}
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+    highlight:        bold underline;
+}
+element.normal.normal {
+    background-color: @normal-background;
+    text-color:       @normal-foreground;
+}
+element.normal.urgent {
+    background-color: @urgent-background;
+    text-color:       @urgent-foreground;
+}
+element.normal.active {
+    background-color: @active-background;
+    text-color:       @active-foreground;
+}
+element.selected.normal {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}
+element.selected.urgent {
+    background-color: @selected-urgent-background;
+    text-color:       @selected-urgent-foreground;
+}
+element.selected.active {
+    background-color: @selected-active-background;
+    text-color:       @selected-active-foreground;
+}
+element.alternate.normal {
+    background-color: @alternate-normal-background;
+    text-color:       @alternate-normal-foreground;
+}
+element.alternate.urgent {
+    background-color: @alternate-urgent-background;
+    text-color:       @alternate-urgent-foreground;
+}
+element.alternate.active {
+    background-color: @alternate-active-background;
+    text-color:       @alternate-active-foreground;
+}
+scrollbar {
+    width:        4px;
+    border:       0;
+    handle-color: #565f89;
+    handle-width: 8px;
+    padding:      0;
+}
+mode-switcher {
+    border:       2px 0px 0px;
+    border-color: @separatorcolor;
+}
+button {
+    text-color: #565f89;
+}
+button.selected {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}
+inputbar {
+    spacing:          8;
+    text-color:       @normal-foreground;
+    padding:          8px 12px;
+    background-color: #16161e;
+    border-radius:    8;
+    margin:           0 0 8px 0;
+    children:         [ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+case-indicator {
+    spacing:    0;
+    text-color: @normal-foreground;
+}
+entry {
+    spacing:           0;
+    text-color:        @normal-foreground;
+    placeholder:       "Search...";
+    placeholder-color: #565f89;
+}
+prompt {
+    spacing:    0;
+    text-color: @blue;
+}
+textbox-prompt-colon {
+    expand:     false;
+    str:        ":";
+    margin:     0px 0.3em 0em 0em;
+    text-color: #565f89;
+}

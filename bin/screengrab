@@ -5,19 +5,6 @@ if [[ ! -t 0 ]]; then
   notify-send "Screengrab activated" "Drag region"
 fi
 
-if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
-    # grim -g "$(slurp -d)" -t png -l 8 - | wl-copy -t image/png
-    hyprshot -m region --clipboard-only
-else
-    maim -s | xclip -selection clipboard -t image/png
-fi
+maim -s | xclip -selection clipboard -t image/png
 
 notify-send 'Screenshot' 'Region copied to clipboard'
-
-# out="${XDG_RUNTIME_DIR:-/tmp}/$(date +%s).png"
-# maim -s "$out"
-# notify-send "Publishing screenshot" "Screenshot taken, processing..."
-# publish "$out"
-# rm -f "$out"
-
-# notify-send 'Screenshot' "$out"

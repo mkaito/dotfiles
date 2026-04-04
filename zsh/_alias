@@ -1,9 +1,9 @@
 source ~/dev/dotfiles/zsh/nix.sh
 
-alias ss='sudo systemctl'
-alias ssu='systemctl --user'
-alias jj='sudo journalctl'
-alias jju='journalctl --user'
+# alias ss='sudo systemctl'
+# alias ssu='systemctl --user'
+# alias jj='sudo journalctl'
+# alias jju='journalctl --user'
 
 alias speedtest='wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
 
@@ -131,12 +131,12 @@ alias calc='noglob calculate'
 alias fixperm="find . -type d -exec chmod 755 {} \; && find . -type f -exec chmod 644 {} \;"
 
 # Yay shorthands
-alias yas='yay -S'
-alias yass='yay -Ss'
-alias yasy='yay -Sy'
-alias yasyy='yay -Syy'
-alias yasyu='yay -Syyu --devel --noconfirm'
-alias yard='yay -Rcsu'
+# alias yas='yay -S'
+# alias yass='yay -Ss'
+# alias yasy='yay -Sy'
+# alias yasyy='yay -Syy'
+# alias yasyu='yay -Syyu --devel --noconfirm'
+# alias yard='yay -Rcsu'
 
 # Homebrew shorthands
 # alias b='brew'
@@ -262,8 +262,8 @@ function clipencrypt() {
 alias ce=clipencrypt
 
 # Linux Xorg screen helpers
-output_left="DP-2"
-output_right="DP-0"
+output_left="DisplayPort-1"
+output_right="DisplayPort-2"
 alias ssingle="xrandr --output $output_right --off"
 alias snormal="xrandr --output $output_right --auto --pos 3840x0 --rotate right --output $output_left --auto --pos 0x1000"
 alias s1440="xrandr --output $output_right --auto --pos 2560x0 --rotate right --output $output_left --mode "2560x1440" --pos 0x1180"
@@ -286,5 +286,7 @@ alias cal='cal -m'
 
 alias mnt='udisksctl mount -b'
 alias umnt='udisksctl unmount -b'
+
+source ~/dev/dotfiles/zsh/_gentoo.zsh
 
 # vim:ft=zsh

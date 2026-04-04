@@ -1,8 +1,8 @@
 fpath=("$HOME/dev/dotfiles/zsh/completion" $fpath)
 
-# "$(brew --prefix)/share/zsh/site-functions" 
-
 source "${HOME}/dev/build/zgenom/zgenom.zsh"
+
+source ~/.zshenv
 
 if ! zgenom saved; then
     echo "Creating a zgenom save"
@@ -20,21 +20,14 @@ if ! zgenom saved; then
     zgenom load sindresorhus/pure
 
     # completions
-    # zgenom load zsh-users/zsh-completions src
+    zgenom load zsh-users/zsh-completions src
 
     # FZF history search
     zgenom load unixorn/fzf-zsh-plugin
-    zgenom load Aloxaf/fzf-tab
 
     # save all to init script
     zgenom save
 fi
-
-# Vi mode config
-function zvm_after_lazy_keybindings() {
-    zvm_bindkey viins '^R' fzf-history-widget
-    zvm_bindkey viins '^Q' push-line
-}
 
 # Show git stash in the prompt
 zstyle :prompt:pure:git:stash show yes
@@ -123,5 +116,11 @@ MISE="$(command -v mise)"
 eval "$($MISE activate zsh)"
 
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
+
+# fzf shell integration - explicit paths for system-installed fzf
+if command -v fzf &>/dev/null; then
+    # Try modern fzf --zsh first (fzf >= 0.48)
+    source <(fzf --zsh)
+fi
 
 # vim:ft=zsh
