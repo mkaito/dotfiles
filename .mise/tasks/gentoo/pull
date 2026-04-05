@@ -7,15 +7,20 @@ if [[ "$(hostname -s)" != "aldheim" ]]; then
     exit 1
 fi
 
+if [[ $EUID -eq 0 ]]; then
+    echo "Error: this task must not be run as root" >&2
+    exit 1
+fi
+
 SYSTEM_CONFIG="$MISE_PROJECT_ROOT/system/gentoo/config"
 FILTER="$MISE_PROJECT_ROOT/system/gentoo/rsync-filter"
 
 echo "==> Syncing /etc/portage -> $SYSTEM_CONFIG/etc/portage/"
-rsync -av --delete --filter="merge $FILTER" \
+rsync -av --no-owner --no-group --delete --filter="merge $FILTER" \
     /etc/portage/ "$SYSTEM_CONFIG/etc/portage/"
 
 echo "==> Syncing /etc (non-portage tracked files) -> $SYSTEM_CONFIG/etc/"
-rsync -av \
+rsync -av --no-owner --no-group \
     --files-from=<(find "$SYSTEM_CONFIG/etc/" -not -path '*/portage/*' -type f -printf '%P\n') \
     /etc/ "$SYSTEM_CONFIG/etc/"
 

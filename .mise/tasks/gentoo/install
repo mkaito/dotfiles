@@ -15,11 +15,11 @@ SYSTEM_CONFIG="$MISE_PROJECT_ROOT/system/gentoo/config"
 FILTER="$MISE_PROJECT_ROOT/system/gentoo/rsync-filter"
 
 echo "==> Deploying /etc/portage..."
-rsync -av --delete --filter="merge $FILTER" \
+rsync -av --chown=root:root --delete --filter="merge $FILTER" \
     "$SYSTEM_CONFIG/etc/portage/" /etc/portage/
 
 echo "==> Deploying /etc (non-portage)..."
-rsync -av --exclude=portage/ "$SYSTEM_CONFIG/etc/" /etc/
+rsync -av --chown=root:root --exclude=portage/ "$SYSTEM_CONFIG/etc/" /etc/
 
 echo "==> Writing local overlay config..."
 cat > /etc/portage/repos.conf/local.conf <<EOF
