@@ -1,7 +1,6 @@
 [user]
 	name = Christian Höppner
 	email = chris@mkaito.net
-  ; signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICF2HUMJT5CjS+Uz/PSBKXI/kKI9EAsxQh/Nnz+ANq+B
 
 ; [gpg]
 ;   format = ssh
@@ -12,12 +11,6 @@
 
 ; [commit]
 ;   gpgsign = true
-
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
 
 [column]
   ui = auto
@@ -43,9 +36,6 @@
   untrackedCache = true
 	safecrlf = warn
 
-[push]
-  default = current
-
 [color]
   ui = true
 
@@ -66,11 +56,6 @@
   colorMoved = plain
   mnemonicPrefix = true
   renames = true
-
-[sendemail]
-  smtpserver = /usr/bin/msmtp
-  smtpserveroption=-a
-  smtpserveroption=mkaito.net
 
 [push]
   default = simple
@@ -110,8 +95,5 @@
 
 [includeIf "gitdir:~/dev/stx/internal/"]
   path = .gitconfig-stx
-
-[safe]
-	directory = /mnt/windows/Users/chris/source/repos/SE/mods/UDSERebalance
 
 # vim: set ft=gitconfig:

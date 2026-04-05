@@ -1,0 +1,63 @@
+local wezterm = require("wezterm")
+local mux = wezterm.mux
+local act = wezterm.action
+
+local config = wezterm.config_builder()
+
+{{ if eq .chezmoi.os "linux" -}}
+-- Maximize on startup; i3 tiles windows but doesn't auto-fill
+wezterm.on("gui-attached", function(_)
+	local workspace = mux.get_active_workspace()
+	for _, window in ipairs(mux.all_windows()) do
+		if window:get_workspace() == workspace then
+			window:gui_window():maximize()
+		end
+	end
+end)
+
+{{ end -}}
+wezterm.on("update-right-status", function(window, _)
+	local name = window:active_key_table()
+	if name then
+		name = "TABLE: " .. name
+	end
+	window:set_right_status(name or "")
+end)
+
+config.color_scheme = "tokyonight_night"
+config.audible_bell = "Disabled"
+
+config.font = wezterm.font("IosevkaTermSS02 Nerd Font", { weight = "ExtraLight" })
+config.font_size = 12
+
+config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = false
+config.use_fancy_tab_bar = false
+
+{{ if eq .chezmoi.os "darwin" -}}
+config.native_macos_fullscreen_mode = true
+config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+{{ else -}}
+config.window_decorations = "NONE"
+{{ end -}}
+
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
+}
+
+config.window_close_confirmation = "NeverPrompt"
+
+config.keys = {
+{{ if eq .chezmoi.os "darwin" -}}
+	{
+		key = "f",
+		mods = "CTRL|CMD",
+		action = act.ToggleFullScreen,
+	},
+{{ end -}}
+}
+
+return config

@@ -55,20 +55,11 @@ bindsym $mod+F1 exec --no-startup-id terminal
 bindsym $mod+F2 exec browser
 # bindsym $mod+F3 exec --no-startup-id mail-emacs
 # bindsym $mod+F3 exec --no-startup-id terminal mail   mutt
-bindsym $mod+F3 exec --no-startup-id terminal mail   alot
-bindsym $mod+F4 exec --no-startup-id terminal chat   weechat
+bindsym $mod+F3 exec --no-startup-id terminal mail   neomutt
 bindsym $mod+F5 exec --no-startup-id terminal ranger ranger
-bindsym $mod+F6 exec --no-startup-id terminal music  mocp
-bindsym $mod+F8 exec --no-startup-id emacsclient -c -n
-
-# bindsym $mod+t exec --no-startup-id terminal torrent transmission-remote-cli
+bindsym $mod+F6 exec --no-startup-id terminal music  rmpc
 
 bindsym $mod+F10 exec --no-startup-id anki
-
-## Emacs
-bindsym $mod+F9 exec --no-startup-id capture
-bindsym $mod+F11 exec --no-startup-id edit-personal-ledger
-bindsym $mod+F12 exec --no-startup-id edit-personal-orgfile
 
 ## Assign apps to workspaces.
 ## First match overrides.
@@ -118,21 +109,6 @@ assign [instance="^ffxivlauncher.exe$"] 5
 assign [instance="^ffxivboot.exe$"] 5
 assign [instance="^ffxiv.exe$"] 5
 
-## EVE Online
-assign [class="^evelauncher.exe$"] 5
-assign [title="^EVE1 - Wine desktop$"] Kaito
-assign [title="^EVE2 - Wine desktop$"] Teiko
-assign [title="^EVE3 - Wine desktop$"] Sanjo
-assign [title="^EVE4 - Wine desktop$"] Shijo
-assign [title="^EVE5 - Wine desktop$"] Meigo
-assign [title="^EVE6 - Wine desktop$"] Gokku
-assign [class="^Gtkevemon$"] EVEMon
-assign [instance="^pyfa.exe$"] Pyfa
-assign [instance="^evernus.exe$"] Evernus
-for_window [instance="^evernus.exe$" title="^Margin tool$"] floating enable
-for_window [instance="^pyfa.exe$"] floating enable
-for_window [instance="^pyfa.exe$" title="^pyfa v"] floating disable border none
-
 assign [title="^Cities: Skylines$"] 5
 assign [title="^Pillars of Eternity$"] 5
 assign [title="^WORLD END ECONOMICA -I-$"] 5
@@ -181,25 +157,16 @@ for_window [class="^Wine$" instance="^explorer.exe$"] border none
 for_window [class="^Pavucontrol$"] floating enable, border pixel 4
 for_window [instance="^mixer"] floating enable, border pixel 4
 for_window [class="^Pinentry-gtk-2$"] floating enable, border pixel 4
-for_window [class="^Emacs$" instance="^personal-org$"] floating enable, border pixel 4
-for_window [class="^Emacs$" instance="^ledger$"] floating enable, border pixel 4
-for_window [class="^Emacs$" instance="^editor"] floating enable, border pixel 4
-for_window [class="^Emacs$" instance="^capture$"] floating enable, border pixel 4
 for_window [class="^Anki$"] floating enable
 for_window [class="^Nitrogen$"] floating enable, border pixel 4
 for_window [class="^Sxiv$" instance="^sxiv$"] floating enable, border pixel 4
 for_window [class="^feh$" instance="^feh$"] floating enable, border pixel 4
 for_window [class="^Steam$" title="^(?!Steam$)"] floating enable, border pixel 4
 for_window [class="^FTL$"] floating enable, border pixel 4
-for_window [class="^Gvim$" instance="^gvim$" title="^vimperator-secure"] floating enable, border pixel 4
-for_window [class="^URxvt$" instance="^browser-editor$"] floating enable, border pixel 4
-for_window [class="^Termite$" instance="^editor$"] floating enable, border pixel 4
-for_window [class="^Gvim$" title="^cvim-"] floating enable, border pixel 4
 for_window [class="^Mcomix$" title="^Library$"] floating enable, border pixel 4
 for_window [class="^ffxiv.exe$"] floating disable, border none
 for_window [class="^Client_tos.exe$"] floating disable, border none
 for_window [class="^Xmessage$"] floating enable, border pixel 4
-for_window [class="^Pyfa.py" title="^Export fit to EVE$"] floating enable, border pixel 4
 for_window [class="^Klavaro$"] floating enable, border pixel 4
 for_window [class="^Steam Controller Configurator$"] floating enable, border pixel 4
 

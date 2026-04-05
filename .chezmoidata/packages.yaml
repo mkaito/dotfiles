@@ -12,6 +12,14 @@ packages:
     - www-client/firefox
     - mail-client/neomutt
     - mail-mta/msmtp
+    - x11-wm/i3
+    - x11-misc/rofi
+    - x11-misc/dunst
+    - x11-misc/polybar
+    - sys-apps/ripgrep
+    - app-misc/abook
+    - media-sound/rmpc
+    - media-sound/mpd
 
   darwin:
     - neovim
