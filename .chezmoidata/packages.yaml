@@ -10,6 +10,8 @@ packages:
     - sys-fs/udisks
     - x11-terms/wezterm
     - www-client/firefox
+    - mail-client/neomutt
+    - mail-mta/msmtp
 
   darwin:
     - neovim
