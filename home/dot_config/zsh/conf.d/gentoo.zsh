@@ -6,14 +6,6 @@ xr() {
     sudo emerge --ask --depclean
 }
 
-# Upgrade
-alias xiu='sudo emaint sync -a && sudo emerge -auDN @world'
-alias xiuu='sudo emaint sync -a && sudo emerge -auDNv @world'
-
-# Query
-alias xq='equery list'
-alias xqi='equery list -op'
-
 # What got updated recently
 alias updated="qlop -lH"
 

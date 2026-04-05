@@ -15,7 +15,7 @@
 {{ end }}
 
 # Gentoo-only (detected via /etc/os-release ID)
-{{ if ne .chezmoi.osRelease.id "gentoo" }}
+{{ if not (contains "gentoo" .chezmoi.osRelease.id) }}
 .config/zsh/conf.d/gentoo.zsh
 {{ end }}
 
