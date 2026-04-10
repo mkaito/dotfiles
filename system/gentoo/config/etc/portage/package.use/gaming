@@ -1,1 +1,13 @@
 media-libs/mesa vaapi
+
+# required by app-emulation/wine-vanilla-11.6::gentoo[wow64,gecko]
+# required by virtual/wine-0-r11::gentoo
+# required by app-emulation/winetricks-20260125::gentoo
+# required by app-emulation/winetricks (argument)
+>=app-emulation/wine-gecko-2.47.4 abi_x86_32
+
+# required by app-emulation/wine-vanilla-11.6::gentoo[-crossdev-mingw,wow64,mingw]
+# required by virtual/wine-0-r11::gentoo
+# required by app-emulation/winetricks-20260125::gentoo
+# required by app-emulation/winetricks (argument)
+>=dev-util/mingw64-toolchain-14.0.0 abi_x86_32
