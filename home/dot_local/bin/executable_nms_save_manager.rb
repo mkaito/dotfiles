@@ -43,7 +43,7 @@ module NMS
     def save_dir
       @save_dir ||= begin
         dirs = save_base.glob("st_*").select(&:directory?)
-        raise Error, "No NMS save directory under #{save_base}" if dirs.empty?
+        raise Error, "no save dir: #{save_base}" if dirs.empty?
         dirs.first
       end
     end
@@ -254,12 +254,14 @@ module NMS
   module App
     module_function
 
+    def fmt_mb(mb) = mb < 1.0 ? format("%.0f KB", mb * 1024) : format("%.1f MB", mb)
+
     def list(cfg)
       slots    = FS.scan_slots(cfg).sort_by(&:mtime).reverse
       archives = FS.scan_archives(cfg)
       grouped  = archives.group_by(&:slot)
 
-      puts TTY.blue("permadeath saves:")
+      puts TTY.blue("=== Permadeath Saves ===\n")
       if slots.empty?
         puts TTY.yellow("no permadeath saves")
         puts "  dir: #{cfg.save_dir rescue cfg.save_base}"
@@ -269,11 +271,12 @@ module NMS
       mr = FS.most_recent_slot(slots)
       puts "  #{'slot'.ljust(5)}  #{'name'.ljust(20)}  #{'saved'.ljust(19)}  #{'size'.rjust(8)}  bkp"
       slots.each do |s|
-        count = grouped.fetch(s.canonical_slot, []).size
-        mark  = s.canonical_slot == mr.canonical_slot ? TTY.cyan("→") : " "
-        label = s.name.empty? ? TTY.yellow("unnamed") : s.name
-        size  = format("%6.1f MB", s.size_mb)
-        puts " #{mark} #{s.canonical_slot.to_s.ljust(5)}  #{label.ljust(20)}  #{s.timestamp_s}  #{size}  #{count}"
+        count      = grouped.fetch(s.canonical_slot, []).size
+        mark       = s.canonical_slot == mr.canonical_slot ? TTY.cyan("→") : " "
+        label      = s.name.empty? ? TTY.yellow("unnamed") : s.name
+        size       = fmt_mb(s.size_mb).rjust(8)
+        pair_label = s.partner_save ? "#{s.canonical_slot}+#{s.canonical_slot + 1}" : s.canonical_slot.to_s
+        puts " #{mark} #{pair_label.ljust(5)}  #{label.ljust(20)}  #{s.timestamp_s}  #{size}  #{count}"
       end
 
       if (a = archives.max_by(&:timestamp))
@@ -286,10 +289,10 @@ module NMS
       s        = FS.scan_slots(cfg).find { _1.canonical_slot == (slot.odd? ? slot : slot - 1) }
 
       canonical = slot.odd? ? slot : slot - 1
-      puts TTY.blue("slot #{canonical}:")
+      puts TTY.blue("=== Slot #{canonical} ===\n")
       if s
         label = s.name.empty? ? "unnamed" : s.name
-        puts "  live: #{label}  #{s.timestamp_s}  #{format('%.1f MB', s.size_mb)}"
+        puts "  live: #{label}  #{s.timestamp_s}  #{fmt_mb(s.size_mb)}"
       else
         puts TTY.yellow("  slot #{canonical}: no live save")
       end
@@ -307,18 +310,22 @@ module NMS
 
     def create(cfg, slot:, name:)
       slots = FS.scan_slots(cfg)
-      raise SaveNotFoundError, "No permadeath saves found" if slots.empty?
+      raise SaveNotFoundError, "no permadeath saves" if slots.empty?
 
       s = if slot
         canonical = slot.odd? ? slot : slot - 1
         slots.find { _1.canonical_slot == canonical } or
-          raise SaveNotFoundError, "No permadeath save for slot #{slot}"
+          raise SaveNotFoundError, "no permadeath save: slot #{slot}"
       else
         FS.most_recent_slot(slots)
       end
 
       arch = Archive.from_slot(s, backup_dir: cfg.backup_dir, name: name)
       if arch.exists?
+        unless TTY.confirm?("backup exists. create another?")
+          puts TTY.yellow("Skipped.")
+          return
+        end
         suffix = Time.now.strftime("manual-%H%M%S")
         arch = Archive.from_slot(s, backup_dir: cfg.backup_dir, name: suffix)
       end
@@ -329,7 +336,7 @@ module NMS
       compressed_mb = arch.size_mb
       saved_pct = original_mb.positive? ? (100.0 * (1.0 - (compressed_mb / original_mb))) : 0.0
 
-      puts TTY.green("+ #{arch.path.basename}  #{format('%.2f', original_mb)}→#{format('%.2f', compressed_mb)} MB  -#{format('%.1f', saved_pct)}%")
+      puts TTY.green("+ #{arch.path.basename}  #{fmt_mb(original_mb)}→#{fmt_mb(compressed_mb)}  -#{format('%.1f', saved_pct)}%")
     end
 
     def restore(cfg, archive_arg)
@@ -340,12 +347,12 @@ module NMS
       puts TTY.blue("restore slot #{arch.slot}:")
       if live
         label = live.name.empty? ? "unnamed" : live.name
-        puts "  live: #{label}  #{live.timestamp_s}  #{format('%.1f MB', live.size_mb)}"
+        puts "  live: #{label}  #{live.timestamp_s}  #{fmt_mb(live.size_mb)}"
       else
         puts "  live: #{TTY.yellow('(none)')}"
       end
       note = arch.custom_name ? " [#{arch.custom_name.tr('-', ' ')}]" : ""
-      puts "  bkp:  #{arch.timestamp.strftime('%Y-%m-%d %H:%M')}#{note}  #{format('%.1f MB', arch.size_mb)}"
+      puts "  bkp:  #{arch.timestamp.strftime('%Y-%m-%d %H:%M')}#{note}  #{fmt_mb(arch.size_mb)}"
       puts
 
       unless TTY.confirm?("overwrite?")
@@ -357,7 +364,7 @@ module NMS
 
       sfx      = arch.slot == 1 ? "" : arch.slot.to_s
       restored = cfg.save_dir / "save#{sfx}.hg"
-      raise ArchiveError, "Restore produced no .hg file for slot #{arch.slot}" unless restored.file?
+      raise ArchiveError, "no .hg after restore: slot #{arch.slot}" unless restored.file?
 
       puts TTY.green("ok → #{restored}")
       puts "restart NMS. steam cloud may overwrite."
@@ -386,13 +393,13 @@ module NMS
     def resolve_archive_arg(cfg, arg)
       if arg.match?(/^\d+$/)
         a = FS.latest_archive_for(arg.to_i, FS.scan_archives(cfg))
-        raise ArchiveError, "No backups for slot #{arg}" unless a
+        raise ArchiveError, "no backups: slot #{arg}" unless a
         return a.path
       end
       expanded = arg.sub(/^~/, ENV["HOME"])
       matches  = Dir.glob(expanded)
-      raise ArchiveError, "Archive not found: #{arg}" if matches.empty?
-      raise ArchiveError, "Multiple matches:\n  #{matches.join("\n  ")}" if matches.size > 1
+      raise ArchiveError, "archive not found: #{arg}" if matches.empty?
+      raise ArchiveError, "multiple matches:\n  #{matches.join("\n  ")}" if matches.size > 1
       Pathname(matches.first)
     end
     module_function :resolve_archive_arg
@@ -401,7 +408,7 @@ module NMS
       arr.each_with_index do |a, i|
         tag  = i.zero? ? TTY.cyan("→") : " "
         name = a.custom_name ? " [#{a.custom_name.tr('-', ' ')}]" : ""
-        puts " #{tag} #{a.timestamp.strftime('%Y-%m-%d %H:%M')}#{name}  #{format('%.1f MB', a.size_mb)}"
+        puts " #{tag} #{a.timestamp.strftime('%Y-%m-%d %H:%M')}#{name}  #{fmt_mb(a.size_mb)}"
       end
     end
     module_function :print_archive_rows
@@ -418,7 +425,7 @@ module NMS
       when "clean"                then App.clean(cfg)
       when "help", "-h", "--help" then puts help(cfg)
       else
-        warn TTY.red("Unknown command: #{argv[0]}"); puts help(cfg); exit 1
+        warn TTY.red("unknown command: #{argv[0]}"); puts help(cfg); exit 1
       end
     rescue SaveNotFoundError, ArchiveError => e
       warn TTY.red(e.message); exit 1
@@ -430,10 +437,10 @@ module NMS
       a1 = argv[1]
       return App.list(cfg) if a1.nil?
       unless a1.match?(/^\d+$/)
-        warn TTY.red("list: expected slot#, got #{a1.inspect}")
-        exit 1
+        warn TTY.red("list: expected slot#, got #{a1.inspect}"); exit 1
       end
-      App.list_backups_for_slot(cfg, a1.to_i)
+      ok = App.list_backups_for_slot(cfg, a1.to_i)
+      exit 1 unless ok
     end
     module_function :handle_list
 
@@ -451,7 +458,7 @@ module NMS
 
     def restore_latest(cfg)
       a = FS.scan_archives(cfg).max_by(&:timestamp)
-      raise ArchiveError, "No backups found" unless a
+      raise ArchiveError, "no backups" unless a
       App.restore(cfg, a.path.to_s)
     end
     module_function :restore_latest

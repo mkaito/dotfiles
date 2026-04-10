@@ -108,7 +108,7 @@ module BG3
       m = pn.basename.to_s.match(RGX)
       unless m
         exp = "UUID__HonourMode_YYYY-MM-DD-HH-MM[_note]#{EXT}"
-        raise ArchiveError, "Bad archive name: #{pn.basename} (expected #{exp})"
+        raise ArchiveError, "bad archive name: #{pn.basename} (expected #{exp})"
       end
       new(save_uuid: m[1], timestamp: Time.strptime(m[2], "%Y-%m-%d-%H-%M"), custom_name: m[3], path: pn)
     end
@@ -177,16 +177,16 @@ module BG3
       archives = FS.scan_archives(cfg)
       grouped  = archives.group_by(&:save_uuid)
 
-      puts TTY.blue("=== Honour Mode Saves ===\n")
+      puts TTY.blue("=== honour mode saves ===\n")
       if saves.empty?
-        puts TTY.yellow("No honour mode saves found.")
+        puts TTY.yellow("no honour mode saves")
         cfg.save_dirs.each { |d| puts "  #{d} #{d.exist? ? '' : '(missing)'}" }
         return
       end
 
       mr = FS.most_recent_save(saves)
       w = 36
-      puts "  #{'UUID'.ljust(w)}  #{'Last Played'.ljust(19)}  #{'Size'.rjust(8)}  Backups"
+      puts "  #{'uuid'.ljust(w)}  #{'last played'.ljust(19)}  #{'size'.rjust(8)}  bkp"
       saves.each do |s|
         count = grouped.fetch(s.uuid, []).size
         mark  = s.uuid == mr.uuid ? TTY.cyan("→ ") : "  "
@@ -195,9 +195,7 @@ module BG3
       end
 
       if (a = archives.max_by(&:timestamp))
-        puts "\nDefaults:"
-        puts "  create  → #{mr.short}... (#{mr.timestamp_s})"
-        puts "  restore → #{a.save_uuid[0,8]}... (#{a.timestamp.strftime('%Y-%m-%d %H:%M')})"
+        puts "\ncreate → #{mr.short}...  restore → #{a.save_uuid[0,8]}..."
       end
     end
 
@@ -207,35 +205,34 @@ module BG3
       saves = FS.scan_saves(cfg)
       save = saves.find { _1.uuid.casecmp?(uuid) }
 
-      puts TTY.blue("=== Backups for #{uuid} ===\n")
+      puts TTY.blue("=== backups: #{uuid} ===\n")
       if save
-        puts "Current save: #{save.timestamp_s}  #{format('%.1f MB', save.size_mb)}"
+        puts "  live: #{save.timestamp_s}  #{format('%.1f MB', save.size_mb)}"
       else
-        puts TTY.yellow("Save not currently present on disk.")
+        puts TTY.yellow("  save not on disk")
       end
 
       if archives.empty?
-        puts TTY.yellow("No backups found for this save.")
+        puts TTY.yellow("  no backups")
         return false
       end
 
       print_archive_rows(archives)
       puts
-      puts "Tip: restore this save's latest backup with:"
-      puts "  #{$PROGRAM_NAME} restore #{uuid}"
+      puts "  restore: #{$PROGRAM_NAME} restore #{uuid}"
       true
     end
 
     def create(cfg, uuid: nil, name: nil, force: false)
       saves = FS.scan_saves(cfg)
-      raise SaveNotFoundError, "No honour mode saves found" if saves.empty?
+      raise SaveNotFoundError, "no honour mode saves" if saves.empty?
       save = uuid ? saves.find { _1.uuid.casecmp?(uuid) } : FS.most_recent_save(saves)
-      raise SaveNotFoundError, "Save not found: #{uuid}" unless save
+      raise SaveNotFoundError, "save not found: #{uuid}" unless save
 
       arch = Archive.from_save(save, backup_dir: cfg.backup_dir, name: name)
       if arch.exists?
-        unless force || TTY.confirm?("Backup exists for that timestamp. Create another?")
-          puts TTY.yellow("Skipped.")
+        unless force || TTY.confirm?("backup exists. create another?")
+          puts TTY.yellow("skipped")
           return
         end
         suffix = Time.now.strftime("manual-%H%M%S")
@@ -248,9 +245,7 @@ module BG3
       compressed_mb = arch.size_mb
       saved_pct = original_mb.positive? ? (100.0 * (1.0 - (compressed_mb / original_mb))) : 0.0
 
-      puts TTY.green(
-        "Created: #{arch.path.basename} (#{format('%.2f MB', original_mb)} → #{format('%.2f MB', compressed_mb)}, saved #{format('%.1f', saved_pct)}%)"
-      )
+      puts TTY.green("+ #{arch.path.basename}  #{format('%.2f MB', original_mb)}→#{format('%.2f MB', compressed_mb)}  -#{format('%.1f', saved_pct)}%")
     end
 
     # Keep last N backups per save; report space freed
@@ -268,9 +263,9 @@ module BG3
       freed  = before - after
 
       if removed.positive?
-        puts TTY.green("Removed #{removed} old backup(s). Freed #{format('%.2f MB', freed)}.")
+        puts TTY.green("-#{removed} bkp  freed #{format('%.2f MB', freed)}")
       else
-        puts TTY.cyan("No old backups to remove.")
+        puts TTY.cyan("nothing to remove")
       end
     end
 
@@ -281,30 +276,30 @@ module BG3
       dest = resolve_destination(cfg, arch)
 
       if dest.exist? && !force
-        puts TTY.yellow("Destination exists: #{dest}")
-        unless TTY.confirm?("Overwrite existing save? This will delete the current save.")
-          puts "Cancelled."
+        puts TTY.yellow("dest exists: #{dest}")
+        unless TTY.confirm?("overwrite? deletes current save.")
+          puts "cancelled"
           return
         end
       end
 
       FileUtils.rm_rf(dest) if dest.exist?
       Tar.extract(archive: path, into: dest.parent)
-      raise ArchiveError, "Restore produced no LSV files" if dest.glob("*.lsv").empty?
+      raise ArchiveError, "no .lsv after restore" if dest.glob("*.lsv").empty?
 
-      puts TTY.green("Restored → #{dest}")
-      puts "Note: restart BG3; Steam Cloud may overwrite restored files."
+      puts TTY.green("ok → #{dest}")
+      puts "restart BG3. steam cloud may overwrite."
     end
 
     def resolve_archive_arg(cfg, arg)
       if arg =~ /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i
-        a = FS.latest_archive_for(arg, FS.scan_archives(cfg)) or raise ArchiveError, "No backups for #{arg}"
+        a = FS.latest_archive_for(arg, FS.scan_archives(cfg)) or raise ArchiveError, "no backups: #{arg}"
         return a.path
       end
       expanded = arg.sub(/^~/, ENV["HOME"])
       matches = Dir.glob(expanded)
-      raise ArchiveError, "Archive not found: #{arg}" if matches.empty?
-      raise ArchiveError, "Multiple matches:\n  #{matches.join("\n  ")}" if matches.size > 1
+      raise ArchiveError, "archive not found: #{arg}" if matches.empty?
+      raise ArchiveError, "multiple matches:\n  #{matches.join("\n  ")}" if matches.size > 1
       Pathname(matches.first)
     end
     module_function :resolve_archive_arg
@@ -339,7 +334,7 @@ module BG3
       when "clean"         then App.clean(cfg)
       when "help", "-h", "--help" then puts(help(cfg))
       else
-        warn TTY.red("Unknown command: #{cmd}"); puts(help(cfg)); exit 1
+        warn TTY.red("unknown command: #{cmd}"); puts(help(cfg)); exit 1
       end
     rescue SaveNotFoundError, ArchiveError => e
       warn TTY.red(e.message); exit 1
@@ -378,7 +373,7 @@ module BG3
 
     def restore_latest(cfg)
       archives = FS.scan_archives(cfg)
-      a = archives.max_by(&:timestamp) or raise ArchiveError, "No backups found"
+      a = archives.max_by(&:timestamp) or raise ArchiveError, "no backups"
       App.restore(cfg, a.path.to_s, force: false)
     end
     module_function :restore_latest
@@ -386,25 +381,18 @@ module BG3
     def help(cfg)
       keep = cfg.keep_count
       <<~H
-        #{TTY.blue("Baldur's Gate 3 Honour Mode Backup")}
+        #{TTY.blue("bg3 honour mode backup")}
 
-        Usage:
-          #{$PROGRAM_NAME} list [uuid]             # List saves, or backups for a specific save
-          #{$PROGRAM_NAME} create [note]           # Backup most recent save, optional note
-          #{$PROGRAM_NAME} create <uuid> [note]    # Backup specific save, optional note
-          #{$PROGRAM_NAME} restore [path|uuid]     # Restore most recent or specific backup
-          #{$PROGRAM_NAME} clean                   # Keep last #{keep} per save
+          list [uuid]             honour saves, or backups for uuid
+          create [note]           backup most recent save
+          create <uuid> [note]    backup specific save
+          restore [path|uuid]     restore latest or specific backup
+          clean                   keep last #{keep} per save
 
-        Notes:
-          • Default "create" backs up the most recent save (you can add a note).
-          • Default "restore" restores the most recent backup into its corresponding save.
-          • Pass a UUID to "list" to see all backups for that save.
-          • Pass a UUID to "restore" to restore the latest backup for that save.
+          create → most recent save  restore → most recent backup
+          uuid → list/restore latest for that save
 
-        ENV:
-          STEAM_BASE, BG3_BACKUP_DIR, KEEP_BACKUPS
-          NO_COLOR=1        # disable colours
-          BG3_YES=1         # auto-confirm prompts
+        ENV: STEAM_BASE  BG3_BACKUP_DIR  KEEP_BACKUPS  NO_COLOR=1  BG3_YES=1
       H
     end
   end
