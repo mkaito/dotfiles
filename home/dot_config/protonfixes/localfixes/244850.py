@@ -13,22 +13,25 @@ def _install_pulsar(game_path: Path) -> None:
     if (pulsar_dir / 'Legacy.exe').exists():
         return
 
-    api_url = 'https://api.github.com/repos/SpaceGT/Pulsar/releases/latest'
-    with urllib.request.urlopen(api_url) as response:
-        release = json.loads(response.read())
+    try:
+        api_url = 'https://api.github.com/repos/SpaceGT/Pulsar/releases/latest'
+        with urllib.request.urlopen(api_url) as response:
+            release = json.loads(response.read())
 
-    zip_url = next(
-        asset['browser_download_url']
-        for asset in release['assets']
-        if asset['name'].startswith('Pulsar-') and asset['name'].endswith('.zip')
-    )
+        zip_url = next(
+            asset['browser_download_url']
+            for asset in release['assets']
+            if asset['name'].startswith('Pulsar-') and asset['name'].endswith('.zip')
+        )
 
-    with urllib.request.urlopen(zip_url) as response:
-        zip_data = response.read()
+        with urllib.request.urlopen(zip_url) as response:
+            zip_data = response.read()
 
-    pulsar_dir.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(io.BytesIO(zip_data)) as zf:
-        zf.extractall(pulsar_dir)
+        pulsar_dir.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(io.BytesIO(zip_data)) as zf:
+            zf.extractall(pulsar_dir)
+    except Exception:
+        pass
 
 
 def main() -> None:
@@ -49,9 +52,9 @@ def main() -> None:
 """
 
     util.set_xml_options(base_attribute, game_opts, 'Bin64/SpaceEngineers.exe.config')
-    util.set_xml_options(base_attribute, game_opts, 'Pulsar/Legacy.exe.config')
-
-    util.replace_command(r'Bin64.SpaceEngineers\.exe', r'Pulsar\\Legacy.exe')
+    if (game_path / 'Pulsar' / 'Legacy.exe').exists():
+        util.set_xml_options(base_attribute, game_opts, 'Pulsar/Legacy.exe.config')
+        util.replace_command(r'Bin64.SpaceEngineers\.exe', r'Pulsar\\Legacy.exe')
 
     external = Path.home() / 'GameData' / 'SpaceEngineers'
     internal = util.protonprefix() / 'drive_c/users/steamuser/AppData/Roaming/SpaceEngineers'
