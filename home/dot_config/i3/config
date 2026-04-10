@@ -98,8 +98,10 @@ assign [class="^FTL$"] 5
 assign [title="^RimWorld"] 5
 assign [title="^Shadowrun$"] 5
 assign [class="^steam_app_"] 5
-assign [class="^X4"] 5
-assign [class="^Kingmaker.exe"] 5
+assign [class="^X4$"] 5
+assign [class="^Kingmaker.exe$"] 5
+assign [class="^Xenonauts$"] 5
+assign [class="^Xenonauts.bin.x86$"] 5
 
 assign [class="^Civ5XP$"] 5
 assign [class="^Dwarf_Fortress$"] 5
