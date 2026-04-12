@@ -1,3 +1,17 @@
 [tools]
 chezmoi = "latest"
 usage = "latest"
+
+[tasks."bundle:install"]
+description = "Install Ruby gem dependencies for ruby-scripts"
+run = "bundle install"
+dir = "{{config_root}}/ruby-scripts"
+
+[tasks."steam:import"]
+description = "Import Steam launch options from localconfig.vdf into launch-options.toml"
+run = "~/.local/bin/steam-launch-sync import"
+
+[tasks."steam:test"]
+description = "Run ruby-scripts unit tests"
+run = "bundle exec ruby -Ilib -Ispec spec/vdf_nav_spec.rb spec/steam_launch_sync_spec.rb"
+dir = "{{config_root}}/ruby-scripts"

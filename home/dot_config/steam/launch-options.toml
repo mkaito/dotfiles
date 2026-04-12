@@ -1,0 +1,2 @@
+# Steam launch options. Managed by steam-launch-sync.
+# Populate: `mise run steam:import`. Deploy: `chezmoi apply`.

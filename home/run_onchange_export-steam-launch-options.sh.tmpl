@@ -1,0 +1,4 @@
+#!/bin/sh
+# include path = relative to chezmoi source root (~/.local/share/chezmoi → dotfiles/home/)
+# {{ include "dot_config/steam/launch-options.toml" | sha256sum }}
+~/.local/bin/steam-launch-sync export

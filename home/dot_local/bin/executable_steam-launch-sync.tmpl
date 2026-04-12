@@ -1,0 +1,4 @@
+#!/bin/sh
+# .chezmoi.sourceDir = dotfiles/home/ → need .. to reach ruby-scripts/ at repo root
+BUNDLE_GEMFILE="{{ .chezmoi.sourceDir }}/../ruby-scripts/Gemfile" \
+  exec ruby "{{ .chezmoi.sourceDir }}/../ruby-scripts/bin/steam-launch-sync" "$@"
