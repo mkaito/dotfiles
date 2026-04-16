@@ -1,0 +1,84 @@
+# frozen_string_literal: true
+
+require "minitest/autorun"
+require "tmpdir"
+require "fileutils"
+require_relative "../../lib/mod_manager/deployer"
+require_relative "../../lib/mod_manager/archive"
+
+include ModManager
+
+class DeployerTest < Minitest::Test
+  def setup
+    @dir         = Dir.mktmpdir
+    @archive_dir = File.join(@dir, "archive")
+    @game_dir    = File.join(@dir, "game")
+    FileUtils.mkdir_p(@game_dir)
+
+    make_mod("redscript", "2.0", "bin/x64/global.ini" => "cfg")
+    make_mod("codeware",  "1.0", "r6/scripts/cw.reds" => "src")
+
+    @archive  = Archive.new(@archive_dir)
+    @deployer = Deployer.new(@game_dir, @archive_dir)
+  end
+
+  def teardown = FileUtils.rm_rf(@dir)
+
+  def test_deploy_creates_symlinks_at_correct_paths
+    @deployer.deploy([@archive.latest("redscript")])
+    link = File.join(@game_dir, "bin/x64/global.ini")
+    assert File.symlink?(link)
+    assert_equal File.join(@archive_dir, "redscript/2.0/files/bin/x64/global.ini"), File.readlink(link)
+  end
+
+  def test_undeploy_removes_archive_symlinks
+    @deployer.deploy([@archive.latest("redscript")])
+    @deployer.undeploy
+    refute File.exist?(File.join(@game_dir, "bin/x64/global.ini"))
+  end
+
+  def test_undeploy_preserves_non_archive_files
+    non_mod = File.join(@game_dir, "bin/x64/native.dll")
+    FileUtils.mkdir_p(File.dirname(non_mod))
+    File.write(non_mod, "original")
+
+    @deployer.deploy([@archive.latest("redscript")])
+    @deployer.undeploy
+
+    assert File.exist?(non_mod)
+    refute File.symlink?(non_mod)
+  end
+
+  def test_deploy_is_idempotent
+    mods = [@archive.latest("redscript")]
+    r1 = @deployer.deploy(mods)
+    r2 = @deployer.deploy(mods)
+    assert_equal r1[:created], r2[:created]
+    assert_equal 1, Dir.glob("#{@game_dir}/**/*").count { File.symlink?(_1) }
+  end
+
+  def test_status_detects_broken_links
+    @deployer.deploy([@archive.latest("redscript")])
+    FileUtils.rm_rf(File.join(@archive_dir, "redscript", "2.0", "files"))
+    st = @deployer.status
+    assert st.values.any? { _1[:broken].any? }
+  end
+
+  private
+
+  def make_mod(slug, version, files = {})
+    dir = File.join(@archive_dir, slug, version)
+    files.each do |rel, content|
+      path = File.join(dir, "files", rel)
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, content)
+    end
+    File.write(File.join(dir, "meta.toml"), <<~TOML)
+      name = "#{slug}"
+      slug = "#{slug}"
+      version = "#{version}"
+      game = "cp2077"
+      depends = []
+    TOML
+  end
+end

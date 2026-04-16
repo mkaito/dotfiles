@@ -1,0 +1,228 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "optparse"
+require "fileutils"
+require "set"
+require_relative "../lib/mod_manager/errors"
+require_relative "../lib/mod_manager/log"
+require_relative "../lib/mod_manager/config"
+require_relative "../lib/mod_manager/mod"
+require_relative "../lib/mod_manager/archive"
+require_relative "../lib/mod_manager/atom"
+require_relative "../lib/mod_manager/collection"
+require_relative "../lib/mod_manager/collection_editor"
+require_relative "../lib/mod_manager/modset"
+require_relative "../lib/mod_manager/topo_sort"
+require_relative "../lib/mod_manager/deployer"
+require_relative "../lib/mod_manager/checker"
+require_relative "../lib/mod_manager/verifier"
+
+include ModManager
+
+def load_context
+  config  = Config.load
+  archive = Archive.new(config.archive_dir)
+  [config, archive]
+end
+
+def confirm(prompt)
+  print "#{prompt} [y/N] "
+  $stdout.flush
+  $stdin.gets&.chomp&.downcase == "y"
+end
+
+def cmd_deploy(modset_name)
+  config, archive = load_context
+  path = File.join(config.modsets_dir, "#{modset_name}.toml")
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
+  ms = Modset.load(path)
+
+  check_errors = Checker.new(archive, config).check_modset(ms)
+  if check_errors.any?
+    check_errors.each { puts "  #{_1}" }
+    exit 1
+  end
+
+  mods, collections = ms.resolve(archive, config)
+  deployer = Deployer.new(config.game_dir, config.archive_dir)
+  result   = deployer.deploy(mods)
+
+  puts "#{result[:created]} symlink(s) from #{mods.size} mod(s)"
+
+  checks  = Verifier.collect(config, ms, collections)
+  vfails  = Verifier.run(checks, config.game_dir)
+  if vfails.any?
+    puts "verify warnings (#{vfails.size}):"
+    vfails.each { puts "  #{_1}" }
+  end
+
+  result[:broken].each { Log.warn("broken: #{_1}") }
+end
+
+def cmd_reset(yes:)
+  config, = load_context
+  deployer = Deployer.new(config.game_dir, config.archive_dir)
+  st = deployer.status
+  total = st.values.sum { _1[:links].size + _1[:broken].size }
+
+  if total.zero?
+    puts "no active symlinks"
+    return
+  end
+
+  puts "#{total} symlink(s) to remove"
+  unless yes || confirm("proceed?")
+    puts "aborted"
+    return
+  end
+
+  puts "removed #{deployer.undeploy} symlink(s)"
+end
+
+def cmd_status
+  config, = load_context
+  st = Deployer.new(config.game_dir, config.archive_dir).status
+
+  if st.empty?
+    puts "no active mods"
+    return
+  end
+
+  st.each do |slug_ver, data|
+    suffix = data[:broken].any? ? ", #{data[:broken].size} broken" : ""
+    puts "#{slug_ver}: #{data[:links].size} link(s)#{suffix}"
+    data[:broken].each { puts "  broken: #{_1}" }
+  end
+end
+
+def cmd_validate(name = nil)
+  config, archive = load_context
+  checker = Checker.new(archive, config)
+
+  errors = if name
+    path = File.join(config.modsets_dir, "#{name}.toml")
+    if File.exist?(path)
+      checker.check_modset(Modset.load(path))
+    else
+      path = File.join(config.collections_dir, "#{name}.toml")
+      raise Error, "no modset or collection named #{name.inspect}" unless File.exist?(path)
+      checker.send(:check_collection, Collection.load(path))
+    end
+  else
+    checker.check_all
+  end
+
+  if errors.empty?
+    puts "ok"
+  else
+    errors.each { puts "  #{_1}" }
+    exit 1
+  end
+end
+
+def cmd_collection_add(collection_name, atom_str)
+  config, archive = load_context
+  path = File.join(config.collections_dir, "#{collection_name}.toml")
+  raise Error, "collection not found: #{path}" unless File.exist?(path)
+  CollectionEditor.add(path, atom_str, archive)
+  puts "updated #{collection_name}"
+end
+
+def cmd_collection_remove(collection_name, slug)
+  config, archive = load_context
+  path = File.join(config.collections_dir, "#{collection_name}.toml")
+  raise Error, "collection not found: #{path}" unless File.exist?(path)
+  CollectionEditor.remove(path, slug, archive)
+  puts "updated #{collection_name}"
+end
+
+def cmd_cleanup(dry_run:, yes:)
+  config, archive = load_context
+  referenced = Set.new
+
+  Dir.glob("#{config.collections_dir}/*.toml").each do |p|
+    Collection.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+  end
+  Dir.glob("#{config.modsets_dir}/*.toml").each do |p|
+    Modset.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+  end
+
+  orphans = archive.all.reject { referenced.include?(_1.slug) }
+
+  if orphans.empty?
+    puts "no orphaned mods"
+    return
+  end
+
+  puts "orphaned (#{orphans.size}):"
+  orphans.each { puts "  #{_1}" }
+  return if dry_run
+
+  unless yes || confirm("delete #{orphans.size} mod(s)?")
+    puts "aborted"
+    return
+  end
+
+  orphans.each do |mod|
+    FileUtils.rm_rf(mod.path)
+    parent = File.dirname(mod.path)
+    Dir.rmdir(parent) if Dir.empty?(parent)
+    Log.info("deleted #{mod}")
+  end
+  puts "deleted #{orphans.size} mod(s)"
+end
+
+subcommand = ARGV.shift
+
+begin
+  case subcommand
+  when "deploy"
+    abort("usage: mod deploy <modset>") if ARGV.empty?
+    cmd_deploy(ARGV.first)
+
+  when "reset"
+    opts = { yes: false }
+    OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(ARGV)
+    cmd_reset(**opts)
+
+  when "status"
+    cmd_status
+
+  when "validate"
+    cmd_validate(ARGV.first)
+
+  when "collection"
+    action = ARGV.shift
+    case action
+    when "add"
+      abort("usage: mod collection add <collection> <atom>") if ARGV.size < 2
+      cmd_collection_add(ARGV[0], ARGV[1])
+    when "remove"
+      abort("usage: mod collection remove <collection> <slug>") if ARGV.size < 2
+      cmd_collection_remove(ARGV[0], ARGV[1])
+    else
+      abort("usage: mod collection <add|remove> ...")
+    end
+
+  when "cleanup"
+    opts = { dry_run: false, yes: false }
+    OptionParser.new do |o|
+      o.on("-n", "--dry-run") { opts[:dry_run] = true }
+      o.on("-y", "--yes")     { opts[:yes] = true }
+    end.parse!(ARGV)
+    cmd_cleanup(**opts)
+
+  when "update"
+    abort("mod update requires the nexus client (not yet implemented)")
+
+  else
+    abort("usage: mod <deploy|reset|status|validate|collection|cleanup|update>")
+  end
+rescue ValidationError => e
+  e.errors.each { puts "  #{_1}" }
+  exit 1
+rescue Error => e
+  abort(e.message)
+end

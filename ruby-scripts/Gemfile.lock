@@ -8,6 +8,7 @@ GEM
       prism (~> 1.5)
     prism (1.9.0)
     racc (1.8.1)
+    rake (13.4.2)
     toml-rb (4.1.0)
       citrus (~> 3.0, > 3.0)
       racc (~> 1.7)
@@ -19,6 +20,7 @@ PLATFORMS
 
 DEPENDENCIES
   minitest
+  rake
   toml-rb
   vdf
 
@@ -28,6 +30,7 @@ CHECKSUMS
   minitest (6.0.3) sha256=88ac8a1de36c00692420e7cb3cc11a0773bbcb126aee1c249f320160a7d11411
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
+  rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   toml-rb (4.1.0) sha256=14456ec4549e4703881bf04b83a56f3264ef99884880092d83c98a2058d95846
   vdf (1.0.5) sha256=41e2038175d4909d178d18678474f63469689d4aa40b4209e0472a9ca6db8e72
 

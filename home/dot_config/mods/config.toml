@@ -1,0 +1,11 @@
+# Managed by chezmoi. Deployed to ~/.config/mods/config.toml.
+# archive_dir = "/mnt/big/mods/archive"   # override XDG_DATA_HOME/mods/archive
+
+[cp2077]
+name = "Cyberpunk 2077"
+domain = "cyberpunk2077"
+game_dir = "/mnt/steamtwo/SteamLibrary/steamapps/common/Cyberpunk 2077"
+checks = [
+  { path = "bin/x64", type = "dir" },
+  { path = "r6/scripts", type = "dir" },
+]
