@@ -83,6 +83,7 @@ assign [class="^vesktop"] Discord
 assign [class="^Slack"] Slack
 assign [class="^Zulip"] Zulip
 assign [class="^Telegram"] Telegram
+assign [class="^Element$"] Matrix
 
 # Anki
 assign [class="^Anki$"] Anki
