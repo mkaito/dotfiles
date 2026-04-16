@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>sm+gentoo@skym.fi</email>
+		<name>Skyler Mäntysaari</name>
+	</maintainer>
+	<longdescription>
+		1Password CLI (op) allows you to work with your 1Password data from the terminal.
+		When used alongside the 1Password desktop app, biometric unlock is available
+		via a Unix socket authenticated by the onepassword-cli group setgid bit.
+	</longdescription>
+</pkgmetadata>
