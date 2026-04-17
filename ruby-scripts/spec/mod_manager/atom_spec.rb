@@ -40,6 +40,10 @@ class AtomParseTest < Minitest::Test
     assert_equal :lt,  Atom.parse("<redscript-3.0")[:op]
     assert_equal :lte, Atom.parse("<=redscript-3.0")[:op]
   end
+
+  def test_invalid_atom_raises
+    assert_raises(Error) { Atom.parse("=no-version-here") }
+  end
 end
 
 class AtomResolveTest < Minitest::Test
@@ -71,6 +75,18 @@ class AtomResolveTest < Minitest::Test
 
   def test_unknown_slug_returns_nil
     assert_nil Atom.resolve("no-such-mod", @archive)
+  end
+
+  def test_gt_returns_first_strictly_greater
+    assert_equal "2.0.0", Atom.resolve(">redscript-1.5.0", @archive).version
+  end
+
+  def test_gt_no_match_returns_nil
+    assert_nil Atom.resolve(">redscript-2.0.0", @archive)
+  end
+
+  def test_lte_returns_highest_satisfying
+    assert_equal "1.5.0", Atom.resolve("<=redscript-1.5.0", @archive).version
   end
 
   private

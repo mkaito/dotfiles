@@ -5,6 +5,7 @@ require "bundler/setup"
 require "optparse"
 require "fileutils"
 require "set"
+require_relative "../lib/core/cli"
 require_relative "../lib/mod_manager/errors"
 require_relative "../lib/mod_manager/log"
 require_relative "../lib/mod_manager/config"
@@ -25,12 +26,6 @@ def load_context
   config  = Config.load
   archive = Archive.new(config.archive_dir)
   [config, archive]
-end
-
-def confirm(prompt)
-  print "#{prompt} [y/N] "
-  $stdout.flush
-  $stdin.gets&.chomp&.downcase == "y"
 end
 
 def cmd_deploy(modset_name)
@@ -73,7 +68,7 @@ def cmd_reset(yes:)
   end
 
   puts "#{total} symlink(s) to remove"
-  unless yes || confirm("proceed?")
+  unless yes || Core::CLI.confirm("proceed?")
     puts "aborted"
     return
   end
@@ -108,7 +103,7 @@ def cmd_validate(name = nil)
     else
       path = File.join(config.collections_dir, "#{name}.toml")
       raise Error, "no modset or collection named #{name.inspect}" unless File.exist?(path)
-      checker.send(:check_collection, Collection.load(path))
+      checker.check_collection(Collection.load(path))
     end
   else
     checker.check_all
@@ -144,9 +139,13 @@ def cmd_cleanup(dry_run:, yes:)
 
   Dir.glob("#{config.collections_dir}/*.toml").each do |p|
     Collection.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+  rescue ValidationError => e
+    e.errors.each { Log.warn(_1) }
   end
   Dir.glob("#{config.modsets_dir}/*.toml").each do |p|
     Modset.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+  rescue ValidationError => e
+    e.errors.each { Log.warn(_1) }
   end
 
   orphans = archive.all.reject { referenced.include?(_1.slug) }
@@ -160,7 +159,7 @@ def cmd_cleanup(dry_run:, yes:)
   orphans.each { puts "  #{_1}" }
   return if dry_run
 
-  unless yes || confirm("delete #{orphans.size} mod(s)?")
+  unless yes || Core::CLI.confirm("delete #{orphans.size} mod(s)?")
     puts "aborted"
     return
   end

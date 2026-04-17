@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "toml-rb"
 require_relative "mod"
 require_relative "log"
 
@@ -35,7 +36,7 @@ module ModManager
       return [] unless File.directory?(@dir)
       Dir.glob("#{@dir}/*/*/meta.toml").filter_map do |meta|
         Mod.load(File.dirname(meta))
-      rescue => e
+      rescue ModManager::Error, TomlRB::ParseError, Errno::ENOENT, Errno::EACCES => e
         Log.warn("skipping #{meta}: #{e.message}")
         nil
       end

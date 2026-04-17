@@ -3,9 +3,13 @@
 require "bundler/setup"
 require "toml-rb"
 require "vdf"
-require_relative "../lib/vdf_nav"
+require_relative "../lib/core/errors"
+require_relative "../lib/core/log"
+require_relative "../lib/core/xdg"
+require_relative "../lib/core/file_io"
+require_relative "../lib/steam/vdf_nav"
 
-CONF = File.expand_path("~/.config/steam/launch-options.toml")
+CONF = File.join(Core::XDG.config_home, "steam", "launch-options.toml")
 VDF_PATHS = [
   "~/.local/share/Steam/userdata/*/config/localconfig.vdf",
   "~/.steam/steam/userdata/*/config/localconfig.vdf",
@@ -20,12 +24,12 @@ def find_vdf
     found = Dir.glob(File.expand_path(pattern)).first
     return found if found
   end
-  abort("localconfig.vdf not found (checked: #{VDF_PATHS.join(", ")})")
+  raise Core::Error, "localconfig.vdf not found (checked: #{VDF_PATHS.join(", ")})"
 end
 
 def apps_from_vdf(vdf_data)
-  VdfNav.dig(vdf_data, "UserLocalConfigStore", "Software", "Valve", "Steam", "apps") ||
-    abort("Could not find apps section in VDF")
+  Steam::VdfNav.dig(vdf_data, "UserLocalConfigStore", "Software", "Valve", "Steam", "apps") ||
+    raise(Core::Error, "could not find apps section in VDF")
 end
 
 def cmd_import
@@ -40,37 +44,36 @@ def cmd_import
     next unless data.is_a?(Hash)
     TRACKED_ATTRS.each do |attr|
       _, val = data.find { |k, _| k.casecmp?(attr[:vdf_key]) }
-      next if val.nil? || val.empty?
+      next if val.nil? || val.to_s.empty?
       toml[appid] ||= {}
       toml[appid][attr[:toml_key]] = val
       imported += 1
     end
   end
 
-  File.write(CONF, TomlRB.dump(toml))
-  puts "Imported #{imported} attribute(s) → #{CONF}"
+  Core::FileIO.atomic_write(CONF, TomlRB.dump(toml))
+  puts "imported #{imported} attribute(s) → #{CONF}"
 end
 
 def cmd_export
-  abort("#{CONF} not found — run `mise run steam:import` first") unless File.exist?(CONF)
+  raise Core::Error, "#{CONF} not found — run import first" unless File.exist?(CONF)
 
-  # Steam overwrites VDF on exit → changes lost if Steam running during export
-  abort("Steam is running (pgrep steam). Quit Steam before exporting.") \
-    if system("pgrep", "-x", "steam", out: File::NULL, err: File::NULL)
+  if system("pgrep", "-x", "steam", out: File::NULL, err: File::NULL)
+    raise Core::Error, "Steam is running (pgrep steam). Quit Steam before exporting."
+  end
 
-  vdf_path = find_vdf
+  vdf_path    = find_vdf
   original_src = File.read(vdf_path)
-  vdf_data = VDF.parse(original_src)
-  apps = apps_from_vdf(vdf_data)
-  conf = TomlRB.load_file(CONF)
+  vdf_data    = VDF.parse(original_src)
+  apps        = apps_from_vdf(vdf_data)
+  conf        = TomlRB.load_file(CONF)
 
-  skipped = []
+  skipped  = []
   exported = 0
 
   conf.each do |appid, section|
     next unless section.is_a?(Hash)
 
-    # Only touch appids already in VDF — never create new app sections
     existing_key = apps.keys.find { |k| k.casecmp?(appid) }
     unless existing_key
       skipped << appid
@@ -79,8 +82,8 @@ def cmd_export
 
     TRACKED_ATTRS.each do |attr|
       next unless section.key?(attr[:toml_key])
-      VdfNav.set(vdf_data, "UserLocalConfigStore", "Software", "Valve", "Steam",
-                 "apps", existing_key, attr[:vdf_key], value: section[attr[:toml_key]])
+      Steam::VdfNav.set(vdf_data, "UserLocalConfigStore", "Software", "Valve", "Steam",
+                        "apps", existing_key, attr[:vdf_key], value: section[attr[:toml_key]])
       exported += 1
     end
   end
@@ -88,10 +91,10 @@ def cmd_export
   new_src = VDF.generate(vdf_data)
   validate_vdf!(original_src, new_src)
 
-  File.write(vdf_path, new_src)
+  Core::FileIO.atomic_write(vdf_path, new_src)
 
-  warn "Note: skipped #{skipped.size} TOML appid(s) not in VDF: #{skipped.join(", ")}" if skipped.any?
-  puts "Exported #{exported} attribute(s) → #{vdf_path}"
+  Core::Log.warn("skipped #{skipped.size} TOML appid(s) not in VDF: #{skipped.join(", ")}") if skipped.any?
+  puts "exported #{exported} attribute(s) → #{vdf_path}"
 end
 
 def validate_vdf!(original_src, new_src)
@@ -102,20 +105,26 @@ def validate_vdf!(original_src, new_src)
   new_apps      = apps_from_vdf(new_data)
 
   if new_apps.size < original_apps.size
-    abort("VDF validation failed: app count shrank #{original_apps.size}→#{new_apps.size}. VDF not written.")
+    raise Core::Error, "VDF validation failed: app count shrank #{original_apps.size}→#{new_apps.size}. VDF not written."
   end
 
   original_apps.each_key do |appid|
     unless new_apps.any? { |k, _| k.casecmp?(appid) }
-      abort("VDF validation failed: appid #{appid} missing from generated VDF. VDF not written.")
+      raise Core::Error, "VDF validation failed: appid #{appid} missing from generated VDF. VDF not written."
     end
   end
-rescue => e
-  abort("VDF validation failed: #{e.message}. VDF not written.")
+rescue Core::Error
+  raise
+rescue StandardError => e
+  raise Core::Error, "VDF validation failed: #{e.message}. VDF not written."
 end
 
-case ARGV[0]
-when "import" then cmd_import
-when "export" then cmd_export
-else abort("Usage: steam-launch-sync <import|export>")
+begin
+  case ARGV[0]
+  when "import" then cmd_import
+  when "export" then cmd_export
+  else raise Core::Error, "usage: steam-launch-sync <import|export>"
+  end
+rescue Core::Error => e
+  abort(e.message)
 end

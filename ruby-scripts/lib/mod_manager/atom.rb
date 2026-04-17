@@ -37,6 +37,7 @@ module ModManager
       when :gt  then cmp > 0
       when :lte then cmp <= 0
       when :lt  then cmp < 0
+      else raise Error, "unexpected op: #{op}"
       end
     end
 

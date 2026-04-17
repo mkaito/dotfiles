@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require "set"
 require "toml-rb"
 require_relative "errors"
 require_relative "atom"
 require_relative "collection"
 require_relative "log"
+require_relative "../core/file_io"
 
 module ModManager
   module CollectionEditor
@@ -46,9 +48,7 @@ module ModManager
     private_class_method def self.write_collection(path, col, new_mods)
       data = { "name" => col.name, "game" => col.game, "mods" => new_mods }
       data["checks"] = col.checks if col.checks.any?
-      tmp = "#{path}.tmp.#{Process.pid}"
-      File.write(tmp, TomlRB.dump(data))
-      File.rename(tmp, path)
+      Core::FileIO.atomic_write(path, TomlRB.dump(data))
     end
   end
 end

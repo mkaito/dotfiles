@@ -16,11 +16,16 @@ module ModManager
       errors = []
 
       Dir.glob("#{@config.collections_dir}/*.toml").each do |path|
-        errors.concat(check_collection(Collection.load(path)))
+        col = Collection.load(path)
+        errors.concat(check_collection(col))
+      rescue ValidationError => e
+        errors.concat(e.errors)
       end
 
       Dir.glob("#{@config.modsets_dir}/*.toml").each do |path|
         errors.concat(check_modset(Modset.load(path)))
+      rescue ValidationError => e
+        errors.concat(e.errors)
       end
 
       errors
@@ -65,8 +70,6 @@ module ModManager
 
       errors
     end
-
-    private
 
     def check_collection(col)
       col.mods.filter_map do |atom_str|

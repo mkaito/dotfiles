@@ -6,7 +6,7 @@ module ModManager
 
     def self.collect(config, modset, collections)
       (Array(config.checks) + Array(modset.checks) + collections.flat_map { Array(_1.checks) })
-        .map { Check.new(path: _1["path"] || _1[:path], type: _1["type"] || _1[:type]) }
+        .map { Check.new(path: _1["path"], type: _1["type"]) }
     end
 
     def self.run(checks, game_dir)

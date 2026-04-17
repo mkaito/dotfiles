@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
+require_relative "../core/errors"
+
 module ModManager
-  Error = Class.new(StandardError)
-
-  ValidationError = Class.new(Error) do
-    attr_reader :errors
-
-    def initialize(errors)
-      @errors = errors
-      super(errors.join("; "))
-    end
-  end
+  Error           = Core::Error
+  ValidationError = Core::ValidationError
 end

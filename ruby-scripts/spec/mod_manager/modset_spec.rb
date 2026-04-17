@@ -53,6 +53,17 @@ class ModsetResolveTest < Minitest::Test
     assert_equal %w[redscript codeware], ms.resolve(@archive, @config).first.map(&:slug)
   end
 
+  def test_resolve_raises_on_unresolved_atom
+    write_col("base", %w[no-such-mod])
+    ms = write_modset(collections: %w[base])
+    assert_raises(Error) { ms.resolve(@archive, @config) }
+  end
+
+  def test_resolve_raises_on_missing_collection
+    ms = write_modset(collections: %w[nonexistent])
+    assert_raises(Error) { ms.resolve(@archive, @config) }
+  end
+
   private
 
   def make_mod(slug, version)

@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "errors"
+require_relative "../core/errors"
+require_relative "../core/xdg"
 
 module ModManager
   class Config
     attr_reader :game_dir, :domain, :checks, :archive_dir, :collections_dir, :modsets_dir
 
     def self.load
-      xdg_config = ENV.fetch("XDG_CONFIG_HOME", File.expand_path("~/.config"))
-      xdg_data   = ENV.fetch("XDG_DATA_HOME",   File.expand_path("~/.local/share"))
+      xdg_config = Core::XDG.config_home
+      xdg_data   = Core::XDG.data_home
       path = File.join(xdg_config, "mods", "config.toml")
       raise Error, "config not found: #{path}" unless File.exist?(path)
       data = TomlRB.load_file(path)

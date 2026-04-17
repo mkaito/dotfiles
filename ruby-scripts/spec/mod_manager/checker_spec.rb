@@ -73,6 +73,21 @@ class CheckerTest < Minitest::Test
     assert errors.any? { _1.include?("cycle") }
   end
 
+  def test_check_all_collects_errors_from_all_collections_and_modsets
+    make_mod("ok-mod", "1.0")
+    write_col("good",  %w[ok-mod])
+    write_col("bad",   %w[missing-mod])
+    write_modset(collections: %w[good])
+    errors = @checker.check_all
+    assert errors.any? { _1.include?("missing-mod") }
+  end
+
+  def test_check_all_reports_invalid_collection_toml
+    File.write(File.join(@collections_dir, "broken.toml"), "game = \"cp2077\"\n# no mods key")
+    errors = @checker.check_all
+    assert errors.any? { _1.include?("broken") }
+  end
+
   private
 
   def make_mod(slug, version, depends: [])

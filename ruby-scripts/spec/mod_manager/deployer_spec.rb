@@ -64,6 +64,28 @@ class DeployerTest < Minitest::Test
     assert st.values.any? { _1[:broken].any? }
   end
 
+  def test_last_writer_wins_on_conflict
+    make_mod("mod-a", "1.0", "bin/x64/shared.cfg" => "from-a")
+    make_mod("mod-b", "1.0", "bin/x64/shared.cfg" => "from-b")
+    @deployer.deploy([@archive.latest("mod-a"), @archive.latest("mod-b")])
+    link = File.join(@game_dir, "bin/x64/shared.cfg")
+    assert File.symlink?(link)
+    assert_includes File.readlink(link), "mod-b"
+  end
+
+  def test_deploy_raises_on_real_file_at_dst
+    FileUtils.mkdir_p(File.join(@game_dir, "bin/x64"))
+    File.write(File.join(@game_dir, "bin/x64/global.ini"), "real game file")
+    assert_raises(Error) { @deployer.deploy([@archive.latest("redscript")]) }
+  end
+
+  def test_status_groups_by_slug_version
+    @deployer.deploy([@archive.latest("redscript"), @archive.latest("codeware")])
+    st = @deployer.status
+    assert st.key?("redscript@2.0")
+    assert st.key?("codeware@1.0")
+  end
+
   private
 
   def make_mod(slug, version, files = {})

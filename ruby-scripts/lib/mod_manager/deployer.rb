@@ -23,7 +23,11 @@ module ModManager
           rel = src.delete_prefix(prefix)
           dst = File.join(@game_dir, rel)
           FileUtils.mkdir_p(File.dirname(dst))
-          File.unlink(dst) if File.symlink?(dst)
+          if File.symlink?(dst)
+            File.unlink(dst)
+          elsif File.exist?(dst)
+            raise Error, "cannot overwrite #{dst}: not a symlink"
+          end
           File.symlink(src, dst)
           created += 1
           Log.debug("link #{dst} -> #{src}")

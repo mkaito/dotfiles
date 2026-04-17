@@ -51,6 +51,19 @@ class ModLoadTest < Minitest::Test
     assert_raises(Error) { Mod.load(@dir) }
   end
 
+  def test_files_lists_files_under_files_dir
+    write_meta(slug: "mod", version: "1.0", name: "Mod", game: "cp2077")
+    FileUtils.mkdir_p(File.join(@dir, "files/bin/x64"))
+    File.write(File.join(@dir, "files/bin/x64/plugin.dll"), "")
+    mod = Mod.load(@dir)
+    assert_equal [File.join(@dir, "files/bin/x64/plugin.dll")], mod.files
+  end
+
+  def test_to_s
+    write_meta(slug: "redscript", version: "2.0", name: "Redscript", game: "cp2077")
+    assert_equal "redscript@2.0", Mod.load(@dir).to_s
+  end
+
   private
 
   def write_meta(slug:, version:, name:, game:)
