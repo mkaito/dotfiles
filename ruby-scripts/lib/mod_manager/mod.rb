@@ -23,9 +23,10 @@ module ModManager
     end
 
     def files
-      Dir.glob("#{path}/files/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
+      Dir.glob("#{path}/**/*", File::FNM_DOTMATCH)
+        .reject { |f| File.directory?(f) || f == "#{path}/meta.toml" }
     end
 
-    def to_s = "#{slug}@#{version}"
+    def to_s = slug
   end
 end

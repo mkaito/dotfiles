@@ -30,6 +30,10 @@ module ModManager
       all.any? { _1.slug == slug }
     end
 
+    def invalidate
+      @all = nil
+    end
+
     private
 
     def load_all

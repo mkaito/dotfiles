@@ -18,7 +18,7 @@ module ModManager
 
       mods.each do |mod|
         mod.files.each do |src|
-          prefix = "#{mod.path}/files/"
+          prefix = "#{mod.path}/"
           raise Error, "unexpected file path: #{src}" unless src.start_with?(prefix)
           rel = src.delete_prefix(prefix)
           dst = File.join(@game_dir, rel)
@@ -54,7 +54,7 @@ module ModManager
       archive_symlinks.each do |path|
         target  = File.readlink(path)
         rel     = target.delete_prefix(@archive_dir + "/")
-        slug_ver = rel.split("/").first(2).join("@")
+        slug_ver = rel.split("/").first(2).join("/")
         key = File.exist?(path) ? :links : :broken
         result[slug_ver][key] << path
       end
