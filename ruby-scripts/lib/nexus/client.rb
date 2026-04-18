@@ -5,6 +5,7 @@ require "uri"
 require "json"
 require_relative "../core/errors"
 require_relative "../core/log"
+require_relative "../core/format"
 
 module Nexus
   class Client
@@ -43,8 +44,8 @@ module Nexus
     def warn_rate_limits(res)
       h = res["x-rl-hourly-remaining"]&.to_i
       d = res["x-rl-daily-remaining"]&.to_i
-      Core::Log.warn("Nexus hourly limit low: #{h} remaining") if h && h < 10
-      Core::Log.warn("Nexus daily limit low: #{d} remaining")  if d && d < 50
+      puts Core::Format.yellow("warning: Nexus hourly API limit low (#{h} remaining)") if h && h < 10
+      puts Core::Format.yellow("warning: Nexus daily API limit low (#{d} remaining)")  if d && d < 50
     end
   end
 end

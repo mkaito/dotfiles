@@ -35,7 +35,7 @@ module ModManager
       end
 
       broken = verify
-      Log.warn("#{broken.size} broken symlink(s) after deploy") if broken.any?
+      Log.debug("#{broken.size} broken symlink(s) after deploy") if broken.any?
       { created:, broken: }
     end
 
@@ -73,7 +73,7 @@ module ModManager
       end
       links
     rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR => e
-      Log.warn("archive_symlinks: #{e.message}")
+      Log.debug("archive_symlinks: #{e.message}")
       []
     end
 

@@ -46,8 +46,11 @@ end
 
 class InstallerAutoSelectTest < Minitest::Test
   def test_single_main_auto_selected
-    result = Nexus::Installer.auto_select([MAIN_A, OLD_C])
-    assert_equal 1, result["file_id"]
+    assert_equal 1, Nexus::Installer.auto_select([MAIN_A])["file_id"]
+  end
+
+  def test_single_main_selected_even_with_other_categories_present
+    assert_equal 1, Nexus::Installer.auto_select([MAIN_A, OLD_C])["file_id"]
   end
 
   def test_multiple_main_returns_nil

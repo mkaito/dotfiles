@@ -39,7 +39,7 @@ module ModManager
         col = Collection.load(col_path)
         loaded_collections << col
         col.mods.each do |slug|
-          mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect} (from #{col_path})"
+          mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{col_path}\n  run `mod list` to see available mods"
           next if seen[mod.slug]
           seen[mod.slug] = true
           ordered << mod
@@ -47,7 +47,7 @@ module ModManager
       end
 
       @mods.each do |slug|
-        mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect} (from #{@path})"
+        mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{@path}\n  run `mod list` to see available mods"
         next if seen[mod.slug]
         seen[mod.slug] = true
         ordered << mod

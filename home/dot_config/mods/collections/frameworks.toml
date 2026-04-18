@@ -1,0 +1,2 @@
+mods = ["nexus-107-123169-cet-1-37-1-scripting-fixes-1.37.1", "nexus-1511-120421-redscript-0.5.31", "nexus-4198-139905-archivexl-1.26.3", "nexus-2380-139049-red4ext-1.30.0", "nexus-4197-130803-tweakxl-1.11.3", "nexus-4575-114235-input-loader-v0-2-3-zip-0.2.3", "nexus-3518-63684-native-settings-ui-1.96", "nexus-4885-114228-mod-settings-v0-2-21-zip-0.2.21"]
+name = "frameworks"

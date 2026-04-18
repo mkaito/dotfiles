@@ -10,13 +10,20 @@ _mod() {
   case $state in
     subcommand)
       local -a cmds
-      cmds=(deploy reset status validate collection cleanup nexus)
+      cmds=(deploy reset status list validate collection cleanup download)
       _describe -t commands 'mod command' cmds
       ;;
     args)
       case $line[1] in
         collection) _mod_collection ;;
-        deploy|validate) _mod_modset_names ;;
+        download)   _mod_download ;;
+        deploy)     _mod_modset_names ;;
+        validate)   _mod_validate_names ;;
+        list)       _arguments '--orphans[show only uncollected mods]' ;;
+        reset)      _arguments '(-y --yes)'{-y,--yes}'[skip confirmation]' ;;
+        cleanup)    _arguments \
+                      '(-n --dry-run)'{-n,--dry-run}'[show without deleting]' \
+                      '(-y --yes)'{-y,--yes}'[skip confirmation]' ;;
       esac
       ;;
   esac
@@ -37,22 +44,32 @@ _mod_collection() {
       ;;
     args)
       case $line[1] in
-        show|delete) _mod_collection_names ;;
+        show)   _mod_collection_names ;;
+        delete) _arguments '(-y --yes)'{-y,--yes}'[skip confirmation]' ':name:_mod_collection_names' ;;
         add)
-          case $((CURRENT - 1)) in
-            1) _mod_collection_names ;;
-            2) _mod_archive_keys ;;
+          case $CURRENT in
+            2) _mod_collection_names ;;
+            *) _mod_archive_slugs ;;
           esac
           ;;
         remove)
-          case $((CURRENT - 1)) in
-            1) _mod_collection_names ;;
-            2) _mod_collection_mods ;;
+          case $CURRENT in
+            2) _mod_collection_names ;;
+            3) _mod_collection_mods ;;
           esac
           ;;
       esac
       ;;
   esac
+}
+
+_mod_download() {
+  _arguments \
+    '--provider=[override provider detection]:provider:(nexus)' \
+    '--file=[pick file by index from --list]:N' \
+    '--slug=[override installed slug]:slug' \
+    '--list[list available files and exit]' \
+    '1:mod id'
 }
 
 _mod_collection_names() {
@@ -62,11 +79,26 @@ _mod_collection_names() {
   _describe -t collections 'collection' names
 }
 
-_mod_archive_keys() {
+_mod_modset_names() {
+  local ms_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/modsets"
+  local -a names
+  names=(${ms_dir}/*.toml(N:t:r))
+  _describe -t modsets 'modset' names
+}
+
+_mod_validate_names() {
+  local col_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/collections"
+  local ms_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/modsets"
+  local -a names
+  names=(${col_dir}/*.toml(N:t:r) ${ms_dir}/*.toml(N:t:r))
+  _describe -t names 'modset or collection' names
+}
+
+_mod_archive_slugs() {
   local archive_dir="${XDG_DATA_HOME:-$HOME/.local/share}/mods/archive"
-  local -a keys
-  keys=(${archive_dir}/*/*(N/:t))
-  _describe -t 'archive-keys' 'mod key' keys
+  local -a slugs
+  slugs=(${archive_dir}/*/*(N/:t))
+  _describe -t 'archive-slugs' 'mod slug' slugs
 }
 
 _mod_collection_mods() {
@@ -76,13 +108,6 @@ _mod_collection_mods() {
   local -a mods
   mods=(${(f)"$(ruby -e "require 'toml-rb'; puts TomlRB.load_file(ARGV[0])['mods'].join(?\n)" -- "$col_file" 2>/dev/null)"})
   _describe -t mods 'mod' mods
-}
-
-_mod_modset_names() {
-  local ms_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/modsets"
-  local -a names
-  names=(${ms_dir}/*.toml(N:t:r))
-  _describe -t modsets 'modset' names
 }
 
 _mod "$@"

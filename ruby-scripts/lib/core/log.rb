@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "format"
+
 module Core
   module Log
     LEVELS = { "debug" => 0, "info" => 1, "warn" => 2, "error" => 3 }.freeze
@@ -13,11 +15,17 @@ module Core
       private
 
       def level
-        LEVELS.fetch(ENV.fetch("RUBY_LOG_LEVEL", "info").downcase, 1)
+        LEVELS.fetch(ENV.fetch("RUBY_LOG_LEVEL", "warn").downcase, 2)
       end
 
       def log(lvl, label, msg)
-        puts "[#{label}] #{msg}" if lvl >= level
+        return unless lvl >= level
+        colored_label = case label
+          when "WARN"  then Format.yellow("[WARN]")
+          when "ERROR" then Format.red("[ERROR]")
+          else "[#{label}]"
+        end
+        puts "#{colored_label} #{msg}"
       end
     end
   end

@@ -4,13 +4,13 @@ require "minitest/autorun"
 require_relative "../../lib/core/log"
 
 class CoreLogTest < Minitest::Test
-  def test_info_appears_at_default_level
-    out, = with_log_level("info") { Core::Log.info("hello") }
-    assert_includes out, "hello"
+  def test_debug_suppressed_at_default_level
+    out, = with_log_level("warn") { Core::Log.debug("secret") }
+    assert_empty out
   end
 
-  def test_debug_suppressed_at_info_level
-    out, = with_log_level("info") { Core::Log.debug("secret") }
+  def test_info_suppressed_at_default_level
+    out, = with_log_level("warn") { Core::Log.info("hello") }
     assert_empty out
   end
 

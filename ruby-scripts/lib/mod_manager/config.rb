@@ -25,8 +25,8 @@ module ModManager
       @domain          = game["domain"]                    || raise(Error, "config missing cp2077.domain")
       @checks          = Array(game["checks"])
       @archive_dir     = File.expand_path(data["archive_dir"] || File.join(xdg_data, "mods", "archive"))
-      @collections_dir = File.join(xdg_config, "mods", "collections")
-      @modsets_dir     = File.join(xdg_config, "mods", "modsets")
+      @collections_dir = File.expand_path(data["collections_dir"] || File.join(xdg_config, "mods", "collections"))
+      @modsets_dir     = File.expand_path(data["modsets_dir"]     || File.join(xdg_config, "mods", "modsets"))
     end
   end
 end

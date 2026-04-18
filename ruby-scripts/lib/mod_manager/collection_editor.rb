@@ -7,11 +7,14 @@ require_relative "../core/file_io"
 
 module ModManager
   module CollectionEditor
-    def self.add(collection_path, slug, archive)
-      raise Error, "#{slug}: not in archive" unless archive.include?(slug)
+    def self.add(collection_path, slugs, archive)
+      slugs = Array(slugs)
+      slugs.each do |slug|
+        raise Error, "#{slug}: not in archive\n  run `mod list` to see available mods" unless archive.include?(slug)
+      end
       col = Collection.load(collection_path)
-      return if col.mods.include?(slug)
-      write_collection(collection_path, col, col.mods + [slug])
+      new_mods = col.mods | slugs
+      write_collection(collection_path, col, new_mods) unless new_mods == col.mods
     end
 
     def self.remove(collection_path, slug)

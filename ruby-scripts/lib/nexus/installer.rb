@@ -24,7 +24,7 @@ module Nexus
       end
     end
 
-    # Returns the single MAIN file if unambiguous; nil if multiple or none.
+    # Returns the single MAIN file if unambiguous; nil if multiple MAINs or none.
     def self.auto_select(sorted_files)
       mains = sorted_files.select { _1["category_name"] == "MAIN" }
       mains.first if mains.size == 1
@@ -64,6 +64,7 @@ module Nexus
 
       Dir.mktmpdir("nexus-") do |tmp|
         extract(cached, tmp)
+        FileUtils.chmod_R(0o755, tmp)
         game_root = detect_root(tmp)
 
         dest = File.join(archive_dir, game_domain, slug)
@@ -106,11 +107,11 @@ module Nexus
       path = File.join(Core::XDG.cache_home, "mods", "nexus",
                        game_domain.to_s, mod_id.to_s, file["file_id"].to_s, file["file_name"])
       if File.exist?(path)
-        Core::Log.info("cache hit: #{file["file_name"]}")
+        Core::Log.debug("cache hit: #{file["file_name"]}")
         return path
       end
 
-      Core::Log.info("downloading #{file["file_name"]}...")
+      puts "downloading #{file["file_name"]}..."
       FileUtils.mkdir_p(File.dirname(path))
       url = url_block.call
       download(url, path)
@@ -128,12 +129,8 @@ module Nexus
     end
 
     private_class_method def self.extract(archive_path, dir)
-      case File.extname(archive_path).downcase
-      when ".zip" then system("unzip", "-q", "-o", archive_path, "-d", dir)
-      when ".7z"  then system("7za", "x", "-y", "-o#{dir}", archive_path)
-      when ".rar" then system("unrar", "x", "-y", archive_path, dir)
-      else raise Core::Error, "unsupported archive format: #{File.extname(archive_path)}"
-      end or raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
+      system("7za", "x", "-y", "-bso0", "-bsp0", "-o#{dir}", archive_path) or
+        raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
     end
 
     # Strips single wrapper directory if archive contained one.

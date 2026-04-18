@@ -29,6 +29,12 @@ class CollectionEditorTest < Minitest::Test
     assert_equal %w[mod-a mod-b], Collection.load(col_path).mods
   end
 
+  def test_add_multiple_slugs
+    col_path = write_col("mylist", %w[])
+    CollectionEditor.add(col_path, %w[mod-a mod-b], @archive)
+    assert_equal %w[mod-a mod-b], Collection.load(col_path).mods
+  end
+
   def test_add_skips_already_present
     col_path = write_col("mylist", %w[mod-a mod-b])
     CollectionEditor.add(col_path, "mod-b", @archive)

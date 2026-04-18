@@ -12,15 +12,15 @@ class NexusClientWarnRateLimitsTest < Minitest::Test
   def test_warns_when_hourly_low
     res = fake_response({ "x-rl-hourly-remaining" => "5", "x-rl-daily-remaining" => "100" })
     out = capture_io { @client.send(:warn_rate_limits, res) }.first
-    assert_match(/hourly limit low/, out)
-    refute_match(/daily limit low/, out)
+    assert_match(/hourly.*limit low/, out)
+    refute_match(/daily.*limit low/, out)
   end
 
   def test_warns_when_daily_low
     res = fake_response({ "x-rl-hourly-remaining" => "50", "x-rl-daily-remaining" => "20" })
     out = capture_io { @client.send(:warn_rate_limits, res) }.first
-    refute_match(/hourly limit low/, out)
-    assert_match(/daily limit low/, out)
+    refute_match(/hourly.*limit low/, out)
+    assert_match(/daily.*limit low/, out)
   end
 
   def test_no_warn_when_limits_healthy
