@@ -1,0 +1,289 @@
+{
+  "collection": {
+    "name": "CET+Essentials",
+    "revisions": [
+      {
+        "revisionNumber": 47,
+        "createdAt": "2025-11-10T16:05:15Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 46,
+        "createdAt": "2025-09-27T14:40:18Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 45,
+        "createdAt": "2025-08-31T15:10:52Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 44,
+        "createdAt": "2025-07-21T15:47:20Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 43,
+        "createdAt": "2025-07-21T07:18:16Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 42,
+        "createdAt": "2025-06-08T06:53:13Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 41,
+        "createdAt": "2025-03-16T08:39:38Z",
+        "revisionStatus": "published",
+        "modCount": 12
+      },
+      {
+        "revisionNumber": 40,
+        "createdAt": "2025-03-04T20:26:36Z",
+        "revisionStatus": "published",
+        "modCount": 13
+      },
+      {
+        "revisionNumber": 39,
+        "createdAt": "2025-02-16T08:28:22Z",
+        "revisionStatus": "published",
+        "modCount": 13
+      },
+      {
+        "revisionNumber": 38,
+        "createdAt": "2025-02-16T08:21:28Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 37,
+        "createdAt": "2025-01-25T23:29:14Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 36,
+        "createdAt": "2024-12-15T08:01:47Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 35,
+        "createdAt": "2024-10-04T15:26:36Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 34,
+        "createdAt": "2024-09-14T12:52:35Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 33,
+        "createdAt": "2024-08-18T06:06:50Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 32,
+        "createdAt": "2024-08-07T17:15:31Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 31,
+        "createdAt": "2024-08-02T05:50:43Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 30,
+        "createdAt": "2024-07-13T05:52:41Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 29,
+        "createdAt": "2024-07-01T19:44:16Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 28,
+        "createdAt": "2024-06-05T15:36:41Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 27,
+        "createdAt": "2024-05-19T11:25:53Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 26,
+        "createdAt": "2024-05-10T20:20:37Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 25,
+        "createdAt": "2024-05-09T19:51:09Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 24,
+        "createdAt": "2024-04-27T18:11:19Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 23,
+        "createdAt": "2024-04-08T19:36:47Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 22,
+        "createdAt": "2024-03-29T22:45:30Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 21,
+        "createdAt": "2024-03-03T07:36:51Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 20,
+        "createdAt": "2024-03-01T16:34:05Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 19,
+        "createdAt": "2024-03-01T16:30:26Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 18,
+        "createdAt": "2024-02-04T21:36:48Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 17,
+        "createdAt": "2024-01-19T23:38:46Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 16,
+        "createdAt": "2024-01-13T07:43:50Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 15,
+        "createdAt": "2023-12-30T16:41:48Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 14,
+        "createdAt": "2023-12-18T14:24:40Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 13,
+        "createdAt": "2023-12-08T15:06:02Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 12,
+        "createdAt": "2023-12-01T12:40:01Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 11,
+        "createdAt": "2023-11-17T23:14:18Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 10,
+        "createdAt": "2023-11-12T16:29:17Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 9,
+        "createdAt": "2023-11-02T19:31:33Z",
+        "revisionStatus": "published",
+        "modCount": 10
+      },
+      {
+        "revisionNumber": 8,
+        "createdAt": "2023-10-31T23:15:38Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 7,
+        "createdAt": "2023-10-21T08:03:51Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 6,
+        "createdAt": "2023-10-14T11:15:28Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 5,
+        "createdAt": "2023-10-06T19:22:16Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 4,
+        "createdAt": "2023-09-29T19:40:34Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 3,
+        "createdAt": "2023-09-13T21:26:00Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 2,
+        "createdAt": "2023-08-08T12:28:16Z",
+        "revisionStatus": "published",
+        "modCount": 11
+      },
+      {
+        "revisionNumber": 1,
+        "createdAt": "2023-08-06T21:18:46Z",
+        "revisionStatus": "published",
+        "modCount": 10
+      }
+    ]
+  }
+}

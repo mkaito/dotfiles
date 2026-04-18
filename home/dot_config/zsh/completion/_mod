@@ -39,7 +39,7 @@ _mod_collection() {
   case $state in
     action)
       local -a actions
-      actions=(new list show add remove delete)
+      actions=(new list show add remove delete import)
       _describe -t actions 'collection action' actions
       ;;
     args)
@@ -58,6 +58,7 @@ _mod_collection() {
             3) _mod_collection_mods ;;
           esac
           ;;
+        import) _mod_collection_import ;;
       esac
       ;;
   esac
@@ -104,6 +105,15 @@ _mod_modset_collections() {
   local -a cols
   cols=(${(f)"$(ruby -e "require 'toml-rb'; puts TomlRB.load_file(ARGV[0])['collections'].join(?\n)" -- "$ms_file" 2>/dev/null)"})
   _describe -t collections 'collection' cols
+}
+
+_mod_collection_import() {
+  _arguments \
+    '--provider=[provider backend]:provider:(nexus)' \
+    '--revision=[import specific revision]:N' \
+    '--list[list available revisions and exit]' \
+    '--info[show collection mods and archive status, no download]' \
+    '1:collection id'
 }
 
 _mod_download() {

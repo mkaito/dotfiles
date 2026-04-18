@@ -19,7 +19,7 @@ require_relative "../../lib/mod_manager/deployer"
 require_relative "../../lib/mod_manager/checker"
 require_relative "../../lib/mod_manager/verifier"
 require_relative "../../lib/nexus/client"
-require_relative "../../lib/nexus/installer"
+require_relative "../../lib/nexus/file_picker"
 require_relative "../../lib/mod_manager/adapters/terminal/memory"
 require_relative "../../lib/mod_manager/cli"
 

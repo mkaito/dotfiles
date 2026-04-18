@@ -14,7 +14,9 @@ require_relative "interactors/cleanup"
 require_relative "interactors/collection_crud"
 require_relative "interactors/modset_crud"
 require_relative "interactors/install_mod"
+require_relative "interactors/import_collection"
 require_relative "adapters/download/nexus"
+require_relative "adapters/collection_provider/nexus"
 
 module ModManager
   class CLI
@@ -101,8 +103,18 @@ module ModManager
           OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(argv)
           die("usage: mod collection delete [-y] <name>") if argv.empty?
           crud.delete(argv.first, **opts)
+        when "import"
+          opts = { provider: "nexus", revision: nil, list: false, info: false }
+          OptionParser.new do |o|
+            o.on("--provider=PROVIDER")   { opts[:provider] = _1 }
+            o.on("--revision=N", Integer) { opts[:revision] = _1 }
+            o.on("--list")                { opts[:list] = true }
+            o.on("--info")                { opts[:info] = true }
+          end.parse!(argv)
+          die("usage: mod collection import [--provider=nexus] [--revision=N] [--list|--info] <collection_id>") if argv.empty?
+          cmd_import_collection(argv.first, **opts)
         else
-          die("usage: mod collection <new|list|show|add|remove|delete> ...")
+          die("usage: mod collection <new|list|show|add|remove|delete|import> ...")
         end
 
       when "cleanup"
@@ -176,17 +188,8 @@ module ModManager
       [config, archive, catalog]
     end
 
-    def nexus_env_file
-      File.join(Core::XDG.config_home, "mods", "nexus.env")
-    end
-
     def nexus_client
-      key = ENV["NEXUS_API_KEY"] or raise Core::Error, <<~MSG.chomp
-        NEXUS_API_KEY not set. Options:
-          1. op run --env-file=#{nexus_env_file} -- mod download ...
-             (create #{nexus_env_file} with: NEXUS_API_KEY=op://Private/Nexusmods/add more/API Key)
-          2. NEXUS_API_KEY="op://Private/Nexusmods/add more/API Key" op run -- mod download ...
-      MSG
+      key = ENV["NEXUS_API_KEY"] or raise Core::Error, "NEXUS_API_KEY not set (set it in mise.local.toml or export it)"
       Nexus::Client.new(key)
     end
 
@@ -197,23 +200,63 @@ module ModManager
 
     # ── commands ─────────────────────────────────────────────────────────────
 
+    def cmd_import_collection(collection_id, provider:, revision:, list:, info:)
+      case provider
+      when "nexus"
+        client              = nexus_client
+        config, archive, catalog = load_context
+        col_prov            = Adapters::CollectionProvider::Nexus.new(config.domain, client)
+        download            = Adapters::Download::Nexus.new(config.domain, client)
+        if info
+          rev   = col_prov.fetch_revision(slug: collection_id, revision:)
+          width = rev.mods.filter_map { _1.predicted_slug&.length }.max.to_i
+          col_name = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
+          @terminal.info("#{col_name} (#{rev.mods.size} mods)\n")
+          rev.mods.each do |m|
+            slug   = m.predicted_slug || "nexus-#{m.mod_id}-#{m.file_id}-?"
+            cached = archive.all.any? { |a| a.source["mod_id"] == m.mod_id && a.source["file_id"] == m.file_id }
+            status = cached ? "[archived]" : "[missing]"
+            @terminal.info("  #{slug.ljust(width)}  #{@terminal.muted(status)}")
+          end
+          throw :exit, 0
+        end
+        if list
+          summaries = col_prov.list_revisions(slug: collection_id)
+          if summaries.empty?
+            @terminal.info("no revisions found for #{collection_id}")
+          else
+            summaries.each do |s|
+              @terminal.info("  #{@terminal.bold(s.revision_number.to_s)}  #{s.status}  #{s.mod_count} mods  #{s.created_at}")
+            end
+          end
+          throw :exit, 0
+        end
+        Interactors::ImportCollection.new(
+          provider: col_prov, download:, archive:, catalog:, terminal: @terminal,
+        ).call(collection_id, revision:)
+      else
+        raise Core::Error, "unknown provider: #{provider}"
+      end
+    end
+
     def cmd_download(mod_id, provider:, file_index:, slug:, list:)
-      config, archive = load_context
       provider ||= detect_provider(mod_id)
 
       case provider
       when "nexus"
-        download = Adapters::Download::Nexus.new(config.domain, nexus_client)
+        client   = nexus_client
+        config, archive = load_context
+        download = Adapters::Download::Nexus.new(config.domain, client)
         sorted   = download.list_files(mod_id:)
 
         file = if list
-          Nexus::Installer.print_file_list(sorted)
+          Nexus::FilePicker.print_file_list(sorted)
           throw :exit, 0
         elsif file_index
           sorted[file_index - 1] or raise Core::Error, "--file #{file_index}: out of range (1-#{sorted.size})"
         else
-          Nexus::Installer.auto_select(sorted) or begin
-            Nexus::Installer.print_file_list(sorted)
+          Nexus::FilePicker.auto_select(sorted) or begin
+            Nexus::FilePicker.print_file_list(sorted)
             throw :exit, 1
           end
         end

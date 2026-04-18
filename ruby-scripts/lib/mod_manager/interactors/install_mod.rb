@@ -15,7 +15,7 @@ module ModManager
       def call(mod_id, file_id:, slug: nil)
         unpacked = @download.fetch(mod_id:, file_id:, slug:)
         mod      = @archive.install(unpacked_mod: unpacked)
-        @terminal.success("installed #{mod.slug}")
+        @terminal.success("archived #{mod.slug}")
         mod
       ensure
         FileUtils.rm_rf(unpacked.tmp_dir) if unpacked

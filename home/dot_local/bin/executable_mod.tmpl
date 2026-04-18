@@ -1,12 +1,5 @@
 #!/bin/sh
-MOD="{{ .chezmoi.sourceDir }}/../ruby-scripts/bin/mod"
-export BUNDLE_GEMFILE="{{ .chezmoi.sourceDir }}/../ruby-scripts/Gemfile"
-
-case "${1:-}" in
-  download)
-    exec op run --env-file="${XDG_CONFIG_HOME:-$HOME/.config}/mods/nexus.env" -- ruby "$MOD" "$@"
-    ;;
-  *)
-    exec ruby "$MOD" "$@"
-    ;;
-esac
+DOTFILES="{{ .chezmoi.sourceDir }}"
+MOD="$DOTFILES/../ruby-scripts/bin/mod"
+export BUNDLE_GEMFILE="$DOTFILES/../ruby-scripts/Gemfile"
+cd "$DOTFILES" && exec mise exec -- ruby "$MOD" "$@"

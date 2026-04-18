@@ -2,7 +2,7 @@
 
 module ModManager
   module Ports
-    # Browse and manage the installed mod archive.
+    # Browse and manage the mod archive.
     module ModArchive
       def all                    = raise(NotImplementedError)   # → Array<Mod>
       def include?(slug)         = raise(NotImplementedError)   # → bool

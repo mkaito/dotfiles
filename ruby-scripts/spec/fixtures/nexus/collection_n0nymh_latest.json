@@ -1,0 +1,99 @@
+{
+  "collection": {
+    "name": "CET+Essentials",
+    "slug": "n0nymh",
+    "latestPublishedRevision": {
+      "revisionNumber": 47,
+      "modFiles": [
+        {
+          "fileId": 121009,
+          "file": {
+            "modId": 7780,
+            "name": "Codeware",
+            "version": "1.18.0"
+          }
+        },
+        {
+          "fileId": 82956,
+          "file": {
+            "modId": 533,
+            "name": "No Intro Videos - archive",
+            "version": "0.5"
+          }
+        },
+        {
+          "fileId": 125853,
+          "file": {
+            "modId": 2987,
+            "name": "Virtual Atelier",
+            "version": "1.4.7"
+          }
+        },
+        {
+          "fileId": 121050,
+          "file": {
+            "modId": 2380,
+            "name": "RED4ext",
+            "version": "1.29.1"
+          }
+        },
+        {
+          "fileId": 113975,
+          "file": {
+            "modId": 4197,
+            "name": "TweakXL",
+            "version": "1.11.0"
+          }
+        },
+        {
+          "fileId": 99128,
+          "file": {
+            "modId": 6945,
+            "name": "Equipment-EX",
+            "version": "1.2.8"
+          }
+        },
+        {
+          "fileId": 121010,
+          "file": {
+            "modId": 4198,
+            "name": "ArchiveXL",
+            "version": "1.26.0"
+          }
+        },
+        {
+          "fileId": 121987,
+          "file": {
+            "modId": 10038,
+            "name": "BrowserExtensionFramework",
+            "version": "0.9.7"
+          }
+        },
+        {
+          "fileId": 114228,
+          "file": {
+            "modId": 4885,
+            "name": "mod_settings_v0.2.21.zip",
+            "version": "0.2.21"
+          }
+        },
+        {
+          "fileId": 120421,
+          "file": {
+            "modId": 1511,
+            "name": "redscript",
+            "version": "0.5.31"
+          }
+        },
+        {
+          "fileId": 123169,
+          "file": {
+            "modId": 107,
+            "name": "CET 1.37.1 - Scripting fixes",
+            "version": "1.37.1"
+          }
+        }
+      ]
+    }
+  }
+}
