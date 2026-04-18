@@ -12,12 +12,10 @@ require_relative "../lib/mod_manager/log"
 require_relative "../lib/mod_manager/config"
 require_relative "../lib/mod_manager/mod"
 require_relative "../lib/mod_manager/archive"
-require_relative "../lib/mod_manager/atom"
 require_relative "../lib/mod_manager/collection"
 require_relative "../lib/mod_manager/collection_editor"
 require_relative "../lib/mod_manager/modset"
-require_relative "../lib/mod_manager/romset_editor"
-require_relative "../lib/mod_manager/topo_sort"
+require_relative "../lib/mod_manager/modset_editor"
 require_relative "../lib/mod_manager/deployer"
 require_relative "../lib/mod_manager/checker"
 require_relative "../lib/mod_manager/verifier"
@@ -91,7 +89,7 @@ end
 def cmd_deploy(modset_name)
   config, archive = load_context
   path = File.join(config.modsets_dir, "#{modset_name}.toml")
-  raise Error, "romset not found: #{path}" unless File.exist?(path)
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
   ms = Modset.load(path)
 
   check_errors = Checker.new(archive, config).check_modset(ms)
@@ -101,10 +99,11 @@ def cmd_deploy(modset_name)
   end
 
   mods, conflicts = ms.resolve(archive, config)
-  conflicts.each do |slug, sources|
-    winner = sources.last || "direct"
-    losers = sources[0..-2].map { _1 || "direct" }
-    puts Core::Format.yellow("conflict: #{slug} in #{losers.join(", ")} overridden by #{winner}")
+  raise Error, "modset has no mods to deploy" if mods.empty?
+
+  conflicts.each do |key, slugs|
+    loser, winner = slugs.uniq.first, slugs.uniq.last
+    puts Core::Format.yellow("conflict: #{key} — #{loser} overridden by #{winner}")
   end
 
   result = Deployer.new(config.game_dir, config.archive_dir).deploy(mods)
@@ -318,20 +317,20 @@ def cmd_cleanup(dry_run:, yes:)
   puts "deleted #{orphans.size} mod(s)"
 end
 
-def cmd_romset_new(name)
+def cmd_modset_new(name)
   config, = load_context
   path = File.join(config.modsets_dir, "#{name}.toml")
-  raise Error, "romset already exists: #{path}" if File.exist?(path)
+  raise Error, "modset already exists: #{path}" if File.exist?(path)
   Core::FileIO.atomic_write(path, TomlRB.dump("game" => config.domain, "collections" => [], "mods" => []))
   chezmoi_add(path)
   puts "created #{name}"
 end
 
-def cmd_romset_list
+def cmd_modset_list
   config, = load_context
   paths = Dir.glob("#{config.modsets_dir}/*.toml").sort
   if paths.empty?
-    puts Core::Format.dim("no romsets")
+    puts Core::Format.dim("no modsets")
     return
   end
   paths.each do |p|
@@ -342,10 +341,10 @@ def cmd_romset_list
   end
 end
 
-def cmd_romset_show(name)
+def cmd_modset_show(name)
   config, = load_context
   path = File.join(config.modsets_dir, "#{name}.toml")
-  raise Error, "romset not found: #{path}" unless File.exist?(path)
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
   rs = Modset.load(path)
   if rs.collections.empty? && rs.mods.empty?
     puts "(empty)"
@@ -355,28 +354,28 @@ def cmd_romset_show(name)
   end
 end
 
-def cmd_romset_add(name, collection_names)
+def cmd_modset_add(name, collection_names)
   config, = load_context
   path = File.join(config.modsets_dir, "#{name}.toml")
-  raise Error, "romset not found: #{path}" unless File.exist?(path)
-  RomsetEditor.add(path, collection_names, config)
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
+  ModsetEditor.add(path, collection_names, config)
   chezmoi_add(path)
   puts "updated #{name}"
 end
 
-def cmd_romset_remove(name, collection_name)
+def cmd_modset_remove(name, collection_name)
   config, = load_context
   path = File.join(config.modsets_dir, "#{name}.toml")
-  raise Error, "romset not found: #{path}" unless File.exist?(path)
-  RomsetEditor.remove(path, collection_name)
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
+  ModsetEditor.remove(path, collection_name)
   chezmoi_add(path)
   puts "updated #{name}"
 end
 
-def cmd_romset_delete(name, yes:)
+def cmd_modset_delete(name, yes:)
   config, = load_context
   path = File.join(config.modsets_dir, "#{name}.toml")
-  raise Error, "romset not found: #{path}" unless File.exist?(path)
+  raise Error, "modset not found: #{path}" unless File.exist?(path)
   unless yes || Core::CLI.confirm("delete #{name}?")
     puts "aborted"
     return
@@ -450,37 +449,37 @@ begin
     abort("usage: mod download [--provider=nexus] [--file=N] [--slug=SLUG] [--list] <mod_id>") if ARGV.empty?
     cmd_download(ARGV.first, **opts)
 
-  when "romset"
+  when "modset"
     action = ARGV.shift
     case action
     when "new"
-      abort("usage: mod romset new <name>") if ARGV.empty?
-      cmd_romset_new(ARGV.first)
+      abort("usage: mod modset new <name>") if ARGV.empty?
+      cmd_modset_new(ARGV.first)
     when "list"
-      cmd_romset_list
+      cmd_modset_list
     when "show"
-      abort("usage: mod romset show <name>") if ARGV.empty?
-      cmd_romset_show(ARGV.first)
+      abort("usage: mod modset show <name>") if ARGV.empty?
+      cmd_modset_show(ARGV.first)
     when "add"
-      abort("usage: mod romset add <romset> <collection> [collection...]") if ARGV.size < 2
-      cmd_romset_add(ARGV[0], ARGV[1..])
+      abort("usage: mod modset add <modset> <collection> [collection...]") if ARGV.size < 2
+      cmd_modset_add(ARGV[0], ARGV[1..])
     when "remove"
-      abort("usage: mod romset remove <romset> <collection>") if ARGV.size < 2
-      cmd_romset_remove(ARGV[0], ARGV[1])
+      abort("usage: mod modset remove <modset> <collection>") if ARGV.size < 2
+      cmd_modset_remove(ARGV[0], ARGV[1])
     when "delete"
       opts = { yes: false }
       OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(ARGV)
-      abort("usage: mod romset delete [-y] <name>") if ARGV.empty?
-      cmd_romset_delete(ARGV.first, **opts)
+      abort("usage: mod modset delete [-y] <name>") if ARGV.empty?
+      cmd_modset_delete(ARGV.first, **opts)
     when "deploy"
-      abort("usage: mod romset deploy <name>") if ARGV.empty?
+      abort("usage: mod modset deploy <name>") if ARGV.empty?
       cmd_deploy(ARGV.first)
     else
-      abort("usage: mod romset <new|list|show|add|remove|delete|deploy> ...")
+      abort("usage: mod modset <new|list|show|add|remove|delete|deploy> ...")
     end
 
   else
-    abort("usage: mod <list|reset|status|validate|collection|romset|cleanup|download>")
+    abort("usage: mod <list|reset|status|validate|collection|modset|cleanup|download>")
   end
 rescue ValidationError => e
   e.errors.each { puts "  #{_1}" }

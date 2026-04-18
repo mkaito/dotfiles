@@ -99,7 +99,7 @@ module ModManager
         links << path if target.start_with?(@archive_dir + "/")
       end
       links
-    rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR => e
+    rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::EPERM => e
       Log.debug("archive_symlinks: #{e.message}")
       []
     end

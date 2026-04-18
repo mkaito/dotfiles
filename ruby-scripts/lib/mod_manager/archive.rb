@@ -41,7 +41,7 @@ module ModManager
       Dir.glob("#{@dir}/*/*/meta.toml").filter_map do |meta|
         Mod.load(File.dirname(meta))
       rescue ModManager::Error, TomlRB::ParseError, Errno::ENOENT, Errno::EACCES => e
-        Log.debug("skipping #{meta}: #{e.message}")
+        Log.warn("skipping #{meta}: #{e.message}")
         nil
       end
     end

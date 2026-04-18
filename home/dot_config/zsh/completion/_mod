@@ -10,13 +10,13 @@ _mod() {
   case $state in
     subcommand)
       local -a cmds
-      cmds=(reset status list validate collection romset cleanup download)
+      cmds=(reset status list validate collection modset cleanup download)
       _describe -t commands 'mod command' cmds
       ;;
     args)
       case $line[1] in
         collection) _mod_collection ;;
-        romset)     _mod_romset ;;
+        modset)     _mod_modset ;;
         download)   _mod_download ;;
         validate)   _mod_validate_names ;;
         list)       _arguments '--orphans[show only uncollected mods]' ;;
@@ -63,7 +63,7 @@ _mod_collection() {
   esac
 }
 
-_mod_romset() {
+_mod_modset() {
   local context curcontext="$curcontext" state line
 
   _arguments \
@@ -74,7 +74,7 @@ _mod_romset() {
     action)
       local -a actions
       actions=(new list show add remove delete deploy)
-      _describe -t actions 'romset action' actions
+      _describe -t actions 'modset action' actions
       ;;
     args)
       case $line[1] in
@@ -89,7 +89,7 @@ _mod_romset() {
         remove)
           case $CURRENT in
             2) _mod_modset_names ;;
-            3) _mod_romset_collections ;;
+            3) _mod_modset_collections ;;
           esac
           ;;
       esac
@@ -97,12 +97,12 @@ _mod_romset() {
   esac
 }
 
-_mod_romset_collections() {
+_mod_modset_collections() {
   local ms_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/modsets"
-  local rs_file="$ms_dir/$words[2].toml"
-  [[ -f $rs_file ]] || return
+  local ms_file="$ms_dir/$words[2].toml"
+  [[ -f $ms_file ]] || return
   local -a cols
-  cols=(${(f)"$(ruby -e "require 'toml-rb'; puts TomlRB.load_file(ARGV[0])['collections'].join(?\n)" -- "$rs_file" 2>/dev/null)"})
+  cols=(${(f)"$(ruby -e "require 'toml-rb'; puts TomlRB.load_file(ARGV[0])['collections'].join(?\n)" -- "$ms_file" 2>/dev/null)"})
   _describe -t collections 'collection' cols
 }
 

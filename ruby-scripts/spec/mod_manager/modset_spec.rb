@@ -40,14 +40,25 @@ class ModsetResolveTest < Minitest::Test
     assert_equal %w[redscript extra], ms.resolve(@archive, @config).first.map(&:slug)
   end
 
-  def test_deduplication_last_occurrence_wins
+  def test_same_slug_in_two_collections_is_idempotent
     write_col("a", %w[redscript codeware])
     write_col("b", %w[redscript extra])
     ms = write_modset(collections: %w[a b])
     mods, conflicts = ms.resolve(@archive, @config)
     assert_equal %w[redscript codeware extra], mods.map(&:slug)
-    assert_includes conflicts, "redscript"
-    assert_equal %w[a b], conflicts["redscript"]
+    assert_empty conflicts
+  end
+
+  def test_version_conflict_keyed_on_mod_id
+    make_mod("redscript-0.20", "0.20", mod_id: 12345)
+    make_mod("redscript-0.21", "0.21", mod_id: 12345)
+    write_col("a", %w[redscript-0.20])
+    write_col("b", %w[redscript-0.21])
+    ms = write_modset(collections: %w[a b])
+    mods, conflicts = ms.resolve(@archive, @config)
+    assert_equal %w[redscript-0.21], mods.map(&:slug)
+    assert_includes conflicts, "nexus:12345"
+    assert_equal %w[redscript-0.20 redscript-0.21], conflicts["nexus:12345"]
   end
 
   def test_collections_applied_in_order
@@ -70,15 +81,16 @@ class ModsetResolveTest < Minitest::Test
 
   private
 
-  def make_mod(slug, version = "1.0")
+  def make_mod(slug, version = "1.0", mod_id: nil)
     dir = File.join(@archive_dir, "cp2077", slug)
     FileUtils.mkdir_p(dir)
+    source = mod_id ? "\n[source]\nprovider = \"nexus\"\nmod_id = #{mod_id}\n" : ""
     File.write(File.join(dir, "meta.toml"), <<~TOML)
       name = "#{slug}"
       slug = "#{slug}"
       version = "#{version}"
       game = "cp2077"
-      depends = []
+      depends = []#{source}
     TOML
   end
 
