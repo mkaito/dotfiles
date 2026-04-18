@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "../../collection"
-require_relative "../../modset"
-require_relative "../../errors"
-require_relative "../../../core/file_io"
+require "mod_manager/collection"
+require "mod_manager/modset"
+require "mod_manager/errors"
+require "core/file_io"
 
 module ModManager
   module Adapters
@@ -30,7 +30,6 @@ module ModManager
           Collection.load(col_path(name))
         end
 
-        # col must respond to #name and #mods.
         def write_collection(col)
           Core::FileIO.atomic_write(col_path(col.name), TomlRB.dump("name" => col.name, "mods" => col.mods))
           chezmoi_add(col_path(col.name))
@@ -56,7 +55,6 @@ module ModManager
           Modset.load(ms_path(name))
         end
 
-        # ms must respond to #game, #collections, #mods. Name is derived from ms#path.
         def write_modset(ms)
           name = File.basename(ms.path, ".toml")
           Core::FileIO.atomic_write(ms_path(name), TomlRB.dump(

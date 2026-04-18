@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "minitest/autorun"
-require_relative "../../lib/steam/vdf_nav"
+require "steam/vdf_nav"
 
 class SteamVdfNavDigTest < Minitest::Test
   DATA = {

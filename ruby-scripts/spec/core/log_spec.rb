@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require_relative "../../lib/core/log"
+require "core/log"
 
 class CoreLogTest < Minitest::Test
   def test_debug_suppressed_at_default_level

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "mod"
-require_relative "log"
+require "mod_manager/mod"
+require "mod_manager/log"
 
 module ModManager
   class Archive

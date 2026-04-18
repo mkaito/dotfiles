@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../../mod"
+require "mod_manager/mod"
 
 module ModManager
   module Adapters

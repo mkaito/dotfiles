@@ -2,11 +2,13 @@
 
 require "tmpdir"
 require "fileutils"
-require_relative "../../../nexus/file_picker"
-require_relative "../../../core/http"
-require_relative "../../../core/xdg"
-require_relative "../../errors"
-require_relative "../../core/models"
+require "core/text"
+require "nexus/file_picker"
+require "core/http"
+require "mod_manager/adapters/download/translator"
+require "core/xdg"
+require "mod_manager/errors"
+require "mod_manager/core/models"
 
 module ModManager
   module Adapters
@@ -17,10 +19,9 @@ module ModManager
           @client      = client
         end
 
-        # Returns Array<Hash> of file hashes from Nexus API.
-        # Keys: file_id, name, version, category_name, size_kb, uploaded_timestamp, file_name.
         def list_files(mod_id:)
-          ::Nexus::FilePicker.sort_files(@client.mod_files(@game_domain, mod_id.to_i))
+          raw = @client.mod_files(@game_domain, mod_id.to_i)
+          ::Nexus::FilePicker.sort_files(raw).map { Translator.file_info(_1) }
         end
 
         def file_exist?(mod_id:, file_id:)
@@ -38,7 +39,7 @@ module ModManager
           version   = file["version"].to_s.strip.then { _1.empty? ? info["version"].to_s.strip : _1 }
           raise Core::Error, "could not determine version for mod #{mod_id}" if version.empty?
 
-          base_slug = slugify(file["name"].to_s.sub(/\s+#{Regexp.escape(version)}\z/, ""))
+          base_slug = Core::Text.slugify(file["name"].to_s.sub(/\s+#{Regexp.escape(version)}\z/, ""))
           slug    ||= "nexus-#{mod_id}-#{file["file_id"]}-#{base_slug}-#{version}"
 
           cached = cached_archive(mod_id.to_i, file) do
@@ -70,10 +71,6 @@ module ModManager
 
         private
 
-        def slugify(name)
-          name.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
-        end
-
         def cached_archive(mod_id, file, &url_block)
           path = File.join(Core::XDG.cache_home, "mods", "nexus",
                            @game_domain.to_s, mod_id.to_s, file["file_id"].to_s, file["file_name"])
@@ -96,10 +93,6 @@ module ModManager
           end
         end
 
-        def detect_root(dir)
-          entries = Dir.glob("#{dir}/*")
-          entries.size == 1 && File.directory?(entries.first) ? entries.first : dir
-        end
       end
     end
   end

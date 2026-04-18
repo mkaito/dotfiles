@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require_relative "../../../../lib/mod_manager/services/verifier"
+require "mod_manager/services/verifier"
 
 include ModManager
 

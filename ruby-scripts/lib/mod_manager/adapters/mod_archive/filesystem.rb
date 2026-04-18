@@ -2,10 +2,10 @@
 
 require "fileutils"
 require "toml-rb"
-require_relative "../../mod"
-require_relative "../../log"
-require_relative "../../errors"
-require_relative "../../../core/file_io"
+require "mod_manager/mod"
+require "mod_manager/log"
+require "mod_manager/errors"
+require "core/file_io"
 
 module ModManager
   module Adapters

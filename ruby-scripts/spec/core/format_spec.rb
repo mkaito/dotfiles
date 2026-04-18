@@ -2,7 +2,7 @@
 
 require "minitest/autorun"
 require "stringio"
-require_relative "../../lib/core/format"
+require "core/format"
 
 class CoreFormatTest < Minitest::Test
   def setup

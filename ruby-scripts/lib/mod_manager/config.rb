@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "../core/errors"
-require_relative "../core/xdg"
+require "core/errors"
+require "core/xdg"
 
 module ModManager
   class Config

@@ -5,10 +5,9 @@ require "uri"
 require "json"
 require "time"
 require "fileutils"
-require_relative "../core/errors"
-require_relative "../core/log"
-require_relative "../core/format"
-require_relative "../core/xdg"
+require "core/errors"
+require "core/log"
+require "core/xdg"
 
 module Nexus
   class Client
@@ -178,13 +177,13 @@ module Nexus
 
       if h && h < HOURLY_WARN_THRESHOLD && !@warned_hourly
         reset_str = h_reset ? " (resets #{parse_reset_time(h_reset)&.utc&.strftime("%H:%M UTC")})" : ""
-        puts Core::Format.yellow("warning: #{h}/#{res["x-rl-hourly-limit"]} Nexus hourly requests remaining#{reset_str}")
+        Core::Log.warn("#{h}/#{res["x-rl-hourly-limit"]} Nexus hourly requests remaining#{reset_str}")
         @warned_hourly = true
       end
 
       if d && d < DAILY_WARN_THRESHOLD && !@warned_daily
         reset_str = d_reset ? " (resets #{parse_reset_time(d_reset)&.utc&.strftime("%H:%M UTC")})" : ""
-        puts Core::Format.yellow("warning: #{d}/#{res["x-rl-daily-limit"]} Nexus daily requests remaining#{reset_str}")
+        Core::Log.warn("#{d}/#{res["x-rl-daily-limit"]} Nexus daily requests remaining#{reset_str}")
         @warned_daily = true
       end
     end

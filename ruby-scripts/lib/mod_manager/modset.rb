@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "errors"
-require_relative "collection"
+require "mod_manager/errors"
 
 module ModManager
   class Modset
@@ -25,12 +24,5 @@ module ModManager
       @path = path
     end
 
-    private
-
-    def mod_key(mod)
-      src = mod.source
-      return "slug:#{mod.slug}" if src.empty? || src["mod_id"].nil?
-      "#{src["provider"]}:#{src["mod_id"]}"
-    end
   end
 end

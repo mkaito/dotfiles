@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require_relative "../../lib/core/errors"
+require "core/errors"
 
 class CoreErrorTest < Minitest::Test
   def test_error_is_standard_error

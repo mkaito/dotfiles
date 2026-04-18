@@ -6,7 +6,7 @@ module ModManager
   UnpackedMod = Data.define(:tmp_dir, :slug, :version, :game, :name, :source)
 
   # A file entry returned by Download#list_files.
-  FileInfo = Data.define(:file_id, :name, :version, :category, :description)
+  FileInfo = Data.define(:file_id, :name, :version, :category, :size_kb)
 
   # A post-deploy check declared in config (e.g. assert a dir or file exists).
   Check = Data.define(:path, :type)

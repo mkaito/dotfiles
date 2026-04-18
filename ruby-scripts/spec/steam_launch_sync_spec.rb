@@ -2,7 +2,7 @@
 require "minitest/autorun"
 require "toml-rb"
 require "vdf"
-require_relative "../lib/steam/vdf_nav"
+require "steam/vdf_nav"
 
 SAMPLE_VDF = <<~VDF
   "UserLocalConfigStore"

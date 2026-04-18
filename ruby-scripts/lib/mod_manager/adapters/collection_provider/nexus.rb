@@ -3,11 +3,13 @@
 require "tmpdir"
 require "json"
 require "fileutils"
-require_relative "../../collection_revision"
-require_relative "../../core/models"
-require_relative "../../errors"
-require_relative "../../../core/http"
-require_relative "../../../core/xdg"
+require "core/text"
+require "mod_manager/collection_revision"
+require "mod_manager/core/models"
+require "mod_manager/errors"
+require "mod_manager/adapters/collection_provider/translator"
+require "core/http"
+require "core/xdg"
 
 module ModManager
   module Adapters
@@ -39,18 +41,11 @@ module ModManager
             mods_raw      = rev_data["modFiles"]
           end
 
-          mods = (mods_raw || []).map do |m|
-            CollectionRevisionMod.new(
-              mod_id:       m["file"]["modId"],
-              file_id:      m["fileId"],
-              file_name:    m["file"]["name"],
-              file_version: m["file"]["version"],
-            )
-          end
+          mods = (mods_raw || []).map { Translator.revision_mod(_1) }
 
           CollectionRevision.new(
             collection_id:   slug,
-            collection_name: slugify(col_name),
+            collection_name: Core::Text.slugify(col_name),
             revision_number: rev_num,
             download_link:,
             mods:,
@@ -62,15 +57,7 @@ module ModManager
           Dir.mktmpdir("collection-manifest-") do |tmp|
             system("7za", "e", "-y", "-bso0", "-bsp0", "-o#{tmp}", cached, "collection.json")
             data = JSON.parse(File.read(File.join(tmp, "collection.json")))
-            (data["mods"] || []).map do |m|
-              CollectionManifestMod.new(
-                file_id: m.dig("source", "fileId"),
-                mod_id:  m.dig("source", "modId"),
-                name:    m["name"],
-                phase:   m["phase"],
-                choices: m["choices"],
-              )
-            end
+            (data["mods"] || []).map { Translator.manifest_mod(_1) }
           end
         end
 
@@ -96,10 +83,6 @@ module ModManager
           Core::Http.cached_download(path, label: "collection manifest #{slug} r#{revision}") do
             @client.collection_download_url(download_link)
           end
-        end
-
-        def slugify(name)
-          name.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
         end
       end
     end

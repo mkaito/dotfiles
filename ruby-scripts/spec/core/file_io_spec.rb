@@ -3,7 +3,7 @@
 require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
-require_relative "../../lib/core/file_io"
+require "core/file_io"
 
 class CoreFileIOTest < Minitest::Test
   def setup

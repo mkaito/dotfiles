@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require_relative "../../lib/core/xdg"
+require "core/xdg"
 
 class CoreXdgTest < Minitest::Test
   def test_config_home_env_override

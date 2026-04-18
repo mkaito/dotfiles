@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../services/resolver"
-require_relative "../services/checker"
-require_relative "../services/verifier"
-require_relative "../errors"
+require "mod_manager/services/resolver"
+require "mod_manager/services/checker"
+require "mod_manager/services/verifier"
+require "mod_manager/errors"
 
 module ModManager
   module Interactors

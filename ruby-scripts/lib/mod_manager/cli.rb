@@ -1,27 +1,13 @@
 # frozen_string_literal: true
 
+require "set"
 require "optparse"
-require_relative "adapters/terminal/ansi"
-require_relative "adapters/catalog/toml"
-require_relative "adapters/mod_archive/filesystem"
-require_relative "adapters/deploy/link_farm"
-require_relative "interactors/deploy_modset"
-require_relative "interactors/reset_deploy"
-require_relative "interactors/show_status"
-require_relative "interactors/validate"
-require_relative "interactors/list_mods"
-require_relative "interactors/cleanup"
-require_relative "interactors/collection_crud"
-require_relative "interactors/modset_crud"
-require_relative "interactors/install_mod"
-require_relative "interactors/import_collection"
-require_relative "adapters/download/nexus"
-require_relative "adapters/collection_provider/nexus"
+require "mod_manager/deps"
 
 module ModManager
   class CLI
     def self.run(argv, terminal = nil)
-      terminal ||= Adapters::Terminal::Ansi.new
+      terminal ||= Deps.terminal
       new(terminal).run(argv.dup)
     end
 
@@ -55,34 +41,28 @@ module ModManager
       when "reset"
         opts = { yes: false }
         OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(argv)
-        config, = load_context
-        Interactors::ResetDeploy.new(
-          deploy:   Adapters::Deploy::LinkFarm.new(config.game_dir, config.archive_dir),
-          terminal: @terminal,
-        ).call(**opts)
+        config = Deps.config
+        Deps.reset_deploy(config:, terminal: @terminal).call(**opts)
 
       when "list"
         opts = { orphans_only: false }
         OptionParser.new { |o| o.on("--orphans") { opts[:orphans_only] = true } }.parse!(argv)
-        _, archive, catalog = load_context
-        Interactors::ListMods.new(archive:, catalog:, terminal: @terminal).call(**opts)
+        config = Deps.config
+        Deps.list_mods(config:, terminal: @terminal).call(**opts)
 
       when "status"
-        config, = load_context
-        Interactors::ShowStatus.new(
-          deploy:   Adapters::Deploy::LinkFarm.new(config.game_dir, config.archive_dir),
-          terminal: @terminal,
-        ).call
+        config = Deps.config
+        Deps.show_status(config:, terminal: @terminal).call
 
       when "validate"
-        _, archive, catalog = load_context
-        ok = Interactors::Validate.new(archive:, catalog:, terminal: @terminal).call(argv.first)
+        config = Deps.config
+        ok = Deps.validate(config:, terminal: @terminal).call(argv.first)
         throw :exit, 1 unless ok
 
       when "collection"
         action = argv.shift
-        _, archive, catalog = load_context
-        crud = Interactors::CollectionCrud.new(catalog:, archive:, terminal: @terminal)
+        config = Deps.config
+        crud   = Deps.collection_crud(config:, terminal: @terminal)
         case action
         when "new"
           die("usage: mod collection new <name>") if argv.empty?
@@ -123,8 +103,8 @@ module ModManager
           o.on("-n", "--dry-run") { opts[:dry_run] = true }
           o.on("-y", "--yes")     { opts[:yes] = true }
         end.parse!(argv)
-        _, archive, catalog = load_context
-        Interactors::Cleanup.new(archive:, catalog:, terminal: @terminal).call(**opts)
+        config = Deps.config
+        Deps.cleanup(config:, terminal: @terminal).call(**opts)
 
       when "download"
         opts = { provider: nil, file_index: nil, slug: nil, list: false }
@@ -139,8 +119,8 @@ module ModManager
 
       when "modset"
         action = argv.shift
-        config, _, catalog = load_context
-        crud = Interactors::ModsetCrud.new(catalog:, terminal: @terminal, game: config.domain, modsets_dir: config.modsets_dir)
+        config = Deps.config
+        crud   = Deps.modset_crud(config:, terminal: @terminal)
         case action
         when "new"
           die("usage: mod modset new <name>") if argv.empty?
@@ -163,13 +143,7 @@ module ModManager
           crud.delete(argv.first, **opts)
         when "deploy"
           die("usage: mod modset deploy <name>") if argv.empty?
-          archive = Adapters::ModArchive::Filesystem.new(config.archive_dir)
-          Interactors::DeployModset.new(
-            catalog:  catalog,
-            archive:  archive,
-            deploy:   Adapters::Deploy::LinkFarm.new(config.game_dir, config.archive_dir),
-            terminal: @terminal,
-          ).call(argv.first, raw_checks: Array(config.checks))
+          Deps.deploy_modset(config:, terminal: @terminal).call(argv.first, raw_checks: Array(config.checks))
         else
           die("usage: mod modset <new|list|show|add|remove|delete|deploy> ...")
         end
@@ -179,42 +153,22 @@ module ModManager
       end
     end
 
-    # ── helpers ──────────────────────────────────────────────────────────────
-
-    def load_context
-      config  = Config.load
-      archive = Adapters::ModArchive::Filesystem.new(config.archive_dir)
-      catalog = Adapters::Catalog::Toml.new(config.collections_dir, config.modsets_dir)
-      [config, archive, catalog]
-    end
-
-    def nexus_client
-      key = ENV["NEXUS_API_KEY"] or raise Core::Error, "NEXUS_API_KEY not set (set it in mise.local.toml or export it)"
-      Nexus::Client.new(key)
-    end
-
-    def detect_provider(mod_id)
-      return "nexus" if mod_id.match?(/\A\d+\z/)
-      raise Core::Error, "cannot detect provider for #{mod_id.inspect} — use --provider=nexus"
-    end
-
     # ── commands ─────────────────────────────────────────────────────────────
 
     def cmd_import_collection(collection_id, provider:, revision:, list:, info:)
       case provider
       when "nexus"
-        client              = nexus_client
-        config, archive, catalog = load_context
-        col_prov            = Adapters::CollectionProvider::Nexus.new(config.domain, client)
-        download            = Adapters::Download::Nexus.new(config.domain, client)
+        config   = Deps.config
+        client   = Deps.nexus_client
+        col_prov = Deps.collection_provider(config:, client:)
         if info
+          archive = Deps.archive(config:)
           rev      = col_prov.fetch_revision(slug: collection_id, revision:)
           manifest = col_prov.fetch_manifest(download_link: rev.download_link,
                                              slug: collection_id, revision: rev.revision_number)
           manifest_by_file_id = manifest.each_with_object({}) { |m, h| h[m.file_id] = m }
           col_base = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
 
-          # Detect unresolved FOMOD mods (choices: nil in manifest, or missing from manifest)
           fomod_entries = rev.mods.select do |m|
             mm = manifest_by_file_id[m.file_id]
             next false unless mm
@@ -250,10 +204,7 @@ module ModManager
           end
           throw :exit, 0
         end
-        Interactors::ImportCollection.new(
-          provider: col_prov, download:, archive:, catalog:, terminal: @terminal,
-          game: config.domain,
-        ).call(collection_id, revision:)
+        Deps.import_collection(config:, client:, terminal: @terminal).call(collection_id, revision:)
       else
         raise Core::Error, "unknown provider: #{provider}"
       end
@@ -261,13 +212,12 @@ module ModManager
 
     def cmd_download(mod_id, provider:, file_index:, slug:, list:)
       provider ||= detect_provider(mod_id)
-
       case provider
       when "nexus"
-        client   = nexus_client
-        config, archive = load_context
-        download = Adapters::Download::Nexus.new(config.domain, client)
-        sorted   = download.list_files(mod_id:)
+        config   = Deps.config
+        client   = Deps.nexus_client
+        download = Deps.download(config:, client:)
+        sorted   = download.list_files(mod_id: mod_id.to_i)
 
         file = if list
           Nexus::FilePicker.print_file_list(sorted)
@@ -281,11 +231,15 @@ module ModManager
           end
         end
 
-        Interactors::InstallMod.new(download:, archive:, terminal: @terminal)
-          .call(mod_id, file_id: file["file_id"], slug:)
+        Deps.install_mod(config:, client:, terminal: @terminal).call(mod_id, file_id: file.file_id, slug:)
       else
         raise Core::Error, "unknown provider: #{provider}"
       end
+    end
+
+    def detect_provider(mod_id)
+      return "nexus" if mod_id.match?(/\A\d+\z/)
+      raise Core::Error, "cannot detect provider for #{mod_id.inspect} — use --provider=nexus"
     end
   end
 end

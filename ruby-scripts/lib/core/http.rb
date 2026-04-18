@@ -3,8 +3,8 @@
 require "net/http"
 require "uri"
 require "fileutils"
-require_relative "errors"
-require_relative "log"
+require "core/errors"
+require "core/log"
 
 module Core
   module Http

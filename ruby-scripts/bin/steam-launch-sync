@@ -3,11 +3,11 @@
 require "bundler/setup"
 require "toml-rb"
 require "vdf"
-require_relative "../lib/core/errors"
-require_relative "../lib/core/log"
-require_relative "../lib/core/xdg"
-require_relative "../lib/core/file_io"
-require_relative "../lib/steam/vdf_nav"
+require "core/errors"
+require "core/log"
+require "core/xdg"
+require "core/file_io"
+require "steam/vdf_nav"
 
 CONF = File.join(Core::XDG.config_home, "steam", "launch-options.toml")
 VDF_PATHS = [

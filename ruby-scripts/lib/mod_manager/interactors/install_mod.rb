@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "fileutils"
-require_relative "../errors"
+require "mod_manager/errors"
 
 module ModManager
   module Interactors

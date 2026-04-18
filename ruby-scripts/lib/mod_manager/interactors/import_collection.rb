@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require "fileutils"
-require_relative "../collection"
-require_relative "../modset"
-require_relative "../errors"
-require_relative "../../nexus/fomod"
+require "core/text"
+require "mod_manager/collection"
+require "mod_manager/modset"
+require "mod_manager/errors"
+require "nexus/fomod"
 
 module ModManager
   module Interactors
@@ -51,7 +52,7 @@ module ModManager
 
         if fomod_split
           fomod_split.each do |choice_name, fomod_slug|
-            col_name = "nexus-#{rev.collection_id}-#{slugify(choice_name)}-#{rev.revision_number}"
+            col_name = "nexus-#{rev.collection_id}-#{Core::Text.slugify(choice_name)}-#{rev.revision_number}"
             write_collection_and_modset(col_name, shared_slugs + [fomod_slug])
             @terminal.success("created #{col_name}")
           end
@@ -82,7 +83,7 @@ module ModManager
         # Unresolved FOMOD — archive each choice variant as a separate slug.
         result = {}
         choices.each do |choice|
-          choice_dir = File.join(unpacked.tmp_dir, "__choice__#{slugify(choice.name)}")
+          choice_dir = File.join(unpacked.tmp_dir, "__choice__#{Core::Text.slugify(choice.name)}")
           FileUtils.mkdir_p(choice_dir)
           choice.folders.each do |folder|
             src  = File.join(unpacked.tmp_dir, folder["source"])
@@ -93,7 +94,7 @@ module ModManager
           FileUtils.chmod_R(0o755, choice_dir)
           choice_mod = UnpackedMod.new(
             tmp_dir: choice_dir,
-            slug:    "#{unpacked.slug}--#{slugify(choice.name)}",
+            slug:    "#{unpacked.slug}--#{Core::Text.slugify(choice.name)}",
             version: unpacked.version,
             game:    unpacked.game,
             name:    "#{unpacked.name} (#{choice.name})",
@@ -137,9 +138,6 @@ module ModManager
         end
       end
 
-      def slugify(name)
-        name.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
-      end
     end
   end
 end

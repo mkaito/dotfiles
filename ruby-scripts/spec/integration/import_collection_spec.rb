@@ -4,14 +4,14 @@ require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
 # core/models first so collection.rb (loaded below) can override Collection with its Struct
-require_relative "../../lib/mod_manager/core/models"
-require_relative "../../lib/mod_manager/collection_revision"
-require_relative "../../lib/mod_manager/interactors/import_collection"
-require_relative "../../lib/mod_manager/adapters/collection_provider/memory"
-require_relative "../../lib/mod_manager/adapters/download/memory"
-require_relative "../../lib/mod_manager/adapters/mod_archive/memory"
-require_relative "../../lib/mod_manager/adapters/catalog/memory"
-require_relative "../../lib/mod_manager/adapters/terminal/memory"
+require "mod_manager/core/models"
+require "mod_manager/collection_revision"
+require "mod_manager/interactors/import_collection"
+require "mod_manager/adapters/collection_provider/memory"
+require "mod_manager/adapters/download/memory"
+require "mod_manager/adapters/mod_archive/memory"
+require "mod_manager/adapters/catalog/memory"
+require "mod_manager/adapters/terminal/memory"
 
 FOMOD_FIXTURE_XML = File.join(__dir__, "../fixtures/nexus/fomod_moduleconfig.xml")
 

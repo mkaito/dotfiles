@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "errors"
-require_relative "modset"
+require "mod_manager/errors"
+require "mod_manager/modset"
 
 module ModManager
   module ModsetEditor

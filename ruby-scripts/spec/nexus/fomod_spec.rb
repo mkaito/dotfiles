@@ -2,7 +2,7 @@
 
 require "minitest/autorun"
 require "tmpdir"
-require_relative "../../lib/nexus/fomod"
+require "nexus/fomod"
 
 FIXTURE_XML = File.join(__dir__, "../fixtures/nexus/fomod_moduleconfig.xml")
 

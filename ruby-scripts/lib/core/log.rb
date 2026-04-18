@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "format"
+require "core/format"
 
 module Core
   module Log

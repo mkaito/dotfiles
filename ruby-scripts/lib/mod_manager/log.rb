@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../core/log"
+require "core/log"
 
 module ModManager
   Log = Core::Log

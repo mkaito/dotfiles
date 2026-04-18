@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require_relative "../../lib/mod_manager/interactors/modset_crud"
-require_relative "../../lib/mod_manager/adapters/catalog/memory"
-require_relative "../../lib/mod_manager/adapters/terminal/memory"
+require "mod_manager/interactors/modset_crud"
+require "mod_manager/adapters/catalog/memory"
+require "mod_manager/adapters/terminal/memory"
 
 include ModManager
 

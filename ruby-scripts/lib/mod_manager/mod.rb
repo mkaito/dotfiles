@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "toml-rb"
-require_relative "errors"
+require "mod_manager/errors"
 
 module ModManager
   Mod = Struct.new(:slug, :version, :name, :game, :depends, :source, :path, keyword_init: true) do

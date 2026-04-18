@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../core/errors"
+require "core/errors"
 
 module ModManager
   Error           = Core::Error

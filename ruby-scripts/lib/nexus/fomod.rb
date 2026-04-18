@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rexml/document"
-require_relative "../core/errors"
+require "core/errors"
 
 module Nexus
   # One selectable option inside a FOMOD SelectExactlyOne group.

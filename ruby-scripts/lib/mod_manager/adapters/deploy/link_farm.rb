@@ -2,8 +2,8 @@
 
 require "fileutils"
 require "find"
-require_relative "../../errors"
-require_relative "../../log"
+require "mod_manager/errors"
+require "mod_manager/log"
 
 module ModManager
   module Adapters

@@ -2,7 +2,7 @@
 
 require "minitest/autorun"
 require "stringio"
-require_relative "../../lib/core/cli"
+require "core/cli"
 
 class CoreCLITest < Minitest::Test
   def test_confirm_returns_true_for_y

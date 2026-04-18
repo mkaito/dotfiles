@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../collection_editor"
-require_relative "../collection"
-require_relative "../errors"
+require "mod_manager/collection_editor"
+require "mod_manager/collection"
+require "mod_manager/errors"
 
 module ModManager
   module Interactors

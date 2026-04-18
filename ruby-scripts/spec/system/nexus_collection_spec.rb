@@ -15,9 +15,9 @@
 
 require "minitest/autorun"
 require "json"
-require_relative "../../lib/nexus/client"
-require_relative "../../lib/mod_manager/collection_revision"
-require_relative "../../lib/mod_manager/adapters/collection_provider/nexus"
+require "nexus/client"
+require "mod_manager/collection_revision"
+require "mod_manager/adapters/collection_provider/nexus"
 
 FIXTURE_DIR  = File.expand_path("../fixtures/nexus", __dir__)
 GAME_DOMAIN  = "cyberpunk2077"

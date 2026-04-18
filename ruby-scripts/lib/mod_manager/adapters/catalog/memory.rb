@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../../collection"
-require_relative "../../modset"
-require_relative "../../errors"
+require "mod_manager/collection"
+require "mod_manager/modset"
+require "mod_manager/errors"
 
 module ModManager
   module Adapters

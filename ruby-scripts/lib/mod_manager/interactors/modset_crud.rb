@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../modset_editor"
-require_relative "../modset"
-require_relative "../errors"
+require "mod_manager/modset_editor"
+require "mod_manager/modset"
+require "mod_manager/errors"
 
 module ModManager
   module Interactors

@@ -4,7 +4,7 @@ require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
 require "toml-rb"
-require_relative "../support/mod_cli_helper"
+require "support/mod_cli_helper"
 
 class ModDeployIntegrationTest < Minitest::Test
   include ModCliHelper

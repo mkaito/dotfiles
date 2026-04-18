@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "set"
-require_relative "../log"
-require_relative "../errors"
+require "mod_manager/log"
+require "mod_manager/errors"
 
 module ModManager
   module Interactors
