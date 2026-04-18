@@ -25,7 +25,10 @@ module ModManager
         end
 
         def file_exist?(mod_id:, file_id:)
-          @client.mod_files(@game_domain, mod_id.to_i).any? { _1["file_id"] == file_id }
+          @client.download_urls(@game_domain, mod_id.to_i, file_id)
+          true
+        rescue Core::Error
+          false
         end
 
         # Downloads + unpacks to a temp dir. Caller must clean up unpacked.tmp_dir.
@@ -33,8 +36,8 @@ module ModManager
         def fetch(mod_id:, file_id:, slug: nil)
           info  = @client.mod_info(@game_domain, mod_id.to_i)
           files = @client.mod_files(@game_domain, mod_id.to_i)
-          file  = files.find { _1["file_id"] == file_id } or
-                  raise Core::Error, "file_id #{file_id} not found for mod #{mod_id}"
+          file  = files.find { _1["file_id"] == file_id } ||
+                  @client.mod_file(@game_domain, mod_id.to_i, file_id)
 
           version   = file["version"].to_s.strip.then { _1.empty? ? info["version"].to_s.strip : _1 }
           raise Core::Error, "could not determine version for mod #{mod_id}" if version.empty?

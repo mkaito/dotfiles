@@ -88,6 +88,13 @@ module Nexus
       end.then { _1["files"] }
     end
 
+    def mod_file(game_domain, mod_id, file_id)
+      # Cache forever — a specific file's metadata is immutable.
+      cached_json(api_cache("#{game_domain}/mods/#{mod_id}/file-#{file_id}.json"), ttl: Float::INFINITY) do
+        get("/games/#{game_domain}/mods/#{mod_id}/files/#{file_id}")
+      end
+    end
+
     def download_urls(game_domain, mod_id, file_id)
       # CDN URLs expire — never cache.
       get("/games/#{game_domain}/mods/#{mod_id}/files/#{file_id}/download_link")
