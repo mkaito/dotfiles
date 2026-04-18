@@ -3,13 +3,12 @@
 require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
-require "open3"
 require "toml-rb"
-
-MOD_BIN      = File.expand_path("../../bin/mod", __dir__) unless defined?(MOD_BIN)
-GEMFILE_PATH = File.expand_path("../../Gemfile", __dir__)  unless defined?(GEMFILE_PATH)
+require_relative "../support/mod_cli_helper"
 
 class ModModsetIntegrationTest < Minitest::Test
+  include ModCliHelper
+
   def setup
     @dir        = Dir.mktmpdir
     @xdg_config = File.join(@dir, "config")
@@ -151,16 +150,6 @@ class ModModsetIntegrationTest < Minitest::Test
   end
 
   private
-
-  def run_mod(*args)
-    env = {
-      "XDG_CONFIG_HOME" => @xdg_config,
-      "XDG_DATA_HOME"   => @xdg_data,
-      "BUNDLE_GEMFILE"  => GEMFILE_PATH,
-    }
-    out, status = Open3.capture2e(env, "ruby", MOD_BIN, *args)
-    [status.exitstatus, out]
-  end
 
   def rs_path(name)
     File.join(@xdg_config, "mods", "modsets", "#{name}.toml")

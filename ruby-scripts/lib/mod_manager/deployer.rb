@@ -72,6 +72,13 @@ module ModManager
         File.unlink(path)
         count += 1
         Log.debug("unlink #{path}")
+        parent = File.dirname(path)
+        while parent.start_with?(@game_dir + "/")
+          break unless Dir.empty?(parent)
+          Dir.rmdir(parent)
+          Log.debug("rmdir #{parent}")
+          parent = File.dirname(parent)
+        end
       end
       count
     end

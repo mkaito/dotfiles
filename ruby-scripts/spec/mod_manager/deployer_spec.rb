@@ -37,6 +37,21 @@ class DeployerTest < Minitest::Test
     refute File.exist?(File.join(@game_dir, "bin/x64/global.ini"))
   end
 
+  def test_undeploy_removes_empty_dirs
+    @deployer.deploy([@archive.latest("redscript-2.0")])
+    @deployer.undeploy
+    refute File.directory?(File.join(@game_dir, "bin/x64"))
+    refute File.directory?(File.join(@game_dir, "bin"))
+  end
+
+  def test_undeploy_preserves_dirs_with_real_files
+    @deployer.deploy([@archive.latest("redscript-2.0")])
+    native = File.join(@game_dir, "bin/x64/native.dll")
+    File.write(native, "game file")
+    @deployer.undeploy
+    assert File.directory?(File.join(@game_dir, "bin/x64"))
+  end
+
   def test_undeploy_preserves_non_archive_files
     non_mod = File.join(@game_dir, "bin/x64/native.dll")
     FileUtils.mkdir_p(File.dirname(non_mod))

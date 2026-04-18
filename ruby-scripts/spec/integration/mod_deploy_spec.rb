@@ -3,15 +3,12 @@
 require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
-require "open3"
 require "toml-rb"
-require_relative "../../lib/mod_manager/deployer"
-require_relative "../../lib/mod_manager/archive"
-
-MOD_BIN      = File.expand_path("../../bin/mod", __dir__) unless defined?(MOD_BIN)
-GEMFILE_PATH = File.expand_path("../../Gemfile", __dir__)  unless defined?(GEMFILE_PATH)
+require_relative "../support/mod_cli_helper"
 
 class ModDeployIntegrationTest < Minitest::Test
+  include ModCliHelper
+
   def setup
     @dir         = Dir.mktmpdir
     @xdg_config  = File.join(@dir, "config")
@@ -161,19 +158,41 @@ class ModDeployIntegrationTest < Minitest::Test
     assert_match(/no mods to deploy/, out)
   end
 
-  # 9. Reset after deploy — all archive symlinks removed
-  def test_reset_removes_symlinks
+  # 9. Reset after deploy — symlinks and empty dirs removed, real files/dirs preserved
+  def test_reset_removes_symlinks_and_empty_dirs
     make_mod("cet", files: { "bin/x64/global.ini" => "cet", "bin/x64/config.ini" => "cfg" })
     make_collection("frameworks", %w[cet])
     make_modset("full", collections: %w[frameworks])
 
+    # Plant a real game file in a shared dir
+    FileUtils.mkdir_p(File.join(@game_dir, "bin/x64"))
+    File.write(File.join(@game_dir, "bin/x64/native.dll"), "real")
+
     run_mod("modset", "deploy", "full")
-    assert File.symlink?(File.join(@game_dir, "bin/x64/global.ini"))
 
     status, out = run_mod("reset", "-y")
     assert_equal 0, status, out
+
+    # Symlinks gone
     refute File.exist?(File.join(@game_dir, "bin/x64/global.ini"))
     refute File.exist?(File.join(@game_dir, "bin/x64/config.ini"))
+
+    # Dir kept because real file is still there
+    assert File.directory?(File.join(@game_dir, "bin/x64"))
+    assert File.file?(File.join(@game_dir, "bin/x64/native.dll"))
+  end
+
+  def test_reset_removes_empty_dirs
+    make_mod("cet", files: { "r6/scripts/cet.reds" => "cet" })
+    make_collection("frameworks", %w[cet])
+    make_modset("full", collections: %w[frameworks])
+
+    run_mod("modset", "deploy", "full")
+    assert File.directory?(File.join(@game_dir, "r6/scripts"))
+
+    run_mod("reset", "-y")
+    refute File.exist?(File.join(@game_dir, "r6/scripts"))
+    refute File.exist?(File.join(@game_dir, "r6"))
   end
 
   # 10. `mod status` reflects deployed mods
@@ -192,16 +211,6 @@ class ModDeployIntegrationTest < Minitest::Test
   end
 
   private
-
-  def run_mod(*args)
-    env = {
-      "XDG_CONFIG_HOME" => @xdg_config,
-      "XDG_DATA_HOME"   => @xdg_data,
-      "BUNDLE_GEMFILE"  => GEMFILE_PATH,
-    }
-    out, status = Open3.capture2e(env, "ruby", MOD_BIN, *args)
-    [status.exitstatus, out]
-  end
 
   def make_mod(slug, files: {}, mod_id: nil)
     dir = File.join(@archive_dir, "cyberpunk2077", slug)
