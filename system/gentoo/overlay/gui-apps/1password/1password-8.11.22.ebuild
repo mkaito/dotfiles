@@ -22,7 +22,7 @@ RESTRICT="bindist mirror strip"
 
 DEPEND="
 	x11-misc/xdg-utils
-	acct-group/1password
+	acct-group/onepassword
 "
 RDEPEND="${DEPEND}"
 
@@ -62,8 +62,8 @@ src_install() {
 	fperms 4755 /opt/1Password/chrome-sandbox
 
 	# This gives no extra permissions to the binary. It only hardens it against environmental tampering.
-	chgrp 1password "${ED}/opt/1Password/1Password-BrowserSupport" || die "Failed to change group of 1Password-BrowserSupport"
-	fperms g+s "/opt/1Password/1Password-BrowserSupport"
+	fowners root:onepassword /opt/1Password/1Password-BrowserSupport
+	fperms g+s /opt/1Password/1Password-BrowserSupport
 }
 
 pkg_postinst() {

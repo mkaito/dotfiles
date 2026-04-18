@@ -17,12 +17,12 @@ KEYWORDS="~amd64 ~arm64"
 RESTRICT="strip test bindist"
 
 BDEPEND="app-arch/unzip"
-RDEPEND="acct-group/onepassword-cli"
+RDEPEND="acct-group/onepassword"
 
 QA_FLAGS_IGNORED="usr/bin/op"
 
 src_install() {
 	dobin op
-	chgrp onepassword-cli "${ED}/usr/bin/op" || die
+	fowners root:onepassword /usr/bin/op
 	fperms 2755 /usr/bin/op
 }
