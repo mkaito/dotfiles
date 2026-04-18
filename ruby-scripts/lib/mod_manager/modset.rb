@@ -12,9 +12,6 @@ module ModManager
       data = TomlRB.load_file(path)
       errors = []
       errors << "missing game" if data["game"].to_s.strip.empty?
-      unless Array(data["collections"]).any? || Array(data["mods"]).any?
-        errors << "must have at least one collection or mod"
-      end
       raise ValidationError.new(errors.map { "#{path}: #{_1}" }) if errors.any?
       new(game: data["game"], collections: Array(data["collections"]),
           mods: Array(data["mods"]), checks: Array(data["checks"]), path:)
