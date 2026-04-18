@@ -155,6 +155,15 @@ def cmd_validate(name = nil)
   end
 end
 
+def cmd_list
+  config, archive = load_context
+  if archive.all.empty?
+    puts "archive empty"
+    return
+  end
+  archive.all.sort_by(&:slug).each { puts _1.slug }
+end
+
 def cmd_collection_add(collection_name, atom_str)
   config, archive = load_context
   path = File.join(config.collections_dir, "#{collection_name}.toml")
@@ -271,6 +280,9 @@ begin
     OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(ARGV)
     cmd_reset(**opts)
 
+  when "list"
+    cmd_list
+
   when "status"
     cmd_status
 
@@ -327,7 +339,7 @@ begin
     end
 
   else
-    abort("usage: mod <deploy|reset|status|validate|collection|cleanup|nexus>")
+    abort("usage: mod <list|deploy|reset|status|validate|collection|cleanup|nexus>")
   end
 rescue ValidationError => e
   e.errors.each { puts "  #{_1}" }
