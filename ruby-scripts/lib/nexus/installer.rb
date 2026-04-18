@@ -96,14 +96,13 @@ module Nexus
       name.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
     end
 
-    private_class_method def self.pick_url(urls)
+    def self.pick_url(urls)
       raise Core::Error, "no download URL returned" if urls.empty?
       preferred = urls.find { _1["short_name"] == "Nexus CDN" }
       (preferred || urls.first).fetch("URI")
     end
 
-    # Returns path to cached archive, downloading via block if not cached.
-    private_class_method def self.cached_archive(game_domain, mod_id, file, &url_block)
+    def self.cached_archive(game_domain, mod_id, file, &url_block)
       path = File.join(Core::XDG.cache_home, "mods", "nexus",
                        game_domain.to_s, mod_id.to_s, file["file_id"].to_s, file["file_name"])
       if File.exist?(path)
@@ -128,7 +127,7 @@ module Nexus
       end
     end
 
-    private_class_method def self.extract(archive_path, dir)
+    def self.extract(archive_path, dir)
       system("7za", "x", "-y", "-bso0", "-bsp0", "-o#{dir}", archive_path) or
         raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
     end

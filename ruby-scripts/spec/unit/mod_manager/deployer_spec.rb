@@ -3,8 +3,8 @@
 require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
-require_relative "../../lib/mod_manager/deployer"
-require_relative "../../lib/mod_manager/archive"
+require_relative "../../../lib/mod_manager/deployer"
+require_relative "../../../lib/mod_manager/archive"
 
 include ModManager
 

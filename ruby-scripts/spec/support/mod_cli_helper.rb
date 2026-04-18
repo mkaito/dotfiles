@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "stringio"
 require "bundler/setup"
 require "optparse"
 require "fileutils"
@@ -21,13 +20,15 @@ require_relative "../../lib/mod_manager/checker"
 require_relative "../../lib/mod_manager/verifier"
 require_relative "../../lib/nexus/client"
 require_relative "../../lib/nexus/installer"
+require_relative "../../lib/mod_manager/adapters/terminal/memory"
 require_relative "../../lib/mod_manager/cli"
 
 module ModCliHelper
   def run_mod(*args)
-    out = StringIO.new
+    terminal = ModManager::Adapters::Terminal::Memory.new
     with_env("XDG_CONFIG_HOME" => @xdg_config, "XDG_DATA_HOME" => @xdg_data) do
-      [ModManager::CLI.run(args, out), out.string]
+      status = ModManager::CLI.run(args, terminal)
+      [status, terminal.output]
     end
   end
 

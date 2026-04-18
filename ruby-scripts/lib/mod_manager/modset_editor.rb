@@ -1,34 +1,23 @@
 # frozen_string_literal: true
 
-require "toml-rb"
 require_relative "errors"
 require_relative "modset"
-require_relative "../core/file_io"
 
 module ModManager
   module ModsetEditor
-    def self.add(modset_path, collection_names, config)
+    def self.add(modset_name, collection_names, catalog)
       collection_names = Array(collection_names)
       collection_names.each do |name|
-        path = File.join(config.collections_dir, "#{name}.toml")
-        raise Error, "#{name}: collection not found\n  run `mod collection list` to see available collections" unless File.exist?(path)
+        raise Error, "#{name}: collection not found\n  run `mod collection list` to see available collections" unless catalog.collection_exist?(name)
       end
-      rs = Modset.load(modset_path)
-      new_cols = rs.collections | collection_names
-      write_modset(modset_path, rs, new_cols)
+      ms       = catalog.read_modset(modset_name)
+      new_cols = ms.collections | collection_names
+      catalog.write_modset(Modset.new(game: ms.game, collections: new_cols, mods: ms.mods, checks: ms.checks, path: ms.path))
     end
 
-    def self.remove(modset_path, collection_name)
-      rs = Modset.load(modset_path)
-      write_modset(modset_path, rs, rs.collections.reject { _1 == collection_name })
-    end
-
-    private_class_method def self.write_modset(path, rs, new_cols)
-      Core::FileIO.atomic_write(path, TomlRB.dump(
-        "game"        => rs.game,
-        "collections" => new_cols,
-        "mods"        => rs.mods
-      ))
+    def self.remove(modset_name, collection_name, catalog)
+      ms = catalog.read_modset(modset_name)
+      catalog.write_modset(Modset.new(game: ms.game, collections: ms.collections.reject { _1 == collection_name }, mods: ms.mods, checks: ms.checks, path: ms.path))
     end
   end
 end
