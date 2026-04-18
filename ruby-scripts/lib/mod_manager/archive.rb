@@ -22,10 +22,6 @@ module ModManager
       versions(slug).first
     end
 
-    def get(slug, version)
-      all.find { _1.slug == slug && _1.version == version }
-    end
-
     def include?(slug)
       all.any? { _1.slug == slug }
     end
