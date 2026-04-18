@@ -59,41 +59,6 @@ def cmd_nexus_download(game_domain, mod_id, file_index:, slug:)
   puts "installed #{installed_slug}"
 end
 
-def cmd_nexus_update(slugs)
-  config, archive = load_context
-  client = nexus_client
-  candidates = archive.all.select { _1.source["provider"] == "nexus" }
-  candidates = candidates.select { slugs.include?(_1.slug) } if slugs.any?
-
-  if candidates.empty?
-    puts "no nexus-sourced mods in archive#{slugs.any? ? " matching #{slugs.join(", ")}" : ""}"
-    return
-  end
-
-  candidates.each do |mod|
-    src          = mod.source
-    game_domain  = src["game_domain"]
-    mod_id       = src["mod_id"]
-    category     = src["category_name"] || "MAIN"
-    installed_ts = src["uploaded_at"].to_i
-
-    all_files = client.mod_files(game_domain, mod_id)
-    track     = all_files.select { _1["category_name"] == category }
-    track     = all_files if track.empty?
-    latest    = track.max_by { _1["uploaded_timestamp"].to_i }
-
-    if latest["uploaded_timestamp"].to_i <= installed_ts
-      puts "#{mod.slug}: up to date"
-    else
-      new_slug, _ = Nexus::Installer.install(
-        client, game_domain, mod_id,
-        archive_dir: config.archive_dir, file_id: latest["file_id"]
-      )
-      puts "#{mod.slug} → #{new_slug}"
-    end
-  end
-  archive.invalidate
-end
 
 def load_context
   config  = Config.load
@@ -297,17 +262,12 @@ begin
       end.parse!(ARGV)
       abort("usage: mod nexus download <game_domain> <mod_id>") if ARGV.size < 2
       cmd_nexus_download(ARGV[0], ARGV[1].to_i, **opts)
-    when "update"
-      cmd_nexus_update(ARGV)
     else
-      abort("usage: mod nexus <download|update> ...")
+      abort("usage: mod nexus download <game_domain> <mod_id>")
     end
 
-  when "update"
-    cmd_nexus_update(ARGV)
-
   else
-    abort("usage: mod <deploy|reset|status|validate|collection|cleanup|nexus|update>")
+    abort("usage: mod <deploy|reset|status|validate|collection|cleanup|nexus>")
   end
 rescue ValidationError => e
   e.errors.each { puts "  #{_1}" }
