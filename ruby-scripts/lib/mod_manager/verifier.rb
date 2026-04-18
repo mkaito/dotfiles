@@ -4,9 +4,8 @@ module ModManager
   module Verifier
     Check = Struct.new(:path, :type, keyword_init: true)
 
-    def self.collect(config, modset, collections)
-      (Array(config.checks) + Array(modset.checks) + collections.flat_map { Array(_1.checks) })
-        .map { Check.new(path: _1["path"], type: _1["type"]) }
+    def self.collect(config)
+      Array(config.checks).map { Check.new(path: _1["path"], type: _1["type"]) }
     end
 
     def self.run(checks, game_dir)

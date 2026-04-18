@@ -1,0 +1,88 @@
+#compdef mod
+
+_mod() {
+  local context curcontext="$curcontext" state line
+
+  _arguments \
+    '1: :->subcommand' \
+    '*:: :->args'
+
+  case $state in
+    subcommand)
+      local -a cmds
+      cmds=(deploy reset status validate collection cleanup nexus)
+      _describe -t commands 'mod command' cmds
+      ;;
+    args)
+      case $line[1] in
+        collection) _mod_collection ;;
+        deploy|validate) _mod_modset_names ;;
+      esac
+      ;;
+  esac
+}
+
+_mod_collection() {
+  local context curcontext="$curcontext" state line
+
+  _arguments \
+    '1: :->action' \
+    '*:: :->args'
+
+  case $state in
+    action)
+      local -a actions
+      actions=(new list show add remove delete)
+      _describe -t actions 'collection action' actions
+      ;;
+    args)
+      case $line[1] in
+        show|delete) _mod_collection_names ;;
+        add)
+          case $((CURRENT - 1)) in
+            1) _mod_collection_names ;;
+            2) _mod_archive_keys ;;
+          esac
+          ;;
+        remove)
+          case $((CURRENT - 1)) in
+            1) _mod_collection_names ;;
+            2) _mod_collection_mods ;;
+          esac
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_mod_collection_names() {
+  local col_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/collections"
+  local -a names
+  names=(${col_dir}/*.toml(N:t:r))
+  _describe -t collections 'collection' names
+}
+
+_mod_archive_keys() {
+  local archive_dir="${XDG_DATA_HOME:-$HOME/.local/share}/mods/archive"
+  local -a keys
+  keys=(${archive_dir}/*/*(N/:t))
+  _describe -t 'archive-keys' 'mod key' keys
+}
+
+_mod_collection_mods() {
+  local col_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/collections"
+  local col_file="$col_dir/$words[2].toml"
+  [[ -f $col_file ]] || return
+  local -a mods
+  mods=(${(f)"$(ruby -e "require 'toml-rb'; puts TomlRB.load_file(ARGV[0])['mods'].join(?\n)" -- "$col_file" 2>/dev/null)"})
+  _describe -t mods 'mod' mods
+}
+
+_mod_modset_names() {
+  local ms_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mods/modsets"
+  local -a names
+  names=(${ms_dir}/*.toml(N:t:r))
+  _describe -t modsets 'modset' names
+}
+
+_mod "$@"

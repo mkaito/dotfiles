@@ -39,19 +39,24 @@ class VerifierTest < Minitest::Test
     assert errors.any? { _1.include?("bin/x64/global.ini") }
   end
 
-  def test_collect_merges_config_modset_collections
+  def test_collect_returns_config_checks
     config = FakeConfig.new(
       archive_dir: @dir, collections_dir: @dir, modsets_dir: @dir,
       game_dir: @game_dir, domain: "cyberpunk2077",
-      checks: [{ "path" => "bin/x64", "type" => "dir" }]
+      checks: [{ "path" => "bin/x64", "type" => "dir" },
+               { "path" => "bin/x64/global.ini", "type" => "file" }]
     )
-    modset = Struct.new(:checks).new([{ "path" => "r6/scripts", "type" => "dir" }])
-    col    = Struct.new(:checks).new([{ "path" => "bin/x64/global.ini", "type" => "file" }])
-
-    checks = Verifier.collect(config, modset, [col])
-    assert_equal 3, checks.size
+    checks = Verifier.collect(config)
+    assert_equal 2, checks.size
     assert checks.any? { _1.path == "bin/x64" && _1.type == "dir" }
-    assert checks.any? { _1.path == "r6/scripts" }
-    assert checks.any? { _1.path == "bin/x64/global.ini" }
+    assert checks.any? { _1.path == "bin/x64/global.ini" && _1.type == "file" }
+  end
+
+  def test_collect_empty_when_no_checks
+    config = FakeConfig.new(
+      archive_dir: @dir, collections_dir: @dir, modsets_dir: @dir,
+      game_dir: @game_dir, domain: "cyberpunk2077"
+    )
+    assert_empty Verifier.collect(config)
   end
 end

@@ -2,7 +2,6 @@
 
 require "toml-rb"
 require_relative "errors"
-require_relative "atom"
 require_relative "collection"
 
 module ModManager
@@ -39,16 +38,16 @@ module ModManager
         raise Error, "collection not found: #{col_path}" unless File.exist?(col_path)
         col = Collection.load(col_path)
         loaded_collections << col
-        col.mods.each do |atom_str|
-          mod = Atom.resolve(atom_str, archive) or raise Error, "unresolved atom #{atom_str.inspect} in #{col_path}"
+        col.mods.each do |slug|
+          mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect} (from #{col_path})"
           next if seen[mod.slug]
           seen[mod.slug] = true
           ordered << mod
         end
       end
 
-      @mods.each do |atom_str|
-        mod = Atom.resolve(atom_str, archive) or raise Error, "unresolved atom #{atom_str.inspect} in #{@path}"
+      @mods.each do |slug|
+        mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect} (from #{@path})"
         next if seen[mod.slug]
         seen[mod.slug] = true
         ordered << mod

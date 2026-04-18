@@ -18,8 +18,8 @@ class CheckerTest < Minitest::Test
     @modsets_dir     = File.join(@dir, "modsets")
     [@archive_dir, @collections_dir, @modsets_dir].each { FileUtils.mkdir_p(_1) }
 
-    make_mod("redscript", "2.0")
-    make_mod("codeware",  "1.0", depends: %w[redscript])
+    make_mod("redscript")
+    make_mod("codeware")
 
     @config  = FakeConfig.new(archive_dir: @archive_dir, collections_dir: @collections_dir,
                               modsets_dir: @modsets_dir, game_dir: @dir, domain: "cyberpunk2077")
@@ -48,14 +48,6 @@ class CheckerTest < Minitest::Test
     assert errors.any? { _1.include?("nonexistent") }
   end
 
-  def test_missing_dep_reported
-    make_mod("trace", "1.0", depends: %w[missing-dep])
-    write_col("col", %w[trace])
-    ms = write_modset(collections: %w[col])
-    errors = @checker.check_modset(ms)
-    assert errors.any? { _1.include?("missing-dep") }
-  end
-
   def test_all_errors_reported_not_just_first
     write_col("multi-bad", %w[gone-a gone-b])
     ms = write_modset(collections: %w[multi-bad])
@@ -64,50 +56,38 @@ class CheckerTest < Minitest::Test
     assert errors.any? { _1.include?("gone-b") }
   end
 
-  def test_dependency_cycle_reported_as_error
-    make_mod("a", "1.0", depends: %w[b])
-    make_mod("b", "1.0", depends: %w[a])
-    write_col("cycle-col", %w[a b])
-    ms = write_modset(collections: %w[cycle-col])
-    errors = @checker.check_modset(ms)
-    assert errors.any? { _1.include?("cycle") }
-  end
-
   def test_check_all_collects_errors_from_all_collections_and_modsets
-    make_mod("ok-mod", "1.0")
-    write_col("good",  %w[ok-mod])
-    write_col("bad",   %w[missing-mod])
+    make_mod("ok-mod")
+    write_col("good", %w[ok-mod])
+    write_col("bad",  %w[missing-mod])
     write_modset(collections: %w[good])
     errors = @checker.check_all
     assert errors.any? { _1.include?("missing-mod") }
   end
 
   def test_check_all_reports_invalid_collection_toml
-    File.write(File.join(@collections_dir, "broken.toml"), "game = \"cp2077\"\n# no mods key")
+    File.write(File.join(@collections_dir, "broken.toml"), "# no name or mods key\n")
     errors = @checker.check_all
     assert errors.any? { _1.include?("broken") }
   end
 
   private
 
-  def make_mod(slug, version, depends: [])
-    dir = File.join(@archive_dir, slug, version)
-    FileUtils.mkdir_p(File.join(dir, "files"))
+  def make_mod(slug)
+    dir = File.join(@archive_dir, "cp2077", slug)
+    FileUtils.mkdir_p(dir)
     File.write(File.join(dir, "meta.toml"), <<~TOML)
       name = "#{slug}"
       slug = "#{slug}"
-      version = "#{version}"
+      version = "1.0"
       game = "cp2077"
-      depends = #{depends.inspect}
+      depends = []
     TOML
   end
 
   def write_col(name, mods)
-    File.write(File.join(@collections_dir, "#{name}.toml"), <<~TOML)
-      name = "#{name}"
-      game = "cp2077"
-      mods = #{mods.inspect}
-    TOML
+    File.write(File.join(@collections_dir, "#{name}.toml"),
+               TomlRB.dump("name" => name, "mods" => mods))
   end
 
   def write_modset(collections: [], mods: [])

@@ -3,6 +3,7 @@
 require "minitest/autorun"
 require "tmpdir"
 require "fileutils"
+require "toml-rb"
 require_relative "../../lib/mod_manager/modset"
 require_relative "../../lib/mod_manager/archive"
 require_relative "../support/fake_config"
@@ -66,9 +67,9 @@ class ModsetResolveTest < Minitest::Test
 
   private
 
-  def make_mod(slug, version)
-    dir = File.join(@archive_dir, slug, version)
-    FileUtils.mkdir_p(File.join(dir, "files"))
+  def make_mod(slug, version = "1.0")
+    dir = File.join(@archive_dir, "cp2077", slug)
+    FileUtils.mkdir_p(dir)
     File.write(File.join(dir, "meta.toml"), <<~TOML)
       name = "#{slug}"
       slug = "#{slug}"
@@ -79,11 +80,8 @@ class ModsetResolveTest < Minitest::Test
   end
 
   def write_col(name, mods)
-    File.write(File.join(@collections_dir, "#{name}.toml"), <<~TOML)
-      name = "#{name}"
-      game = "cp2077"
-      mods = #{mods.inspect}
-    TOML
+    File.write(File.join(@collections_dir, "#{name}.toml"),
+               TomlRB.dump("name" => name, "mods" => mods))
   end
 
   def write_modset(collections: [], mods: [])

@@ -84,7 +84,7 @@ def cmd_deploy(modset_name)
 
   puts "#{result[:created]} symlink(s) from #{mods.size} mod(s)"
 
-  checks  = Verifier.collect(config, ms, collections)
+  checks  = Verifier.collect(config)
   vfails  = Verifier.run(checks, config.game_dir)
   if vfails.any?
     puts "verify warnings (#{vfails.size}):"
@@ -164,11 +164,58 @@ def cmd_collection_add(collection_name, atom_str)
 end
 
 def cmd_collection_remove(collection_name, slug)
-  config, archive = load_context
+  config, = load_context
   path = File.join(config.collections_dir, "#{collection_name}.toml")
   raise Error, "collection not found: #{path}" unless File.exist?(path)
-  CollectionEditor.remove(path, slug, archive)
+  CollectionEditor.remove(path, slug)
   puts "updated #{collection_name}"
+end
+
+def cmd_collection_new(name)
+  config, = load_context
+  path = File.join(config.collections_dir, "#{name}.toml")
+  raise Error, "collection already exists: #{path}" if File.exist?(path)
+  Core::FileIO.atomic_write(path, TomlRB.dump("name" => name, "mods" => []))
+  puts "created #{name}"
+end
+
+def cmd_collection_list
+  config, = load_context
+  paths = Dir.glob("#{config.collections_dir}/*.toml").sort
+  if paths.empty?
+    puts "no collections"
+    return
+  end
+  paths.each do |p|
+    col = Collection.load(p)
+    puts "#{File.basename(p, ".toml")}: #{col.mods.size} mod(s)"
+  rescue ValidationError => e
+    puts "#{File.basename(p, ".toml")}: (invalid: #{e.errors.first})"
+  end
+end
+
+def cmd_collection_show(name)
+  config, = load_context
+  path = File.join(config.collections_dir, "#{name}.toml")
+  raise Error, "collection not found: #{path}" unless File.exist?(path)
+  col = Collection.load(path)
+  if col.mods.empty?
+    puts "(empty)"
+  else
+    col.mods.each { puts _1 }
+  end
+end
+
+def cmd_collection_delete(name, yes:)
+  config, = load_context
+  path = File.join(config.collections_dir, "#{name}.toml")
+  raise Error, "collection not found: #{path}" unless File.exist?(path)
+  unless yes || Core::CLI.confirm("delete #{name}?")
+    puts "aborted"
+    return
+  end
+  File.delete(path)
+  puts "deleted #{name}"
 end
 
 def cmd_cleanup(dry_run:, yes:)
@@ -176,12 +223,12 @@ def cmd_cleanup(dry_run:, yes:)
   referenced = Set.new
 
   Dir.glob("#{config.collections_dir}/*.toml").each do |p|
-    Collection.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+    Collection.load(p).mods.each { referenced << _1 }
   rescue ValidationError => e
     e.errors.each { Log.warn(_1) }
   end
   Dir.glob("#{config.modsets_dir}/*.toml").each do |p|
-    Modset.load(p).mods.each { referenced << Atom.parse(_1)[:slug] }
+    Modset.load(p).mods.each { referenced << _1 }
   rescue ValidationError => e
     e.errors.each { Log.warn(_1) }
   end
@@ -233,14 +280,27 @@ begin
   when "collection"
     action = ARGV.shift
     case action
+    when "new"
+      abort("usage: mod collection new <name>") if ARGV.empty?
+      cmd_collection_new(ARGV.first)
+    when "list"
+      cmd_collection_list
+    when "show"
+      abort("usage: mod collection show <name>") if ARGV.empty?
+      cmd_collection_show(ARGV.first)
     when "add"
-      abort("usage: mod collection add <collection> <atom>") if ARGV.size < 2
+      abort("usage: mod collection add <collection> <slug>") if ARGV.size < 2
       cmd_collection_add(ARGV[0], ARGV[1])
     when "remove"
       abort("usage: mod collection remove <collection> <slug>") if ARGV.size < 2
       cmd_collection_remove(ARGV[0], ARGV[1])
+    when "delete"
+      opts = { yes: false }
+      OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(ARGV)
+      abort("usage: mod collection delete [-y] <name>") if ARGV.empty?
+      cmd_collection_delete(ARGV.first, **opts)
     else
-      abort("usage: mod collection <add|remove> ...")
+      abort("usage: mod collection <new|list|show|add|remove|delete> ...")
     end
 
   when "cleanup"
