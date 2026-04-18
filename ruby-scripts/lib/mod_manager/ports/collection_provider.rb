@@ -10,6 +10,9 @@ module ModManager
 
       # → Array<CollectionRevisionSummary>
       def list_revisions(slug:)               = raise(NotImplementedError)
+
+      # → Array<CollectionManifestMod>
+      def fetch_manifest(download_link:, slug:, revision:) = raise(NotImplementedError)
     end
   end
 end

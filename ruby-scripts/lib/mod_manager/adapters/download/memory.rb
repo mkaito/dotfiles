@@ -26,6 +26,10 @@ module ModManager
           @file_stubs.fetch(mod_id) { raise Core::Error, "no stub for mod_id #{mod_id}" }
         end
 
+        def file_exist?(mod_id:, file_id:)
+          @fetch_stubs.key?([mod_id, file_id])
+        end
+
         def fetch(mod_id:, file_id:, slug: nil)
           @fetched << { mod_id:, file_id:, slug: }
           @fetch_stubs.fetch([mod_id, file_id]) { raise Core::Error, "no stub for #{mod_id}/#{file_id}" }

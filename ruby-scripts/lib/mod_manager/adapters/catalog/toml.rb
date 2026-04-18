@@ -38,7 +38,9 @@ module ModManager
 
         def delete_collection(name)
           raise Error, "collection not found: #{name}" unless collection_exist?(name)
-          File.delete(col_path(name))
+          path = col_path(name)
+          File.delete(path)
+          chezmoi_forget(path)
         end
 
         # ── modsets ───────────────────────────────────────────────────────────
@@ -67,7 +69,9 @@ module ModManager
 
         def delete_modset(name)
           raise Error, "modset not found: #{name}" unless modset_exist?(name)
-          File.delete(ms_path(name))
+          path = ms_path(name)
+          File.delete(path)
+          chezmoi_forget(path)
         end
 
         private
@@ -77,6 +81,10 @@ module ModManager
 
         def chezmoi_add(path)
           system("chezmoi", "add", path, out: File::NULL, err: File::NULL)
+        end
+
+        def chezmoi_forget(path)
+          system("chezmoi", "forget", "--force", path, out: File::NULL, err: File::NULL)
         end
       end
     end

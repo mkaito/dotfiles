@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "uri"
 require "tmpdir"
 require "fileutils"
 require_relative "../../../nexus/file_picker"
-require_relative "../../../core/log"
+require_relative "../../../core/http"
 require_relative "../../../core/xdg"
 require_relative "../../errors"
 require_relative "../../core/models"
@@ -23,6 +21,10 @@ module ModManager
         # Keys: file_id, name, version, category_name, size_kb, uploaded_timestamp, file_name.
         def list_files(mod_id:)
           ::Nexus::FilePicker.sort_files(@client.mod_files(@game_domain, mod_id.to_i))
+        end
+
+        def file_exist?(mod_id:, file_id:)
+          @client.mod_files(@game_domain, mod_id.to_i).any? { _1["file_id"] == file_id }
         end
 
         # Downloads + unpacks to a temp dir. Caller must clean up unpacked.tmp_dir.
@@ -75,14 +77,7 @@ module ModManager
         def cached_archive(mod_id, file, &url_block)
           path = File.join(Core::XDG.cache_home, "mods", "nexus",
                            @game_domain.to_s, mod_id.to_s, file["file_id"].to_s, file["file_name"])
-          if File.exist?(path)
-            Core::Log.debug("cache hit: #{file["file_name"]}")
-            return path
-          end
-          puts "downloading #{file["file_name"]}..."
-          FileUtils.mkdir_p(File.dirname(path))
-          download(url_block.call, path)
-          path
+          Core::Http.cached_download(path, label: file["file_name"]) { url_block.call }
         end
 
         def pick_url(urls)
@@ -91,19 +86,14 @@ module ModManager
           (preferred || urls.first).fetch("URI")
         end
 
-        def download(url, dest)
-          uri = URI(url.gsub(" ", "%20"))
-          Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
-            http.request(Net::HTTP::Get.new(uri)) do |res|
-              raise Core::Error, "download failed: HTTP #{res.code}" unless res.is_a?(Net::HTTPSuccess)
-              File.open(dest, "wb") { |f| res.read_body { f.write(_1) } }
-            end
-          end
-        end
-
         def extract(archive_path, dir)
-          system("7za", "x", "-y", "-bso0", "-bsp0", "-o#{dir}", archive_path) or
-            raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
+          if archive_path.end_with?(".rar")
+            system("unrar", "x", "-y", "-inul", archive_path, dir + "/") or
+              raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
+          else
+            system("7za", "x", "-y", "-bso0", "-bsp0", "-o#{dir}", archive_path) or
+              raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
+          end
         end
 
         def detect_root(dir)

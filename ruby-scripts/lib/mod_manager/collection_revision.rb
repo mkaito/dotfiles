@@ -20,7 +20,9 @@ module ModManager
   end
 
   # Metadata + mod list for one revision of a remote collection.
-  CollectionRevision = Data.define(:collection_id, :collection_name, :revision_number, :mods)
+  CollectionRevision = Data.define(:collection_id, :collection_name, :revision_number, :mods, :download_link) do
+    def initialize(collection_id:, collection_name:, revision_number:, mods:, download_link: nil) = super
+  end
 
   # Summary row used for --list: one entry per revision.
   CollectionRevisionSummary = Data.define(:revision_number, :created_at, :mod_count, :status)

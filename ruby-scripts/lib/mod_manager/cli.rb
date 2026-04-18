@@ -208,16 +208,35 @@ module ModManager
         col_prov            = Adapters::CollectionProvider::Nexus.new(config.domain, client)
         download            = Adapters::Download::Nexus.new(config.domain, client)
         if info
-          rev   = col_prov.fetch_revision(slug: collection_id, revision:)
+          rev      = col_prov.fetch_revision(slug: collection_id, revision:)
+          manifest = col_prov.fetch_manifest(download_link: rev.download_link,
+                                             slug: collection_id, revision: rev.revision_number)
+          manifest_by_file_id = manifest.each_with_object({}) { |m, h| h[m.file_id] = m }
+          col_base = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
+
+          # Detect unresolved FOMOD mods (choices: nil in manifest, or missing from manifest)
+          fomod_entries = rev.mods.select do |m|
+            mm = manifest_by_file_id[m.file_id]
+            next false unless mm
+            mm.choices.nil? && archive.all.none? { |a| a.source["mod_id"] == m.mod_id && a.source["file_id"] == m.file_id }
+          end
+
+          archived_set = archive.all.map { |a| [a.source["mod_id"], a.source["file_id"]] }.to_set
+
           width = rev.mods.filter_map { _1.predicted_slug&.length }.max.to_i
-          col_name = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
-          @terminal.info("#{col_name} (#{rev.mods.size} mods)\n")
+          @terminal.info("#{col_base} (#{rev.mods.size} mods)\n")
           rev.mods.each do |m|
             slug   = m.predicted_slug || "nexus-#{m.mod_id}-#{m.file_id}-?"
-            cached = archive.all.any? { |a| a.source["mod_id"] == m.mod_id && a.source["file_id"] == m.file_id }
+            cached = archived_set.include?([m.mod_id, m.file_id])
             status = cached ? "[archived]" : "[missing]"
             @terminal.info("  #{slug.ljust(width)}  #{@terminal.muted(status)}")
           end
+
+          if fomod_entries.any?
+            @terminal.info("\n  FOMOD detected — import will create separate collections per choice")
+            @terminal.info("  (choices unknown until mod is downloaded; run import to resolve)")
+          end
+
           throw :exit, 0
         end
         if list
@@ -233,6 +252,7 @@ module ModManager
         end
         Interactors::ImportCollection.new(
           provider: col_prov, download:, archive:, catalog:, terminal: @terminal,
+          game: config.domain,
         ).call(collection_id, revision:)
       else
         raise Core::Error, "unknown provider: #{provider}"
