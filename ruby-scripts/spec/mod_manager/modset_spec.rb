@@ -40,11 +40,14 @@ class ModsetResolveTest < Minitest::Test
     assert_equal %w[redscript extra], ms.resolve(@archive, @config).first.map(&:slug)
   end
 
-  def test_deduplication_first_occurrence_wins
+  def test_deduplication_last_occurrence_wins
     write_col("a", %w[redscript codeware])
     write_col("b", %w[redscript extra])
     ms = write_modset(collections: %w[a b])
-    assert_equal %w[redscript codeware extra], ms.resolve(@archive, @config).first.map(&:slug)
+    mods, conflicts = ms.resolve(@archive, @config)
+    assert_equal %w[redscript codeware extra], mods.map(&:slug)
+    assert_includes conflicts, "redscript"
+    assert_equal %w[a b], conflicts["redscript"]
   end
 
   def test_collections_applied_in_order

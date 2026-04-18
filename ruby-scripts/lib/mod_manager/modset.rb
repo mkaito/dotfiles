@@ -25,32 +25,33 @@ module ModManager
       @path = path
     end
 
+    # Returns [mods, conflicts] where:
+    #   mods      - ordered list of Mod objects, last-seen slug wins
+    #   conflicts - { slug => [source, ...] } for slugs claimed by multiple sources
+    #               source is a collection name or nil for direct @mods entries
     def resolve(archive, config)
-      seen    = {}
-      ordered = []
-      loaded_collections = []
+      slug_order   = []   # first-seen insertion order
+      slug_sources = {}   # slug => [source, ...]  (last is winner)
 
-      @collections.each do |name|
-        col_path = File.join(config.collections_dir, "#{name}.toml")
+      @collections.each do |col_name|
+        col_path = File.join(config.collections_dir, "#{col_name}.toml")
         raise Error, "collection not found: #{col_path}" unless File.exist?(col_path)
-        col = Collection.load(col_path)
-        loaded_collections << col
-        col.mods.each do |slug|
-          mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{col_path}\n  run `mod list` to see available mods"
-          next if seen[mod.slug]
-          seen[mod.slug] = true
-          ordered << mod
+        Collection.load(col_path).mods.each do |slug|
+          archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{col_path}\n  run `mod list` to see available mods"
+          slug_order << slug unless slug_sources.key?(slug)
+          (slug_sources[slug] ||= []) << col_name
         end
       end
 
       @mods.each do |slug|
-        mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{@path}\n  run `mod list` to see available mods"
-        next if seen[mod.slug]
-        seen[mod.slug] = true
-        ordered << mod
+        archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{@path}\n  run `mod list` to see available mods"
+        slug_order << slug unless slug_sources.key?(slug)
+        (slug_sources[slug] ||= []) << nil
       end
 
-      [ordered, loaded_collections]
+      mods      = slug_order.map { archive.latest(_1) }
+      conflicts = slug_sources.select { |_, sources| sources.size > 1 }
+      [mods, conflicts]
     end
   end
 end

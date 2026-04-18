@@ -12,31 +12,58 @@ module ModManager
       @archive_dir = File.expand_path(archive_dir)
     end
 
+    # Deploys mods as a symlink farm. Raises on any problem.
+    # Returns { created: N }.
+    #
+    # Pipeline:
+    #   1. Resolve mods -> file pairs (dst -> src map, last mod wins on file conflict)
+    #   2. Pre-flight: every dst must be absent or an archive-owned symlink
+    #   3. Clear: remove all archive symlinks under game_dir
+    #   4. Deploy: create symlinks
+    #   5. Verify: no dangling, no missing
     def deploy(mods)
-      undeploy
-      created = 0
-
+      # Step 1 — resolve to dst->src map
+      dst_to_src = {}
       mods.each do |mod|
         mod.files.each do |src|
-          prefix = "#{mod.path}/"
-          raise Error, "unexpected file path: #{src}" unless src.start_with?(prefix)
-          rel = src.delete_prefix(prefix)
+          rel = src.delete_prefix("#{mod.path}/")
           dst = File.join(@game_dir, rel)
-          FileUtils.mkdir_p(File.dirname(dst))
-          if File.symlink?(dst)
-            File.unlink(dst)
-          elsif File.exist?(dst)
-            raise Error, "cannot overwrite #{dst}: not a symlink"
-          end
-          File.symlink(src, dst)
-          created += 1
-          Log.debug("link #{dst} -> #{src}")
+          Log.debug("file conflict: #{rel} — #{mod.slug} overrides #{dst_to_src[dst]}") if dst_to_src.key?(dst)
+          dst_to_src[dst] = src
         end
       end
+      pairs = dst_to_src.to_a  # [[dst, src], ...]
 
-      broken = verify
-      Log.debug("#{broken.size} broken symlink(s) after deploy") if broken.any?
-      { created:, broken: }
+      # Step 2 — pre-flight
+      pairs.each do |dst, _|
+        next unless File.exist?(dst) || File.symlink?(dst)
+        if File.symlink?(dst)
+          target = File.expand_path(File.readlink(dst), File.dirname(dst))
+          next if target.start_with?(@archive_dir + "/")
+          raise Error, "cannot overwrite #{dst}: symlink to non-archive path (#{target})"
+        end
+        raise Error, "cannot overwrite #{dst}: not a symlink"
+      end
+
+      # Step 3 — clear
+      undeploy
+
+      # Step 4 — deploy
+      pairs.each do |dst, src|
+        FileUtils.mkdir_p(File.dirname(dst))
+        File.symlink(src, dst)
+        Log.debug("link #{dst} -> #{src}")
+      end
+
+      # Step 5 — verify
+      expected = dst_to_src.keys
+      missing  = expected.reject { File.symlink?(_1) }
+      dangling = expected.select { File.symlink?(_1) && !File.exist?(_1) }
+
+      raise Error, "deploy incomplete — #{missing.size} file(s) not linked:\n  #{missing.first(5).join("\n  ")}" if missing.any?
+      raise Error, "#{dangling.size} dangling symlink(s) after deploy:\n  #{dangling.first(5).join("\n  ")}"   if dangling.any?
+
+      { created: pairs.size }
     end
 
     def undeploy
@@ -75,10 +102,6 @@ module ModManager
     rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR => e
       Log.debug("archive_symlinks: #{e.message}")
       []
-    end
-
-    def verify
-      archive_symlinks.reject { File.exist?(_1) }
     end
   end
 end

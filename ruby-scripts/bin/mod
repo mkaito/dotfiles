@@ -91,7 +91,7 @@ end
 def cmd_deploy(modset_name)
   config, archive = load_context
   path = File.join(config.modsets_dir, "#{modset_name}.toml")
-  raise Error, "modset not found: #{path}" unless File.exist?(path)
+  raise Error, "romset not found: #{path}" unless File.exist?(path)
   ms = Modset.load(path)
 
   check_errors = Checker.new(archive, config).check_modset(ms)
@@ -100,20 +100,21 @@ def cmd_deploy(modset_name)
     exit 1
   end
 
-  mods, collections = ms.resolve(archive, config)
-  deployer = Deployer.new(config.game_dir, config.archive_dir)
-  result   = deployer.deploy(mods)
+  mods, conflicts = ms.resolve(archive, config)
+  conflicts.each do |slug, sources|
+    winner = sources.last || "direct"
+    losers = sources[0..-2].map { _1 || "direct" }
+    puts Core::Format.yellow("conflict: #{slug} in #{losers.join(", ")} overridden by #{winner}")
+  end
 
-  puts "#{result[:created]} symlink(s) from #{mods.size} mod(s)"
+  result = Deployer.new(config.game_dir, config.archive_dir).deploy(mods)
+  puts "deployed #{result[:created]} file(s) from #{mods.size} mod(s)"
 
-  checks  = Verifier.collect(config)
-  vfails  = Verifier.run(checks, config.game_dir)
+  vfails = Verifier.run(Verifier.collect(config), config.game_dir)
   if vfails.any?
     puts "verify warnings (#{vfails.size}):"
     vfails.each { puts "  #{_1}" }
   end
-
-  result[:broken].each { Log.warn("broken: #{_1}") }
 end
 
 def cmd_reset(yes:)
