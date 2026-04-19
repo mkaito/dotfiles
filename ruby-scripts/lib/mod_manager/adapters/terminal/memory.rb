@@ -18,6 +18,7 @@ module ModManager
         def success(msg) = (@lines << { level: :success, msg: msg.to_s })
         def bold(str)    = str.to_s
         def muted(str)   = str.to_s
+        def green(str)   = str.to_s
 
         def confirm(_prompt) = @confirm_responses.shift || false
 

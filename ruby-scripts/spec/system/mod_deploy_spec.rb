@@ -30,7 +30,7 @@ class ModDeployIntegrationTest < Minitest::Test
 
   def teardown = FileUtils.rm_rf(@dir)
 
-  # 1. Basic deploy — symlinks created, pointing into archive
+  # 1. Basic deploy — files accessible, some archive symlink in path points into archive
   def test_basic_deploy_creates_symlinks
     make_mod("cet", files: { "bin/x64/global.ini" => "cet-config" })
     make_collection("frameworks", %w[cet])
@@ -39,13 +39,10 @@ class ModDeployIntegrationTest < Minitest::Test
     status, out = run_mod("modset", "deploy", "full")
     assert_equal 0, status, out
 
-    link = File.join(@game_dir, "bin/x64/global.ini")
-    assert File.symlink?(link), "expected symlink at #{link}"
-    assert File.exist?(link),   "symlink must not be dangling"
-    assert_includes File.readlink(link), @archive_dir
+    assert_deployed "bin/x64/global.ini"
   end
 
-  # 2. Multi-collection deploy — all files linked
+  # 2. Multi-collection deploy — all files accessible
   def test_multi_collection_deploy
     make_mod("cet",       files: { "bin/x64/global.ini"  => "cet" })
     make_mod("redscript", files: { "r6/scripts/red.reds" => "rs" })
@@ -57,9 +54,9 @@ class ModDeployIntegrationTest < Minitest::Test
     status, out = run_mod("modset", "deploy", "full")
     assert_equal 0, status, out
 
-    assert File.symlink?(File.join(@game_dir, "bin/x64/global.ini"))
-    assert File.symlink?(File.join(@game_dir, "r6/scripts/red.reds"))
-    assert File.symlink?(File.join(@game_dir, "archive/pc/mod/hud.archive"))
+    assert_deployed "bin/x64/global.ini"
+    assert_deployed "r6/scripts/red.reds"
+    assert_deployed "archive/pc/mod/hud.archive"
   end
 
   # 3. Version conflict (same mod_id, different slugs) — last collection wins, conflict reported
@@ -75,9 +72,7 @@ class ModDeployIntegrationTest < Minitest::Test
     assert_match(/conflict/, out)
     assert_match(/cet-3.12.*overridden.*cet-3.13|cet-3.13.*overrides.*cet-3.12/i, out)
 
-    link = File.join(@game_dir, "bin/x64/global.ini")
-    assert File.symlink?(link)
-    assert_includes File.readlink(link), "cet-3.13"
+    assert_deployed_from "bin/x64/global.ini", "cet-3.13"
   end
 
   # 4. File conflict (two different mods, same relative path) — overlay model, last mod wins
@@ -90,9 +85,7 @@ class ModDeployIntegrationTest < Minitest::Test
     status, out = run_mod("modset", "deploy", "full")
     assert_equal 0, status, out
 
-    link = File.join(@game_dir, "r6/scripts/shared.reds")
-    assert File.symlink?(link)
-    assert_includes File.readlink(link), "mod-b"
+    assert_deployed_from "r6/scripts/shared.reds", "mod-b"
   end
 
   # 5. Redeploy with different modset — old symlinks gone, new in place, real files untouched
@@ -109,13 +102,13 @@ class ModDeployIntegrationTest < Minitest::Test
     File.write(File.join(@game_dir, "bin/x64/native.dll"), "real game file")
 
     run_mod("modset", "deploy", "rs-a")
-    assert File.symlink?(File.join(@game_dir, "bin/x64/a.dll"))
+    assert_deployed "bin/x64/a.dll"
 
     status, out = run_mod("modset", "deploy", "rs-b")
     assert_equal 0, status, out
 
-    refute File.exist?(File.join(@game_dir, "bin/x64/a.dll")), "old symlink should be gone"
-    assert File.symlink?(File.join(@game_dir, "bin/x64/b.dll")), "new symlink should exist"
+    refute File.exist?(File.join(@game_dir, "bin/x64/a.dll")), "old file should be gone after redeploy"
+    assert_deployed "bin/x64/b.dll"
     assert File.file?(File.join(@game_dir, "bin/x64/native.dll")), "real file must survive"
   end
 
@@ -238,5 +231,38 @@ class ModDeployIntegrationTest < Minitest::Test
   def make_modset(name, collections:)
     path = File.join(@xdg_config, "mods", "modsets", "#{name}.toml")
     File.write(path, TomlRB.dump("game" => "cyberpunk2077", "collections" => collections, "mods" => []))
+  end
+
+  # Assert that rel_path is accessible under game_dir via an archive symlink somewhere
+  # in its ancestor chain. Works regardless of whether the symlink is at the file level
+  # or a higher directory level.
+  def assert_deployed(rel_path)
+    full = File.join(@game_dir, rel_path)
+    assert File.exist?(full), "expected #{rel_path} to be accessible after deploy"
+    assert archive_symlink_in_path?(rel_path), "expected an archive symlink in path to #{rel_path}"
+  end
+
+  def assert_deployed_from(rel_path, slug_fragment)
+    assert_deployed(rel_path)
+    symlink = archive_symlink_for(rel_path)
+    assert symlink, "no archive symlink found in path to #{rel_path}"
+    target = File.readlink(symlink)
+    assert_includes target, slug_fragment, "expected symlink to #{rel_path} to point to #{slug_fragment}"
+  end
+
+  def archive_symlink_in_path?(rel_path)
+    !!archive_symlink_for(rel_path)
+  end
+
+  def archive_symlink_for(rel_path)
+    parts = rel_path.split("/")
+    parts.size.times do |i|
+      candidate = File.join(@game_dir, *parts[0..i])
+      if File.symlink?(candidate)
+        target = File.expand_path(File.readlink(candidate), File.dirname(candidate))
+        return candidate if target.start_with?(@archive_dir)
+      end
+    end
+    nil
   end
 end

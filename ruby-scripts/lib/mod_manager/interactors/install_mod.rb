@@ -12,9 +12,14 @@ module ModManager
         @terminal = terminal
       end
 
-      def call(mod_id, file_id:, slug: nil)
+      def call(mod_id, file_id:, slug: nil, force: false)
         unpacked = @download.fetch(mod_id:, file_id:, slug:)
-        mod      = @archive.install(unpacked_mod: unpacked)
+        existing = @archive.all.find { _1.slug == unpacked.slug }
+        if existing
+          return @terminal.info("#{unpacked.slug} already archived (use --force to re-archive)") unless force
+          @archive.delete(existing)
+        end
+        mod = @archive.install(unpacked_mod: unpacked)
         @terminal.success("archived #{mod.slug}")
         mod
       ensure

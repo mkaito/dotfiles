@@ -10,7 +10,7 @@ _mod() {
   case $state in
     subcommand)
       local -a cmds
-      cmds=(reset status list validate collection modset cleanup download)
+      cmds=(reset status list validate collection modset cleanup download repair)
       _describe -t commands 'mod command' cmds
       ;;
     args)
@@ -18,8 +18,9 @@ _mod() {
         collection) _mod_collection ;;
         modset)     _mod_modset ;;
         download)   _mod_download ;;
+        repair)     _mod_repair ;;
         validate)   _mod_validate_names ;;
-        list)       _arguments '--orphans[show only uncollected mods]' ;;
+        list)       _arguments '(-o --orphans)'{-o,--orphans}'[show only uncollected mods]' ;;
         reset)      _arguments '(-y --yes)'{-y,--yes}'[skip confirmation]' ;;
         cleanup)    _arguments \
                       '(-n --dry-run)'{-n,--dry-run}'[show without deleting]' \
@@ -39,12 +40,12 @@ _mod_collection() {
   case $state in
     action)
       local -a actions
-      actions=(new list show add remove delete import)
+      actions=(new list show add remove delete import verify)
       _describe -t actions 'collection action' actions
       ;;
     args)
       case $line[1] in
-        show)   _mod_collection_names ;;
+        show|verify) _mod_collection_names ;;
         delete) _arguments '(-y --yes)'{-y,--yes}'[skip confirmation]' ':name:_mod_collection_names' ;;
         add)
           case $CURRENT in
@@ -74,12 +75,12 @@ _mod_modset() {
   case $state in
     action)
       local -a actions
-      actions=(new list show add remove delete deploy)
+      actions=(new list show add remove delete deploy verify)
       _describe -t actions 'modset action' actions
       ;;
     args)
       case $line[1] in
-        show|deploy) _mod_modset_names ;;
+        show|deploy|verify) _mod_modset_names ;;
         delete) _arguments '(-y --yes)'{-y,--yes}'[skip confirmation]' ':name:_mod_modset_names' ;;
         add)
           case $CURRENT in
@@ -119,10 +120,16 @@ _mod_collection_import() {
 _mod_download() {
   _arguments \
     '--provider=[override provider detection]:provider:(nexus)' \
-    '--file=[pick file by index from --list]:N' \
+    '--files=[pick files by index from --list (comma-separated)]:N' \
     '--slug=[override installed slug]:slug' \
     '--list[list available files and exit]' \
+    '(-f --force)'{-f,--force}'[re-archive even if already present]' \
     '1:mod id'
+}
+
+_mod_repair() {
+  _arguments \
+    '--mods=[target specific mods (mod_id:file_id,...)]:LIST'
 }
 
 _mod_collection_names() {

@@ -29,7 +29,7 @@ module ModManager
           @terminal.warn("conflict: #{key} — #{slugs.uniq.first} overridden by #{slugs.uniq.last}")
         end
 
-        result = @deploy.deploy(mods:)
+        result = @deploy.deploy(mods:, modset: name)
         @terminal.success("deployed #{result[:created]} file(s) from #{mods.size} mod(s)")
 
         if raw_checks.any?

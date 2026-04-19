@@ -4,13 +4,13 @@ module ModManager
   module Adapters
     module Deploy
       class Memory
-        attr_reader :links  # Hash<dst, src>
+        attr_reader :links
 
         def initialize
           @links = {}
         end
 
-        def deploy(mods:)
+        def deploy(mods:, modset: nil)
           mods.each do |mod|
             mod.files.each do |src|
               rel      = src.delete_prefix("#{mod.path}/")

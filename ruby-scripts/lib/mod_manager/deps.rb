@@ -17,6 +17,8 @@ require "mod_manager/interactors/collection_crud"
 require "mod_manager/interactors/modset_crud"
 require "mod_manager/interactors/install_mod"
 require "mod_manager/interactors/import_collection"
+require "mod_manager/interactors/repair_archive"
+require "mod_manager/interactors/verify_catalog"
 require "nexus/client"
 require "nexus/file_picker"
 require "core/errors"
@@ -56,6 +58,10 @@ module ModManager
       Interactors::Validate.new(catalog: catalog(config:), archive: archive(config:), terminal:)
     end
 
+    def self.verify_catalog(config:, terminal:)
+      Interactors::VerifyCatalog.new(catalog: catalog(config:), archive: archive(config:), terminal:)
+    end
+
     def self.list_mods(config:, terminal:)
       Interactors::ListMods.new(archive: archive(config:), catalog: catalog(config:), terminal:)
     end
@@ -78,6 +84,12 @@ module ModManager
     def self.install_mod(config:, client:, terminal:)
       Interactors::InstallMod.new(
         download: download(config:, client:), archive: archive(config:), terminal:,
+      )
+    end
+
+    def self.repair_archive(config:, client:, terminal:)
+      Interactors::RepairArchive.new(
+        archive: archive(config:), download: download(config:, client:), terminal:,
       )
     end
 

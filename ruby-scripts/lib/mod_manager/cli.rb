@@ -46,7 +46,7 @@ module ModManager
 
       when "list"
         opts = { orphans_only: false }
-        OptionParser.new { |o| o.on("--orphans") { opts[:orphans_only] = true } }.parse!(argv)
+        OptionParser.new { |o| o.on("-o", "--orphans") { opts[:orphans_only] = true } }.parse!(argv)
         config = Deps.config
         Deps.list_mods(config:, terminal: @terminal).call(**opts)
 
@@ -83,6 +83,10 @@ module ModManager
           OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(argv)
           die("usage: mod collection delete [-y] <name>") if argv.empty?
           crud.delete(argv.first, **opts)
+        when "verify"
+          ok = Deps.verify_catalog(config:, terminal: @terminal).call(names: argv, mode: :collections)
+          throw :exit, 1 unless ok
+
         when "import"
           opts = { provider: "nexus", revision: nil, list: false, info: false }
           OptionParser.new do |o|
@@ -94,7 +98,7 @@ module ModManager
           die("usage: mod collection import [--provider=nexus] [--revision=N] [--list|--info] <collection_id>") if argv.empty?
           cmd_import_collection(argv.first, **opts)
         else
-          die("usage: mod collection <new|list|show|add|remove|delete|import> ...")
+          die("usage: mod collection <new|list|show|add|remove|delete|import|verify> ...")
         end
 
       when "cleanup"
@@ -107,14 +111,15 @@ module ModManager
         Deps.cleanup(config:, terminal: @terminal).call(**opts)
 
       when "download"
-        opts = { provider: nil, file_index: nil, slug: nil, list: false }
+        opts = { provider: nil, file_indices: nil, slug: nil, list: false, force: false }
         OptionParser.new do |o|
           o.on("--provider=PROVIDER") { opts[:provider] = _1 }
-          o.on("--file=N", Integer)   { opts[:file_index] = _1 }
+          o.on("--files=LIST")        { opts[:file_indices] = _1.split(",").map(&:to_i) }
           o.on("--slug=SLUG")         { opts[:slug] = _1 }
           o.on("--list")              { opts[:list] = true }
+          o.on("-f", "--force")       { opts[:force] = true }
         end.parse!(argv)
-        die("usage: mod download [--provider=nexus] [--file=N] [--slug=SLUG] [--list] <mod_id>") if argv.empty?
+        die("usage: mod download [--provider=nexus] [--files=1,2] [--slug=SLUG] [--list] [-f] <mod_id>") if argv.empty?
         cmd_download(argv.first, **opts)
 
       when "modset"
@@ -144,12 +149,26 @@ module ModManager
         when "deploy"
           die("usage: mod modset deploy <name>") if argv.empty?
           Deps.deploy_modset(config:, terminal: @terminal).call(argv.first, raw_checks: Array(config.checks))
+        when "verify"
+          ok = Deps.verify_catalog(config:, terminal: @terminal).call(names: argv, mode: :modsets)
+          throw :exit, 1 unless ok
         else
-          die("usage: mod modset <new|list|show|add|remove|delete|deploy> ...")
+          die("usage: mod modset <new|list|show|add|remove|delete|deploy|verify> ...")
         end
 
+      when "repair"
+        opts = { mods: nil }
+        OptionParser.new do |o|
+          o.on("--mods=LIST") do |v|
+            opts[:mods] = v.split(",").map { _1.split(":").map(&:to_i) }
+          end
+        end.parse!(argv)
+        config = Deps.config
+        client = Deps.nexus_client
+        Deps.repair_archive(config:, client:, terminal: @terminal).call(**opts)
+
       else
-        die("usage: mod <list|reset|status|validate|collection|modset|cleanup|download>")
+        die("usage: mod <list|reset|status|validate|collection|modset|cleanup|download|repair>")
       end
     end
 
@@ -210,7 +229,7 @@ module ModManager
       end
     end
 
-    def cmd_download(mod_id, provider:, file_index:, slug:, list:)
+    def cmd_download(mod_id, provider:, file_indices:, slug:, list:, force:)
       provider ||= detect_provider(mod_id)
       case provider
       when "nexus"
@@ -219,19 +238,25 @@ module ModManager
         download = Deps.download(config:, client:)
         sorted   = download.list_files(mod_id: mod_id.to_i)
 
-        file = if list
+        if list
           Nexus::FilePicker.print_file_list(sorted)
           throw :exit, 0
-        elsif file_index
-          sorted[file_index - 1] or raise Core::Error, "--file #{file_index}: out of range (1-#{sorted.size})"
+        end
+
+        files = if file_indices
+          file_indices.map do |i|
+            sorted[i - 1] or raise Core::Error, "--files #{i}: out of range (1-#{sorted.size})"
+          end
         else
-          Nexus::FilePicker.auto_select(sorted) or begin
+          file = Nexus::FilePicker.auto_select(sorted) or begin
             Nexus::FilePicker.print_file_list(sorted)
             throw :exit, 1
           end
+          [file]
         end
 
-        Deps.install_mod(config:, client:, terminal: @terminal).call(mod_id, file_id: file.file_id, slug:)
+        installer = Deps.install_mod(config:, client:, terminal: @terminal)
+        files.each { installer.call(mod_id, file_id: _1.file_id, slug:, force:) }
       else
         raise Core::Error, "unknown provider: #{provider}"
       end

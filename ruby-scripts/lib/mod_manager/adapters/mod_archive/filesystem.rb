@@ -29,10 +29,9 @@ module ModManager
         end
 
         def install(unpacked_mod:)
-          game_root = detect_root(unpacked_mod.tmp_dir)
-          dest      = File.join(@dir, unpacked_mod.game, unpacked_mod.slug)
+          dest = File.join(@dir, unpacked_mod.game, unpacked_mod.slug)
           FileUtils.mkdir_p(dest)
-          Dir.glob("#{game_root}/*").each { FileUtils.cp_r(_1, dest) }
+          Dir.glob("#{unpacked_mod.tmp_dir}/*").each { FileUtils.cp_r(_1, dest) }
           meta = {
             "name"    => unpacked_mod.name,
             "slug"    => unpacked_mod.slug,
@@ -71,11 +70,6 @@ module ModManager
 
         def version_tuple(v)
           v.to_s.split(".").map(&:to_i)
-        end
-
-        def detect_root(dir)
-          entries = Dir.glob("#{dir}/*")
-          entries.size == 1 && File.directory?(entries.first) ? entries.first : dir
         end
       end
     end

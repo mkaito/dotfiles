@@ -18,6 +18,7 @@ module ModManager
         def success(msg) = @out.puts(tty? ? "#{Core::Format::GREEN}#{msg}#{Core::Format::RESET}" : msg)
         def bold(str)    = tty? ? "#{Core::Format::BOLD}#{str}#{Core::Format::RESET}" : str
         def muted(str)   = tty? ? "#{Core::Format::DIM}#{str}#{Core::Format::RESET}" : str
+        def green(str)   = tty? ? "#{Core::Format::GREEN}#{str}#{Core::Format::RESET}" : str
 
         def confirm(prompt)
           @out.print "#{prompt} [y/N] "

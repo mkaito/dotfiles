@@ -90,6 +90,10 @@ module ModManager
           if archive_path.end_with?(".rar")
             system("unrar", "x", "-y", "-inul", archive_path, dir + "/") or
               raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
+          elsif archive_path.end_with?(".zip")
+            system("unzip", "-q", "-o", archive_path, "-d", dir)
+            # unzip exits 1 for warnings (e.g. backslash paths), 2+ for real errors
+            raise Core::Error, "extraction failed for #{File.basename(archive_path)}" if $?.exitstatus > 1
           else
             system("7za", "x", "-y", "-bso0", "-bsp0", "-o#{dir}", archive_path) or
               raise Core::Error, "extraction failed for #{File.basename(archive_path)}"
