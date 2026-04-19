@@ -19,19 +19,6 @@ module ModManager
           def self.filenames_for(_dst_rel) = []
         end
 
-        # Cyberpunk 2077 redirect filenames.
-        # Knows which files the game engine writes at runtime into each dir symlink target.
-        module CyberpunkRedirects
-          CET_CONFIG_FILES = %w[bindings.json config.json layout.ini persistent.json].freeze
-          private_constant :CET_CONFIG_FILES
-
-          def self.filenames_for(dst_rel)
-            files = %w[db.sqlite3]
-            files += CET_CONFIG_FILES if dst_rel.split("/").include?("cyber_engine_tweaks")
-            files
-          end
-        end
-
         def initialize(archive_dir, data_dir, redirects: NullRedirects)
           @archive_dir = archive_dir
           @data_dir = data_dir

@@ -11,20 +11,13 @@ class Cyberpunk2077CleanupActionTest < Minitest::Test
     assert_equal :stateful, Cyberpunk2077.cleanup_action("some/dir/db.sqlite3")
   end
 
-  def test_bindings_json_in_cet_is_stateful
-    assert_equal :stateful, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/bindings.json")
+  # CET config files are left as real files — CET replaces symlinks with templates
+  def test_bindings_json_in_cet_is_static
+    assert_equal :static, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/bindings.json")
   end
 
-  def test_config_json_in_cet_is_stateful
-    assert_equal :stateful, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/config.json")
-  end
-
-  def test_layout_ini_in_cet_is_stateful
-    assert_equal :stateful, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/layout.ini")
-  end
-
-  def test_persistent_json_in_cet_is_stateful
-    assert_equal :stateful, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/persistent.json")
+  def test_config_json_in_cet_is_static
+    assert_equal :static, Cyberpunk2077.cleanup_action("bin/x64/plugins/cyber_engine_tweaks/config.json")
   end
 
   # :ephemeral — transient noise; discard

@@ -22,7 +22,7 @@ class LinkFarmTest < Minitest::Test
     @farm_cp = Adapters::Deploy::LinkFarm.new(
       @game_dir, @archive_dir,
       game_profile: Services::GameProfile::Cyberpunk2077,
-      redirects: Adapters::Deploy::RedirectStore::CyberpunkRedirects
+      redirects: Services::GameProfile::Cyberpunk2077::Redirects
     )
   end
 
@@ -314,41 +314,6 @@ class LinkFarmTest < Minitest::Test
 
     @farm_cp.undeploy
     refute File.exist?(log), ".log file deleted by undeploy"
-  end
-
-  # ----------------------------------------------------------------
-  # CET config redirect: fresh install gets redirects for bindings.json etc.
-  # Use two mods so cyber_engine_tweaks itself gets a dir symlink, not just its children.
-  # ----------------------------------------------------------------
-
-  def test_cet_config_redirected_to_data_dir
-    # CET owns cyber_engine_tweaks exclusively; a sibling ASI mod shares bin/x64/plugins/
-    # so the solver creates a dir symlink at cyber_engine_tweaks (not at bin/).
-    cet = make_mod("cet", ["bin/x64/plugins/cyber_engine_tweaks/scripts/main.lua"])
-    other = make_mod("other-asi", ["bin/x64/plugins/other.asi"])
-    deploy_cp([cet, other], modset: "fresh")
-
-    cet_link = File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks")
-    assert File.symlink?(cet_link), "cyber_engine_tweaks should be a dir symlink on fresh install"
-
-    # Archive should have redirect symlinks for CET config files
-    archive_cet_dir = File.join(@archive_dir, "cp2077/cet/bin/x64/plugins/cyber_engine_tweaks")
-    %w[bindings.json config.json layout.ini persistent.json].each do |cfg|
-      archive_cfg = File.join(archive_cet_dir, cfg)
-      assert File.symlink?(archive_cfg), "archive redirect missing for #{cfg}"
-      target = File.expand_path(File.readlink(archive_cfg), archive_cet_dir)
-      assert_includes target, "fresh", "redirect points to modset-namespaced path"
-      assert_includes target, @data_dir, "redirect points into data_dir"
-    end
-
-    # Simulate CET writing bindings.json through the dir symlink chain
-    archive_bindings = File.join(archive_cet_dir, "bindings.json")
-    bindings_data_path = File.expand_path(File.readlink(archive_bindings), archive_cet_dir)
-    FileUtils.mkdir_p(File.dirname(bindings_data_path))
-    File.write(bindings_data_path, "overlay_key=F2")
-    assert_equal "overlay_key=F2",
-      File.read(File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks/bindings.json")),
-      "write through dir symlink → archive redirect → data_dir"
   end
 
   # ----------------------------------------------------------------
