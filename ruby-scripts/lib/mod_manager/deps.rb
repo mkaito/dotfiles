@@ -5,6 +5,7 @@ require "mod_manager/adapters/terminal/ansi"
 require "mod_manager/adapters/catalog/toml"
 require "mod_manager/adapters/mod_archive/filesystem"
 require "mod_manager/adapters/deploy/link_farm"
+require "mod_manager/services/game_profile/cyberpunk2077"
 require "mod_manager/adapters/download/nexus"
 require "mod_manager/adapters/collection_provider/nexus"
 require "mod_manager/interactors/deploy_modset"
@@ -35,7 +36,13 @@ module ModManager
 
     def self.archive(config:)                      = Adapters::ModArchive::Filesystem.new(config.archive_dir)
     def self.catalog(config:)                      = Adapters::Catalog::Toml.new(config.collections_dir, config.modsets_dir)
-    def self.deploy(config:)                       = Adapters::Deploy::LinkFarm.new(config.game_dir, config.archive_dir)
+    def self.deploy(config:)
+      Adapters::Deploy::LinkFarm.new(
+        config.game_dir,
+        config.archive_dir,
+        game_profile: Services::GameProfile::Cyberpunk2077,
+      )
+    end
     def self.download(config:, client:)            = Adapters::Download::Nexus.new(config.domain, client)
     def self.collection_provider(config:, client:) = Adapters::CollectionProvider::Nexus.new(config.domain, client)
 

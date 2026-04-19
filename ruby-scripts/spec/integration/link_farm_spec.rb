@@ -5,6 +5,7 @@ require "tmpdir"
 require "fileutils"
 require "toml-rb"
 require "mod_manager/adapters/deploy/link_farm"
+require "mod_manager/services/game_profile/cyberpunk2077"
 require "mod_manager/mod"
 
 include ModManager
@@ -16,7 +17,11 @@ class LinkFarmTest < Minitest::Test
     @archive_dir = File.join(@dir, "archive")
     @data_dir    = File.join(@dir, "mod-data")
     FileUtils.mkdir_p([@game_dir, @archive_dir])
-    @farm = Adapters::Deploy::LinkFarm.new(@game_dir, @archive_dir)
+    @farm    = Adapters::Deploy::LinkFarm.new(@game_dir, @archive_dir)
+    @farm_cp = Adapters::Deploy::LinkFarm.new(
+      @game_dir, @archive_dir,
+      game_profile: Services::GameProfile::Cyberpunk2077
+    )
   end
 
   def teardown = FileUtils.rm_rf(@dir)
@@ -41,6 +46,10 @@ class LinkFarmTest < Minitest::Test
 
   def deploy(mods, modset: "test")
     @farm.deploy(mods: mods, modset: modset)
+  end
+
+  def deploy_cp(mods, modset: "test")
+    @farm_cp.deploy(mods: mods, modset: modset)
   end
 
   # ----------------------------------------------------------------
@@ -188,7 +197,7 @@ class LinkFarmTest < Minitest::Test
   def test_sqlite_redirected_to_data_dir
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
     vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
-    deploy([native, vhs], modset: "firstrun")
+    deploy_cp([native, vhs], modset: "firstrun")
 
     # Each mod gets a dir symlink at its own subdir
     assert File.symlink?(File.join(@game_dir, "mods/nativeSettings")), "dir symlink created"
@@ -216,7 +225,7 @@ class LinkFarmTest < Minitest::Test
 
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
     vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
-    deploy([native, vhs], modset: "firstrun")
+    deploy_cp([native, vhs], modset: "firstrun")
 
     # The direct path is no longer a real file — it's accessible only through symlinks
     refute File.file?(File.join(@game_dir, "mods/nativeSettings")), "game_dir path is now a symlink, not a real dir"
@@ -233,19 +242,19 @@ class LinkFarmTest < Minitest::Test
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
     vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
 
-    deploy([native, vhs], modset: "preset-a")
+    deploy_cp([native, vhs], modset: "preset-a")
     db_a = File.join(@data_dir, "preset-a/mods/nativeSettings/db.sqlite3")
     FileUtils.mkdir_p(File.dirname(db_a))
     File.write(db_a, "preset-a settings")
 
-    @farm.undeploy
-    deploy([native, vhs], modset: "preset-b")
+    @farm_cp.undeploy
+    deploy_cp([native, vhs], modset: "preset-b")
     db_b = File.join(@data_dir, "preset-b/mods/nativeSettings/db.sqlite3")
     FileUtils.mkdir_p(File.dirname(db_b))
     File.write(db_b, "preset-b settings")
 
-    @farm.undeploy
-    deploy([native, vhs], modset: "preset-a")
+    @farm_cp.undeploy
+    deploy_cp([native, vhs], modset: "preset-a")
     archive_db = File.join(@archive_dir, "cp2077/native/mods/nativeSettings/db.sqlite3")
     target = File.expand_path(File.readlink(archive_db), File.dirname(archive_db))
     assert_includes target, "preset-a", "redirect points to preset-a data dir"
@@ -265,7 +274,7 @@ class LinkFarmTest < Minitest::Test
     }
     files.each { |rel, content| File.write(File.join(@game_dir, rel), content) }
 
-    @farm.undeploy
+    @farm_cp.undeploy
 
     files.each_key do |rel|
       refute File.exist?(File.join(@game_dir, rel)), "#{rel} should be deleted on undeploy"
@@ -278,7 +287,7 @@ class LinkFarmTest < Minitest::Test
     log = File.join(@game_dir, "bin/x64/plugin.log")
     File.write(log, "stale")
 
-    deploy([mod])
+    deploy_cp([mod])
     refute File.exist?(log), ".log deleted by pre_deploy_cleanup"
   end
 
@@ -288,7 +297,7 @@ class LinkFarmTest < Minitest::Test
     log = File.join(@game_dir, "mods/nativeSettings/nativeSettings.log")
     File.write(log, "log content")
 
-    @farm.undeploy
+    @farm_cp.undeploy
     refute File.exist?(log), ".log file deleted by undeploy"
   end
 
@@ -302,7 +311,7 @@ class LinkFarmTest < Minitest::Test
     # so the solver creates a dir symlink at cyber_engine_tweaks (not at bin/).
     cet      = make_mod("cet",       ["bin/x64/plugins/cyber_engine_tweaks/scripts/main.lua"])
     other    = make_mod("other-asi", ["bin/x64/plugins/other.asi"])
-    deploy([cet, other], modset: "fresh")
+    deploy_cp([cet, other], modset: "fresh")
 
     cet_link = File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks")
     assert File.symlink?(cet_link), "cyber_engine_tweaks should be a dir symlink on fresh install"
@@ -325,5 +334,37 @@ class LinkFarmTest < Minitest::Test
     assert_equal "overlay_key=F2",
                  File.read(File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks/bindings.json")),
                  "write through dir symlink → archive redirect → data_dir"
+  end
+
+  # ----------------------------------------------------------------
+  # Error propagation: lib raises instead of silently returning []
+  # ----------------------------------------------------------------
+
+  def test_non_archive_content_raises_on_unreadable_dir
+    mod = make_mod("cet", ["bin/x64/global.ini"])
+    FileUtils.mkdir_p(File.join(@game_dir, "bin/x64"))
+    File.write(File.join(@game_dir, "bin/x64/global.ini"), "real")
+
+    # Make the directory untraversable
+    FileUtils.chmod(0o000, File.join(@game_dir, "bin/x64"))
+    begin
+      assert_raises(Errno::EACCES) { deploy([mod]) }
+    ensure
+      FileUtils.chmod(0o755, File.join(@game_dir, "bin/x64"))
+    end
+  end
+
+  def test_ensure_data_redirect_raises_on_unwritable_archive_dir
+    native = make_mod("native", ["mods/nativeSettings/init.lua"])
+    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+
+    archive_native = File.join(@archive_dir, "cp2077/native/mods/nativeSettings")
+    FileUtils.mkdir_p(archive_native)
+    FileUtils.chmod(0o555, archive_native)
+    begin
+      assert_raises(Errno::EACCES) { deploy_cp([native, vhs], modset: "firstrun") }
+    ensure
+      FileUtils.chmod(0o755, archive_native)
+    end
   end
 end
