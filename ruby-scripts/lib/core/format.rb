@@ -16,5 +16,12 @@ module Core
     def self.yellow(str) = tty? ? "#{YELLOW}#{str}#{RESET}" : str
     def self.bold(str) = tty? ? "#{BOLD}#{str}#{RESET}" : str
     def self.dim(str) = tty? ? "#{DIM}#{str}#{RESET}" : str
+
+    def self.bytes(n)
+      return "#{n} B"                        if n < 1_024
+      return "#{(n / 1_024.0).round(1)} KB"  if n < 1_024**2
+      return "#{(n / 1_024.0**2).round(1)} MB" if n < 1_024**3
+      "#{(n / 1_024.0**3).round(1)} GB"
+    end
   end
 end

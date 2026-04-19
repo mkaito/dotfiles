@@ -5,6 +5,8 @@ require "mod_manager/adapters/terminal/ansi"
 require "mod_manager/adapters/catalog/toml"
 require "mod_manager/adapters/mod_archive/filesystem"
 require "mod_manager/adapters/deploy/link_farm"
+require "mod_manager/adapters/runtime_launch/fuse_overlayfs"
+require "mod_manager/adapters/modset_state/filesystem"
 require "mod_manager/services/game_profile/cyberpunk2077"
 require "mod_manager/adapters/download/nexus"
 require "mod_manager/adapters/collection_provider/nexus"
@@ -19,6 +21,8 @@ require "mod_manager/interactors/install_mod"
 require "mod_manager/interactors/import_collection"
 require "mod_manager/interactors/repair_archive"
 require "mod_manager/interactors/verify_catalog"
+require "mod_manager/interactors/launch_game"
+require "mod_manager/interactors/state_crud"
 require "nexus/client"
 require "nexus/file_picker"
 require "core/errors"
@@ -36,12 +40,35 @@ module ModManager
     def self.archive(config:) = Adapters::ModArchive::Filesystem.new(config.archive_dir)
     def self.catalog(config:) = Adapters::Catalog::Toml.new(config.collections_dir, config.modsets_dir)
 
+    def self.data_dir(config) = File.join(File.dirname(config.archive_dir), "mod-data")
+
     def self.deploy(config:)
       Adapters::Deploy::LinkFarm.new(
         config.game_dir,
         config.archive_dir,
         game_profile: Services::GameProfile::Cyberpunk2077,
         redirects: Services::GameProfile::Cyberpunk2077::Redirects
+      )
+    end
+
+    def self.runtime_launch(config:)
+      Adapters::RuntimeLaunch::FuseOverlayfs.new(game_dir: config.game_dir, data_dir: data_dir(config))
+    end
+
+    def self.modset_state(config:)
+      Adapters::ModsetState::Filesystem.new(data_dir: data_dir(config))
+    end
+
+    def self.launch_game(config:, terminal:)
+      Interactors::LaunchGame.new(
+        catalog: catalog(config:), archive: archive(config:),
+        deploy: deploy(config:), runtime_launch: runtime_launch(config:), terminal:
+      )
+    end
+
+    def self.state_crud(config:, terminal:)
+      Interactors::StateCrud.new(
+        catalog: catalog(config:), modset_state: modset_state(config:), terminal:
       )
     end
 
@@ -82,7 +109,8 @@ module ModManager
     def self.modset_crud(config:, terminal:)
       Interactors::ModsetCrud.new(
         catalog: catalog(config:), terminal:,
-        game: config.domain, modsets_dir: config.modsets_dir
+        game: config.domain, modsets_dir: config.modsets_dir,
+        modset_state: modset_state(config:)
       )
     end
 

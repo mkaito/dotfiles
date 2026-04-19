@@ -158,6 +158,32 @@ module ModManager
           die("usage: mod modset <new|list|show|add|remove|delete|deploy|verify> ...")
         end
 
+      when "state"
+        action = argv.shift
+        config = Deps.config
+        crud = Deps.state_crud(config:, terminal: @terminal)
+        case action
+        when "show"
+          die("usage: mod state show <modset>") if argv.empty?
+          crud.show(argv.first)
+        when "clean"
+          opts = {yes: false}
+          OptionParser.new { |o| o.on("-y", "--yes") { opts[:yes] = true } }.parse!(argv)
+          die("usage: mod state clean [-y] <modset>") if argv.empty?
+          crud.clean(argv.first, **opts)
+        else
+          die("usage: mod state <show|clean> ...")
+        end
+
+      when "launch"
+        opts = {modset: nil}
+        OptionParser.new { |o| o.on("--modset=NAME") { opts[:modset] = it } }.order!(argv)
+        die("usage: mod launch --modset=<name> [--] <command...>") unless opts[:modset]
+        die("command required") if argv.empty?
+        config = Deps.config
+        result = Deps.launch_game(config:, terminal: @terminal).call(opts[:modset], command: argv)
+        throw :exit, result[:exit_code]
+
       when "repair"
         opts = {mods: nil}
         OptionParser.new do |o|
@@ -170,7 +196,7 @@ module ModManager
         Deps.repair_archive(config:, client:, terminal: @terminal).call(**opts)
 
       else
-        die("usage: mod <list|reset|status|verify|collection|modset|cleanup|download|repair>")
+        die("usage: mod <list|reset|status|verify|collection|modset|cleanup|download|repair|launch|state>")
       end
     end
 

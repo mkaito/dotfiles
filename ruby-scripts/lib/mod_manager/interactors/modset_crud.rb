@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "core/format"
 require "mod_manager/modset_editor"
 require "mod_manager/modset"
 require "mod_manager/errors"
@@ -7,11 +8,12 @@ require "mod_manager/errors"
 module ModManager
   module Interactors
     class ModsetCrud
-      def initialize(catalog:, terminal:, game:, modsets_dir:)
+      def initialize(catalog:, terminal:, game:, modsets_dir:, modset_state: nil)
         @catalog = catalog
         @terminal = terminal
         @game = game
         @modsets_dir = modsets_dir
+        @modset_state = modset_state
       end
 
       def new_modset(name)
@@ -37,6 +39,13 @@ module ModManager
 
       def show(name)
         ms = @catalog.read_modset(name)
+
+        if @modset_state
+          summary = @modset_state.summary(modset: name)
+          total = summary ? summary[:redirect_bytes] + summary[:overlay_bytes] : 0
+          @terminal.info("state    #{total.positive? ? Core::Format.bytes(total) : "none"}")
+        end
+
         if ms.collections.empty? && ms.mods.empty?
           @terminal.info("(empty)")
         else
