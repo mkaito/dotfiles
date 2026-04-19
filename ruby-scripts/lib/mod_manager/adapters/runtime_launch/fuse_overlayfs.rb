@@ -55,12 +55,20 @@ module ModManager
           g = Shellwords.shellescape(game_dir)
 
           <<~SH
-            #{FUSE_OVERLAYFS} -o #{o} #{m} || exit 1
+            cleanup() { umount #{g} 2>/dev/null; #{FUSERMOUNT} -u #{m} 2>/dev/null; wait "$FUSE_PID" 2>/dev/null; }
+            trap cleanup EXIT
+
+            #{FUSE_OVERLAYFS} -f -o #{o} #{m} &
+            FUSE_PID=$!
+
+            for i in $(seq 50); do
+              mountpoint -q #{m} && break
+              sleep 0.1
+            done
+            mountpoint -q #{m} || { echo "fuse-overlayfs: mount timed out" >&2; exit 1; }
+
             mount --bind #{m} #{g} || exit 1
             "$@"
-            EXIT=$?
-            #{FUSERMOUNT} -u #{m} 2>/dev/null
-            exit $EXIT
           SH
         end
 
