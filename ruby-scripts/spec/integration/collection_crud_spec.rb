@@ -10,8 +10,8 @@ include ModManager
 
 class CollectionCrudIntegrationTest < Minitest::Test
   def setup
-    @catalog  = Adapters::Catalog::Memory.new
-    @archive  = Adapters::ModArchive::Memory.new
+    @catalog = Adapters::Catalog::Memory.new
+    @archive = Adapters::ModArchive::Memory.new
     @terminal = Adapters::Terminal::Memory.new
     @archive.seed("mod-a")
     @archive.seed("mod-b")

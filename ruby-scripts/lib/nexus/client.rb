@@ -11,7 +11,7 @@ require "core/xdg"
 
 module Nexus
   class Client
-    BASE    = "https://api.nexusmods.com/v1"
+    BASE = "https://api.nexusmods.com/v1"
     BASE_V2 = "https://api.nexusmods.com/v2/graphql"
 
     # Rate limits (as of 2026): 500 req/hour, 20,000 req/day.
@@ -22,16 +22,16 @@ module Nexus
     # X-RL-Daily-Reset  format: "2019-02-02 00:00:00 +0000"
     # 429 is returned when the limit is exceeded; sleep until the reset timestamp, then retry.
     HOURLY_WARN_THRESHOLD = 50
-    DAILY_WARN_THRESHOLD  = 200
+    DAILY_WARN_THRESHOLD = 200
 
     # TTL for cached JSON API responses. Mod metadata is immutable once published;
     # collection revisions are immutable. Cache aggressively.
-    MOD_INFO_TTL       = 86_400      # 24 h — mod metadata rarely changes
-    MOD_FILES_TTL      = 86_400      # 24 h — file list stable within the day
-    REVISION_TTL       = Float::INFINITY  # specific revision is immutable
+    MOD_INFO_TTL = 86_400      # 24 h — mod metadata rarely changes
+    MOD_FILES_TTL = 86_400      # 24 h — file list stable within the day
+    REVISION_TTL = Float::INFINITY  # specific revision is immutable
 
     # GraphQL query: fetch one revision (specific or latest) + its mod list.
-    COLLECTION_REVISION_QUERY = <<~GQL.freeze
+    COLLECTION_REVISION_QUERY = <<~GQL
       query GetCollectionRevision($domainName: String!, $slug: String!, $revision: Int!) {
         collectionRevision(domainName: $domainName, slug: $slug, revision: $revision) {
           collection { name slug }
@@ -42,7 +42,7 @@ module Nexus
       }
     GQL
 
-    COLLECTION_LATEST_QUERY = <<~GQL.freeze
+    COLLECTION_LATEST_QUERY = <<~GQL
       query GetCollection($domainName: String!, $slug: String!) {
         collection(domainName: $domainName, slug: $slug) {
           name
@@ -56,7 +56,7 @@ module Nexus
       }
     GQL
 
-    COLLECTION_REVISIONS_QUERY = <<~GQL.freeze
+    COLLECTION_REVISIONS_QUERY = <<~GQL
       query ListRevisions($domainName: String!, $slug: String!) {
         collection(domainName: $domainName, slug: $slug) {
           name
@@ -71,9 +71,9 @@ module Nexus
     GQL
 
     def initialize(api_key)
-      @api_key        = api_key
-      @warned_hourly  = false
-      @warned_daily   = false
+      @api_key = api_key
+      @warned_hourly = false
+      @warned_daily = false
     end
 
     def mod_info(game_domain, mod_id)
@@ -85,7 +85,7 @@ module Nexus
     def mod_files(game_domain, mod_id)
       cached_json(api_cache("#{game_domain}/mods/#{mod_id}/files.json"), ttl: MOD_FILES_TTL) do
         get("/games/#{game_domain}/mods/#{mod_id}/files")
-      end.then { _1["files"] }
+      end.then { it["files"] }
     end
 
     def mod_file(game_domain, mod_id, file_id)
@@ -104,33 +104,33 @@ module Nexus
     def collection_revision(game_domain, slug, revision: nil)
       if revision
         cached_json(api_cache("#{game_domain}/collections/#{slug}/revision-#{revision}.json"),
-                    ttl: REVISION_TTL) do
-          graphql(COLLECTION_REVISION_QUERY, { domainName: game_domain, slug:, revision: })
+          ttl: REVISION_TTL) do
+          graphql(COLLECTION_REVISION_QUERY, {domainName: game_domain, slug:, revision:})
         end
       else
         # Latest revision: not cached (changes when author publishes).
-        graphql(COLLECTION_LATEST_QUERY, { domainName: game_domain, slug: })
+        graphql(COLLECTION_LATEST_QUERY, {domainName: game_domain, slug:})
       end
     end
 
     # Returns parsed GraphQL data listing all revisions of a collection.
     def collection_revisions(game_domain, slug)
-      graphql(COLLECTION_REVISIONS_QUERY, { domainName: game_domain, slug: })
+      graphql(COLLECTION_REVISIONS_QUERY, {domainName: game_domain, slug:})
     end
 
     # GETs the relative download_link path returned by GraphQL and returns the CDN URL string.
     def collection_download_url(path)
       uri = URI("https://api.nexusmods.com#{path}")
       req = Net::HTTP::Get.new(uri)
-      req["apikey"]              = @api_key
-      req["Application-Name"]    = "ruby-mod-manager"
+      req["apikey"] = @api_key
+      req["Application-Name"] = "ruby-mod-manager"
       req["Application-Version"] = "1.0.0"
       res = request_with_retry { Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |h| h.request(req) } }
       check_rate_limits(res)
       raise Core::Error, "Nexus collection download link #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
-      body  = JSON.parse(res.body)
+      body = JSON.parse(res.body)
       links = body["download_links"] or raise Core::Error, "no download_links in response"
-      preferred = links.find { _1["short_name"] == "Nexus CDN" }
+      preferred = links.find { it["short_name"] == "Nexus CDN" }
       (preferred || links.first)["URI"]
     end
 
@@ -139,11 +139,11 @@ module Nexus
     def graphql(query, variables = {})
       uri = URI(BASE_V2)
       req = Net::HTTP::Post.new(uri)
-      req["apikey"]              = @api_key
-      req["Content-Type"]        = "application/json"
-      req["Application-Name"]    = "ruby-mod-manager"
+      req["apikey"] = @api_key
+      req["Content-Type"] = "application/json"
+      req["Application-Name"] = "ruby-mod-manager"
       req["Application-Version"] = "1.0.0"
-      req.body = JSON.generate({ query:, variables: })
+      req.body = JSON.generate({query:, variables:})
       res = request_with_retry { Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |h| h.request(req) } }
       check_rate_limits(res)
       raise Core::Error, "Nexus GraphQL #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
@@ -155,8 +155,8 @@ module Nexus
     def get(path)
       uri = URI("#{BASE}#{path}")
       req = Net::HTTP::Get.new(uri)
-      req["apikey"]              = @api_key
-      req["Application-Name"]    = "ruby-mod-manager"
+      req["apikey"] = @api_key
+      req["Application-Name"] = "ruby-mod-manager"
       req["Application-Version"] = "1.0.0"
       res = request_with_retry { Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |h| h.request(req) } }
       check_rate_limits(res)
@@ -177,9 +177,9 @@ module Nexus
 
     # Warn once per session when dropping below thresholds.
     def check_rate_limits(res)
-      h       = res["x-rl-hourly-remaining"]&.to_i
+      h = res["x-rl-hourly-remaining"]&.to_i
       h_reset = res["x-rl-hourly-reset"]
-      d       = res["x-rl-daily-remaining"]&.to_i
+      d = res["x-rl-daily-remaining"]&.to_i
       d_reset = res["x-rl-daily-reset"]
 
       if h && h < HOURLY_WARN_THRESHOLD && !@warned_hourly

@@ -9,14 +9,14 @@ module ModManager
   module Interactors
     class DeployModset
       def initialize(catalog:, archive:, deploy:, terminal:)
-        @catalog  = catalog
-        @archive  = archive
-        @deploy   = deploy
+        @catalog = catalog
+        @archive = archive
+        @deploy = deploy
         @terminal = terminal
       end
 
       def call(name, raw_checks: [])
-        ms          = @catalog.read_modset(name)
+        ms = @catalog.read_modset(name)
         collections = ms.collections.each_with_object({}) { |n, h| h[n] = @catalog.read_collection(n) }
 
         check_errors = Services::Checker.check_modset(ms, collections, @archive)
@@ -39,7 +39,7 @@ module ModManager
           vfails = Services::Verifier.run(checks)
           if vfails.any?
             @terminal.warn("verify warnings (#{vfails.size}):")
-            vfails.each { @terminal.warn("  #{_1}") }
+            vfails.each { @terminal.warn("  #{it}") }
           end
         end
       end

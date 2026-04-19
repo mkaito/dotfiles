@@ -8,9 +8,9 @@ module ModManager
   module Interactors
     class ModsetCrud
       def initialize(catalog:, terminal:, game:, modsets_dir:)
-        @catalog     = catalog
-        @terminal    = terminal
-        @game        = game
+        @catalog = catalog
+        @terminal = terminal
+        @game = game
         @modsets_dir = modsets_dir
       end
 
@@ -40,8 +40,8 @@ module ModManager
         if ms.collections.empty? && ms.mods.empty?
           @terminal.info("(empty)")
         else
-          ms.collections.each { @terminal.info(_1) }
-          ms.mods.each { @terminal.info("  #{_1} (direct mod)") } if ms.mods.any?
+          ms.collections.each { @terminal.info(it) }
+          ms.mods.each { @terminal.info("  #{it} (direct mod)") } if ms.mods.any?
         end
       end
 

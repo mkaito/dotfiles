@@ -27,10 +27,10 @@ module Nexus
       raise Core::Error, "multiple SelectExactlyOne FOMOD groups not yet supported" if groups.size > 1
 
       groups.first.elements.to_a("plugins/plugin").map do |plugin|
-        name        = plugin.attributes["name"].to_s.strip
+        name = plugin.attributes["name"].to_s.strip
         description = plugin.elements["description"]&.text.to_s.strip
-        folders     = plugin.elements.to_a("files/folder").map do |f|
-          { "source" => f.attributes["source"].to_s, "destination" => f.attributes["destination"].to_s }
+        folders = plugin.elements.to_a("files/folder").map do |f|
+          {"source" => f.attributes["source"].to_s, "destination" => f.attributes["destination"].to_s}
         end
         FomodChoice.new(name:, description:, folders:)
       end

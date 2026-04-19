@@ -7,9 +7,9 @@ module ModManager
     module CollectionProvider
       class Memory
         def initialize
-          @revisions      = {}  # slug → CollectionRevision
+          @revisions = {}  # slug → CollectionRevision
           @revision_lists = {}  # slug → Array<CollectionRevisionSummary>
-          @manifests      = {}  # slug → Array<CollectionManifestMod>
+          @manifests = {}  # slug → Array<CollectionManifestMod>
         end
 
         def stub_revision(slug, revision)

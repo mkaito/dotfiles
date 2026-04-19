@@ -21,25 +21,25 @@ module ModManager
         end
 
         def include?(slug)
-          all.any? { _1.slug == slug }
+          all.any? { it.slug == slug }
         end
 
         def latest(slug)
-          all.select { _1.slug == slug }
-            .max_by { version_tuple(_1.version) }
+          all.select { it.slug == slug }
+            .max_by { version_tuple(it.version) }
         end
 
         def install(unpacked_mod:)
           dest = File.join(@dir, unpacked_mod.game, unpacked_mod.slug)
           FileUtils.mkdir_p(dest)
-          Dir.glob("#{unpacked_mod.tmp_dir}/*").each { FileUtils.cp_r(_1, dest) }
+          Dir.glob("#{unpacked_mod.tmp_dir}/*").each { FileUtils.cp_r(it, dest) }
           meta = {
-            "name"    => unpacked_mod.name,
-            "slug"    => unpacked_mod.slug,
+            "name" => unpacked_mod.name,
+            "slug" => unpacked_mod.slug,
             "version" => unpacked_mod.version,
-            "game"    => unpacked_mod.game,
+            "game" => unpacked_mod.game,
             "depends" => [],
-            "source"  => unpacked_mod.source,
+            "source" => unpacked_mod.source
           }
           Core::FileIO.atomic_write(File.join(dest, "meta.toml"), TomlRB.dump(meta))
           invalidate

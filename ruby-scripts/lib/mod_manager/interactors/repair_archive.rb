@@ -7,14 +7,14 @@ module ModManager
   module Interactors
     class RepairArchive
       def initialize(archive:, download:, terminal:)
-        @archive  = archive
+        @archive = archive
         @download = download
         @terminal = terminal
       end
 
       def call(mods: nil)
-        candidates = @archive.all.select { _1.source["provider"] == "nexus" }
-        candidates = candidates.select { mods.include?([_1.source["mod_id"], _1.source["file_id"]]) } if mods
+        candidates = @archive.all.select { it.source["provider"] == "nexus" }
+        candidates = candidates.select { mods.include?([it.source["mod_id"], it.source["file_id"]]) } if mods
 
         if candidates.empty?
           @terminal.info("no matching mods in archive")
@@ -28,7 +28,7 @@ module ModManager
           unpacked = nil
           begin
             unpacked = @download.fetch(mod_id: mod.source["mod_id"], file_id: mod.source["file_id"],
-                                       slug: mod.slug)
+              slug: mod.slug)
             @archive.delete(mod)
             @archive.install(unpacked_mod: unpacked)
             @terminal.info("#{@terminal.green("rebuilt")} #{mod.slug}")

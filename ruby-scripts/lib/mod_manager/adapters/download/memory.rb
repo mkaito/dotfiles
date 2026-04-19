@@ -9,8 +9,8 @@ module ModManager
         attr_reader :fetched  # Array<{mod_id:, file_id:, slug:}>
 
         def initialize
-          @fetched     = []
-          @file_stubs  = {}   # mod_id → Array<Hash>
+          @fetched = []
+          @file_stubs = {}   # mod_id → Array<Hash>
           @fetch_stubs = {}   # [mod_id, file_id] → UnpackedMod
         end
 
@@ -31,7 +31,7 @@ module ModManager
         end
 
         def fetch(mod_id:, file_id:, slug: nil)
-          @fetched << { mod_id:, file_id:, slug: }
+          @fetched << {mod_id:, file_id:, slug:}
           @fetch_stubs.fetch([mod_id, file_id]) { raise Core::Error, "no stub for #{mod_id}/#{file_id}" }
         end
       end

@@ -10,21 +10,21 @@ class ModModsetIntegrationTest < Minitest::Test
   include ModCliHelper
 
   def setup
-    @dir        = Dir.mktmpdir
+    @dir = Dir.mktmpdir
     @xdg_config = File.join(@dir, "config")
-    @xdg_data   = File.join(@dir, "data")
+    @xdg_data = File.join(@dir, "data")
     @archive_dir = File.join(@dir, "archive")
-    @game_dir    = File.join(@dir, "game")
+    @game_dir = File.join(@dir, "game")
 
     FileUtils.mkdir_p([
       File.join(@xdg_config, "mods", "collections"),
       File.join(@xdg_config, "mods", "modsets"),
-      @game_dir,
+      @game_dir
     ])
 
     File.write(File.join(@xdg_config, "mods", "config.toml"), TomlRB.dump(
       "archive_dir" => @archive_dir,
-      "cp2077"      => { "game_dir" => @game_dir, "domain" => "cyberpunk2077" }
+      "cp2077" => {"game_dir" => @game_dir, "domain" => "cyberpunk2077"}
     ))
 
     make_collection("frameworks")

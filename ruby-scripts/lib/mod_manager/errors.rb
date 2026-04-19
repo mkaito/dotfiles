@@ -3,6 +3,6 @@
 require "core/errors"
 
 module ModManager
-  Error           = Core::Error
+  Error = Core::Error
   ValidationError = Core::ValidationError
 end

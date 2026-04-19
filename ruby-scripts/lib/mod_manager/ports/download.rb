@@ -6,7 +6,7 @@ module ModManager
     # specifics (HTTP, auth, archive format) stay inside the adapter.
     module Download
       # → Array<FileInfo>
-      def list_files(mod_id:)                 = raise(NotImplementedError)
+      def list_files(mod_id:) = raise(NotImplementedError)
 
       # Download + unpack to a temp dir. Caller passes UnpackedMod to ModArchive#install.
       # → UnpackedMod

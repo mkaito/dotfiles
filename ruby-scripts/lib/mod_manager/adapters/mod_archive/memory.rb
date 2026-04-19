@@ -20,26 +20,26 @@ module ModManager
 
         def all = @mods.dup
 
-        def include?(slug) = @mods.any? { _1.slug == slug }
+        def include?(slug) = @mods.any? { it.slug == slug }
 
         def latest(slug)
-          @mods.select { _1.slug == slug }
-            .max_by { _1.version.split(".").map(&:to_i) }
+          @mods.select { it.slug == slug }
+            .max_by { it.version.split(".").map(&:to_i) }
         end
 
         def delete(mod)
-          @mods.reject! { _1.slug == mod.slug && _1.version == mod.version }
+          @mods.reject! { it.slug == mod.slug && it.version == mod.version }
         end
 
         def install(unpacked_mod:)
           mod = Mod.new(
-            slug:    unpacked_mod.slug,
+            slug: unpacked_mod.slug,
             version: unpacked_mod.version,
-            name:    unpacked_mod.name,
-            game:    unpacked_mod.game,
+            name: unpacked_mod.name,
+            game: unpacked_mod.game,
             depends: [],
-            source:  unpacked_mod.source,
-            path:    "/fake/#{unpacked_mod.slug}/#{unpacked_mod.version}",
+            source: unpacked_mod.source,
+            path: "/fake/#{unpacked_mod.slug}/#{unpacked_mod.version}"
           ).freeze
           @mods << mod
           mod

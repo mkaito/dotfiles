@@ -4,9 +4,9 @@ module ModManager
   module Services
     module GameProfile
       module Cyberpunk2077
-        SQLITE_PATTERN    = /\.sqlite3\z/
+        SQLITE_PATTERN = /\.sqlite3\z/
         EPHEMERAL_PATTERN = /(?:\.log.?|final\.redscripts\.(?:modded|ts))\z|vkd3d-proton/
-        CET_CONFIG_FILES  = %w[bindings.json config.json layout.ini persistent.json].freeze
+        CET_CONFIG_FILES = %w[bindings.json config.json layout.ini persistent.json].freeze
         private_constant :SQLITE_PATTERN, :EPHEMERAL_PATTERN, :CET_CONFIG_FILES
 
         # Classifies a real file found in the game directory.
@@ -18,7 +18,7 @@ module ModManager
         def self.cleanup_action(rel_path)
           base = File.basename(rel_path)
           if base.match?(SQLITE_PATTERN) ||
-             (CET_CONFIG_FILES.include?(base) && rel_path.include?("/cyber_engine_tweaks/"))
+              (CET_CONFIG_FILES.include?(base) && rel_path.include?("/cyber_engine_tweaks/"))
             :stateful
           elsif base.match?(EPHEMERAL_PATTERN)
             :ephemeral

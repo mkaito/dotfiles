@@ -34,15 +34,15 @@ module ModManager
 
         def initialize(archive_dir, data_dir, redirects: NullRedirects)
           @archive_dir = archive_dir
-          @data_dir    = data_dir
-          @redirects   = redirects
+          @data_dir = data_dir
+          @redirects = redirects
         end
 
         def install(dir_symlinks, modset)
           dir_symlinks.each do |lnk|
             @redirects.filenames_for(lnk[:dst_rel]).each do |filename|
               archive_path = File.join(@archive_dir, lnk[:src_rel], filename)
-              data_path    = File.join(@data_dir, modset, lnk[:dst_rel], filename)
+              data_path = File.join(@data_dir, modset, lnk[:dst_rel], filename)
               ensure_redirect(archive_path, data_path)
             end
           end

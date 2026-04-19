@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 module ModManager
   module Adapters
     module Deploy
@@ -35,7 +33,7 @@ module ModManager
           def insert(node, parts, mod_path_rel)
             node.mods << mod_path_rel
             if parts.size == 1
-              node.files << { name: parts[0], mod_path_rel: }
+              node.files << {name: parts[0], mod_path_rel:}
             else
               child = node.children[parts[0]] ||= Node.new(children: {}, files: [], mods: Set.new)
               insert(child, parts[1..], mod_path_rel)
@@ -47,14 +45,14 @@ module ModManager
 
             node.files.each do |f|
               dst_rel = prefix.empty? ? f[:name] : "#{prefix}/#{f[:name]}"
-              results << { src_rel: "#{f[:mod_path_rel]}/#{dst_rel}", dst_rel:, dir: false }
+              results << {src_rel: "#{f[:mod_path_rel]}/#{dst_rel}", dst_rel:, dir: false}
             end
 
             node.children.each do |name, child|
               child_prefix = prefix.empty? ? name : "#{prefix}/#{name}"
               if child.mods.size == 1
                 mod_path_rel = child.mods.first
-                results << { src_rel: "#{mod_path_rel}/#{child_prefix}", dst_rel: child_prefix, dir: true }
+                results << {src_rel: "#{mod_path_rel}/#{child_prefix}", dst_rel: child_prefix, dir: true}
               else
                 results.concat(walk(child, child_prefix))
               end

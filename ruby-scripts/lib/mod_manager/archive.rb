@@ -15,7 +15,7 @@ module ModManager
     end
 
     def versions(slug)
-      all.select { _1.slug == slug }.sort_by { version_tuple(_1.version) }.reverse
+      all.select { it.slug == slug }.sort_by { version_tuple(it.version) }.reverse
     end
 
     def latest(slug)
@@ -23,7 +23,7 @@ module ModManager
     end
 
     def include?(slug)
-      all.any? { _1.slug == slug }
+      all.any? { it.slug == slug }
     end
 
     def invalidate

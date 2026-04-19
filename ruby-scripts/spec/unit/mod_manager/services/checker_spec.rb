@@ -15,7 +15,7 @@ class CheckerTest < Minitest::Test
     @archive.seed("codeware")
 
     @col_a = Collection.new(name: "col-a", mods: %w[redscript codeware], path: "/fake/col-a.toml")
-    @col_b = Collection.new(name: "col-b", mods: %w[missing-mod],        path: "/fake/col-b.toml")
+    @col_b = Collection.new(name: "col-b", mods: %w[missing-mod], path: "/fake/col-b.toml")
   end
 
   def test_check_collection_clean
@@ -24,37 +24,37 @@ class CheckerTest < Minitest::Test
 
   def test_check_collection_missing_slug
     errors = Services::Checker.check_collection(@col_b, @archive)
-    assert errors.any? { _1.include?("missing-mod") }
+    assert errors.any? { it.include?("missing-mod") }
   end
 
   def test_check_collection_all_errors_reported
     col = Collection.new(name: "multi", mods: %w[gone-a gone-b], path: "/fake/multi.toml")
     errors = Services::Checker.check_collection(col, @archive)
-    assert errors.any? { _1.include?("gone-a") }
-    assert errors.any? { _1.include?("gone-b") }
+    assert errors.any? { it.include?("gone-a") }
+    assert errors.any? { it.include?("gone-b") }
   end
 
   def test_check_modset_clean
     ms = Modset.new(game: "cp2077", collections: %w[col-a], mods: [], checks: [], path: "/fake/ms.toml")
-    errors = Services::Checker.check_modset(ms, { "col-a" => @col_a }, @archive)
+    errors = Services::Checker.check_modset(ms, {"col-a" => @col_a}, @archive)
     assert_empty errors
   end
 
   def test_check_modset_missing_collection
     ms = Modset.new(game: "cp2077", collections: %w[nonexistent], mods: [], checks: [], path: "/fake/ms.toml")
     errors = Services::Checker.check_modset(ms, {}, @archive)
-    assert errors.any? { _1.include?("nonexistent") }
+    assert errors.any? { it.include?("nonexistent") }
   end
 
   def test_check_modset_direct_mod_missing
     ms = Modset.new(game: "cp2077", collections: [], mods: %w[missing-direct], checks: [], path: "/fake/ms.toml")
     errors = Services::Checker.check_modset(ms, {}, @archive)
-    assert errors.any? { _1.include?("missing-direct") }
+    assert errors.any? { it.include?("missing-direct") }
   end
 
   def test_check_all_collects_from_collections_and_modsets
     ms = Modset.new(game: "cp2077", collections: %w[col-b], mods: [], checks: [], path: "/fake/ms.toml")
     errors = Services::Checker.check_all([@col_a, @col_b], [ms], @archive)
-    assert errors.any? { _1.include?("missing-mod") }
+    assert errors.any? { it.include?("missing-mod") }
   end
 end

@@ -4,7 +4,7 @@ require "rake/testtask"
 require "json"
 
 Rake::TestTask.new(:test) do |t|
-  t.libs    << "lib" << "spec"
+  t.libs << "lib" << "spec"
   t.pattern = "spec/**/*_spec.rb"
   t.warning = false
 end
@@ -16,12 +16,12 @@ task default: :test
 # Requires NEXUS_API_KEY (set in mise.local.toml). Run via:
 #   mise exec -- rake nexus:download_fixtures
 #
-namespace :nexus do
-  FIXTURE_DIR  = "spec/fixtures/nexus"
-  FIXTURE_GAME = "cyberpunk2077"
-  FIXTURE_SLUG = "n0nymh"
-  FIXTURE_REV  = 47
+NEXUS_FIXTURE_DIR = "spec/fixtures/nexus"
+NEXUS_FIXTURE_GAME = "cyberpunk2077"
+NEXUS_FIXTURE_SLUG = "n0nymh"
+NEXUS_FIXTURE_REV = 47
 
+namespace :nexus do
   desc "Print relevant GraphQL schema info (CollectionRevision fields + collectionRevision args)"
   task :introspect do
     $LOAD_PATH.unshift("lib")
@@ -35,7 +35,7 @@ namespace :nexus do
     schema.dig("__schema", "queryType", "fields")
       .select { |f| f["name"].downcase.include?("collection") }
       .each do |f|
-        args = f["args"].map { |a| "#{a["name"]}: #{a.dig("type","name")}" }.join(", ")
+        args = f["args"].map { |a| "#{a["name"]}: #{a.dig("type", "name")}" }.join(", ")
         puts "  #{f["name"]}(#{args})"
       end
 
@@ -43,18 +43,18 @@ namespace :nexus do
     cr = client.send(:graphql, '{ __type(name: "CollectionRevision") { fields { name type { name kind ofType { name kind } } } } }')
     (cr.dig("__type", "fields") || []).each do |f|
       type = f.dig("type", "name") || f.dig("type", "ofType", "name")
-      puts "  #{f["name"]}: #{type} (#{f.dig("type","kind")})"
+      puts "  #{f["name"]}: #{type} (#{f.dig("type", "kind")})"
     end
 
     puts "\n=== Collection type fields (subset) ==="
     c = client.send(:graphql, '{ __type(name: "Collection") { fields { name type { name kind ofType { name kind } } } } }')
     (c.dig("__type", "fields") || []).each do |f|
       type = f.dig("type", "name") || f.dig("type", "ofType", "name")
-      puts "  #{f["name"]}: #{type} (#{f.dig("type","kind")})"
+      puts "  #{f["name"]}: #{type} (#{f.dig("type", "kind")})"
     end
   end
 
-  desc "Download Nexus API responses for #{FIXTURE_SLUG} and save as test fixtures"
+  desc "Download Nexus API responses for #{NEXUS_FIXTURE_SLUG} and save as test fixtures"
   task :download_fixtures do
     $LOAD_PATH.unshift("lib")
     require "nexus/client"
@@ -63,20 +63,20 @@ namespace :nexus do
     client = Nexus::Client.new(key)
 
     fixtures = {
-      "collection_#{FIXTURE_SLUG}_latest.json"         => -> { client.collection_revision(FIXTURE_GAME, FIXTURE_SLUG) },
-      "collection_#{FIXTURE_SLUG}_rev#{FIXTURE_REV}.json" => -> { client.collection_revision(FIXTURE_GAME, FIXTURE_SLUG, revision: FIXTURE_REV) },
-      "collection_#{FIXTURE_SLUG}_revisions.json"      => -> { client.collection_revisions(FIXTURE_GAME, FIXTURE_SLUG) },
+      "collection_#{NEXUS_FIXTURE_SLUG}_latest.json" => -> { client.collection_revision(NEXUS_FIXTURE_GAME, NEXUS_FIXTURE_SLUG) },
+      "collection_#{NEXUS_FIXTURE_SLUG}_rev#{NEXUS_FIXTURE_REV}.json" => -> { client.collection_revision(NEXUS_FIXTURE_GAME, NEXUS_FIXTURE_SLUG, revision: NEXUS_FIXTURE_REV) },
+      "collection_#{NEXUS_FIXTURE_SLUG}_revisions.json" => -> { client.collection_revisions(NEXUS_FIXTURE_GAME, NEXUS_FIXTURE_SLUG) }
     }
 
-    FileUtils.mkdir_p(FIXTURE_DIR)
+    FileUtils.mkdir_p(NEXUS_FIXTURE_DIR)
     fixtures.each do |filename, fetch|
-      path = File.join(FIXTURE_DIR, filename)
+      path = File.join(NEXUS_FIXTURE_DIR, filename)
       print "  fetching #{filename}... "
       data = fetch.call
       File.write(path, JSON.pretty_generate(data))
       puts "saved (#{File.size(path)} bytes)"
     end
 
-    puts "fixtures written to #{FIXTURE_DIR}/"
+    puts "fixtures written to #{NEXUS_FIXTURE_DIR}/"
   end
 end

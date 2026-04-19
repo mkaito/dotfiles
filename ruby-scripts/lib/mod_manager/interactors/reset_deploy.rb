@@ -4,13 +4,13 @@ module ModManager
   module Interactors
     class ResetDeploy
       def initialize(deploy:, terminal:)
-        @deploy   = deploy
+        @deploy = deploy
         @terminal = terminal
       end
 
       def call(yes: false)
-        st    = @deploy.status
-        total = st.values.sum { _1[:links].size + _1[:broken].size }
+        st = @deploy.status
+        total = st.values.sum { it[:links].size + it[:broken].size }
 
         if total.zero?
           @terminal.info("no active symlinks")

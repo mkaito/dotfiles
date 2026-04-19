@@ -9,7 +9,7 @@ include ModManager
 
 class ModsetCrudIntegrationTest < Minitest::Test
   def setup
-    @catalog  = Adapters::Catalog::Memory.new
+    @catalog = Adapters::Catalog::Memory.new
     @terminal = Adapters::Terminal::Memory.new
 
     @catalog.seed_collection("col-a", mods: %w[mod-a])

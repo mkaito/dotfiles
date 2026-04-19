@@ -9,9 +9,9 @@ module ModManager
     # archive      - responds to .latest(slug) → Mod | nil
     module Resolver
       def self.resolve(modset, collections, archive)
-        key_order   = []
+        key_order = []
         key_to_slug = {}
-        key_slugs   = {}
+        key_slugs = {}
 
         scan = lambda do |slug, ref|
           mod = archive.latest(slug) or raise Error, "mod not in archive: #{slug.inspect}\n  referenced from #{ref}\n  run `mod list` to see available mods"
@@ -23,12 +23,12 @@ module ModManager
 
         modset.collections.each do |col_name|
           col = collections[col_name] or raise Error, "collection not found: #{col_name}"
-          col.mods.each { scan.call(_1, col_name) }
+          col.mods.each { scan.call(it, col_name) }
         end
 
-        modset.mods.each { scan.call(_1, modset.path.to_s) }
+        modset.mods.each { scan.call(it, modset.path.to_s) }
 
-        mods      = key_order.map { archive.latest(key_to_slug[_1]) }
+        mods = key_order.map { archive.latest(key_to_slug[it]) }
         conflicts = key_slugs.select { |_, slugs| slugs.uniq.size > 1 }
         [mods, conflicts]
       end

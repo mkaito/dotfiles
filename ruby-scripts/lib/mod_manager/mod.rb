@@ -12,16 +12,16 @@ module ModManager
       meta = File.join(dir, "meta.toml")
       raise Error, "meta.toml not found: #{meta}" unless File.exist?(meta)
       data = TomlRB.load_file(meta)
-      missing = %w[name slug version game].select { data[_1].to_s.strip.empty? }
-      raise ValidationError.new(missing.map { "#{meta}: missing #{_1}" }) if missing.any?
+      missing = %w[name slug version game].select { data[it].to_s.strip.empty? }
+      raise ValidationError.new(missing.map { "#{meta}: missing #{it}" }) if missing.any?
       new(
-        slug:    data["slug"],
+        slug: data["slug"],
         version: data["version"],
-        name:    data["name"],
-        game:    data["game"],
+        name: data["name"],
+        game: data["game"],
         depends: Array(data["depends"]),
-        source:  data["source"] || {},
-        path:    dir,
+        source: data["source"] || {},
+        path: dir
       ).freeze
     end
 
@@ -29,9 +29,9 @@ module ModManager
       Dir.glob("#{path}/**/*", File::FNM_DOTMATCH)
         .reject { |f|
           File.directory?(f) ||
-          f == "#{path}/meta.toml" ||
-          f.split("/").include?("__MACOSX") ||
-          OS_ARTIFACTS.include?(File.basename(f))
+            f == "#{path}/meta.toml" ||
+            f.split("/").include?("__MACOSX") ||
+            OS_ARTIFACTS.include?(File.basename(f))
         }
     end
 

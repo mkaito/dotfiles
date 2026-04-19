@@ -13,13 +13,13 @@ module ModManager
 
         def initialize
           @collections = {}   # name → Collection struct
-          @modsets     = {}   # name → Modset struct
+          @modsets = {}   # name → Modset struct
         end
 
         # ── collections ──────────────────────────────────────────────────────
 
-        def list_collections           = @collections.keys.sort
-        def collection_exist?(name)    = @collections.key?(name)
+        def list_collections = @collections.keys.sort
+        def collection_exist?(name) = @collections.key?(name)
 
         def read_collection(name)
           @collections.fetch(name) { raise Error, "collection not found: #{name}" }
@@ -36,8 +36,8 @@ module ModManager
 
         # ── modsets ───────────────────────────────────────────────────────────
 
-        def list_modsets               = @modsets.keys.sort
-        def modset_exist?(name)        = @modsets.key?(name)
+        def list_modsets = @modsets.keys.sort
+        def modset_exist?(name) = @modsets.key?(name)
 
         def read_modset(name)
           @modsets.fetch(name) { raise Error, "modset not found: #{name}" }

@@ -13,21 +13,21 @@ module ModManager
         def deploy(mods:, modset: nil)
           mods.each do |mod|
             mod.files.each do |src|
-              rel      = src.delete_prefix("#{mod.path}/")
+              rel = src.delete_prefix("#{mod.path}/")
               @links[rel] = src
             end
           end
-          { created: @links.size }
+          {created: @links.size}
         end
 
         def undeploy
-          count  = @links.size
+          count = @links.size
           @links = {}
-          { removed: count }
+          {removed: count}
         end
 
         def status
-          result = Hash.new { |h, k| h[k] = { links: [], broken: [] } }
+          result = Hash.new { |h, k| h[k] = {links: [], broken: []} }
           @links.each do |dst, _src|
             slug_ver = dst.split("/").first(2).join("/")
             result[slug_ver][:links] << dst

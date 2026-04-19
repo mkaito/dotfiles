@@ -11,9 +11,9 @@ module ModManager
       data = TomlRB.load_file(path)
       errors = []
       errors << "missing game" if data["game"].to_s.strip.empty?
-      raise ValidationError.new(errors.map { "#{path}: #{_1}" }) if errors.any?
+      raise ValidationError.new(errors.map { "#{path}: #{it}" }) if errors.any?
       new(game: data["game"], collections: Array(data["collections"]),
-          mods: Array(data["mods"]), checks: Array(data["checks"]), path:)
+        mods: Array(data["mods"]), checks: Array(data["checks"]), path:)
     end
 
     def initialize(game:, collections:, mods:, checks:, path:)
@@ -23,6 +23,5 @@ module ModManager
       @checks = checks
       @path = path
     end
-
   end
 end

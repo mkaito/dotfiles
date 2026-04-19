@@ -8,9 +8,9 @@ module ModManager
     def self.load(path)
       data = TomlRB.load_file(path)
       errors = []
-      errors << "missing name"          if data["name"].to_s.strip.empty?
+      errors << "missing name" if data["name"].to_s.strip.empty?
       errors << "mods must be an array" unless data["mods"].is_a?(Array)
-      raise ValidationError.new(errors.map { "#{path}: #{_1}" }) if errors.any?
+      raise ValidationError.new(errors.map { "#{path}: #{it}" }) if errors.any?
       new(name: data["name"], mods: data["mods"], path:).freeze
     end
   end

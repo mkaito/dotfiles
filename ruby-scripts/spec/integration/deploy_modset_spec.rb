@@ -11,12 +11,12 @@ include ModManager
 
 class DeployModsetIntegrationTest < Minitest::Test
   def setup
-    @catalog  = Adapters::Catalog::Memory.new
-    @archive  = Adapters::ModArchive::Memory.new
-    @deploy   = Adapters::Deploy::Memory.new
+    @catalog = Adapters::Catalog::Memory.new
+    @archive = Adapters::ModArchive::Memory.new
+    @deploy = Adapters::Deploy::Memory.new
     @terminal = Adapters::Terminal::Memory.new
 
-    @archive.seed("redscript",  game: "cp2077")
+    @archive.seed("redscript", game: "cp2077")
     @archive.seed("cyber-engine-tweaks", game: "cp2077")
     @catalog.seed_collection("core", mods: %w[redscript cyber-engine-tweaks])
     @catalog.seed_modset("main", collections: %w[core])

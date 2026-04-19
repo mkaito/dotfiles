@@ -13,23 +13,23 @@ module ModManager
       def initialize(provider:, download:, archive:, catalog:, terminal:, game:)
         @provider = provider
         @download = download
-        @archive  = archive
-        @catalog  = catalog
+        @archive = archive
+        @catalog = catalog
         @terminal = terminal
-        @game     = game
+        @game = game
       end
 
       def call(collection_id, revision: nil)
-        rev      = @provider.fetch_revision(slug: collection_id, revision:)
+        rev = @provider.fetch_revision(slug: collection_id, revision:)
         manifest = @provider.fetch_manifest(download_link: rev.download_link,
-                                            slug: collection_id, revision: rev.revision_number)
+          slug: collection_id, revision: rev.revision_number)
         manifest_by_file_id = manifest.each_with_object({}) { |m, h| h[m.file_id] = m }
         archive_index = @archive.all.each_with_object({}) do |m, h|
           h[[m.source["provider"], m.source["mod_id"], m.source["file_id"]]] = m
         end
 
-        col_base     = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
-        fomod_split  = nil   # Hash{choice_name => slug} when an unresolved FOMOD is found
+        col_base = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
+        fomod_split = nil   # Hash{choice_name => slug} when an unresolved FOMOD is found
         shared_slugs = []
 
         verify_all!(rev.mods, rev.collection_id, archive_index)
@@ -69,7 +69,7 @@ module ModManager
 
       def install_mod(entry, manifest_mod)
         unpacked = @download.fetch(mod_id: entry.mod_id, file_id: entry.file_id)
-        choices  = ::Nexus::Fomod.detect(unpacked.tmp_dir)
+        choices = ::Nexus::Fomod.detect(unpacked.tmp_dir)
 
         if choices.nil?
           mod = @archive.install(unpacked_mod: unpacked)
@@ -89,19 +89,19 @@ module ModManager
           choice_dir = File.join(unpacked.tmp_dir, "__choice__#{Core::Text.slugify(choice.name)}")
           FileUtils.mkdir_p(choice_dir)
           choice.folders.each do |folder|
-            src  = File.join(unpacked.tmp_dir, folder["source"])
+            src = File.join(unpacked.tmp_dir, folder["source"])
             dest = folder["destination"].to_s.empty? ? choice_dir : File.join(choice_dir, folder["destination"])
             FileUtils.mkdir_p(dest)
-            Dir.glob("#{src}/*").each { FileUtils.cp_r(_1, dest) }
+            Dir.glob("#{src}/*").each { FileUtils.cp_r(it, dest) }
           end
           FileUtils.chmod_R(0o755, choice_dir)
           choice_mod = UnpackedMod.new(
             tmp_dir: choice_dir,
-            slug:    "#{unpacked.slug}--#{Core::Text.slugify(choice.name)}",
+            slug: "#{unpacked.slug}--#{Core::Text.slugify(choice.name)}",
             version: unpacked.version,
-            game:    unpacked.game,
-            name:    "#{unpacked.name} (#{choice.name})",
-            source:  unpacked.source.merge("fomod_choice" => choice.name),
+            game: unpacked.game,
+            name: "#{unpacked.name} (#{choice.name})",
+            source: unpacked.source.merge("fomod_choice" => choice.name)
           )
           archived = @archive.install(unpacked_mod: choice_mod)
           @terminal.success("archived #{archived.slug} (FOMOD: #{choice.name})")
@@ -130,9 +130,8 @@ module ModManager
           @terminal.warn("missing: mod #{m.mod_id} file #{m.file_id} — #{url}")
         end
         raise Core::Error,
-              "#{missing.size} mod file(s) no longer available on Nexus; collection #{collection_id} cannot be imported"
+          "#{missing.size} mod file(s) no longer available on Nexus; collection #{collection_id} cannot be imported"
       end
-
     end
   end
 end

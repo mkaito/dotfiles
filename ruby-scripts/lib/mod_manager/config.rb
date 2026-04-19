@@ -10,7 +10,7 @@ module ModManager
 
     def self.load
       xdg_config = Core::XDG.config_home
-      xdg_data   = Core::XDG.data_home
+      xdg_data = Core::XDG.data_home
       path = File.join(xdg_config, "mods", "config.toml")
       raise Error, "config not found: #{path}" unless File.exist?(path)
       data = TomlRB.load_file(path)
@@ -21,12 +21,12 @@ module ModManager
     private_class_method :new
 
     def initialize(data, game, xdg_config, xdg_data)
-      @game_dir        = File.expand_path(game["game_dir"] || raise(Error, "config missing cp2077.game_dir"))
-      @domain          = game["domain"]                    || raise(Error, "config missing cp2077.domain")
-      @checks          = Array(game["checks"])
-      @archive_dir     = File.expand_path(data["archive_dir"] || File.join(xdg_data, "mods", "archive"))
+      @game_dir = File.expand_path(game["game_dir"] || raise(Error, "config missing cp2077.game_dir"))
+      @domain = game["domain"] || raise(Error, "config missing cp2077.domain")
+      @checks = Array(game["checks"])
+      @archive_dir = File.expand_path(data["archive_dir"] || File.join(xdg_data, "mods", "archive"))
       @collections_dir = File.expand_path(data["collections_dir"] || File.join(xdg_config, "mods", "collections"))
-      @modsets_dir     = File.expand_path(data["modsets_dir"]     || File.join(xdg_config, "mods", "modsets"))
+      @modsets_dir = File.expand_path(data["modsets_dir"] || File.join(xdg_config, "mods", "modsets"))
     end
   end
 end

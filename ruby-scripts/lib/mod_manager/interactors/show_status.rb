@@ -4,7 +4,7 @@ module ModManager
   module Interactors
     class ShowStatus
       def initialize(deploy:, terminal:)
-        @deploy   = deploy
+        @deploy = deploy
         @terminal = terminal
       end
 
@@ -20,7 +20,7 @@ module ModManager
           @terminal.info("#{slug_ver}: #{data[:links].size} link(s)")
           if data[:broken].any?
             @terminal.error("  #{data[:broken].size} broken")
-            data[:broken].each { @terminal.error("  broken: #{_1}") }
+            data[:broken].each { @terminal.error("  broken: #{it}") }
           end
         end
       end

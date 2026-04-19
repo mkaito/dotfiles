@@ -21,23 +21,23 @@ class ImportCollectionIntegrationTest < Minitest::Test
   def setup
     @provider = Adapters::CollectionProvider::Memory.new
     @download = Adapters::Download::Memory.new
-    @archive  = Adapters::ModArchive::Memory.new
-    @catalog  = Adapters::Catalog::Memory.new
+    @archive = Adapters::ModArchive::Memory.new
+    @catalog = Adapters::Catalog::Memory.new
     @terminal = Adapters::Terminal::Memory.new
 
     @rev = CollectionRevision.new(
-      collection_id:   "n0nymh",
+      collection_id: "n0nymh",
       collection_name: "cet-essentials",
       revision_number: 47,
       mods: [
-        CollectionRevisionMod.new(mod_id: 107,  file_id: 1001),
-        CollectionRevisionMod.new(mod_id: 1511, file_id: 2001),
-      ],
+        CollectionRevisionMod.new(mod_id: 107, file_id: 1001),
+        CollectionRevisionMod.new(mod_id: 1511, file_id: 2001)
+      ]
     )
     @provider.stub_revision("n0nymh", @rev)
     @provider.stub_manifest("n0nymh", [])
 
-    stub_mod(@download, @archive, 107,  1001, "nexus-107-1001-cet-1-0",       "1.0")
+    stub_mod(@download, @archive, 107, 1001, "nexus-107-1001-cet-1-0", "1.0")
     stub_mod(@download, @archive, 1511, 2001, "nexus-1511-2001-redscript-1-0", "1.0")
   end
 
@@ -45,7 +45,7 @@ class ImportCollectionIntegrationTest < Minitest::Test
     Interactors::ImportCollection.new(
       provider: @provider, download: @download,
       archive: @archive, catalog: @catalog, terminal: @terminal,
-      game: "cyberpunk2077",
+      game: "cyberpunk2077"
     )
   end
 
@@ -73,7 +73,7 @@ class ImportCollectionIntegrationTest < Minitest::Test
 
   def test_skips_already_archived_mods
     @archive.seed("nexus-107-1001-cet-1-0",
-                  source: { "provider" => "nexus", "mod_id" => 107, "file_id" => 1001 })
+      source: {"provider" => "nexus", "mod_id" => 107, "file_id" => 1001})
     interactor.call("n0nymh")
     assert_equal 1, @download.fetched.size, "should only fetch the one missing mod"
     assert_includes @terminal.infos.join, "already archived"
@@ -93,10 +93,10 @@ class ImportCollectionIntegrationTest < Minitest::Test
 
   def test_specific_revision
     rev2 = CollectionRevision.new(
-      collection_id:   "n0nymh",
+      collection_id: "n0nymh",
       collection_name: "cet-essentials",
       revision_number: 46,
-      mods: [CollectionRevisionMod.new(mod_id: 107, file_id: 999)],
+      mods: [CollectionRevisionMod.new(mod_id: 107, file_id: 999)]
     )
     @provider.stub_revision("n0nymh", rev2)
     @provider.stub_manifest("n0nymh", [])
@@ -114,9 +114,9 @@ class ImportCollectionIntegrationTest < Minitest::Test
       tmp_dir:,
       slug:,
       version:,
-      game:    "cyberpunk2077",
-      name:    slug,
-      source:  { "provider" => "nexus", "mod_id" => mod_id, "file_id" => file_id },
+      game: "cyberpunk2077",
+      name: slug,
+      source: {"provider" => "nexus", "mod_id" => mod_id, "file_id" => file_id}
     )
     download.stub_fetch(mod_id, file_id, unpacked_mod: unpacked)
   end
@@ -126,8 +126,8 @@ class ImportCollectionFomodTest < Minitest::Test
   def setup
     @provider = Adapters::CollectionProvider::Memory.new
     @download = Adapters::Download::Memory.new
-    @archive  = Adapters::ModArchive::Memory.new
-    @catalog  = Adapters::Catalog::Memory.new
+    @archive = Adapters::ModArchive::Memory.new
+    @catalog = Adapters::Catalog::Memory.new
     @terminal = Adapters::Terminal::Memory.new
 
     # Set up FOMOD mod tmpdir with fixture XML and both choice folders
@@ -138,18 +138,18 @@ class ImportCollectionFomodTest < Minitest::Test
     FileUtils.mkdir_p(File.join(@fomod_dir, "Cyberpunk THING", "bin"))
 
     @rev = CollectionRevision.new(
-      collection_id:   "iszwwe",
+      collection_id: "iszwwe",
       collection_name: "welcome-to-night-city",
       revision_number: 481,
       mods: [
         CollectionRevisionMod.new(mod_id: 999, file_id: 100),   # normal mod
-        CollectionRevisionMod.new(mod_id: 10426, file_id: 131647), # FOMOD mod
-      ],
+        CollectionRevisionMod.new(mod_id: 10426, file_id: 131647) # FOMOD mod
+      ]
     )
     @provider.stub_revision("iszwwe", @rev)
     @provider.stub_manifest("iszwwe", [
-      CollectionManifestMod.new(file_id: 100,    mod_id: 999,   name: "Normal Mod",   phase: 1, choices: nil),
-      CollectionManifestMod.new(file_id: 131647, mod_id: 10426, name: "WTNC Config",  phase: 3, choices: nil),
+      CollectionManifestMod.new(file_id: 100, mod_id: 999, name: "Normal Mod", phase: 1, choices: nil),
+      CollectionManifestMod.new(file_id: 131647, mod_id: 10426, name: "WTNC Config", phase: 3, choices: nil)
     ])
 
     # Normal mod — plain tmpdir, no FOMOD
@@ -158,11 +158,11 @@ class ImportCollectionFomodTest < Minitest::Test
     # FOMOD mod — tmpdir with ModuleConfig.xml
     fomod_unpacked = UnpackedMod.new(
       tmp_dir: @fomod_dir,
-      slug:    "nexus-10426-131647-wtnc-config-1-9-9-1",
+      slug: "nexus-10426-131647-wtnc-config-1-9-9-1",
       version: "1.9.9.1",
-      game:    "cyberpunk2077",
-      name:    "WTNC Config",
-      source:  { "provider" => "nexus", "mod_id" => 10426, "file_id" => 131647 },
+      game: "cyberpunk2077",
+      name: "WTNC Config",
+      source: {"provider" => "nexus", "mod_id" => 10426, "file_id" => 131647}
     )
     @download.stub_fetch(10426, 131647, unpacked_mod: fomod_unpacked)
   end
@@ -171,26 +171,26 @@ class ImportCollectionFomodTest < Minitest::Test
     Interactors::ImportCollection.new(
       provider: @provider, download: @download,
       archive: @archive, catalog: @catalog, terminal: @terminal,
-      game: "cyberpunk2077",
+      game: "cyberpunk2077"
     )
   end
 
   def test_creates_two_collections_for_fomod
     interactor.call("iszwwe")
     assert @catalog.collection_exist?("nexus-iszwwe-welcome-to-night-city-481"), "missing WTNC collection"
-    assert @catalog.collection_exist?("nexus-iszwwe-cyberpunk-thing-481"),       "missing THING collection"
+    assert @catalog.collection_exist?("nexus-iszwwe-cyberpunk-thing-481"), "missing THING collection"
   end
 
   def test_each_collection_contains_shared_and_choice_slug
     interactor.call("iszwwe")
-    wtnc  = @catalog.read_collection("nexus-iszwwe-welcome-to-night-city-481")
+    wtnc = @catalog.read_collection("nexus-iszwwe-welcome-to-night-city-481")
     thing = @catalog.read_collection("nexus-iszwwe-cyberpunk-thing-481")
 
-    assert_includes wtnc.mods,  "nexus-999-100-normal-mod-1-0"
+    assert_includes wtnc.mods, "nexus-999-100-normal-mod-1-0"
     assert_includes thing.mods, "nexus-999-100-normal-mod-1-0"
 
-    assert(wtnc.mods.any?  { _1.include?("--welcome-to-night-city") }, "WTNC choice slug missing")
-    assert(thing.mods.any? { _1.include?("--cyberpunk-thing") },       "THING choice slug missing")
+    assert(wtnc.mods.any? { it.include?("--welcome-to-night-city") }, "WTNC choice slug missing")
+    assert(thing.mods.any? { it.include?("--cyberpunk-thing") }, "THING choice slug missing")
   end
 
   def test_creates_two_modsets_for_fomod
@@ -205,7 +205,7 @@ class ImportCollectionFomodTest < Minitest::Test
     tmp = Dir.mktmpdir("fake-mod-")
     @download.stub_fetch(mod_id, file_id, unpacked_mod: UnpackedMod.new(
       tmp_dir: tmp, slug:, version:, game: "cyberpunk2077", name: slug,
-      source: { "provider" => "nexus", "mod_id" => mod_id, "file_id" => file_id },
+      source: {"provider" => "nexus", "mod_id" => mod_id, "file_id" => file_id}
     ))
   end
 end

@@ -15,13 +15,13 @@ module ModManager
       class Toml
         def initialize(collections_dir, modsets_dir)
           @col_dir = File.expand_path(collections_dir)
-          @ms_dir  = File.expand_path(modsets_dir)
+          @ms_dir = File.expand_path(modsets_dir)
         end
 
         # ── collections ──────────────────────────────────────────────────────
 
         def list_collections
-          Dir.glob("#{@col_dir}/*.toml").sort.map { File.basename(_1, ".toml") }
+          Dir.glob("#{@col_dir}/*.toml").sort.map { File.basename(it, ".toml") }
         end
 
         def collection_exist?(name) = File.exist?(col_path(name))
@@ -46,7 +46,7 @@ module ModManager
         # ── modsets ───────────────────────────────────────────────────────────
 
         def list_modsets
-          Dir.glob("#{@ms_dir}/*.toml").sort.map { File.basename(_1, ".toml") }
+          Dir.glob("#{@ms_dir}/*.toml").sort.map { File.basename(it, ".toml") }
         end
 
         def modset_exist?(name) = File.exist?(ms_path(name))
@@ -59,9 +59,9 @@ module ModManager
         def write_modset(ms)
           name = File.basename(ms.path, ".toml")
           Core::FileIO.atomic_write(ms_path(name), TomlRB.dump(
-            "game"        => ms.game,
+            "game" => ms.game,
             "collections" => ms.collections,
-            "mods"        => ms.mods
+            "mods" => ms.mods
           ))
           chezmoi_add(ms_path(name))
         end
@@ -76,7 +76,7 @@ module ModManager
         private
 
         def col_path(name) = File.join(@col_dir, "#{name}.toml")
-        def ms_path(name)  = File.join(@ms_dir, "#{name}.toml")
+        def ms_path(name) = File.join(@ms_dir, "#{name}.toml")
 
         def chezmoi_add(path)
           ok = system("chezmoi", "add", path, out: File::NULL, err: File::NULL)

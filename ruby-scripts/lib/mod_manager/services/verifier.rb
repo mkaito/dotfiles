@@ -9,7 +9,7 @@ module ModManager
         checks.filter_map do |c|
           next if c.present
           case c.type
-          when "dir"  then "missing dir: #{c.path}"
+          when "dir" then "missing dir: #{c.path}"
           when "file" then "missing file: #{c.path}"
           else "unknown check type: #{c.type}"
           end

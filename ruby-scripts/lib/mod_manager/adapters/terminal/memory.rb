@@ -7,18 +7,18 @@ module ModManager
         attr_reader :lines
 
         def initialize
-          @lines            = []
+          @lines = []
           @confirm_responses = []
         end
 
-        def info(msg)    = (@lines << { level: :info,    msg: msg.to_s })
-        def dim(msg)     = (@lines << { level: :dim,     msg: msg.to_s })
-        def warn(msg)    = (@lines << { level: :warn,    msg: msg.to_s })
-        def error(msg)   = (@lines << { level: :error,   msg: msg.to_s })
-        def success(msg) = (@lines << { level: :success, msg: msg.to_s })
-        def bold(str)    = str.to_s
-        def muted(str)   = str.to_s
-        def green(str)   = str.to_s
+        def info(msg) = (@lines << {level: :info, msg: msg.to_s})
+        def dim(msg) = (@lines << {level: :dim, msg: msg.to_s})
+        def warn(msg) = (@lines << {level: :warn, msg: msg.to_s})
+        def error(msg) = (@lines << {level: :error, msg: msg.to_s})
+        def success(msg) = (@lines << {level: :success, msg: msg.to_s})
+        def bold(str) = str.to_s
+        def muted(str) = str.to_s
+        def green(str) = str.to_s
 
         def confirm(_prompt) = @confirm_responses.shift || false
 
@@ -29,12 +29,12 @@ module ModManager
         end
 
         def output
-          @lines.map { _1[:msg] }.join("\n")
+          @lines.map { it[:msg] }.join("\n")
         end
 
-        def warnings = @lines.select { _1[:level] == :warn    }.map { _1[:msg] }
-        def errors   = @lines.select { _1[:level] == :error   }.map { _1[:msg] }
-        def infos    = @lines.select { _1[:level] == :info    }.map { _1[:msg] }
+        def warnings = @lines.select { it[:level] == :warn }.map { it[:msg] }
+        def errors = @lines.select { it[:level] == :error }.map { it[:msg] }
+        def infos = @lines.select { it[:level] == :info }.map { it[:msg] }
       end
     end
   end

@@ -11,7 +11,6 @@ require "mod_manager/adapters/collection_provider/nexus"
 require "mod_manager/interactors/deploy_modset"
 require "mod_manager/interactors/reset_deploy"
 require "mod_manager/interactors/show_status"
-require "mod_manager/interactors/validate"
 require "mod_manager/interactors/list_mods"
 require "mod_manager/interactors/cleanup"
 require "mod_manager/interactors/collection_crud"
@@ -26,31 +25,33 @@ require "core/errors"
 
 module ModManager
   module Deps
-    def self.config    = Config.load
-    def self.terminal  = Adapters::Terminal::Ansi.new
+    def self.config = Config.load
+    def self.terminal = Adapters::Terminal::Ansi.new
 
     def self.nexus_client
       key = ENV["NEXUS_API_KEY"] or raise Core::Error, "NEXUS_API_KEY not set (set it in mise.local.toml or export it)"
       Nexus::Client.new(key)
     end
 
-    def self.archive(config:)                      = Adapters::ModArchive::Filesystem.new(config.archive_dir)
-    def self.catalog(config:)                      = Adapters::Catalog::Toml.new(config.collections_dir, config.modsets_dir)
+    def self.archive(config:) = Adapters::ModArchive::Filesystem.new(config.archive_dir)
+    def self.catalog(config:) = Adapters::Catalog::Toml.new(config.collections_dir, config.modsets_dir)
+
     def self.deploy(config:)
       Adapters::Deploy::LinkFarm.new(
         config.game_dir,
         config.archive_dir,
         game_profile: Services::GameProfile::Cyberpunk2077,
-        redirects:    Adapters::Deploy::RedirectStore::CyberpunkRedirects,
+        redirects: Adapters::Deploy::RedirectStore::CyberpunkRedirects
       )
     end
-    def self.download(config:, client:)            = Adapters::Download::Nexus.new(config.domain, client)
+
+    def self.download(config:, client:) = Adapters::Download::Nexus.new(config.domain, client)
     def self.collection_provider(config:, client:) = Adapters::CollectionProvider::Nexus.new(config.domain, client)
 
     def self.deploy_modset(config:, terminal:)
       Interactors::DeployModset.new(
         catalog: catalog(config:), archive: archive(config:),
-        deploy: deploy(config:), terminal:,
+        deploy: deploy(config:), terminal:
       )
     end
 
@@ -60,10 +61,6 @@ module ModManager
 
     def self.show_status(config:, terminal:)
       Interactors::ShowStatus.new(deploy: deploy(config:), terminal:)
-    end
-
-    def self.validate(config:, terminal:)
-      Interactors::Validate.new(catalog: catalog(config:), archive: archive(config:), terminal:)
     end
 
     def self.verify_catalog(config:, terminal:)
@@ -85,19 +82,19 @@ module ModManager
     def self.modset_crud(config:, terminal:)
       Interactors::ModsetCrud.new(
         catalog: catalog(config:), terminal:,
-        game: config.domain, modsets_dir: config.modsets_dir,
+        game: config.domain, modsets_dir: config.modsets_dir
       )
     end
 
     def self.install_mod(config:, client:, terminal:)
       Interactors::InstallMod.new(
-        download: download(config:, client:), archive: archive(config:), terminal:,
+        download: download(config:, client:), archive: archive(config:), terminal:
       )
     end
 
     def self.repair_archive(config:, client:, terminal:)
       Interactors::RepairArchive.new(
-        archive: archive(config:), download: download(config:, client:), terminal:,
+        archive: archive(config:), download: download(config:, client:), terminal:
       )
     end
 
@@ -106,7 +103,7 @@ module ModManager
         provider: collection_provider(config:, client:),
         download: download(config:, client:),
         archive: archive(config:), catalog: catalog(config:),
-        terminal:, game: config.domain,
+        terminal:, game: config.domain
       )
     end
   end

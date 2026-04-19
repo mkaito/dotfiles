@@ -24,7 +24,7 @@ module Core
       Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
         http.request(Net::HTTP::Get.new(uri)) do |res|
           raise Core::Error, "download failed: HTTP #{res.code}" unless res.is_a?(Net::HTTPSuccess)
-          File.open(dest, "wb") { |f| res.read_body { f.write(_1) } }
+          File.open(dest, "wb") { |f| res.read_body { f.write(it) } }
         end
       end
     end

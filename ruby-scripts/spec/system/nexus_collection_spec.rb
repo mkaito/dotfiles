@@ -19,10 +19,10 @@ require "nexus/client"
 require "mod_manager/collection_revision"
 require "mod_manager/adapters/collection_provider/nexus"
 
-FIXTURE_DIR  = File.expand_path("../fixtures/nexus", __dir__)
-GAME_DOMAIN  = "cyberpunk2077"
-COLL_SLUG    = "n0nymh"
-COLL_REV     = 47
+FIXTURE_DIR = File.expand_path("../fixtures/nexus", __dir__)
+GAME_DOMAIN = "cyberpunk2077"
+COLL_SLUG = "n0nymh"
+COLL_REV = 47
 
 def fixture(name)
   path = File.join(FIXTURE_DIR, name)
@@ -36,15 +36,18 @@ class NexusCollectionFixtureTest < Minitest::Test
   include ModManager
 
   def setup
-    @latest    = fixture("collection_#{COLL_SLUG}_latest.json")
-    @rev47     = fixture("collection_#{COLL_SLUG}_rev#{COLL_REV}.json")
+    @latest = fixture("collection_#{COLL_SLUG}_latest.json")
+    @rev47 = fixture("collection_#{COLL_SLUG}_rev#{COLL_REV}.json")
     @revisions = fixture("collection_#{COLL_SLUG}_revisions.json")
 
     # Stub client: return fixture data for each call signature.
     client = Object.new
     client.define_singleton_method(:collection_revision) do |_game, _slug, revision: nil|
       revision ? @rev47 : @latest
-    end.tap { client.instance_variable_set(:@rev47, @rev47); client.instance_variable_set(:@latest, @latest) }
+    end.tap {
+      client.instance_variable_set(:@rev47, @rev47)
+      client.instance_variable_set(:@latest, @latest)
+    }
     client.define_singleton_method(:collection_revisions) { |_game, _slug| @revisions }
     client.instance_variable_set(:@revisions, @revisions)
 
@@ -69,9 +72,9 @@ class NexusCollectionFixtureTest < Minitest::Test
 
   def test_fetch_revision_specific_returns_correct_revision
     rev = @adapter.fetch_revision(slug: COLL_SLUG, revision: COLL_REV)
-    assert_equal COLL_REV,         rev.revision_number
+    assert_equal COLL_REV, rev.revision_number
     assert_equal "cet-essentials", rev.collection_name
-    assert_equal 11,               rev.mods.size
+    assert_equal 11, rev.mods.size
     m = rev.mods.first
     refute_nil m.file_name
     refute_nil m.file_version
@@ -102,12 +105,12 @@ class NexusCollectionFixtureTest < Minitest::Test
     rev = col["latestPublishedRevision"]
     refute_nil rev, "fixture missing 'latestPublishedRevision'"
     assert_kind_of Integer, rev["revisionNumber"]
-    assert_kind_of Array,   rev_mods(rev)
+    assert_kind_of Array, rev_mods(rev)
     first = rev_mods(rev).first
-    assert first.key?("fileId"),              "mod entry missing fileId"
-    assert first["file"].key?("modId"),       "mod entry missing file.modId"
-    assert first["file"].key?("name"),        "mod entry missing file.name"
-    assert first["file"].key?("version"),     "mod entry missing file.version"
+    assert first.key?("fileId"), "mod entry missing fileId"
+    assert first["file"].key?("modId"), "mod entry missing file.modId"
+    assert first["file"].key?("name"), "mod entry missing file.name"
+    assert first["file"].key?("version"), "mod entry missing file.version"
   end
 
   # ── raw fixture shape: specific revision ──────────────────────────────────
@@ -120,7 +123,7 @@ class NexusCollectionFixtureTest < Minitest::Test
     assert_kind_of Array, rev_mods(rev)
     assert_equal 11, rev_mods(rev).size
     first = rev_mods(rev).first
-    assert first["file"].key?("name"),    "mod entry missing file.name"
+    assert first["file"].key?("name"), "mod entry missing file.name"
     assert first["file"].key?("version"), "mod entry missing file.version"
   end
 
@@ -132,9 +135,9 @@ class NexusCollectionFixtureTest < Minitest::Test
     refute_empty revs
     r = revs.first
     assert r.key?("revisionNumber"), "revision entry missing revisionNumber"
-    assert r.key?("createdAt"),      "revision entry missing createdAt"
+    assert r.key?("createdAt"), "revision entry missing createdAt"
     assert r.key?("revisionStatus"), "revision entry missing revisionStatus"
-    assert r.key?("modCount"),       "revision entry missing modCount"
+    assert r.key?("modCount"), "revision entry missing modCount"
   end
 
   private
@@ -158,19 +161,19 @@ class NexusCollectionLiveTest < Minitest::Test
 
   def test_latest_matches_fixture_shape
     saved = fixture("collection_#{COLL_SLUG}_latest.json")
-    live  = @client.collection_revision(GAME_DOMAIN, COLL_SLUG)
+    live = @client.collection_revision(GAME_DOMAIN, COLL_SLUG)
     assert_same_keys saved, live, "collection_#{COLL_SLUG}_latest.json"
   end
 
   def test_rev47_matches_fixture_shape
     saved = fixture("collection_#{COLL_SLUG}_rev#{COLL_REV}.json")
-    live  = @client.collection_revision(GAME_DOMAIN, COLL_SLUG, revision: COLL_REV)
+    live = @client.collection_revision(GAME_DOMAIN, COLL_SLUG, revision: COLL_REV)
     assert_same_keys saved, live, "collection_#{COLL_SLUG}_rev#{COLL_REV}.json"
   end
 
   def test_revisions_matches_fixture_shape
     saved = fixture("collection_#{COLL_SLUG}_revisions.json")
-    live  = @client.collection_revisions(GAME_DOMAIN, COLL_SLUG)
+    live = @client.collection_revisions(GAME_DOMAIN, COLL_SLUG)
     assert_same_keys saved, live, "collection_#{COLL_SLUG}_revisions.json"
   end
 

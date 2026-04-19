@@ -8,8 +8,8 @@ include ModManager
 
 # Raw hash — used for sort_files (pre-translation, adapter-internal)
 def raw_file(id:, cat:, ts:, name: "File #{id}", version: "1.0", size_kb: 1024)
-  { "file_id" => id, "category_name" => cat, "uploaded_timestamp" => ts,
-    "name" => name, "version" => version, "size_kb" => size_kb }
+  {"file_id" => id, "category_name" => cat, "uploaded_timestamp" => ts,
+   "name" => name, "version" => version, "size_kb" => size_kb}
 end
 
 # FileInfo — used for auto_select and print_file_list (post-translation, port contract)
@@ -17,32 +17,32 @@ def file_info(id:, cat:, name: "File #{id}", version: "1.0", size_kb: 1024)
   FileInfo.new(file_id: id, category: cat, name:, version:, size_kb:)
 end
 
-RAW_MAIN_A = raw_file(id: 1, cat: "MAIN",        ts: 1000, name: "Main A").freeze
-RAW_MAIN_B = raw_file(id: 2, cat: "MAIN",        ts: 900,  name: "Main B").freeze
-RAW_OLD_C  = raw_file(id: 3, cat: "OLD_VERSION", ts: 800,  name: "Old C").freeze
-RAW_OPT_D  = raw_file(id: 4, cat: "OPTIONAL",    ts: 700,  name: "Optional D").freeze
+RAW_MAIN_A = raw_file(id: 1, cat: "MAIN", ts: 1000, name: "Main A").freeze
+RAW_MAIN_B = raw_file(id: 2, cat: "MAIN", ts: 900, name: "Main B").freeze
+RAW_OLD_C = raw_file(id: 3, cat: "OLD_VERSION", ts: 800, name: "Old C").freeze
+RAW_OPT_D = raw_file(id: 4, cat: "OPTIONAL", ts: 700, name: "Optional D").freeze
 
-FI_MAIN_A = file_info(id: 1, cat: "MAIN",        name: "Main A").freeze
-FI_MAIN_B = file_info(id: 2, cat: "MAIN",        name: "Main B").freeze
-FI_OLD_C  = file_info(id: 3, cat: "OLD_VERSION", name: "Old C").freeze
-FI_OPT_D  = file_info(id: 4, cat: "OPTIONAL",    name: "Optional D").freeze
+FI_MAIN_A = file_info(id: 1, cat: "MAIN", name: "Main A").freeze
+FI_MAIN_B = file_info(id: 2, cat: "MAIN", name: "Main B").freeze
+FI_OLD_C = file_info(id: 3, cat: "OLD_VERSION", name: "Old C").freeze
+FI_OPT_D = file_info(id: 4, cat: "OPTIONAL", name: "Optional D").freeze
 
 class FilePickerSortFilesTest < Minitest::Test
   def test_main_before_optional_before_old
     sorted = Nexus::FilePicker.sort_files([RAW_OLD_C, RAW_OPT_D, RAW_MAIN_A])
-    assert_equal %w[MAIN OPTIONAL OLD_VERSION], sorted.map { _1["category_name"] }
+    assert_equal %w[MAIN OPTIONAL OLD_VERSION], sorted.map { it["category_name"] }
   end
 
   def test_within_category_newest_first
     sorted = Nexus::FilePicker.sort_files([RAW_MAIN_B, RAW_MAIN_A])
-    assert_equal [1, 2], sorted.map { _1["file_id"] }
+    assert_equal [1, 2], sorted.map { it["file_id"] }
   end
 
   def test_tie_break_by_file_id_asc
     a = raw_file(id: 10, cat: "MAIN", ts: 500)
-    b = raw_file(id:  5, cat: "MAIN", ts: 500)
+    b = raw_file(id: 5, cat: "MAIN", ts: 500)
     sorted = Nexus::FilePicker.sort_files([a, b])
-    assert_equal [5, 10], sorted.map { _1["file_id"] }
+    assert_equal [5, 10], sorted.map { it["file_id"] }
   end
 
   def test_unknown_category_last

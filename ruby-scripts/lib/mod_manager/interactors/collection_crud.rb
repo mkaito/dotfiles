@@ -8,9 +8,9 @@ module ModManager
   module Interactors
     class CollectionCrud
       def initialize(catalog:, terminal:, archive: nil)
-        @catalog  = catalog
+        @catalog = catalog
         @terminal = terminal
-        @archive  = archive
+        @archive = archive
       end
 
       def new_collection(name)
@@ -38,7 +38,7 @@ module ModManager
         if col.mods.empty?
           @terminal.info("(empty)")
         else
-          col.mods.each { @terminal.info(_1) }
+          col.mods.each { @terminal.info(it) }
         end
       end
 

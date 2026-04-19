@@ -2,7 +2,6 @@
 
 require "fileutils"
 require "find"
-require "set"
 require "mod_manager/errors"
 require "mod_manager/log"
 require "mod_manager/adapters/deploy/deploy_tree"
@@ -23,10 +22,10 @@ module ModManager
         private_constant :NullGameProfile
 
         def initialize(game_dir, archive_dir, game_profile: NullGameProfile, redirects: RedirectStore::NullRedirects)
-          @game_dir       = File.expand_path(game_dir)
-          @archive_dir    = File.expand_path(archive_dir)
-          @data_dir       = File.join(File.dirname(@archive_dir), "mod-data")
-          @game_profile   = game_profile
+          @game_dir = File.expand_path(game_dir)
+          @archive_dir = File.expand_path(archive_dir)
+          @data_dir = File.join(File.dirname(@archive_dir), "mod-data")
+          @game_profile = game_profile
           @redirect_store = RedirectStore.new(@archive_dir, @data_dir, redirects:)
         end
 
@@ -46,9 +45,9 @@ module ModManager
           real_game_files.each { |rel| entries[rel] ||= EXISTING_PATH_SENTINEL }
 
           symlinks = DeployTree.solve(
-            entries.map { |dst_rel, mod_path_rel| { dst_rel:, mod_path_rel: } }
+            entries.map { |dst_rel, mod_path_rel| {dst_rel:, mod_path_rel:} }
           )
-          symlinks.reject! { _1[:src_rel].start_with?("#{EXISTING_PATH_SENTINEL}/") }
+          symlinks.reject! { it[:src_rel].start_with?("#{EXISTING_PATH_SENTINEL}/") }
 
           symlinks.each do |lnk|
             dst = File.join(@game_dir, lnk[:dst_rel])
@@ -61,7 +60,7 @@ module ModManager
             if File.directory?(dst)
               blockers = non_archive_content(dst)
               next if blockers.empty?
-              raise Error, "cannot overwrite #{dst}: directory has non-archive content (#{blockers.first(3).map { File.basename(_1) }.join(", ")})"
+              raise Error, "cannot overwrite #{dst}: directory has non-archive content (#{blockers.first(3).map { File.basename(it) }.join(", ")})"
             end
             raise Error, "cannot overwrite #{dst}: not a symlink"
           end
@@ -79,21 +78,21 @@ module ModManager
             Log.debug("#{lnk[:dir] ? "link-dir" : "link"} #{dst} -> #{src}")
           end
 
-          dir_symlinks = symlinks.select { _1[:dir] }
+          dir_symlinks = symlinks.select { it[:dir] }
           @redirect_store.install(dir_symlinks, modset)
 
-          file_links = symlinks.reject { _1[:dir] }.map { File.join(@game_dir, _1[:dst_rel]) }
-          missing    = file_links.reject { File.symlink?(_1) }
-          dangling   = file_links.select { File.symlink?(_1) && !File.exist?(_1) }
+          file_links = symlinks.reject { it[:dir] }.map { File.join(@game_dir, it[:dst_rel]) }
+          missing = file_links.reject { File.symlink?(it) }
+          dangling = file_links.select { File.symlink?(it) && !File.exist?(it) }
 
           raise Error, "deploy incomplete — #{missing.size} file(s) not linked:\n  #{missing.first(5).join("\n  ")}" if missing.any?
-          raise Error, "#{dangling.size} dangling symlink(s) after deploy:\n  #{dangling.first(5).join("\n  ")}"   if dangling.any?
+          raise Error, "#{dangling.size} dangling symlink(s) after deploy:\n  #{dangling.first(5).join("\n  ")}" if dangling.any?
 
-          { created: symlinks.size }
+          {created: symlinks.size}
         end
 
         def undeploy
-          count        = 0
+          count = 0
           dirs_to_prune = Set.new
           archive_symlinks.each do |path|
             File.unlink(path)
@@ -101,7 +100,7 @@ module ModManager
             Log.debug("unlink #{path}")
             dirs_to_prune << File.dirname(path)
           end
-          dirs_to_prune.sort_by { -_1.count("/") }.each { prune_empty_dir(_1) }
+          dirs_to_prune.sort_by { -it.count("/") }.each { prune_empty_dir(it) }
 
           if File.directory?(@game_dir)
             Find.find(@game_dir) do |path|
@@ -115,16 +114,16 @@ module ModManager
             end
           end
 
-          { removed: count }
+          {removed: count}
         end
 
         def status
-          result = Hash.new { |h, k| h[k] = { links: [], broken: [] } }
+          result = Hash.new { |h, k| h[k] = {links: [], broken: []} }
           archive_symlinks.each do |path|
-            target   = File.readlink(path)
-            rel      = target.delete_prefix(@archive_dir + "/")
+            target = File.readlink(path)
+            rel = target.delete_prefix(@archive_dir + "/")
             slug_ver = rel.split("/").first(2).join("/")
-            key      = File.exist?(path) ? :links : :broken
+            key = File.exist?(path) ? :links : :broken
             result[slug_ver][key] << path
           end
           result
@@ -133,7 +132,7 @@ module ModManager
         def path_present?(rel_path, type)
           full = File.join(@game_dir, rel_path)
           case type
-          when "dir"  then File.directory?(full)
+          when "dir" then File.directory?(full)
           when "file" then File.file?(full)
           else false
           end
@@ -148,7 +147,7 @@ module ModManager
             next unless File.file?(path)
             rel = path.delete_prefix(@game_dir + "/")
             case @game_profile.cleanup_action(rel)
-            when :stateful  then migrate_file(path, rel, modset)
+            when :stateful then migrate_file(path, rel, modset)
             when :ephemeral then delete_file(path)
             end
           end

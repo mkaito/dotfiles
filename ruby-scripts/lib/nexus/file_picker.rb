@@ -15,7 +15,7 @@ module Nexus
 
     # Returns the single MAIN FileInfo if unambiguous; nil if multiple MAINs or none.
     def self.auto_select(sorted_files)
-      mains = sorted_files.select { _1.category == "MAIN" }
+      mains = sorted_files.select { it.category == "MAIN" }
       mains.first if mains.size == 1
     end
 

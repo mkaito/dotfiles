@@ -17,38 +17,35 @@ module ModManager
       class Nexus
         def initialize(game_domain, client)
           @game_domain = game_domain
-          @client      = client
+          @client = client
         end
 
         def fetch_revision(slug:, revision: nil)
           if revision
-            data     = @client.collection_revision(@game_domain, slug, revision:)
+            data = @client.collection_revision(@game_domain, slug, revision:)
             rev_data = data["collectionRevision"] or
-                       raise Error, "no collectionRevision in response for #{slug}@#{revision}"
-            col_name      = rev_data["collection"]["name"]
-            rev_num       = rev_data["revisionNumber"]
-            download_link = rev_data["downloadLink"]
-            mods_raw      = rev_data["modFiles"]
+              raise Error, "no collectionRevision in response for #{slug}@#{revision}"
+            col_name = rev_data["collection"]["name"]
           else
-            data     = @client.collection_revision(@game_domain, slug)
+            data = @client.collection_revision(@game_domain, slug)
             col_data = data["collection"] or
-                       raise Error, "no collection in response for #{slug}"
+              raise Error, "no collection in response for #{slug}"
             col_name = col_data["name"]
             rev_data = col_data["latestPublishedRevision"] or
-                       raise Error, "no latestPublishedRevision for collection #{slug}"
-            rev_num       = rev_data["revisionNumber"]
-            download_link = rev_data["downloadLink"]
-            mods_raw      = rev_data["modFiles"]
+              raise Error, "no latestPublishedRevision for collection #{slug}"
           end
+          rev_num = rev_data["revisionNumber"]
+          download_link = rev_data["downloadLink"]
+          mods_raw = rev_data["modFiles"]
 
-          mods = (mods_raw || []).map { Translator.revision_mod(_1) }
+          mods = (mods_raw || []).map { Translator.revision_mod(it) }
 
           CollectionRevision.new(
-            collection_id:   slug,
+            collection_id: slug,
             collection_name: Core::Text.slugify(col_name),
             revision_number: rev_num,
             download_link:,
-            mods:,
+            mods:
           )
         end
 
@@ -57,20 +54,20 @@ module ModManager
           Dir.mktmpdir("collection-manifest-") do |tmp|
             system("7za", "e", "-y", "-bso0", "-bsp0", "-o#{tmp}", cached, "collection.json")
             data = JSON.parse(File.read(File.join(tmp, "collection.json")))
-            (data["mods"] || []).map { Translator.manifest_mod(_1) }
+            (data["mods"] || []).map { Translator.manifest_mod(it) }
           end
         end
 
         def list_revisions(slug:)
           data = @client.collection_revisions(@game_domain, slug)
           revs = data.dig("collection", "revisions") or
-                 raise Error, "no revisions in response for #{slug}"
+            raise Error, "no revisions in response for #{slug}"
           revs.map do |r|
             CollectionRevisionSummary.new(
               revision_number: r["revisionNumber"],
-              created_at:      r["createdAt"],
-              mod_count:       r["modCount"],
-              status:          r["revisionStatus"],
+              created_at: r["createdAt"],
+              mod_count: r["modCount"],
+              status: r["revisionStatus"]
             )
           end
         end
@@ -79,7 +76,7 @@ module ModManager
 
         def cached_manifest(slug, revision, download_link)
           path = File.join(Core::XDG.cache_home, "mods", "nexus", "collections",
-                           @game_domain.to_s, "#{slug}-#{revision}.7z")
+            @game_domain.to_s, "#{slug}-#{revision}.7z")
           Core::Http.cached_download(path, label: "collection manifest #{slug} r#{revision}") do
             @client.collection_download_url(download_link)
           end

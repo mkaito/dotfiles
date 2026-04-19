@@ -8,13 +8,13 @@ module ModManager
     class InstallMod
       def initialize(download:, archive:, terminal:)
         @download = download
-        @archive  = archive
+        @archive = archive
         @terminal = terminal
       end
 
       def call(mod_id, file_id:, slug: nil, force: false)
         unpacked = @download.fetch(mod_id:, file_id:, slug:)
-        existing = @archive.all.find { _1.slug == unpacked.slug }
+        existing = @archive.all.find { it.slug == unpacked.slug }
         if existing
           return @terminal.info("#{unpacked.slug} already archived (use --force to re-archive)") unless force
           @archive.delete(existing)

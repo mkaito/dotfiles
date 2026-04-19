@@ -13,16 +13,16 @@ include ModManager
 
 class LinkFarmTest < Minitest::Test
   def setup
-    @dir         = Dir.mktmpdir
-    @game_dir    = File.join(@dir, "game")
+    @dir = Dir.mktmpdir
+    @game_dir = File.join(@dir, "game")
     @archive_dir = File.join(@dir, "archive")
-    @data_dir    = File.join(@dir, "mod-data")
+    @data_dir = File.join(@dir, "mod-data")
     FileUtils.mkdir_p([@game_dir, @archive_dir])
-    @farm    = Adapters::Deploy::LinkFarm.new(@game_dir, @archive_dir)
+    @farm = Adapters::Deploy::LinkFarm.new(@game_dir, @archive_dir)
     @farm_cp = Adapters::Deploy::LinkFarm.new(
       @game_dir, @archive_dir,
       game_profile: Services::GameProfile::Cyberpunk2077,
-      redirects:    Adapters::Deploy::RedirectStore::CyberpunkRedirects
+      redirects: Adapters::Deploy::RedirectStore::CyberpunkRedirects
     )
   end
 
@@ -63,7 +63,7 @@ class LinkFarmTest < Minitest::Test
     result = deploy([mod])
 
     link = File.join(@game_dir, "global.ini")
-    assert_equal({ created: 1 }, result)
+    assert_equal({created: 1}, result)
     assert File.symlink?(link)
     assert File.exist?(link)
     assert_includes File.readlink(link), @archive_dir
@@ -75,7 +75,7 @@ class LinkFarmTest < Minitest::Test
     result = deploy([mod])
 
     dir_link = File.join(@game_dir, "bin")
-    assert_equal({ created: 1 }, result)
+    assert_equal({created: 1}, result)
     assert File.symlink?(dir_link), "expected dir symlink at game_dir/bin"
     assert File.exist?(File.join(@game_dir, "bin/x64/global.ini")), "file accessible through dir symlink"
   end
@@ -87,19 +87,19 @@ class LinkFarmTest < Minitest::Test
 
   def test_cet_style_mods_get_directory_symlinks
     native = make_mod("native", ["bin/x64/plugins/cet/mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["bin/x64/plugins/cet/mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["bin/x64/plugins/cet/mods/vehicleHandling/init.lua"])
     result = deploy([native, vhs])
 
-    assert_equal({ created: 2 }, result)
+    assert_equal({created: 2}, result)
 
     native_link = File.join(@game_dir, "bin/x64/plugins/cet/mods/nativeSettings")
-    vhs_link    = File.join(@game_dir, "bin/x64/plugins/cet/mods/vehicleHandling")
+    vhs_link = File.join(@game_dir, "bin/x64/plugins/cet/mods/vehicleHandling")
 
     assert File.symlink?(native_link), "nativeSettings should be a symlink"
-    assert File.symlink?(vhs_link),    "vehicleHandling should be a symlink"
+    assert File.symlink?(vhs_link), "vehicleHandling should be a symlink"
 
     assert_includes File.readlink(native_link), "native"
-    assert_includes File.readlink(vhs_link),    "vhs"
+    assert_includes File.readlink(vhs_link), "vhs"
   end
 
   # ----------------------------------------------------------------
@@ -163,12 +163,12 @@ class LinkFarmTest < Minitest::Test
   # forces file-level symlinks. Undeploy removes symlinks, leaving the real file.
   def test_undeploy_removes_parent_of_sibling_dir_symlinks
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["mods/vehicleHandling/init.lua"])
     deploy([native, vhs])
 
-    assert File.symlink?(File.join(@game_dir, "mods/nativeSettings")),  "first child is a dir symlink"
+    assert File.symlink?(File.join(@game_dir, "mods/nativeSettings")), "first child is a dir symlink"
     assert File.symlink?(File.join(@game_dir, "mods/vehicleHandling")), "second child is a dir symlink"
-    assert File.directory?(File.join(@game_dir, "mods")),              "parent is a real dir"
+    assert File.directory?(File.join(@game_dir, "mods")), "parent is a real dir"
 
     @farm.undeploy
     refute File.exist?(File.join(@game_dir, "mods")), "parent dir removed after both siblings unlinked"
@@ -200,7 +200,7 @@ class LinkFarmTest < Minitest::Test
 
     status = @farm.status
     assert status.any? { |k, _| k.include?("native") },
-           "status should contain an entry for the native mod"
+      "status should contain an entry for the native mod"
   end
 
   # ----------------------------------------------------------------
@@ -211,7 +211,7 @@ class LinkFarmTest < Minitest::Test
 
   def test_sqlite_redirected_to_data_dir
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["mods/vehicleHandling/init.lua"])
     deploy_cp([native, vhs], modset: "firstrun")
 
     # Each mod gets a dir symlink at its own subdir
@@ -229,7 +229,7 @@ class LinkFarmTest < Minitest::Test
     FileUtils.mkdir_p(File.dirname(target))
     File.write(target, "settings data")
     assert_equal "settings data", File.read(File.join(@game_dir, "mods/nativeSettings/db.sqlite3")),
-                 "write through dir symlink → archive redirect → data_dir"
+      "write through dir symlink → archive redirect → data_dir"
   end
 
   def test_sqlite_migrated_from_game_dir_before_deploy
@@ -239,7 +239,7 @@ class LinkFarmTest < Minitest::Test
     File.write(old_db, "old settings")
 
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["mods/vehicleHandling/init.lua"])
     deploy_cp([native, vhs], modset: "firstrun")
 
     # The direct path is no longer a real file — it's accessible only through symlinks
@@ -255,7 +255,7 @@ class LinkFarmTest < Minitest::Test
 
   def test_sqlite_namespaced_per_modset
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["mods/vehicleHandling/init.lua"])
 
     deploy_cp([native, vhs], modset: "preset-a")
     db_a = File.join(@data_dir, "preset-a/mods/nativeSettings/db.sqlite3")
@@ -282,10 +282,10 @@ class LinkFarmTest < Minitest::Test
     FileUtils.mkdir_p(File.join(@game_dir, "r6/cache"))
 
     files = {
-      "bin/x64/Plugin.log?"              => "log-current",
+      "bin/x64/Plugin.log?" => "log-current",
       "bin/x64/vkd3d-proton.cache.write" => "vkd3d",
       "r6/cache/final.redscripts.modded" => "modded",
-      "r6/cache/final.redscripts.ts"     => "ts",
+      "r6/cache/final.redscripts.ts" => "ts"
     }
     files.each { |rel, content| File.write(File.join(@game_dir, rel), content) }
 
@@ -324,8 +324,8 @@ class LinkFarmTest < Minitest::Test
   def test_cet_config_redirected_to_data_dir
     # CET owns cyber_engine_tweaks exclusively; a sibling ASI mod shares bin/x64/plugins/
     # so the solver creates a dir symlink at cyber_engine_tweaks (not at bin/).
-    cet      = make_mod("cet",       ["bin/x64/plugins/cyber_engine_tweaks/scripts/main.lua"])
-    other    = make_mod("other-asi", ["bin/x64/plugins/other.asi"])
+    cet = make_mod("cet", ["bin/x64/plugins/cyber_engine_tweaks/scripts/main.lua"])
+    other = make_mod("other-asi", ["bin/x64/plugins/other.asi"])
     deploy_cp([cet, other], modset: "fresh")
 
     cet_link = File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks")
@@ -337,7 +337,7 @@ class LinkFarmTest < Minitest::Test
       archive_cfg = File.join(archive_cet_dir, cfg)
       assert File.symlink?(archive_cfg), "archive redirect missing for #{cfg}"
       target = File.expand_path(File.readlink(archive_cfg), archive_cet_dir)
-      assert_includes target, "fresh",   "redirect points to modset-namespaced path"
+      assert_includes target, "fresh", "redirect points to modset-namespaced path"
       assert_includes target, @data_dir, "redirect points into data_dir"
     end
 
@@ -347,8 +347,8 @@ class LinkFarmTest < Minitest::Test
     FileUtils.mkdir_p(File.dirname(bindings_data_path))
     File.write(bindings_data_path, "overlay_key=F2")
     assert_equal "overlay_key=F2",
-                 File.read(File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks/bindings.json")),
-                 "write through dir symlink → archive redirect → data_dir"
+      File.read(File.join(@game_dir, "bin/x64/plugins/cyber_engine_tweaks/bindings.json")),
+      "write through dir symlink → archive redirect → data_dir"
   end
 
   # ----------------------------------------------------------------
@@ -371,7 +371,7 @@ class LinkFarmTest < Minitest::Test
 
   def test_ensure_data_redirect_raises_on_unwritable_archive_dir
     native = make_mod("native", ["mods/nativeSettings/init.lua"])
-    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    vhs = make_mod("vhs", ["mods/vehicleHandling/init.lua"])
 
     archive_native = File.join(@archive_dir, "cp2077/native/mods/nativeSettings")
     FileUtils.mkdir_p(archive_native)

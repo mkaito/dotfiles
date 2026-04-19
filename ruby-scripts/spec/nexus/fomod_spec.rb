@@ -48,8 +48,8 @@ class FomodParseTest < Minitest::Test
 
   def test_folders_map_source_to_destination
     assert_equal "Welcome to Night City", @choices[0].folders.first["source"]
-    assert_equal "",                      @choices[0].folders.first["destination"]
-    assert_equal "Cyberpunk THING",       @choices[1].folders.first["source"]
+    assert_equal "", @choices[0].folders.first["destination"]
+    assert_equal "Cyberpunk THING", @choices[1].folders.first["source"]
   end
 
   def test_multiple_groups_raises
