@@ -65,6 +65,22 @@ class ModLoadTest < Minitest::Test
     refute_includes mod.files, File.join(@dir, "meta.toml")
   end
 
+  def test_files_excludes_os_artifacts
+    write_meta(slug: "mod-1.0", version: "1.0", name: "Mod", game: "cp2077")
+    FileUtils.mkdir_p(File.join(@dir, "bin"))
+    File.write(File.join(@dir, "bin/plugin.dll"), "")
+    File.write(File.join(@dir, "bin/.DS_Store"), "")
+    File.write(File.join(@dir, "bin/Thumbs.db"), "")
+    FileUtils.mkdir_p(File.join(@dir, "__MACOSX/bin"))
+    File.write(File.join(@dir, "__MACOSX/bin/._plugin.dll"), "")
+
+    mod = Mod.load(@dir)
+    assert_includes mod.files, File.join(@dir, "bin/plugin.dll")
+    refute_includes mod.files, File.join(@dir, "bin/.DS_Store")
+    refute_includes mod.files, File.join(@dir, "bin/Thumbs.db")
+    refute_includes mod.files, File.join(@dir, "__MACOSX/bin/._plugin.dll")
+  end
+
   def test_to_s
     write_meta(slug: "redscript-2.0", version: "2.0", name: "Redscript", game: "cp2077")
     assert_equal "redscript-2.0", Mod.load(@dir).to_s

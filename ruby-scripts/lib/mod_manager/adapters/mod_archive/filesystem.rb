@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "fileutils"
+require "rubygems/version"
 require "toml-rb"
 require "mod_manager/mod"
 require "mod_manager/log"
@@ -69,7 +70,9 @@ module ModManager
         end
 
         def version_tuple(v)
-          v.to_s.split(".").map(&:to_i)
+          Gem::Version.new(v)
+        rescue ArgumentError
+          Gem::Version.new("0")
         end
       end
     end

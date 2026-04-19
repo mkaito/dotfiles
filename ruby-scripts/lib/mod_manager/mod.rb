@@ -4,6 +4,9 @@ require "toml-rb"
 require "mod_manager/errors"
 
 module ModManager
+  OS_ARTIFACTS = %w[.DS_Store Thumbs.db desktop.ini].to_set.freeze
+  private_constant :OS_ARTIFACTS
+
   Mod = Struct.new(:slug, :version, :name, :game, :depends, :source, :path, keyword_init: true) do
     def self.load(dir)
       meta = File.join(dir, "meta.toml")
@@ -24,7 +27,12 @@ module ModManager
 
     def files
       Dir.glob("#{path}/**/*", File::FNM_DOTMATCH)
-        .reject { |f| File.directory?(f) || f == "#{path}/meta.toml" }
+        .reject { |f|
+          File.directory?(f) ||
+          f == "#{path}/meta.toml" ||
+          f.split("/").include?("__MACOSX") ||
+          OS_ARTIFACTS.include?(File.basename(f))
+        }
     end
 
     def to_s = slug

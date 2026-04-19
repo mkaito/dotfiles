@@ -9,22 +9,22 @@ module ModManager
         CET_CONFIG_FILES  = %w[bindings.json config.json layout.ini persistent.json].freeze
         private_constant :SQLITE_PATTERN, :EPHEMERAL_PATTERN, :CET_CONFIG_FILES
 
+        # Classifies a real file found in the game directory.
+        # rel_path is relative to game_dir.
+        #
+        # :stateful  — the game writes to this file at runtime; preserve it across deploys
+        # :ephemeral — transient noise (logs, caches); discard before and after deploy
+        # :static    — ordinary file; leave it alone
         def self.cleanup_action(rel_path)
           base = File.basename(rel_path)
           if base.match?(SQLITE_PATTERN) ||
              (CET_CONFIG_FILES.include?(base) && rel_path.include?("/cyber_engine_tweaks/"))
-            :migrate
+            :stateful
           elsif base.match?(EPHEMERAL_PATTERN)
-            :delete
+            :ephemeral
           else
-            :keep
+            :static
           end
-        end
-
-        def self.redirect_filenames_for(dst_rel)
-          files = %w[db.sqlite3]
-          files += CET_CONFIG_FILES if dst_rel.split("/").include?("cyber_engine_tweaks")
-          files
         end
       end
     end

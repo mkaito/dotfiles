@@ -51,6 +51,20 @@ class ResolverTest < Minitest::Test
     assert_includes conflicts, "nexus:1"
   end
 
+  def test_no_source_keyed_by_slug_not_deduped_across_slugs
+    # Without a provider mod_id, two different slugs are treated as distinct mods
+    # even if they install conflicting files — no conflict is flagged.
+    @archive.seed("rs-v1", game: "cp2077", source: {})
+    @archive.seed("rs-v2", game: "cp2077", source: {})
+    result, conflicts = Services::Resolver.resolve(
+      ms(collections: %w[a b]),
+      { "a" => col("a", %w[rs-v1]), "b" => col("b", %w[rs-v2]) },
+      @archive,
+    )
+    assert_equal %w[rs-v1 rs-v2], result.map(&:slug)
+    assert_empty conflicts
+  end
+
   def test_raises_on_missing_slug
     assert_raises(Error) do
       Services::Resolver.resolve(ms(collections: %w[a]), { "a" => col("a", %w[no-such-mod]) }, @archive)

@@ -24,15 +24,18 @@ module ModManager
         manifest = @provider.fetch_manifest(download_link: rev.download_link,
                                             slug: collection_id, revision: rev.revision_number)
         manifest_by_file_id = manifest.each_with_object({}) { |m, h| h[m.file_id] = m }
+        archive_index = @archive.all.each_with_object({}) do |m, h|
+          h[[m.source["provider"], m.source["mod_id"], m.source["file_id"]]] = m
+        end
 
         col_base     = "nexus-#{rev.collection_id}-#{rev.collection_name}-#{rev.revision_number}"
         fomod_split  = nil   # Hash{choice_name => slug} when an unresolved FOMOD is found
         shared_slugs = []
 
-        verify_all!(rev.mods, rev.collection_id)
+        verify_all!(rev.mods, rev.collection_id, archive_index)
 
         rev.mods.each do |entry|
-          existing = find_in_archive(entry.mod_id, entry.file_id)
+          existing = archive_index[["nexus", entry.mod_id, entry.file_id]]
           if existing
             @terminal.info("skip #{existing.slug} (already archived)")
             shared_slugs << existing.slug
@@ -116,9 +119,9 @@ module ModManager
         @catalog.write_modset(modset)
       end
 
-      def verify_all!(mods, collection_id)
+      def verify_all!(mods, collection_id, archive_index)
         missing = mods.reject do |m|
-          find_in_archive(m.mod_id, m.file_id) || @download.file_exist?(mod_id: m.mod_id, file_id: m.file_id)
+          archive_index[["nexus", m.mod_id, m.file_id]] || @download.file_exist?(mod_id: m.mod_id, file_id: m.file_id)
         end
         return if missing.empty?
 
@@ -128,14 +131,6 @@ module ModManager
         end
         raise Core::Error,
               "#{missing.size} mod file(s) no longer available on Nexus; collection #{collection_id} cannot be imported"
-      end
-
-      def find_in_archive(mod_id, file_id)
-        @archive.all.find do |m|
-          m.source["provider"] == "nexus" &&
-            m.source["mod_id"] == mod_id &&
-            m.source["file_id"] == file_id
-        end
       end
 
     end

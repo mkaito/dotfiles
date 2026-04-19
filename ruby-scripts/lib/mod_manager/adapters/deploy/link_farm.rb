@@ -2,9 +2,11 @@
 
 require "fileutils"
 require "find"
+require "set"
 require "mod_manager/errors"
 require "mod_manager/log"
-require "mod_manager/services/deploy_tree"
+require "mod_manager/adapters/deploy/deploy_tree"
+require "mod_manager/adapters/deploy/redirect_store"
 
 module ModManager
   module Adapters
@@ -16,16 +18,16 @@ module ModManager
         private_constant :EXISTING_PATH_SENTINEL
 
         module NullGameProfile
-          def self.cleanup_action(_rel_path) = :keep
-          def self.redirect_filenames_for(_dst_rel) = []
+          def self.cleanup_action(_rel_path) = :static
         end
         private_constant :NullGameProfile
 
-        def initialize(game_dir, archive_dir, game_profile: NullGameProfile)
-          @game_dir     = File.expand_path(game_dir)
-          @archive_dir  = File.expand_path(archive_dir)
-          @data_dir     = File.join(File.dirname(@archive_dir), "mod-data")
-          @game_profile = game_profile
+        def initialize(game_dir, archive_dir, game_profile: NullGameProfile, redirects: RedirectStore::NullRedirects)
+          @game_dir       = File.expand_path(game_dir)
+          @archive_dir    = File.expand_path(archive_dir)
+          @data_dir       = File.join(File.dirname(@archive_dir), "mod-data")
+          @game_profile   = game_profile
+          @redirect_store = RedirectStore.new(@archive_dir, @data_dir, redirects:)
         end
 
         def deploy(mods:, modset:)
@@ -43,7 +45,7 @@ module ModManager
 
           real_game_files.each { |rel| entries[rel] ||= EXISTING_PATH_SENTINEL }
 
-          symlinks = Services::DeployTree.solve(
+          symlinks = DeployTree.solve(
             entries.map { |dst_rel, mod_path_rel| { dst_rel:, mod_path_rel: } }
           )
           symlinks.reject! { _1[:src_rel].start_with?("#{EXISTING_PATH_SENTINEL}/") }
@@ -70,13 +72,15 @@ module ModManager
             dst = File.join(@game_dir, lnk[:dst_rel])
             src = File.join(@archive_dir, lnk[:src_rel])
             FileUtils.mkdir_p(File.dirname(dst))
+            # After undeploy, a now-empty real dir may linger at the dir-symlink target.
+            # Pre-flight verified it only had archive content, so it's safe to remove.
             Dir.rmdir(dst) if File.directory?(dst) && !File.symlink?(dst) && Dir.empty?(dst)
             File.symlink(src, dst)
             Log.debug("#{lnk[:dir] ? "link-dir" : "link"} #{dst} -> #{src}")
           end
 
           dir_symlinks = symlinks.select { _1[:dir] }
-          install_data_redirects(dir_symlinks, modset)
+          @redirect_store.install(dir_symlinks, modset)
 
           file_links = symlinks.reject { _1[:dir] }.map { File.join(@game_dir, _1[:dst_rel]) }
           missing    = file_links.reject { File.symlink?(_1) }
@@ -89,26 +93,22 @@ module ModManager
         end
 
         def undeploy
-          count = 0
+          count        = 0
+          dirs_to_prune = Set.new
           archive_symlinks.each do |path|
             File.unlink(path)
             count += 1
             Log.debug("unlink #{path}")
-            parent = File.dirname(path)
-            while parent.start_with?(@game_dir + "/")
-              break unless Dir.empty?(parent)
-              Dir.rmdir(parent)
-              Log.debug("rmdir #{parent}")
-              parent = File.dirname(parent)
-            end
+            dirs_to_prune << File.dirname(path)
           end
+          dirs_to_prune.sort_by { -_1.count("/") }.each { prune_empty_dir(_1) }
 
           if File.directory?(@game_dir)
             Find.find(@game_dir) do |path|
               Find.prune if File.symlink?(path)
               next unless File.file?(path)
               rel = path.delete_prefix(@game_dir + "/")
-              if @game_profile.cleanup_action(rel) == :delete
+              if @game_profile.cleanup_action(rel) == :ephemeral
                 File.unlink(path)
                 Log.debug("unlink ephemeral #{path}")
               end
@@ -148,35 +148,10 @@ module ModManager
             next unless File.file?(path)
             rel = path.delete_prefix(@game_dir + "/")
             case @game_profile.cleanup_action(rel)
-            when :migrate then migrate_file(path, rel, modset)
-            when :delete  then delete_file(path)
+            when :stateful  then migrate_file(path, rel, modset)
+            when :ephemeral then delete_file(path)
             end
           end
-        end
-
-        def install_data_redirects(dir_symlinks, modset)
-          dir_symlinks.each do |lnk|
-            @game_profile.redirect_filenames_for(lnk[:dst_rel]).each do |filename|
-              archive_path = File.join(@archive_dir, lnk[:src_rel], filename)
-              data_path    = File.join(@data_dir, modset, lnk[:dst_rel], filename)
-              ensure_data_redirect(archive_path, data_path)
-            end
-          end
-        end
-
-        def ensure_data_redirect(archive_path, data_path)
-          if File.symlink?(archive_path)
-            target = File.expand_path(File.readlink(archive_path), File.dirname(archive_path))
-            return if target == data_path
-            File.unlink(archive_path)
-          elsif File.exist?(archive_path)
-            FileUtils.mkdir_p(File.dirname(data_path))
-            FileUtils.mv(archive_path, data_path) unless File.exist?(data_path)
-            File.unlink(archive_path) if File.exist?(archive_path)
-          end
-          FileUtils.mkdir_p(File.dirname(data_path))
-          File.symlink(data_path, archive_path)
-          Log.debug("data-redirect #{archive_path} -> #{data_path}")
         end
 
         def prune_empty_dir(dir)

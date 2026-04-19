@@ -5,6 +5,7 @@ require "tmpdir"
 require "fileutils"
 require "toml-rb"
 require "mod_manager/adapters/deploy/link_farm"
+require "mod_manager/adapters/deploy/redirect_store"
 require "mod_manager/services/game_profile/cyberpunk2077"
 require "mod_manager/mod"
 
@@ -20,7 +21,8 @@ class LinkFarmTest < Minitest::Test
     @farm    = Adapters::Deploy::LinkFarm.new(@game_dir, @archive_dir)
     @farm_cp = Adapters::Deploy::LinkFarm.new(
       @game_dir, @archive_dir,
-      game_profile: Services::GameProfile::Cyberpunk2077
+      game_profile: Services::GameProfile::Cyberpunk2077,
+      redirects:    Adapters::Deploy::RedirectStore::CyberpunkRedirects
     )
   end
 
@@ -159,6 +161,19 @@ class LinkFarmTest < Minitest::Test
 
   # When a real game file shares a directory with mod files, the sentinel logic
   # forces file-level symlinks. Undeploy removes symlinks, leaving the real file.
+  def test_undeploy_removes_parent_of_sibling_dir_symlinks
+    native = make_mod("native", ["mods/nativeSettings/init.lua"])
+    vhs    = make_mod("vhs",    ["mods/vehicleHandling/init.lua"])
+    deploy([native, vhs])
+
+    assert File.symlink?(File.join(@game_dir, "mods/nativeSettings")),  "first child is a dir symlink"
+    assert File.symlink?(File.join(@game_dir, "mods/vehicleHandling")), "second child is a dir symlink"
+    assert File.directory?(File.join(@game_dir, "mods")),              "parent is a real dir"
+
+    @farm.undeploy
+    refute File.exist?(File.join(@game_dir, "mods")), "parent dir removed after both siblings unlinked"
+  end
+
   def test_undeploy_preserves_real_files
     FileUtils.mkdir_p(File.join(@game_dir, "bin/x64"))
     real = File.join(@game_dir, "bin/x64/native.dll")

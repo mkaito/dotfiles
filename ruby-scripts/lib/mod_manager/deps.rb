@@ -41,6 +41,7 @@ module ModManager
         config.game_dir,
         config.archive_dir,
         game_profile: Services::GameProfile::Cyberpunk2077,
+        redirects:    Adapters::Deploy::RedirectStore::CyberpunkRedirects,
       )
     end
     def self.download(config:, client:)            = Adapters::Download::Nexus.new(config.domain, client)

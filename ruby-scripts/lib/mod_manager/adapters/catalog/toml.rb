@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "toml-rb"
+require "mod_manager/log"
 require "mod_manager/collection"
 require "mod_manager/modset"
 require "mod_manager/errors"
@@ -78,11 +79,13 @@ module ModManager
         def ms_path(name)  = File.join(@ms_dir, "#{name}.toml")
 
         def chezmoi_add(path)
-          system("chezmoi", "add", path, out: File::NULL, err: File::NULL)
+          ok = system("chezmoi", "add", path, out: File::NULL, err: File::NULL)
+          Log.warn("chezmoi add #{path} failed") unless ok
         end
 
         def chezmoi_forget(path)
-          system("chezmoi", "forget", "--force", path, out: File::NULL, err: File::NULL)
+          ok = system("chezmoi", "forget", "--force", path, out: File::NULL, err: File::NULL)
+          Log.warn("chezmoi forget #{path} failed") unless ok
         end
       end
     end
