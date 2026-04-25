@@ -22,12 +22,8 @@ module ModManager
         check_errors = Services::Checker.check_modset(ms, collections, @archive)
         raise ValidationError.new(check_errors) if check_errors.any?
 
-        mods, conflicts = Services::Resolver.resolve(ms, collections, @archive)
+        mods = Services::Resolver.resolve(ms, collections, @archive)
         raise Error, "modset has no mods to deploy" if mods.empty?
-
-        conflicts.each do |key, slugs|
-          @terminal.warn("conflict: #{key} — #{slugs.uniq.first} overridden by #{slugs.uniq.last}")
-        end
 
         result = @deploy.deploy(mods:, modset: name)
         @terminal.success("deployed #{result[:created]} file(s) from #{mods.size} mod(s)")

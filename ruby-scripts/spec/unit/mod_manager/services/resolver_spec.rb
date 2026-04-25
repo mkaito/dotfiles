@@ -20,49 +20,33 @@ class ResolverTest < Minitest::Test
   def ms(collections: [], mods: []) = Modset.new(game: "cp2077", collections:, mods:, checks: [], path: "/fake/ms.toml")
 
   def test_collection_expansion
-    result, = Services::Resolver.resolve(ms(collections: %w[a]), {"a" => col("a", %w[redscript codeware])}, @archive)
+    result = Services::Resolver.resolve(ms(collections: %w[a]), {"a" => col("a", %w[redscript codeware])}, @archive)
     assert_equal %w[redscript codeware], result.map(&:slug)
   end
 
   def test_ad_hoc_mods_appended_after_collections
-    result, = Services::Resolver.resolve(ms(collections: %w[a], mods: %w[extra]), {"a" => col("a", %w[redscript])}, @archive)
+    result = Services::Resolver.resolve(ms(collections: %w[a], mods: %w[extra]), {"a" => col("a", %w[redscript])}, @archive)
     assert_equal %w[redscript extra], result.map(&:slug)
   end
 
-  def test_same_slug_deduped_no_conflict
-    result, conflicts = Services::Resolver.resolve(
+  def test_same_slug_in_multiple_collections_deduped
+    result = Services::Resolver.resolve(
       ms(collections: %w[a b]),
       {"a" => col("a", %w[redscript codeware]), "b" => col("b", %w[redscript extra])},
       @archive
     )
     assert_equal %w[redscript codeware extra], result.map(&:slug)
-    assert_empty conflicts
   end
 
-  def test_version_conflict_keyed_on_mod_id
-    @archive.seed("rs-old", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 1})
-    @archive.seed("rs-new", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 1})
-    result, conflicts = Services::Resolver.resolve(
-      ms(collections: %w[a b]),
-      {"a" => col("a", %w[rs-old]), "b" => col("b", %w[rs-new])},
+  def test_different_file_ids_same_mod_id_both_included
+    @archive.seed("cw-main", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 9429, "file_id" => 105001})
+    @archive.seed("cw-config", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 9429, "file_id" => 51398})
+    result = Services::Resolver.resolve(
+      ms(collections: %w[a]),
+      {"a" => col("a", %w[cw-main cw-config])},
       @archive
     )
-    assert_equal %w[rs-new], result.map(&:slug)
-    assert_includes conflicts, "nexus:1"
-  end
-
-  def test_no_source_keyed_by_slug_not_deduped_across_slugs
-    # Without a provider mod_id, two different slugs are treated as distinct mods
-    # even if they install conflicting files — no conflict is flagged.
-    @archive.seed("rs-v1", game: "cp2077", source: {})
-    @archive.seed("rs-v2", game: "cp2077", source: {})
-    result, conflicts = Services::Resolver.resolve(
-      ms(collections: %w[a b]),
-      {"a" => col("a", %w[rs-v1]), "b" => col("b", %w[rs-v2])},
-      @archive
-    )
-    assert_equal %w[rs-v1 rs-v2], result.map(&:slug)
-    assert_empty conflicts
+    assert_equal %w[cw-main cw-config], result.map(&:slug)
   end
 
   def test_raises_on_missing_slug

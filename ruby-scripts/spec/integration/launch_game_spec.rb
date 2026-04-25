@@ -66,17 +66,6 @@ class LaunchGameIntegrationTest < Minitest::Test
     refute_match(/link farm deployed/, @terminal.output)
   end
 
-  def test_warns_on_conflicts
-    # Two slugs with the same upstream mod_id resolve to the same key → conflict
-    @archive.seed("cet-old", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 107})
-    @archive.seed("cet-new", game: "cp2077", source: {"provider" => "nexus", "mod_id" => 107})
-    @catalog.seed_collection("col-old", mods: %w[cet-old])
-    @catalog.seed_collection("col-new", mods: %w[cet-new])
-    @catalog.seed_modset("conflict-set", collections: %w[col-old col-new])
-    interactor.call("conflict-set", command: ["echo"])
-    assert_match(/conflict/, @terminal.output)
-  end
-
   def test_logs_launch_and_exit
     interactor.call("main", command: ["echo"])
     assert_match(/launching main/, @terminal.output)
