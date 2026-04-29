@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<longdescription>
+		udev rules granting hidraw access to the Flydigi Vader 4 Pro controller
+		in DInput mode (04b4:2412) for both wired/dongle and Bluetooth connections.
+		Covers all 4 HID interfaces: gamepad, gyro (mouse), and feature-report
+		devices used for back buttons and rumble control.
+	</longdescription>
+</pkgmetadata>

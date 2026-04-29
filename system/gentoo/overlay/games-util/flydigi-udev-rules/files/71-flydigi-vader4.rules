@@ -1,0 +1,5 @@
+# Flydigi Vader 4 Pro — DInput mode (wired/2.4GHz dongle)
+# 04b4:2412 — 4 interfaces: Gamepad, Mouse (gyro), 2x Device (back buttons/rumble)
+KERNEL=="hidraw*", ATTRS{idVendor}=="04b4", ATTRS{idProduct}=="2412", MODE="0660", TAG+="uaccess"
+# Bluetooth DInput
+KERNEL=="hidraw*", KERNELS=="*04B4:2412*", MODE="0660", TAG+="uaccess"
