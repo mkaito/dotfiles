@@ -72,3 +72,6 @@
 .local/bin/macos_set_key_repeat.sh
 Library
 {{ end }}
+
+# stratum catalog — lives in chezmoi source directly, not deployed
+.config/stratum/catalog

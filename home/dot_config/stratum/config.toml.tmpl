@@ -1,0 +1,12 @@
+# Managed by chezmoi. Do not edit ~/.config/stratum/config.toml directly.
+# NEXUS_API_KEY must be set in the shell environment.
+
+game = "cyberpunk2077"
+archive_root = "~/.local/share/stratum/archive"
+{{ if eq .chezmoi.hostname "aldheim" -}}
+game_dir = "/mnt/steamtwo/SteamLibrary/steamapps/common/Cyberpunk 2077"
+{{ end -}}
+
+# Collections and modsets live in dotfiles; stratum writes here directly.
+# chezmoi tracks them in git but does not deploy them (see .chezmoiignore).
+catalog_root = "{{ .chezmoi.sourceDir }}/dot_config/stratum/catalog"
