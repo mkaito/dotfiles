@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTD/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.tmux</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ .chezmoi.homeDir }}/.local/bin/tmux-supervisor</string>
+        <string>default</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Supervisor stays in foreground so launchd can track + restart it.
+         On bootout/kickstart, SIGTERM trips the supervisor's trap which
+         kills the tmux server cleanly. -->
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>ExitTimeOut</key>
+    <integer>30</integer>
+
+    <key>WorkingDirectory</key>
+    <string>{{ .chezmoi.homeDir }}</string>
+
+    <key>StandardOutPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/tmux.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/tmux.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>

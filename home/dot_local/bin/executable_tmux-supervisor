@@ -1,0 +1,36 @@
+#!/bin/sh
+# Watchdog wrapper so launchd / OpenRC can supervise the tmux server.
+#
+# tmux always daemonizes on `new-session`, so launchd loses sight of the real
+# server PID. This script stays in the foreground, so the service manager has
+# something to track. On SIGTERM it kills the tmux server before exiting,
+# making `launchctl bootout` / `rc-service stop` actually tear down state.
+#
+# Usage: tmux-supervisor [session-name]   (default: "default")
+
+set -eu
+
+SESSION="${1:-default}"
+TMUX_BIN="${TMUX_BIN:-$(command -v tmux)}"
+RESURRECT_SAVE="${HOME}/.tmux/plugins/tmux-resurrect/scripts/save.sh"
+
+cleanup() {
+    # Capture freshest state before tearing down so launchctl kickstart -k
+    # / rc-service restart loses no work since the last 15-min auto-save.
+    if [ -x "$RESURRECT_SAVE" ] && "$TMUX_BIN" has-session 2>/dev/null; then
+        "$TMUX_BIN" run-shell "$RESURRECT_SAVE" 2>/dev/null || true
+    fi
+    "$TMUX_BIN" kill-server 2>/dev/null || true
+    exit 0
+}
+trap cleanup TERM INT
+
+"$TMUX_BIN" has-session -t "$SESSION" 2>/dev/null \
+    || "$TMUX_BIN" new-session -d -s "$SESSION"
+
+# Idle in a signal-responsive loop. `wait $!` lets traps fire immediately;
+# bare `sleep` blocks them.
+while :; do
+    sleep 86400 &
+    wait $!
+done

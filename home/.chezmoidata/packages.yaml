@@ -22,8 +22,30 @@ packages:
     - media-sound/mpd
 
   darwin:
-    - neovim
-    - fzf
-    - zoxide
-    - fd
-    - direnv
+    formulae:
+      - chezmoi
+      - coreutils
+      - direnv
+      - fd
+      - findutils
+      - fzf
+      - gawk
+      - gh
+      - git
+      - gnu-getopt
+      - gnu-indent
+      - gnu-sed
+      - gnu-tar
+      - google-cloud-sdk
+      - grep
+      - lazygit
+      - mise
+      - mozjpeg
+      - neovim
+      - postgresql@18
+      - ripgrep
+      - tmux
+      - zoxide
+    casks:
+      - font-iosevka-term-nerd-font
+      - wezterm

@@ -45,6 +45,19 @@ return {
         -- This can be found in the `lua/lazy_setup.lua` file
       },
     },
+    -- resession.nvim integration (ships with AstroNvim).
+    -- Auto-saves a per-cwd session on quit; auto-loaded below on VimEnter.
+    sessions = {
+      autosave = {
+        last = true,
+        cwd = true,
+      },
+      ignore = {
+        dirs = {},
+        filetypes = { "gitcommit", "gitrebase" },
+        buftypes = { "nofile" },
+      },
+    },
     autocmds = {
       mail_settings = {
         {
@@ -54,6 +67,21 @@ return {
             vim.opt_local.textwidth = 72
             vim.opt_local.spell = true
             vim.opt_local.wrap = true
+          end,
+        },
+      },
+      restore_session = {
+        {
+          event = "VimEnter",
+          desc = "Auto-load resession for cwd when nvim starts with no args",
+          nested = true,
+          callback = function()
+            if vim.fn.argc(-1) == 0 then
+              local ok, resession = pcall(require, "resession")
+              if ok then
+                resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+              end
+            end
           end,
         },
       },

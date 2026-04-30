@@ -67,30 +67,23 @@ if [[ "$PLATFORM" == "gentoo" ]]; then
     echo "  mise run install          # link chezmoi source and apply dotfiles"
 
 # ---------------------------------------------------------------------------
-# macOS — TODO: complete in a separate session on the Mac
+# macOS
 # ---------------------------------------------------------------------------
 
 elif [[ "$PLATFORM" == "darwin" ]]; then
     echo "==> macOS bootstrap"
 
-    # TODO: install Homebrew
-    # if ! command -v brew &>/dev/null; then
-    #     echo "==> Installing Homebrew..."
-    #     /bin/bash -c "$(fetch https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    #     # Apple Silicon: add brew to PATH for the rest of this script
-    #     [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
-    # fi
+    if ! command -v brew &>/dev/null; then
+        echo "==> Installing Homebrew..."
+        /bin/bash -c "$(fetch https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
 
-    # TODO: install mise
-    # install_mise
+    install_mise
 
-    # TODO: next steps message
-    # echo ""
-    # echo "Done. Next steps:"
-    # echo "  mise run install   # link chezmoi source and apply dotfiles"
-
-    echo "macOS bootstrap not yet implemented." >&2
-    exit 1
+    echo ""
+    echo "Done. Next steps:"
+    echo "  mise run install   # link chezmoi source and apply dotfiles"
 
 # ---------------------------------------------------------------------------
 

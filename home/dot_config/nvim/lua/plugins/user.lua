@@ -98,5 +98,5 @@ return {
     event = "VeryLazy",
   },
 
-  { "neomutt/neomutt.vim" },
+  { "neomutt/neomutt.vim", enabled = vim.fn.has("mac") == 0 },
 }

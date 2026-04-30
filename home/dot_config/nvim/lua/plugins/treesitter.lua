@@ -9,7 +9,6 @@ return {
       "vim",
       "ruby",
       "yaml",
-      "hyprlang",
     },
   },
 }

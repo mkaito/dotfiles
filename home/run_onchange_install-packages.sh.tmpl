@@ -3,7 +3,8 @@
 set -e
 
 {{ if eq .chezmoi.os "darwin" -}}
-brew install {{ range .packages.darwin }}{{ . }} {{ end }}
+brew install {{ range .packages.darwin.formulae }}{{ . }} {{ end }}
+brew install --cask {{ range .packages.darwin.casks }}{{ . }} {{ end }}
 
 {{ else if eq .chezmoi.osRelease.id "gentoo" -}}
 sudo emerge -n {{ range .packages.gentoo }}{{ . }} {{ end }}

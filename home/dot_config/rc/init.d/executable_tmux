@@ -1,0 +1,14 @@
+#!/sbin/openrc-run
+
+description="tmux server (kept running for tmux-continuum auto-save/restore)"
+
+command="${HOME}/.local/bin/tmux-supervisor"
+command_args="default"
+command_background=true
+pidfile="${XDG_RUNTIME_DIR}/tmux-supervisor.pid"
+supervisor=supervise-daemon
+output_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/tmux.log"
+error_log="${XDG_CONFIG_HOME:-$HOME/.config}/rc/log/tmux.err"
+
+# Supervisor traps SIGTERM and kills tmux server before exiting,
+# so rc-service stop / restart tears down state cleanly.

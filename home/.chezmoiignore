@@ -10,13 +10,54 @@
 .config/mutt
 .config/MangoHud
 .config/mpd
+.config/steam
+.config/mods
+.config/protonfixes
+.local/bin/cataclysm
+.local/bin/dwm-statusbar
+.local/bin/startdwm
+.local/bin/passmenu
+.local/bin/rofi-mpd-playlist.sh
+.local/bin/screenshot
+.local/bin/screengrab
+.local/bin/screencast
+.local/bin/noise
+.local/bin/dap-sync
+.local/bin/offlineimap-postsync
 .local/bin/mailto-mutt
+.local/bin/update-proton-ge
+.local/bin/steam
+.local/bin/steam-launch-sync
+.local/bin/spaceengineers.sh
+.local/bin/barotrauma_update_luacs.sh
+.local/bin/factorio-modlist.sh
+.local/bin/mc-pack.sh
+.local/bin/mc-sync.sh
+.local/bin/rebuild_ps2_chd.sh
+.local/bin/sort_roms.py
+.local/bin/sort_torrents.sh
+.local/bin/dump_ksp_engines.py
+.local/bin/engines
+.local/bin/bg3_save_manager.rb
+.local/bin/nms_save_manager.rb
+.local/bin/se_bp_mods.py
+.local/bin/mod
+.local/bin/tar-backup-root
+.local/bin/tar-backup-root.exc.txt
+.local/bin/magnet
+.local/bin/reencode
 .xinitrc
 {{ end }}
 
 # Gentoo-only (detected via /etc/os-release ID)
-{{ if not (contains "gentoo" .chezmoi.osRelease.id) }}
+{{ if ne .chezmoi.os "linux" }}
 .config/zsh/conf.d/gentoo.zsh
+.local/bin/gentoo-kernel-rebuild
+.local/bin/gentoo-system-update
+{{ else if not (contains "gentoo" .chezmoi.osRelease.id) }}
+.config/zsh/conf.d/gentoo.zsh
+.local/bin/gentoo-kernel-rebuild
+.local/bin/gentoo-system-update
 {{ end }}
 
 # aldheim-only
@@ -24,7 +65,10 @@
 .config/zsh/conf.d/aldheim.zsh
 {{ end }}
 
-# macOS-only
+# darwin-only
 {{ if ne .chezmoi.os "darwin" }}
 .config/zsh/conf.d/macos.zsh
+.config/linearmouse
+.local/bin/macos_set_key_repeat.sh
+Library/LaunchAgents/com.user.tmux.plist
 {{ end }}
