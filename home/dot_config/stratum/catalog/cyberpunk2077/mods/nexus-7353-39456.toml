@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7353"
+file_id = "39456"
+name = "Immersion patch - No crowd panic from using devices."
+file_label = "No Crowd panic from devices CET 1.2.0"
+version = "1.2.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

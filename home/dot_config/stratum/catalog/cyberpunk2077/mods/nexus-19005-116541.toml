@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19005"
+file_id = "116541"
+name = "NCI Addon - Santo Domingo"
+file_label = "NCI Santo Domingo"
+version = "2.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

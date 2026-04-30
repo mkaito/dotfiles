@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24925"
+file_id = "124339"
+name = "Stats Bar UI Fix"
+file_label = "Stats Bar UI Fix"
+version = "1.0-for-2.31"
+game = "cyberpunk2077"
+depends = []
+priority = 0

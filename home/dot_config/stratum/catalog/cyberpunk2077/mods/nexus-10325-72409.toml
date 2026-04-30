@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10325"
+file_id = "72409"
+name = "Apartment Cats - Dogtown"
+file_label = "Apartment Cats - Dogtown"
+version = "1.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13462"
+file_id = "121380"
+name = "Cronos (New Iconic Weapon)"
+file_label = "Cronos"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2169"
+file_id = "57715"
+name = "No Camera Auto Centering"
+file_label = "No Camera Auto Centering"
+version = "0.9"
+game = "cyberpunk2077"
+depends = []
+priority = 0

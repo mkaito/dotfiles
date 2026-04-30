@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16921"
+file_id = "125840"
+name = "Melee Attacks Fixes And Enhancements"
+file_label = "Melee Attacks Fixes And Enhancements"
+version = "0.41"
+game = "cyberpunk2077"
+depends = []
+priority = 0

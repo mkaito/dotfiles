@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11590"
+file_id = "125324"
+name = "Romance Hangouts Enhanced"
+file_label = "Romance Hangouts Enhanced"
+version = "2.3.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

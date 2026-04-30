@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4197"
+file_id = "130803"
+name = "TweakXL"
+file_label = "TweakXL"
+version = "1.11.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

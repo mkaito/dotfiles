@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8326"
+file_id = "80782"
+name = "Kiroshi Optics Night Vision Mod"
+file_label = "Kiroshi Night Vision Mod 1.81"
+version = "1.81"
+game = "cyberpunk2077"
+depends = []
+priority = 0

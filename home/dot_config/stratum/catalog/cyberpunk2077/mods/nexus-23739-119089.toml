@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23739"
+file_id = "119089"
+name = "Input QoL"
+file_label = "Input QoL"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

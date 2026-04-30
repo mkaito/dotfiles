@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7834"
+file_id = "128457"
+name = "New Quest - One More Light"
+file_label = "One More Light"
+version = "2.1.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

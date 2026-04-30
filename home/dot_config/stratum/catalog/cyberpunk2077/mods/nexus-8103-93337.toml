@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8103"
+file_id = "93337"
+name = "Set Bonuses"
+file_label = ""
+version = "2.3.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

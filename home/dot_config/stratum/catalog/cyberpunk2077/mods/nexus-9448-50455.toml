@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9448"
+file_id = "50455"
+name = "Don't Hide Stamina Bar on Holster (Bug Fix)"
+file_label = "Don't Hide Stamina Bar on Holster"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23230"
+file_id = "116469"
+name = "Stamina Consumption Fix"
+file_label = "Stamina Consumption Fix"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

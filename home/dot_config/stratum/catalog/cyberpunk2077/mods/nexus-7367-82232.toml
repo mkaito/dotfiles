@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7367"
+file_id = "82232"
+name = "Wilson's Range"
+file_label = "Wilsons Range"
+version = "2.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

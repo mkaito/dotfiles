@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15138"
+file_id = "81360"
+name = "NCI Addon - Badlands and Pacifica"
+file_label = "NCI Beer Tweak"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

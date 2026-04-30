@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14044"
+file_id = "73859"
+name = "Actual Chrome Compression"
+file_label = "Actual Chrome Compression"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

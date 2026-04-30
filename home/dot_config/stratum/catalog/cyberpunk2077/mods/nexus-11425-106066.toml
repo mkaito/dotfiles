@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11425"
+file_id = "106066"
+name = "Quickhacks sort by slot"
+file_label = "Quickhacks sort by slot"
+version = "0.0.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14223"
+file_id = "74865"
+name = "Jenkins Tendons Cyberware Can Recharge While Airborne"
+file_label = "Jenkins Tendons Airborne Regen"
+version = "2.12"
+game = "cyberpunk2077"
+depends = []
+priority = 0

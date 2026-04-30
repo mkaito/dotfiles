@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13014"
+file_id = "68444"
+name = "Enable Advert Animations (Ads)"
+file_label = "Enable_Advert_Animations"
+version = "2.11"
+game = "cyberpunk2077"
+depends = []
+priority = 0

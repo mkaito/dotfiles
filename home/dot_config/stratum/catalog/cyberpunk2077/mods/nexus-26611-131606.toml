@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "26611"
+file_id = "131606"
+name = "Running Man - New Sprinting Perks"
+file_label = "Running Man"
+version = "1.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

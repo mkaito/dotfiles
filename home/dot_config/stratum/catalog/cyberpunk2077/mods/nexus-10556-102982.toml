@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10556"
+file_id = "102982"
+name = "Buttslinger Quickmelee"
+file_label = "Buttslinger Quickmelee"
+version = "2.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

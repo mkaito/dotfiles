@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5519"
+file_id = "121537"
+name = "Night City Interactions - Core"
+file_label = "Night City Interactions - Core"
+version = "4.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20373"
+file_id = "111492"
+name = "Bolt Shots Penetrate Cover"
+file_label = "Bolt Shots Penetrate Cover"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11261"
+file_id = "128905"
+name = "Crafting Recipe Owned and Iconic Labels"
+file_label = "Crafting recipe owned and iconic labels"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

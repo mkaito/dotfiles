@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15497"
+file_id = "107930"
+name = "Psycho Killer Reward - Restored"
+file_label = "Core Files"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

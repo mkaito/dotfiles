@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9240"
+file_id = "88950"
+name = "Reset Attributes always available - Redscript"
+file_label = "reset attributes"
+version = "1.0.0.4"
+game = "cyberpunk2077"
+depends = []
+priority = 0

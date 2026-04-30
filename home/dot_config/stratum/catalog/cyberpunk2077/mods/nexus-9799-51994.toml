@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9799"
+file_id = "51994"
+name = "Disable W-S Keys For Select Dialogue Options (Patch 2.3 Compatible)"
+file_label = "Disable W-S Keys To Select Dialog Options"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

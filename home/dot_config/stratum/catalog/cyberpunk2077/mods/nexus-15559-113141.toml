@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15559"
+file_id = "113141"
+name = "No shooting delay"
+file_label = "No Shooting Delay"
+version = "1.2-fix"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,190 @@
+[mod]
+provider = "nexus"
+mod_id = "1099"
+file_id = "105503"
+variant = "34423e9cbe4e"
+name = "Arasaka Cyberarms"
+file_label = "Arasaka Cyberarms"
+version = "4.8.1"
+game = "cyberpunk2077"
+depends = []
+priority = 1
+
+[[fomod.picks]]
+step = "START"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Install Options"
+type = "Any"
+plugins = ["Female"]
+
+[[fomod.picks]]
+step = "Arms - Female"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Default Left Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Default Right Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Gorilla Left Arm"
+type = "ExactlyOne"
+plugins = ["Default Red"]
+
+[[fomod.picks.groups]]
+name = "Gorilla Right Arm"
+type = "ExactlyOne"
+plugins = ["Default Red"]
+
+[[fomod.picks.groups]]
+name = "Launcher (Left Arm)"
+type = "ExactlyOne"
+plugins = ["Arasaka Remade - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Mantis Left Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka Remade - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Mantis Right Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka Remade - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Monowire Left Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka - Normal Size"]
+
+[[fomod.picks.groups]]
+name = "Monowire Right Arm"
+type = "ExactlyOne"
+plugins = ["Arasaka - Normal Size"]
+
+[[fomod.picks]]
+step = "Arms - Female - Alternatives"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Arasaka Skins"
+type = "ExactlyOne"
+plugins = ["Choose only Left and Right arm skins"]
+
+[[fomod.picks.groups]]
+name = "Nails"
+type = "ExactlyOne"
+plugins = ["Remove Nails - Installed Arms"]
+
+[[fomod.picks.groups]]
+name = "Weapon Grip"
+type = "ExactlyOne"
+plugins = ["Remove Weapon Grip"]
+
+[[fomod.picks.groups]]
+name = "Tattoos"
+type = "ExactlyOne"
+plugins = ["Keep Arm Tattoos"]
+
+[[fomod.picks.groups]]
+name = "Texture Compatibility"
+type = "ExactlyOne"
+plugins = ["UV Texture Framework"]
+
+[[fomod.picks.groups]]
+name = "Body Compatibility"
+type = "ExactlyOne"
+plugins = ["Solo Arms"]
+
+[[fomod.picks.groups]]
+name = "Injection Marks"
+type = "ExactlyOne"
+plugins = ["Remove Injection Marks"]
+
+[[fomod.picks]]
+step = "Arasaka Skin - Female - Left Arm"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Female Left Arm"
+type = "ExactlyOne"
+plugins = ["Copper"]
+
+[[fomod.picks]]
+step = "Arasaka Skin - Female - Right Arm"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Female Right Arm"
+type = "ExactlyOne"
+plugins = ["Copper"]
+
+[[fomod.picks]]
+step = "Mantis Blade - Female - Open Left Arm"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Female Left Blade"
+type = "ExactlyOne"
+plugins = ["New Animated Psycho"]
+
+[[fomod.picks]]
+step = "Mantis Blade - Female - Open Right Arm"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Female Right Blade"
+type = "ExactlyOne"
+plugins = ["New Animated Psycho"]
+
+[[fomod.picks]]
+step = "Monowire Wire - Female"
+
+[[fomod.picks.groups]]
+name = "INFORMATION:"
+type = "All"
+plugins = []
+
+[[fomod.picks.groups]]
+name = "Female Left Arm"
+type = "ExactlyOne"
+plugins = ["Overloaded"]
+
+[[fomod.picks.groups]]
+name = "Female Right Arm"
+type = "ExactlyOne"
+plugins = ["Overloaded"]

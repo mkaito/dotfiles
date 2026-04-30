@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21865"
+file_id = "131522"
+name = "Damage Scaling and Balance - Extended"
+file_label = "Damage Scaling and Balance - Extended"
+version = "3.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

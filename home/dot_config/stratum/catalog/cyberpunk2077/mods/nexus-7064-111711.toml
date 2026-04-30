@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7064"
+file_id = "111711"
+name = "Immersive Rippers"
+file_label = "Immersive Rippers"
+version = "2.5.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

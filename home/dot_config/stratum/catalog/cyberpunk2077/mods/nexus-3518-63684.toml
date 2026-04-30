@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3518"
+file_id = "63684"
+name = "Native Settings UI"
+file_label = "Native Settings UI 1.96"
+version = "1.96"
+game = "cyberpunk2077"
+depends = []
+priority = 0

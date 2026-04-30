@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14163"
+file_id = "74564"
+name = "Bug Fix - Recon Grenade Bouce Fix"
+file_label = "Recon Grenades Bounce Fix"
+version = "2.12"
+game = "cyberpunk2077"
+depends = []
+priority = 0

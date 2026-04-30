@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24359"
+file_id = "121845"
+name = "No Spillover out of combat"
+file_label = "No Spillover out of combat"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

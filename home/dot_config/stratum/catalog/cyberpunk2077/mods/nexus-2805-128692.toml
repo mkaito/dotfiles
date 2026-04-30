@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2805"
+file_id = "128692"
+name = "Clear Skill Checks"
+file_label = "Clear Skill Checks"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

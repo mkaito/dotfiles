@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6493"
+file_id = "102912"
+name = "Apartment Cats - Japantown"
+file_label = "Apartment Cats - Japantown"
+version = "2.2.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23674"
+file_id = "121233"
+name = "Biotechnica Cache - New Iconic Weapons"
+file_label = "Biotechnica Cache - New Iconic Weapons"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

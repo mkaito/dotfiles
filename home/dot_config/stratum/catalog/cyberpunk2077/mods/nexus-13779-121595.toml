@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13779"
+file_id = "121595"
+name = "Here's Johnny"
+file_label = "Here's Johnny"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

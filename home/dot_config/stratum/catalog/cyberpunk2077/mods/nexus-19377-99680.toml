@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19377"
+file_id = "99680"
+name = "Gold Machetes for Valentinos"
+file_label = "Gold Machetes for Valentinos"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

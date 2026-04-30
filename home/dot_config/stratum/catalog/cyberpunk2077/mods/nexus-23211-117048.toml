@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23211"
+file_id = "117048"
+name = "Bounty class stars bug fix"
+file_label = "Bounty class stars fix"
+version = "1.0.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

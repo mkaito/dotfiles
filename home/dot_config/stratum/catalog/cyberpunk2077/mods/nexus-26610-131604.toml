@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "26610"
+file_id = "131604"
+name = "Easier Controller Sprint"
+file_label = "Easier Controller Sprint"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13928"
+file_id = "88686"
+name = "Intuitive Projectile Launcher System"
+file_label = "Intuitive Projectile Launcher System"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

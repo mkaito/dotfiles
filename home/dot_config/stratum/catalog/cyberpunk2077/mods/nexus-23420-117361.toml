@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23420"
+file_id = "117361"
+name = "Map Exit Nuclear Explosion Fix"
+file_label = "Map Nuclear Explosion Fix"
+version = "0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

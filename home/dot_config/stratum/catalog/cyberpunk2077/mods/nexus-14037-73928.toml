@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14037"
+file_id = "73928"
+name = "Renaissance Punk - Perk Scaling"
+file_label = "Renaissance Punk Scaling"
+version = "2.12.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

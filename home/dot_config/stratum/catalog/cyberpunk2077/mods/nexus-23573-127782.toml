@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23573"
+file_id = "127782"
+name = "Silver Pixel Cloud Drive-in Gates Game Bug Patch"
+file_label = "Silver Pixel Cloud Gates Game Bug Patch 1.0.1"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

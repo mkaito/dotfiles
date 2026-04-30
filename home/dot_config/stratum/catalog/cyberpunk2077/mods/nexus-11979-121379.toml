@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11979"
+file_id = "121379"
+name = "MaxTac Silencer (New Iconic Weapon)"
+file_label = "MaxTac Silencer"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

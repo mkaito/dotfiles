@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7413"
+file_id = "71492"
+name = "Immersion patch - The Hunt quest missing audio restore"
+file_label = "sq021_randy_pc_scene CET 2.0.3"
+version = "2.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

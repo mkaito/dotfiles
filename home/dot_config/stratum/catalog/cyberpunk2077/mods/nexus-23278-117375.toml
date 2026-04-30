@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23278"
+file_id = "117375"
+name = "Recoil for Driver Combat mode"
+file_label = "DC Recoil - AIO"
+version = "2.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

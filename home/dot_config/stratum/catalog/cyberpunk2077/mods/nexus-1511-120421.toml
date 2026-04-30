@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "1511"
+file_id = "120421"
+name = "redscript"
+file_label = "redscript"
+version = "0.5.31"
+game = "cyberpunk2077"
+depends = []
+priority = 0

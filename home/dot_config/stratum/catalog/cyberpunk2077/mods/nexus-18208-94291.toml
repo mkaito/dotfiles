@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18208"
+file_id = "94291"
+name = "Masamune and Nowaki Revamp"
+file_label = "Masamune"
+version = "1.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

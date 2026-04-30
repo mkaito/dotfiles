@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8775"
+file_id = "102917"
+name = "I Really Want To Stay At Your House - Panam"
+file_label = "Really Want To Stay At Your House - Panam"
+version = "3.3.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

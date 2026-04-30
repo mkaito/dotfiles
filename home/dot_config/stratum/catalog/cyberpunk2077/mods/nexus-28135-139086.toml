@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "28135"
+file_id = "139086"
+name = "Ping Tag Enemies Improved"
+file_label = "PingTagEnemiesImproved"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

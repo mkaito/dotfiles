@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23232"
+file_id = "116671"
+name = "Vehicle Handling Settings"
+file_label = "Vehicle Handling Settings"
+version = "2.3.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12322"
+file_id = "64734"
+name = "DLC Liberation Protocol"
+file_label = "DLC Liberation Protocol"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

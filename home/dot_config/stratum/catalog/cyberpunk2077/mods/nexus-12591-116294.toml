@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12591"
+file_id = "116294"
+name = "Jarngreipr (Lightning Projectile Launcher)"
+file_label = "Jarngreipr"
+version = "1.3.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

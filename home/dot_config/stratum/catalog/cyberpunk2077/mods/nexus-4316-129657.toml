@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4316"
+file_id = "129657"
+name = "Status Bar Bug Fixes"
+file_label = "Status Bar Bug Fixes"
+version = "1.8"
+game = "cyberpunk2077"
+depends = []
+priority = 0

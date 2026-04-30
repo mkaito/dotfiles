@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16896"
+file_id = "88239"
+name = "Rasetsu screens bug fix"
+file_label = "rasetsu screens bug fix"
+version = "1.0.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

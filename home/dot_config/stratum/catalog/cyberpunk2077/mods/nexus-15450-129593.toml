@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15450"
+file_id = "129593"
+name = "Playable Roulette - Gambling System"
+file_label = "Gambling System - Roulette"
+version = "1.1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

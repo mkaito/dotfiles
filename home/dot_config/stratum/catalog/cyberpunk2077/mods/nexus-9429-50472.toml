@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9429"
+file_id = "50472"
+name = "Cyberware-EX"
+file_label = "CyberwareEx-Addon-ExtendedSlots"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

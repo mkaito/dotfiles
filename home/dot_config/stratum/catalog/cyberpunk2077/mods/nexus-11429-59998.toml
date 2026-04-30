@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11429"
+file_id = "59998"
+name = "Allow Unbound Actions (Keybinds)"
+file_label = "Allow Unbound Actions (Keybinds)"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

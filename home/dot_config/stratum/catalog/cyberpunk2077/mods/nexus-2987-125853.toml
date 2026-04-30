@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2987"
+file_id = "125853"
+name = "Virtual Atelier"
+file_label = "Virtual Atelier"
+version = "1.4.7"
+game = "cyberpunk2077"
+depends = []
+priority = 0

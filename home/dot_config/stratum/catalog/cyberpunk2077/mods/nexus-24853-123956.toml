@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24853"
+file_id = "123956"
+name = "Compact Abilities"
+file_label = "CompactAbilities"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

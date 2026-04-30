@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6276"
+file_id = "118582"
+name = "Apartment Cats - The Glen"
+file_label = "Apartment Cats - The Glen"
+version = "2.2.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

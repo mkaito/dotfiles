@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6550"
+file_id = "34285"
+name = "Instant Wardrobe"
+file_label = "Instant Wardrobe"
+version = "v1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

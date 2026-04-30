@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15409"
+file_id = "115310"
+name = "Replace Weapon Mods"
+file_label = "Replace Weapon Mods"
+version = "1.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

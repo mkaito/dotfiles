@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9706"
+file_id = "131025"
+name = "Better Armor Tooltip"
+file_label = "Better Armor Tooltip"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

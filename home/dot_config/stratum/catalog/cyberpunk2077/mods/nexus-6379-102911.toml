@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6379"
+file_id = "102911"
+name = "Apartment Cats - Northside Motel"
+file_label = "Apartment Cats - Northside Motel"
+version = "2.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

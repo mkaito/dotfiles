@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "17486"
+file_id = "108157"
+name = "Judy Identity Privacy"
+file_label = "Judy Identity Privacy"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

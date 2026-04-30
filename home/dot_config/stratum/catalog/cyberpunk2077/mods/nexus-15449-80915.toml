@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15449"
+file_id = "80915"
+name = "Dynamic Wanted Stars"
+file_label = "dynamic_wanted_stars_v1.0"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

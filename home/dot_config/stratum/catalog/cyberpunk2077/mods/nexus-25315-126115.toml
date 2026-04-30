@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "25315"
+file_id = "126115"
+name = "Stash and Vendors QoL - move stack - select group - move group"
+file_label = "StashAndVendorsQoL"
+version = "0.9"
+game = "cyberpunk2077"
+depends = []
+priority = 0

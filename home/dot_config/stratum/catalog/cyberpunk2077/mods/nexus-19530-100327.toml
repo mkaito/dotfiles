@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19530"
+file_id = "100327"
+name = "Fixed NPC Vehicle Reactions"
+file_label = "NPC Vehicle Reactions Fixed"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

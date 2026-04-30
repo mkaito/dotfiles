@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10685"
+file_id = "57158"
+name = "Informative HUD Quickhacks Memory Counter"
+file_label = "QuickhacksMemoryCounter"
+version = "0.9.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

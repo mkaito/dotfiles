@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11800"
+file_id = "67602"
+name = "Midas Collection"
+file_label = "Default Edition - Midas Collection"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

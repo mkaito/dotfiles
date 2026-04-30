@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9666"
+file_id = "61026"
+name = "Malorian Arms 3516 Alternative Ironsight Animation"
+file_label = "Malorian Arms 3516 - Pre2.0 ADS Speedx1.5"
+version = "1.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

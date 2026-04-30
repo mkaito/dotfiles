@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19189"
+file_id = "98549"
+name = "Fighting Gangs Allowed - Reasonable Police"
+file_label = "Fighting Gangs Allowed - Reasonable Police"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

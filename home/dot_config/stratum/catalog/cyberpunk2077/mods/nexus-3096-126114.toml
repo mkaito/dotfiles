@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3096"
+file_id = "126114"
+name = "Custom Quickslots (Consumables Grenades and Cyberware Abilities)"
+file_label = "Custom Quickslots"
+version = "5.3.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

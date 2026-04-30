@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16386"
+file_id = "120892"
+name = "Loot Icons Extension"
+file_label = "Loot Icons Extension Light"
+version = "1.53"
+game = "cyberpunk2077"
+depends = []
+priority = 0

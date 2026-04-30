@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20743"
+file_id = "107189"
+name = "Cutscene Weapon Swapper"
+file_label = "Cutscene Weapon Swapper"
+version = "1.4.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

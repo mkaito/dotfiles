@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24673"
+file_id = "130489"
+name = "Black Budget Classified Limbs - Iconic Cyberarms Pack"
+file_label = "Black Budget - Iconic Cyberarms Pack"
+version = "2.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

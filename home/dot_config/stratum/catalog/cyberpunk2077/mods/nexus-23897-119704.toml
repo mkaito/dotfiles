@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23897"
+file_id = "119704"
+name = "Immersion Patch - Path of Glory - Restore Gun Equip in Shuttle Scene"
+file_label = "Path Of Glory - Shuttle scene restore gun equip"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

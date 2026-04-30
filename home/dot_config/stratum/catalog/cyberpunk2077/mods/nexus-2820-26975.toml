@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2820"
+file_id = "26975"
+name = "Hide Read Shards"
+file_label = "Hide Read Shards"
+version = "0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

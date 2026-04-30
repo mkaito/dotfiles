@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15138"
+file_id = "116544"
+name = "NCI Addon - Badlands and Pacifica"
+file_label = "NCI Badlands and Pacifica"
+version = "2.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

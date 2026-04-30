@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2687"
+file_id = "106194"
+name = "Smarter Scrapper"
+file_label = "Smarter Scrapper"
+version = "2.3.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

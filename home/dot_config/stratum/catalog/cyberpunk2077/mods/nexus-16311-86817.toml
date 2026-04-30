@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16311"
+file_id = "86817"
+name = "Stand After Sliding"
+file_label = "Stand After Sliding"
+version = "0.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

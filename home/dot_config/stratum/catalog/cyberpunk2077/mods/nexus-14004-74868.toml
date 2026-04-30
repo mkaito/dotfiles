@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14004"
+file_id = "74868"
+name = "Slaught-O-Matic Platinum"
+file_label = "Slaught-O-Matic Platinum Semi-Auto"
+version = "1.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

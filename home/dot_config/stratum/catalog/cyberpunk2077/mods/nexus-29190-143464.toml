@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "29190"
+file_id = "143464"
+name = "Nova Optics (Gameplay ENV Tuning with Vehicle Exposure Fix)"
+file_label = "Nova Optics"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

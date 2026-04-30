@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21518"
+file_id = "109102"
+name = "Mizutani Shion horn fix"
+file_label = "Mizutani Shion horn fix"
+version = "1.01"
+game = "cyberpunk2077"
+depends = []
+priority = 0

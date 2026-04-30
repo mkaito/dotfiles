@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23615"
+file_id = "118380"
+name = "Cyberware Screen Tooltip Fix"
+file_label = "Cyberware Screen Tooltip Fix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

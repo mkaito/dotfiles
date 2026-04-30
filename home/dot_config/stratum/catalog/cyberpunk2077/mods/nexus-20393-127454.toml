@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20393"
+file_id = "127454"
+name = "Alternative Berserk"
+file_label = "Alternative Berserk"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4658"
+file_id = "25673"
+name = "Vehicle Summon Tweaks"
+file_label = "Vehicle Summon Tweaks - Repair Cost"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

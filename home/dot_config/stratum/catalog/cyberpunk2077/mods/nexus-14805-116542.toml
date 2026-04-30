@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14805"
+file_id = "116542"
+name = "NCI Addon - Westbrook"
+file_label = "NCI Westbrook"
+version = "2.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

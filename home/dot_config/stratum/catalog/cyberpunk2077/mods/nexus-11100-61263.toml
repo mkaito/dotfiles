@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11100"
+file_id = "61263"
+name = "Second Heart Fix"
+file_label = "Second Heart Fix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2592"
+file_id = "128914"
+name = "Limited HUD"
+file_label = "Limited HUD"
+version = "2.21.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

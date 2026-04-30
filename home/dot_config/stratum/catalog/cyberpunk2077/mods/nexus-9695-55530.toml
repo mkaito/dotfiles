@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9695"
+file_id = "55530"
+name = "Quickhack Damage Fix"
+file_label = "Quickhack Damage Fix 1.0.2 - TweakXL"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20827"
+file_id = "121040"
+name = "Tyger Cache - New Iconic Weapons"
+file_label = "Tyger Cache - New Iconic Weapons"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

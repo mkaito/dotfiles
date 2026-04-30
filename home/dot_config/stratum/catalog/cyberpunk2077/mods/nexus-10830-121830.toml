@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10830"
+file_id = "121830"
+name = "Rostovic Koplje Smart Precision Rifle"
+file_label = "Rostovic Koplje"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

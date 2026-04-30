@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19234"
+file_id = "100028"
+name = "Nomad Cache - New Iconic Weapons"
+file_label = "Nomad Cache - New Iconic Weapons"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

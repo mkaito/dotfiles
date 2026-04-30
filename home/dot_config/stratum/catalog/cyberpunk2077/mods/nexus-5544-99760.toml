@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5544"
+file_id = "99760"
+name = "All Vanilla Clothes Atelier Store"
+file_label = "All Vanilla Clothes Atelier Store"
+version = "v1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

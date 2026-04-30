@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "22838"
+file_id = "114441"
+name = "NCPD Fixes"
+file_label = "NCPD Fixes"
+version = "ncpdf-1.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

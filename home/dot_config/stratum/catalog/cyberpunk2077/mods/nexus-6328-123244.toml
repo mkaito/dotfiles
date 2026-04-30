@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6328"
+file_id = "123244"
+name = "Untrack Quest Ultimate - No Main Quest re-tracking - No leftovers"
+file_label = "Untrack Quest Ultimate 3.3.2"
+version = "3.3.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

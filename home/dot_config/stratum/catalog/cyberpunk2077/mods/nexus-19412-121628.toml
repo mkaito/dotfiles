@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19412"
+file_id = "121628"
+name = "Gone Away - Better Partner Suspended Behaviour"
+file_label = "Gone Away"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

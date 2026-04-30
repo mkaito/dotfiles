@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9939"
+file_id = "88860"
+name = "Stealth Remote Control Cars and Turrets"
+file_label = "StealthRC.zip"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

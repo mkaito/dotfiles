@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8806"
+file_id = "129387"
+name = "I Really Want To Stay At Your House - Kerry"
+file_label = "Really Want To Stay At Your House - Kerry"
+version = "3.3.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

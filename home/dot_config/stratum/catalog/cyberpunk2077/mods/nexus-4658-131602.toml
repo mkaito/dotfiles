@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4658"
+file_id = "131602"
+name = "Vehicle Summon Tweaks"
+file_label = "Vehicle Summon Tweaks - Dismiss"
+version = "2.3.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

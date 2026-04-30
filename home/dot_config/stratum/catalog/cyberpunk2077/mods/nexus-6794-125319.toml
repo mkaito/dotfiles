@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6794"
+file_id = "125319"
+name = "Immersive Vik"
+file_label = "Immersive Vik"
+version = "2.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

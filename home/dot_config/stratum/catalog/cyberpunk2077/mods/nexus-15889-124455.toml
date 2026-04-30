@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15889"
+file_id = "124455"
+name = "Extra Iconics"
+file_label = "Extra Iconics"
+version = "2.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

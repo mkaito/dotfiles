@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "17923"
+file_id = "92628"
+name = "Enemies Dodging Fix"
+file_label = "Dodging Fix"
+version = "0.11"
+game = "cyberpunk2077"
+depends = []
+priority = 0

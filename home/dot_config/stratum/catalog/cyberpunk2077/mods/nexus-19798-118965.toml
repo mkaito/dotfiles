@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19798"
+file_id = "118965"
+name = "Neuralware - Chipware Expansion"
+file_label = "Neuralware - Chipware Expansion"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

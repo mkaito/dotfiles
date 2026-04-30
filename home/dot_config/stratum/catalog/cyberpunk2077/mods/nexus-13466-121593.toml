@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13466"
+file_id = "121593"
+name = "Kabuki Gun Range Enhanced"
+file_label = "Kabuki Gun Range Enhanced"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

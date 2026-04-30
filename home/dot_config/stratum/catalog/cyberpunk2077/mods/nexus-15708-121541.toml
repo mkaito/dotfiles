@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15708"
+file_id = "121541"
+name = "Parking Spots Enhanced"
+file_label = "Parking Spots Enhanced"
+version = "1.2.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

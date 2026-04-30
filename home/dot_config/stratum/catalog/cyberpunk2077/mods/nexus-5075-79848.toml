@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5075"
+file_id = "79848"
+name = "Adaptive Sliders"
+file_label = "AdaptiveSliders"
+version = "2024-06-10"
+game = "cyberpunk2077"
+depends = []
+priority = 0

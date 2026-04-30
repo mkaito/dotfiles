@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16270"
+file_id = "110197"
+name = "Intelligence based scanner time dilation"
+file_label = "INT based scanner dillation 1.0 for 2.21"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

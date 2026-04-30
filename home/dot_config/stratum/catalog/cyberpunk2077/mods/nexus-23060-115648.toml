@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23060"
+file_id = "115648"
+name = "Buzzsaw VFX Fix"
+file_label = "Buzzsaw VFX Fix"
+version = "1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

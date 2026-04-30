@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13461"
+file_id = "96159"
+name = "Plan C"
+file_label = "Plan C - Japantown Stash Wall Fix"
+version = "swf-1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

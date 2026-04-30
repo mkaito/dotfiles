@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16541"
+file_id = "87366"
+name = "Passenger Targeting Fix"
+file_label = "Passenger Targeting Fix"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

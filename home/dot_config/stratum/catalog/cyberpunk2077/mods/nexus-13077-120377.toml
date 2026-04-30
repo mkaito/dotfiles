@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13077"
+file_id = "120377"
+name = "Trigger Mode Control"
+file_label = "Trigger Mode Control"
+version = "2.8.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

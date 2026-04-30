@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9666"
+file_id = "51470"
+name = "Malorian Arms 3516 Alternative Ironsight Animation"
+file_label = "Malorian Arms 3516 - Slide Fix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

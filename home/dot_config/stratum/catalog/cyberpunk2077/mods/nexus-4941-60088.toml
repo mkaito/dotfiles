@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4941"
+file_id = "60088"
+name = "Real Vendor Names"
+file_label = "Real Vendor Names"
+version = "2.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

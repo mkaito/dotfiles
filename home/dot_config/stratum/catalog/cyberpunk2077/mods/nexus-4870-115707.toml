@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4870"
+file_id = "115707"
+name = "River Romanced Enhanced"
+file_label = "River Romanced Enhanced"
+version = "2.4.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

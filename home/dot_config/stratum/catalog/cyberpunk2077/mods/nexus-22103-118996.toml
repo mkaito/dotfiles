@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "22103"
+file_id = "118996"
+name = "Adam Finlay Hidden Gem Quest Recovery"
+file_label = "Adam Finlay Hidden Gem Quest Recovery v1.2.1"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

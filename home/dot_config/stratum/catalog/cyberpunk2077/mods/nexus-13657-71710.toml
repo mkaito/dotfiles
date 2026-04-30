@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13657"
+file_id = "71710"
+name = "Clean Computer Wallpaper"
+file_label = "Clean Computer Wallpaper"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

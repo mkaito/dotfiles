@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4378"
+file_id = "116497"
+name = "Enhanced Craft"
+file_label = "Enhanced Craft"
+version = "4.0.6"
+game = "cyberpunk2077"
+depends = []
+priority = 0

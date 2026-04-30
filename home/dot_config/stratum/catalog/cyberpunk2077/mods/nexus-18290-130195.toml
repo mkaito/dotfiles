@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18290"
+file_id = "130195"
+name = "Quickhack Fixes"
+file_label = "Quickhack Fixes"
+version = "1.2.21"
+game = "cyberpunk2077"
+depends = []
+priority = 0

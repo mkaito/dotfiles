@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7831"
+file_id = "130745"
+name = "Deceptious Quest Core"
+file_label = "Deceptious Quest Core"
+version = "3.1.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

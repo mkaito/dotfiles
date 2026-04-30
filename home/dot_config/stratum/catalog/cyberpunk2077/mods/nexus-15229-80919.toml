@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15229"
+file_id = "80919"
+name = "Gambling Props - Poker Chips and Playing Cards"
+file_label = "Gambling Props"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

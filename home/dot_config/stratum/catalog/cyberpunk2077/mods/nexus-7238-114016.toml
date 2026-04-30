@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7238"
+file_id = "114016"
+name = "Quickhack Hotkeys"
+file_label = "Quickhack Hotkeys"
+version = "2.3.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0
