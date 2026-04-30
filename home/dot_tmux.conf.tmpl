@@ -115,7 +115,7 @@ set -g @plugin 'tmux-plugins/tmux-open'
 set -g @resurrect-capture-pane-contents 'on'
 # Restart these in restored panes. '~nvim' = match any nvim invocation
 # (with args). resession.nvim then auto-loads the cwd-matching session.
-set -g @resurrect-processes 'ssh psql mosh-client "~nvim"'
+set -g @resurrect-processes 'ssh psql mosh-client "~nvim" "~claude->claude --continue"'
 
 # Continuum — auto-save every 15 min, auto-restore on tmux server start
 set -g @continuum-save-interval '15'
