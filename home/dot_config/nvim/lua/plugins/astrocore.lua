@@ -22,6 +22,10 @@ return {
       virtual_text = true,
       underline = true,
     },
+    -- treesitter configuration (v6: lives in astrocore, not nvim-treesitter opts)
+    treesitter = {
+      ensure_installed = { "lua", "vim", "ruby", "yaml" },
+    },
     -- vim options can be configured here
     options = {
       opt = { -- vim.opt.<key>

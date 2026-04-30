@@ -1,6 +1,6 @@
 # Neovim configuration
 
-This configuration uses [AstroNvim v4](https://astronvim.com/).
+This configuration uses [AstroNvim v6](https://astronvim.com/).
 
 ## Clone the repository
 

@@ -40,7 +40,7 @@ return {
     servers = {
       "ruby_lsp",
     },
-    -- customize language server configuration options passed to `lspconfig`
+    -- customize language server configuration via `vim.lsp.config[server]`
     ---@diagnostic disable: missing-fields
     config = {
       ruff = {
@@ -76,19 +76,9 @@ return {
           linters = { "standard" },
         },
       },
-    },
-    -- customize how language servers are attached
-    handlers = {
-      -- a function without a key is simply the default handler, functions take two parameters, the server name and the configured options table for that server
-      -- function(server, opts) require("lspconfig")[server].setup(opts) end
-
-      -- the key is the server that is being setup with `lspconfig`
-      -- rust_analyzer = false, -- setting a handler to false will disable the set up of that language server
-      -- pyright = function(_, opts) require("lspconfig").pyright.setup(opts) end -- or a custom handler function can be passed
-      tflint = function(_, opts)
-        local util = require "lspconfig.util"
-        opts.root_dir = util.root_pattern(".terraform.lock.hcl", ".tflint.hcl", ".git")
-      end,
+      tflint = {
+        root_markers = { ".terraform.lock.hcl", ".tflint.hcl", ".git" },
+      },
     },
     -- Configure buffer local auto commands to add when attaching a language server
     autocmds = {
