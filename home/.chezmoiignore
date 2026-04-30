@@ -75,3 +75,6 @@ Library
 
 # stratum catalog — lives in chezmoi source directly, not deployed
 .config/stratum/catalog
+
+# machine-local secrets — never publish
+.config/zsh/conf.d/local.zsh

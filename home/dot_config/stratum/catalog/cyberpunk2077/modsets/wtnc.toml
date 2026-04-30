@@ -1,0 +1,6 @@
+name = "wtnc"
+collections = [
+    "nexus:iszwwe:481:wtnc",
+    "wtnc-addons",
+    "visual:body",
+]

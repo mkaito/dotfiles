@@ -84,6 +84,9 @@ alias rake='noglob rake'
 alias be='bundle exec'
 alias ber='noglob bundle exec rake'
 
+# Stratum
+alias s=stratum
+
 # Misc utilities
 function mc {
   command mkdir -p "$1"

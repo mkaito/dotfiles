@@ -1,0 +1,20 @@
+name = "wtnc-addons"
+title = "wtnc-addons"
+version = "1"
+include = [
+    "nexus:9695:55530",
+    "nexus:10685:57158",
+    "nexus:28135:139086",
+    "nexus:23232:116671",
+    "nexus:5544:99760",
+    "nexus:2987:125853",
+    "nexus:9429:50472",
+    "nexus:9429:105001",
+    "nexus:2202:71328",
+    "nexus:15043:141071",
+    "nexus:25830:128257",
+    "nexus:29190:143464",
+    "nexus:21987:110952",
+    "local:9429:51398",
+]
+blacklisted = []

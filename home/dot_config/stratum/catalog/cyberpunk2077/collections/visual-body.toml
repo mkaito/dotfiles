@@ -1,0 +1,14 @@
+name = "visual:body"
+title = "visual:body"
+version = "1"
+include = [
+    "nexus:4198:143338",
+    "nexus:3725:122618",
+    "nexus:15869:95826",
+    "nexus:3783:116788",
+    "nexus:3783:116264",
+    "nexus:4393:52435",
+    "nexus:13258:91688",
+    "nexus:1099:105503:34423e9cbe4e",
+]
+blacklisted = []

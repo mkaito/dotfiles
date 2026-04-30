@@ -1,0 +1,1347 @@
+#compdef stratum
+
+autoload -U is-at-least
+
+_stratum() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum_commands" \
+"*::: :->stratum" \
+&& ret=0
+    case $state in
+    (stratum)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-command-$line[1]:"
+        case $line[1] in
+            (mod)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum__subcmd__mod_commands" \
+"*::: :->mod" \
+&& ret=0
+
+    case $state in
+    (mod)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-mod-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+'-o[Show only mods not referenced by any collection]' \
+'--orphans[Show only mods not referenced by any collection]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':id -- Mod id, e.g. nexus\:1099\:105503 or nexus\:1099\:105503\:a3f9c12d4e80:_default' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':id -- Mod id, e.g. nexus\:1099\:105503:_default' \
+&& ret=0
+;;
+(check)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(priority)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':id -- Mod id:_default' \
+':priority -- Priority value (default 0; positive = higher; negative = lower):_default' \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+'-a[Include old/archived files in the picker]' \
+'--old[Include old/archived files in the picker]' \
+'-C[Don'\''t clear the screen between FOMOD prompts]' \
+'--no-clear[Don'\''t clear the screen between FOMOD prompts]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':mod_ref -- Provider\:mod-id, e.g. nexus\:2987:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__mod__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-mod-help-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(check)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(priority)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(collection)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum__subcmd__collection_commands" \
+"*::: :->collection" \
+&& ret=0
+
+    case $state in
+    (collection)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-collection-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+'-a[Include old/archived files in the picker]' \
+'--old[Include old/archived files in the picker]' \
+'-C[Don'\''t clear the screen between FOMOD prompts]' \
+'--no-clear[Don'\''t clear the screen between FOMOD prompts]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+':mod_id -- Archived mod id (nexus\:2987\:105503) or bare provider\:mod-id (nexus\:2987):_default' \
+&& ret=0
+;;
+(blacklist)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+':mod_id:_default' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+':mod_id:_default' \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(import)
+_arguments "${_arguments_options[@]}" : \
+'-C[Don'\''t clear the screen between FOMOD prompts]' \
+'--no-clear[Don'\''t clear the screen between FOMOD prompts]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':id -- provider\:slug or provider\:slug\:revision, e.g. nexus\:iszwwe or nexus\:iszwwe\:481:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__collection__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-collection-help-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(blacklist)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(import)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(modset)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum__subcmd__modset_commands" \
+"*::: :->modset" \
+&& ret=0
+
+    case $state in
+    (modset)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-modset-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+':collection:_default' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+':collection:_default' \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(resolve)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__modset__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-modset-help-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(resolve)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(state)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum__subcmd__state_commands" \
+"*::: :->state" \
+&& ret=0
+
+    case $state in
+    (state)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-state-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name -- Modset name:_default' \
+&& ret=0
+;;
+(clean)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':name -- Modset name:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__state__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-state-help-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(clean)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(launch)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_stratum__subcmd__launch_commands" \
+"*::: :->launch" \
+&& ret=0
+
+    case $state in
+    (launch)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-launch-command-$line[1]:"
+        case $line[1] in
+            (run)
+_arguments "${_arguments_options[@]}" : \
+'-n[Show the overlay plan without mounting]' \
+'--dry-run[Show the overlay plan without mounting]' \
+'-h[Print help]' \
+'--help[Print help]' \
+':name -- Modset to activate:_default' \
+'*::command -- Command to execute with the overlay active (everything after --):_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__launch__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-launch-help-command-$line[1]:"
+        case $line[1] in
+            (run)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(generate-completions)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':shell:(bash elvish fish powershell zsh)' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-command-$line[1]:"
+        case $line[1] in
+            (mod)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help__subcmd__mod_commands" \
+"*::: :->mod" \
+&& ret=0
+
+    case $state in
+    (mod)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-mod-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(check)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(priority)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(collection)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help__subcmd__collection_commands" \
+"*::: :->collection" \
+&& ret=0
+
+    case $state in
+    (collection)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-collection-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(blacklist)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(import)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(modset)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help__subcmd__modset_commands" \
+"*::: :->modset" \
+&& ret=0
+
+    case $state in
+    (modset)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-modset-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(delete)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(resolve)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(state)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help__subcmd__state_commands" \
+"*::: :->state" \
+&& ret=0
+
+    case $state in
+    (state)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-state-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(show)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(clean)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(launch)
+_arguments "${_arguments_options[@]}" : \
+":: :_stratum__subcmd__help__subcmd__launch_commands" \
+"*::: :->launch" \
+&& ret=0
+
+    case $state in
+    (launch)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:stratum-help-launch-command-$line[1]:"
+        case $line[1] in
+            (run)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(generate-completions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_stratum_commands] )) ||
+_stratum_commands() {
+    local commands; commands=(
+'mod:Manage the mod archive' \
+'collection:Manage mod collections' \
+'modset:Manage modsets' \
+'state:Manage overlay state' \
+'launch:Launch a game with a modset overlay' \
+'generate-completions:Generate shell completions' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection_commands] )) ||
+_stratum__subcmd__collection_commands() {
+    local commands; commands=(
+'create:Create a new collection' \
+'list:List all collections' \
+'show:Show contents of a collection' \
+'add:Add a mod to a collection, downloading it first if not archived' \
+'blacklist:Add a mod to a collection as blacklisted' \
+'remove:Remove a mod from a collection' \
+'delete:Delete a collection' \
+'import:Import an external collection and archive all its mods' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum collection commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__add_commands] )) ||
+_stratum__subcmd__collection__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__blacklist_commands] )) ||
+_stratum__subcmd__collection__subcmd__blacklist_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection blacklist commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__create_commands] )) ||
+_stratum__subcmd__collection__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__delete_commands] )) ||
+_stratum__subcmd__collection__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help_commands] )) ||
+_stratum__subcmd__collection__subcmd__help_commands() {
+    local commands; commands=(
+'create:Create a new collection' \
+'list:List all collections' \
+'show:Show contents of a collection' \
+'add:Add a mod to a collection, downloading it first if not archived' \
+'blacklist:Add a mod to a collection as blacklisted' \
+'remove:Remove a mod from a collection' \
+'delete:Delete a collection' \
+'import:Import an external collection and archive all its mods' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum collection help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__add_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__blacklist_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__blacklist_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help blacklist commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__create_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__delete_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__import_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help import commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__list_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__remove_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__help__subcmd__show_commands] )) ||
+_stratum__subcmd__collection__subcmd__help__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection help show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__import_commands] )) ||
+_stratum__subcmd__collection__subcmd__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection import commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__list_commands] )) ||
+_stratum__subcmd__collection__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__remove_commands] )) ||
+_stratum__subcmd__collection__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__collection__subcmd__show_commands] )) ||
+_stratum__subcmd__collection__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum collection show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__generate-completions_commands] )) ||
+_stratum__subcmd__generate-completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum generate-completions commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help_commands] )) ||
+_stratum__subcmd__help_commands() {
+    local commands; commands=(
+'mod:Manage the mod archive' \
+'collection:Manage mod collections' \
+'modset:Manage modsets' \
+'state:Manage overlay state' \
+'launch:Launch a game with a modset overlay' \
+'generate-completions:Generate shell completions' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection_commands] )) ||
+_stratum__subcmd__help__subcmd__collection_commands() {
+    local commands; commands=(
+'create:Create a new collection' \
+'list:List all collections' \
+'show:Show contents of a collection' \
+'add:Add a mod to a collection, downloading it first if not archived' \
+'blacklist:Add a mod to a collection as blacklisted' \
+'remove:Remove a mod from a collection' \
+'delete:Delete a collection' \
+'import:Import an external collection and archive all its mods' \
+    )
+    _describe -t commands 'stratum help collection commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__add_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__blacklist_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__blacklist_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection blacklist commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__create_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__delete_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__import_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__import_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection import commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__list_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__remove_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__collection__subcmd__show_commands] )) ||
+_stratum__subcmd__help__subcmd__collection__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help collection show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__generate-completions_commands] )) ||
+_stratum__subcmd__help__subcmd__generate-completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help generate-completions commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__launch_commands] )) ||
+_stratum__subcmd__help__subcmd__launch_commands() {
+    local commands; commands=(
+'run:Mount modset overlay and run a command inside it (-n shows the plan without mounting)' \
+    )
+    _describe -t commands 'stratum help launch commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__launch__subcmd__run_commands] )) ||
+_stratum__subcmd__help__subcmd__launch__subcmd__run_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help launch run commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod_commands] )) ||
+_stratum__subcmd__help__subcmd__mod_commands() {
+    local commands; commands=(
+'list:List archived mods' \
+'show:Show details for a single archived mod (including FOMOD picks)' \
+'remove:Remove a mod from the archive' \
+'check:Check archive integrity' \
+'priority:Set the overlay priority of a mod (positive = higher in overlay stack)' \
+'get:Download and archive files for a provider mod' \
+    )
+    _describe -t commands 'stratum help mod commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__check_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__check_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod check commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__get_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod get commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__list_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__priority_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__priority_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod priority commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__remove_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__mod__subcmd__show_commands] )) ||
+_stratum__subcmd__help__subcmd__mod__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help mod show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset_commands] )) ||
+_stratum__subcmd__help__subcmd__modset_commands() {
+    local commands; commands=(
+'create:Create a new modset' \
+'list:List all modsets' \
+'show:Show collections in a modset' \
+'add:Add a collection to a modset' \
+'remove:Remove a collection from a modset' \
+'delete:Delete a modset' \
+'resolve:Resolve a modset\: list archived mods it references' \
+    )
+    _describe -t commands 'stratum help modset commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__add_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__create_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__delete_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__list_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__remove_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__resolve_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__resolve_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset resolve commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__modset__subcmd__show_commands] )) ||
+_stratum__subcmd__help__subcmd__modset__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help modset show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__state_commands] )) ||
+_stratum__subcmd__help__subcmd__state_commands() {
+    local commands; commands=(
+'list:List all modsets with overlay state\: disk size and last-launched date' \
+'show:Show files in the overlay state directory for a modset' \
+'clean:Remove overlay state (upper/work/merged dirs) for a modset' \
+    )
+    _describe -t commands 'stratum help state commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__state__subcmd__clean_commands] )) ||
+_stratum__subcmd__help__subcmd__state__subcmd__clean_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help state clean commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__state__subcmd__list_commands] )) ||
+_stratum__subcmd__help__subcmd__state__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help state list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__help__subcmd__state__subcmd__show_commands] )) ||
+_stratum__subcmd__help__subcmd__state__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum help state show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__launch_commands] )) ||
+_stratum__subcmd__launch_commands() {
+    local commands; commands=(
+'run:Mount modset overlay and run a command inside it (-n shows the plan without mounting)' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum launch commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__launch__subcmd__help_commands] )) ||
+_stratum__subcmd__launch__subcmd__help_commands() {
+    local commands; commands=(
+'run:Mount modset overlay and run a command inside it (-n shows the plan without mounting)' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum launch help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__launch__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__launch__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum launch help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__launch__subcmd__help__subcmd__run_commands] )) ||
+_stratum__subcmd__launch__subcmd__help__subcmd__run_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum launch help run commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__launch__subcmd__run_commands] )) ||
+_stratum__subcmd__launch__subcmd__run_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum launch run commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod_commands] )) ||
+_stratum__subcmd__mod_commands() {
+    local commands; commands=(
+'list:List archived mods' \
+'show:Show details for a single archived mod (including FOMOD picks)' \
+'remove:Remove a mod from the archive' \
+'check:Check archive integrity' \
+'priority:Set the overlay priority of a mod (positive = higher in overlay stack)' \
+'get:Download and archive files for a provider mod' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum mod commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__check_commands] )) ||
+_stratum__subcmd__mod__subcmd__check_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod check commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__get_commands] )) ||
+_stratum__subcmd__mod__subcmd__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod get commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help_commands] )) ||
+_stratum__subcmd__mod__subcmd__help_commands() {
+    local commands; commands=(
+'list:List archived mods' \
+'show:Show details for a single archived mod (including FOMOD picks)' \
+'remove:Remove a mod from the archive' \
+'check:Check archive integrity' \
+'priority:Set the overlay priority of a mod (positive = higher in overlay stack)' \
+'get:Download and archive files for a provider mod' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum mod help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__check_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__check_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help check commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__get_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__get_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help get commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__list_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__priority_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__priority_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help priority commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__remove_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__help__subcmd__show_commands] )) ||
+_stratum__subcmd__mod__subcmd__help__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod help show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__list_commands] )) ||
+_stratum__subcmd__mod__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__priority_commands] )) ||
+_stratum__subcmd__mod__subcmd__priority_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod priority commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__remove_commands] )) ||
+_stratum__subcmd__mod__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__mod__subcmd__show_commands] )) ||
+_stratum__subcmd__mod__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum mod show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset_commands] )) ||
+_stratum__subcmd__modset_commands() {
+    local commands; commands=(
+'create:Create a new modset' \
+'list:List all modsets' \
+'show:Show collections in a modset' \
+'add:Add a collection to a modset' \
+'remove:Remove a collection from a modset' \
+'delete:Delete a modset' \
+'resolve:Resolve a modset\: list archived mods it references' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum modset commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__add_commands] )) ||
+_stratum__subcmd__modset__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__create_commands] )) ||
+_stratum__subcmd__modset__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__delete_commands] )) ||
+_stratum__subcmd__modset__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help_commands] )) ||
+_stratum__subcmd__modset__subcmd__help_commands() {
+    local commands; commands=(
+'create:Create a new modset' \
+'list:List all modsets' \
+'show:Show collections in a modset' \
+'add:Add a collection to a modset' \
+'remove:Remove a collection from a modset' \
+'delete:Delete a modset' \
+'resolve:Resolve a modset\: list archived mods it references' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum modset help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__add_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help add commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__create_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help create commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__delete_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__delete_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help delete commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__list_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__remove_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__resolve_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__resolve_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help resolve commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__help__subcmd__show_commands] )) ||
+_stratum__subcmd__modset__subcmd__help__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset help show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__list_commands] )) ||
+_stratum__subcmd__modset__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__remove_commands] )) ||
+_stratum__subcmd__modset__subcmd__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset remove commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__resolve_commands] )) ||
+_stratum__subcmd__modset__subcmd__resolve_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset resolve commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__modset__subcmd__show_commands] )) ||
+_stratum__subcmd__modset__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum modset show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state_commands] )) ||
+_stratum__subcmd__state_commands() {
+    local commands; commands=(
+'list:List all modsets with overlay state\: disk size and last-launched date' \
+'show:Show files in the overlay state directory for a modset' \
+'clean:Remove overlay state (upper/work/merged dirs) for a modset' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum state commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__clean_commands] )) ||
+_stratum__subcmd__state__subcmd__clean_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state clean commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__help_commands] )) ||
+_stratum__subcmd__state__subcmd__help_commands() {
+    local commands; commands=(
+'list:List all modsets with overlay state\: disk size and last-launched date' \
+'show:Show files in the overlay state directory for a modset' \
+'clean:Remove overlay state (upper/work/merged dirs) for a modset' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'stratum state help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__help__subcmd__clean_commands] )) ||
+_stratum__subcmd__state__subcmd__help__subcmd__clean_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state help clean commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__help__subcmd__help_commands] )) ||
+_stratum__subcmd__state__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state help help commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__help__subcmd__list_commands] )) ||
+_stratum__subcmd__state__subcmd__help__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state help list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__help__subcmd__show_commands] )) ||
+_stratum__subcmd__state__subcmd__help__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state help show commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__list_commands] )) ||
+_stratum__subcmd__state__subcmd__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state list commands' commands "$@"
+}
+(( $+functions[_stratum__subcmd__state__subcmd__show_commands] )) ||
+_stratum__subcmd__state__subcmd__show_commands() {
+    local commands; commands=()
+    _describe -t commands 'stratum state show commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_stratum" ]; then
+    _stratum "$@"
+else
+    compdef _stratum stratum
+fi
