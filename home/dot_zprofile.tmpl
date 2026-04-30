@@ -2,9 +2,7 @@
 # (Homebrew's path_helper) resets PATH between .zshenv and .zshrc.
 # .zprofile runs after /etc/zprofile and wins.
 
-PATHS=(\
-  "$HOME/.local/bin" \
-  )
+PATHS=( "$HOME/.local/bin" )
 
 {{ if eq .chezmoi.os "darwin" -}}
 export HOMEBREW_NO_ANALYTICS=1

@@ -70,5 +70,5 @@
 .config/zsh/conf.d/macos.zsh
 .config/linearmouse
 .local/bin/macos_set_key_repeat.sh
-Library/LaunchAgents/com.user.tmux.plist
+Library
 {{ end }}

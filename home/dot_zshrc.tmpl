@@ -1,3 +1,10 @@
+{{ if eq .chezmoi.os "darwin" -}}
+# tmux runs $SHELL non-login (avoids macOS /etc/zprofile path_helper),
+# so .zprofile never fires inside panes. Source it here; case guard in
+# .zprofile dedupes so login shells re-running it stay idempotent.
+[[ -f ~/.zprofile ]] && source ~/.zprofile
+{{ end -}}
+
 fpath=("$HOME/.config/zsh/completion" $fpath)
 
 # --- Plugins ---
