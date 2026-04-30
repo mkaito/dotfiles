@@ -23,29 +23,85 @@ packages:
 
   darwin:
     formulae:
+      - atool
+      - bat
+      - btop
       - chezmoi
+      - ckan
       - coreutils
       - direnv
+      - dos2unix
       - fd
       - findutils
       - fzf
       - gawk
       - gh
       - git
+      - git-fixup
       - gnu-getopt
       - gnu-indent
       - gnu-sed
       - gnu-tar
-      - google-cloud-sdk
       - grep
+      - hivemind
+      - htop
+      - jq
       - lazygit
       - mise
       - mozjpeg
+      - ncdu
       - neovim
+      - nnn
+      - parallel
+      - pinentry-mac
       - postgresql@18
+      - pwgen
+      - qmk/qmk/qmk
       - ripgrep
+      - rsync
+      - sevenzip
+      - stripe/stripe-cli/stripe
       - tmux
+      - tree
+      - websocat
+      - wget
+      - yazi
+      - yq
+      - yt-dlp
       - zoxide
+      - zsh
     casks:
+      - 1password
+      - 1password-cli
+      - alfred
+      - anki
+      - bartender
+      - blender
+      - calibre
+      - claude-code
+      - cleanshot
+      - discord
+      - firefox
+      - font-iosevka-ss02
       - font-iosevka-term-nerd-font
+      - font-symbols-only-nerd-font
+      - forklift
+      - google-chrome
+      - gpg-suite
+      - hammerspoon
+      - iina
+      - istat-menus
+      - linearmouse
+      - middleclick
+      - moonlight
+      - ngrok
+      - obsidian
+      - prismlauncher
+      - starsector
+      - tiles
+      - transmission
       - wezterm
+      - yubico-authenticator
+      - zen
+      - zulu@8
+      - zulu@17

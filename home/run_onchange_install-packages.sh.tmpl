@@ -3,8 +3,13 @@
 set -e
 
 {{ if eq .chezmoi.os "darwin" -}}
-brew install {{ range .packages.darwin.formulae }}{{ . }} {{ end }}
-brew install --cask {{ range .packages.darwin.casks }}{{ . }} {{ end }}
+# brew bundle install --no-upgrade: idempotent, quiet (only prints when something
+# actually needs installing). Never attempts upgrades — those break for casks
+# whose .app auto-updates outside brew (Chrome/Keystone, Bartender internal updater).
+brew bundle install --no-upgrade --quiet --file=- <<'EOF'
+{{ range .packages.darwin.formulae }}brew "{{ . }}"
+{{ end }}{{ range .packages.darwin.casks }}cask "{{ . }}"
+{{ end }}EOF
 
 {{ else if eq .chezmoi.osRelease.id "gentoo" -}}
 sudo emerge -n {{ range .packages.gentoo }}{{ . }} {{ end }}
