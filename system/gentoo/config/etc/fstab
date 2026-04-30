@@ -21,6 +21,8 @@ UUID=fa006da1-a90d-44c9-ae23-325a24bd09a1  / xfs defaults,noatime 0 1
 UUID=0891-8759 /efi vfat umask=0077,tz=UTC 0 2
 UUID=4887ff65-4803-40e6-ad18-b46c7983ca92 /home/chris/media btrfs defaults 0 0
 
+tmpfs /tmp tmpfs rw,nosuid,nodev,size=16G,mode=1777 0 0
+
 UUID=fec97123-6e90-436f-a527-888173386ac3 /mnt/steamtwo btrfs defaults 0 0
 UUID=c742aba0-d2ed-490b-8f2d-0c132b43e8df /mnt/steamone btrfs defaults 0 0
 
