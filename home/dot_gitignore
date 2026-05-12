@@ -3,8 +3,9 @@
 .#*
 .DS_Store
 .history/
-.claude/
+.claude
 .cursor/
 .vscode/
 CLAUDE.local.md
 mise.local.toml
+.mise.local.toml
