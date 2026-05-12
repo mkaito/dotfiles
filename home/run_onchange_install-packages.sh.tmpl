@@ -3,13 +3,16 @@
 set -e
 
 {{ if eq .chezmoi.os "darwin" -}}
+{{ $work := eq .chezmoi.hostname "STX-MacBook-Air" -}}
 # brew bundle install --no-upgrade: idempotent, quiet (only prints when something
 # actually needs installing). Never attempts upgrades — those break for casks
 # whose .app auto-updates outside brew (Chrome/Keystone, Bartender internal updater).
 brew bundle install --no-upgrade --quiet --file=- <<'EOF'
-{{ range .packages.darwin.formulae }}brew "{{ . }}"
-{{ end }}{{ range .packages.darwin.casks }}cask "{{ . }}"
-{{ end }}EOF
+{{ range .packages.darwin.formulae.shared }}brew "{{ . }}"
+{{ end }}{{ if not $work }}{{ range .packages.darwin.formulae.personal }}brew "{{ . }}"
+{{ end }}{{ end }}{{ range .packages.darwin.casks.shared }}cask "{{ . }}"
+{{ end }}{{ if not $work }}{{ range .packages.darwin.casks.personal }}cask "{{ . }}"
+{{ end }}{{ end }}EOF
 
 {{ else if eq .chezmoi.osRelease.id "gentoo" -}}
 sudo emerge -n {{ range .packages.gentoo }}{{ . }} {{ end }}
