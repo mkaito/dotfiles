@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "26618"
+file_id = "134856"
+name = "Immersive Cockpit Views (Better vehicle first person presets)"
+file_label = "Immersive Cockpits Realistic version"
+version = "1.6"
+game = "cyberpunk2077"
+depends = []
+priority = 0

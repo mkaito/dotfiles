@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "25552"
+file_id = "128125"
+name = "Night City Traffic Overhaul"
+file_label = "Better Panic Reaction"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

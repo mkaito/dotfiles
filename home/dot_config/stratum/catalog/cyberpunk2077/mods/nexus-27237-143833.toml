@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "27237"
+file_id = "143833"
+name = "Much Better Netrunning"
+file_label = "Much Better Netrunning"
+version = "2.16"
+game = "cyberpunk2077"
+depends = []
+priority = 0

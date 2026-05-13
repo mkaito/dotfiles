@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5909"
+file_id = "115066"
+name = "Cosmopolitan Night city"
+file_label = "Cosmopolitan Night city - Enhanced edition"
+version = "2.6enhanced"
+game = "cyberpunk2077"
+depends = []
+priority = 0

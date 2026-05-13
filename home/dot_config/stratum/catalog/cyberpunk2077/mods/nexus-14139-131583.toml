@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14139"
+file_id = "131583"
+name = "RedData"
+file_label = "RedData"
+version = "0.10.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

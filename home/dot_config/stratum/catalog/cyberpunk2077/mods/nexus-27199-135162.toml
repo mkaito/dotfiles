@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "27199"
+file_id = "135162"
+name = "AI Trigger Overhaul - More Perceptive NPCs"
+file_label = "Ai Trigger Overhaul"
+version = "0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

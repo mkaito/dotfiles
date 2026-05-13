@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16841"
+file_id = "102825"
+name = "Gunsensical"
+file_label = "Melee Attack Fixes and Enhancements Patch"
+version = "0.36"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10297"
+file_id = "110756"
+name = "Weapon Damage Scaling Rebalance"
+file_label = "Weapon Damage Scaling Rebalance"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

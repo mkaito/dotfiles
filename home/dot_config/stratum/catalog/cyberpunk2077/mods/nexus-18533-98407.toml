@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18533"
+file_id = "98407"
+name = "Make All Vehicles Unlockable - With TwinTone Fix"
+file_label = "MakeAllVehiclesUnlockable-CET"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16310"
+file_id = "87511"
+name = "LUT Switcher 2 (Custom Pack Support - LUT Adjustments - Hotkeys)"
+file_label = "LUT Switcher - Misc LUT Pack"
+version = "1.1.0m"
+game = "cyberpunk2077"
+depends = []
+priority = 0
