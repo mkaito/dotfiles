@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>chrismhoppner@gmail.com</email>
+		<name>Christian Höppner</name>
+	</maintainer>
+	<longdescription lang="en">
+		Developer tools shipped alongside MAME upstream: chdman for CHD
+		(Compressed Hunks of Data) image manipulation, plus romcmp, jedutil,
+		floptool, imgtool, castool, ldresample, ldverify, nltool, nlwav,
+		pngcmp, regrep, srcclean, testkeys, unidasm, and mame-split. This
+		ebuild builds only the tools (EMULATOR=0), skipping the multi-hour
+		emulator compile and its Qt/OpenGL dependency tree.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">mamedev/mame</remote-id>
+	</upstream>
+</pkgmetadata>
