@@ -2,9 +2,13 @@
 set -euo pipefail
 
 if [[ ! -t 0 ]]; then
-  notify-send "Screengrab activated" "Drag region"
+  notify-send "Screengrab activated" "Drag region" || true
 fi
 
-maim -s | xclip -selection clipboard -t image/png
+tmp=$(mktemp --suffix=.png)
+trap 'rm -f "$tmp"' EXIT
 
-notify-send 'Screenshot' 'Region copied to clipboard'
+maim -s "$tmp"
+xclip -selection clipboard -t image/png -i "$tmp"
+
+notify-send 'Screenshot' 'Region copied to clipboard' || true

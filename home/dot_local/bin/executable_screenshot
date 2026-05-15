@@ -1,6 +1,10 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+tmp=$(mktemp --suffix=.png)
+trap 'rm -f "$tmp"' EXIT
 
-notify-send "Window Screenshot" "Window screenshot taken, copied to clipboard."
+maim -i "$(xdotool getactivewindow)" "$tmp"
+xclip -selection clipboard -t image/png -i "$tmp"
+
+notify-send "Window Screenshot" "Window screenshot taken, copied to clipboard." || true
