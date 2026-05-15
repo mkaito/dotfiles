@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>chrismhoppner@gmail.com</email>
+		<name>Christian Höppner</name>
+	</maintainer>
+	<longdescription>
+		Pulsar is a third-party launcher for Space Engineers. The 'linux'
+		branch of SpaceGT/Pulsar adds the runtime patching needed to run
+		Space Engineers natively on Linux instead of via Proton.
+
+		This ebuild is a binary repack of the official PulsarForLinux-Native
+		.7z release published by viktor-ferenczi/se-linux-compat. The
+		launcher installs under /opt/pulsar with a /usr/bin/pulsar wrapper
+		and a Games menu entry. Plugins (se-linux-compat, se-dotnet-compat)
+		are not packaged separately; Pulsar fetches them from PluginHub on
+		first run.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">SpaceGT/Pulsar</remote-id>
+		<remote-id type="github">viktor-ferenczi/se-linux-compat</remote-id>
+	</upstream>
+</pkgmetadata>
