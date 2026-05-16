@@ -6,6 +6,8 @@ xset r rate 220 40
 numlockx &
 nitrogen --restore &
 
+/usr/libexec/polkit-gnome-authentication-agent-1 &
+
 ## This needs to run after i3 starts, so it gets executed in i3 config instead of here.
 # openrc --user graphical
 
