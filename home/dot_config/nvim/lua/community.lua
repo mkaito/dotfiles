@@ -10,6 +10,7 @@ return {
   { import = "astrocommunity.colorscheme.tokyonight-nvim" },
 
   -- Packs
+  { import = "astrocommunity.pack.cs" },
   { import = "astrocommunity.pack.docker" },
   { import = "astrocommunity.pack.full-dadbod" },
   { import = "astrocommunity.pack.json" },
