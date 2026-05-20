@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16420"
+file_id = "85857"
+name = "Eddies Notification Fix (2.31 Supported)"
+file_label = "EddiesNotificationFix 1.01"
+version = "1.01"
+game = "cyberpunk2077"
+depends = []
+priority = 0

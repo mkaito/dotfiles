@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11757"
+file_id = "62493"
+name = "Radio Port Vehicle Fix"
+file_label = "Radio Port Vehicle Fix 1.1.1"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8753"
+file_id = "102915"
+name = "I Really Want To Stay At Your House - Judy"
+file_label = "Really Want To Stay At Your House - Judy"
+version = "3.4.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

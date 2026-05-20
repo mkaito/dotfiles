@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13005"
+file_id = "68461"
+name = "Overcompensator"
+file_label = "Bizarre Ballistics - Over Compensator"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

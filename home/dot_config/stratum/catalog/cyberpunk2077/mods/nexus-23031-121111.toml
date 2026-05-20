@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23031"
+file_id = "121111"
+name = "Semimaru Quest Restart Bug Fix (Reworked For 2.31)"
+file_label = "SemimaruQuestRestartBugFix-1.1"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

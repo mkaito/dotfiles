@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9213"
+file_id = "90279"
+name = "Borg Malorian Restored"
+file_label = "Borg Malorian"
+version = "1.6.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

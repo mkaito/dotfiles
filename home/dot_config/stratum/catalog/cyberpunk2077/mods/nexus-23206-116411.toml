@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23206"
+file_id = "116411"
+name = "Ragdoll Execution Fix"
+file_label = "Ragdoll Execution Fix"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

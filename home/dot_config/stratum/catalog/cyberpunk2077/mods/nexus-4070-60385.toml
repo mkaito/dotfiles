@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4070"
+file_id = "60385"
+name = "Silent Silencers and Throwing Knives"
+file_label = "Silent Silencers and Throwing Knives"
+version = "1.6.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

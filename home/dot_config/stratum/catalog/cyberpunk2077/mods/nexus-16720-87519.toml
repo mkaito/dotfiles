@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16720"
+file_id = "87519"
+name = "Car Dodge Stutter Fix"
+file_label = "CarDodgeStutterFix"
+version = "0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

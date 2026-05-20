@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20217"
+file_id = "103496"
+name = "Hammers are not bats (tooltip fix)"
+file_label = "Hammer tooltip fix"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

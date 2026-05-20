@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5431"
+file_id = "29149"
+name = "Faster Vehicle Knockback Animation"
+file_label = "Not as much Faster Vehicle Knockback Animation"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

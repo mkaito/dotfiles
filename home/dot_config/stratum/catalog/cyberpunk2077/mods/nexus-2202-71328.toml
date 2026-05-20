@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2202"
+file_id = "71328"
+name = "Better Vehicle First Person"
+file_label = "Better Vehicle First Person"
+version = "1.4.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

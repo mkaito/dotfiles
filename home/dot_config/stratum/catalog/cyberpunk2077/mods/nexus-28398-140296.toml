@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "28398"
+file_id = "140296"
+name = "Grave Filler"
+file_label = "Grave Filler"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

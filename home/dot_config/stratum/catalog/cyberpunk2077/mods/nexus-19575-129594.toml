@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19575"
+file_id = "129594"
+name = "Playable Blackjack - Gambling System"
+file_label = "gambling-system-blackjack"
+version = "1.1.4"
+game = "cyberpunk2077"
+depends = []
+priority = 0

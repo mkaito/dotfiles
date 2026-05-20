@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15963"
+file_id = "102307"
+name = "Reflex is Cool"
+file_label = "ReflexIsCool"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

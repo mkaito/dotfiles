@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24124"
+file_id = "121532"
+name = "Exagryph Iconic Smart LMG"
+file_label = "Exagryph Iconic Smart LMG"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

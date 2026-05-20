@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "28390"
+file_id = "142992"
+name = "DigitalVixen Core"
+file_label = "DigitalVixenCore"
+version = "3.6.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6945"
+file_id = "99128"
+name = "Equipment-EX"
+file_label = "Equipment-EX"
+version = "1.2.8"
+game = "cyberpunk2077"
+depends = []
+priority = 0

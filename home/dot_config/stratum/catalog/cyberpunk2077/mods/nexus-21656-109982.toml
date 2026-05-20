@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21656"
+file_id = "109982"
+name = "Hold to Overclock while scanning"
+file_label = "Hold to Overclock while scanning"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

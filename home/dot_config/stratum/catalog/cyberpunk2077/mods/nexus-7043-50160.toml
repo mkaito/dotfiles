@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7043"
+file_id = "50160"
+name = "More Climbable Objects"
+file_label = "More Climbable Objects"
+version = "1.02"
+game = "cyberpunk2077"
+depends = []
+priority = 0

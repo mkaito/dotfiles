@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13090"
+file_id = "68826"
+name = "QoL - Higher TV Quality"
+file_label = "Higher TV Quality"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

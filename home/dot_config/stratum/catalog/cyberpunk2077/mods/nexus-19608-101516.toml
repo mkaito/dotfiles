@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19608"
+file_id = "101516"
+name = "Jackie's Machete - New Iconic Weapon"
+file_label = "Jackie's Machete - New Iconic Weapon"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

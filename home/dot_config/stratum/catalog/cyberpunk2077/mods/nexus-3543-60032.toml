@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3543"
+file_id = "60032"
+name = "Zoomable Scopes"
+file_label = "Zoomable Scopes 1.4"
+version = "1.4"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "533"
+file_id = "124614"
+name = "No Intro Videos"
+file_label = "No Intro Videos - redscript"
+version = "0.8"
+game = "cyberpunk2077"
+depends = []
+priority = 0

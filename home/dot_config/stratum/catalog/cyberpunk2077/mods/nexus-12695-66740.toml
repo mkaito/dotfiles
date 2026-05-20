@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12695"
+file_id = "66740"
+name = "Mjolnir"
+file_label = "GLEIPNIR"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

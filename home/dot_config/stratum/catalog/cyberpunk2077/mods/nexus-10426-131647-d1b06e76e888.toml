@@ -1,0 +1,19 @@
+[mod]
+provider = "nexus"
+mod_id = "10426"
+file_id = "131647"
+variant = "d1b06e76e888"
+name = "WTNC Config"
+file_label = "WTNC Config"
+version = "1.9.9.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0
+
+[[fomod.picks]]
+step = "Your Choice Awaits"
+
+[[fomod.picks.groups]]
+name = "Choose Your Experience"
+type = "ExactlyOne"
+plugins = ["Welcome to Night City"]

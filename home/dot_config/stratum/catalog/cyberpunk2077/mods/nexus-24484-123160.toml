@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24484"
+file_id = "123160"
+name = "Shuriken Tornado Grenade"
+file_label = "Shuriken Tornado Grenade"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

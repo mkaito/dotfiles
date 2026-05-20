@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10355"
+file_id = "54427"
+name = "Better Access Point Hacking Netrunner Rewards"
+file_label = "accesspointrewards"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

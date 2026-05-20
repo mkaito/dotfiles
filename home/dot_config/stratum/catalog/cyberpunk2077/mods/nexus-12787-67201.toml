@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12787"
+file_id = "67201"
+name = "Deadeye Sound Remover"
+file_label = "Deadeye No Sound"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

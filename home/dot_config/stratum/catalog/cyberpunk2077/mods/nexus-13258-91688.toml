@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13258"
+file_id = "91688"
+name = "Lethal Curves - Body Rig"
+file_label = "01 - Lethal Curves - Rig - 2.0"
+version = "2.03"
+game = "cyberpunk2077"
+depends = []
+priority = 0

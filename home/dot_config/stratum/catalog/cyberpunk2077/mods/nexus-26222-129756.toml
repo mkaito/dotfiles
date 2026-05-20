@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "26222"
+file_id = "129756"
+name = "Map Search"
+file_label = "Map Search"
+version = "1.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14730"
+file_id = "120326"
+name = "Looting QoL"
+file_label = "Looting QoL"
+version = "1.8"
+game = "cyberpunk2077"
+depends = []
+priority = 0

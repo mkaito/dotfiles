@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18210"
+file_id = "93731"
+name = "All Vehicles Can Steer"
+file_label = "All Vehicles Can Steer"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

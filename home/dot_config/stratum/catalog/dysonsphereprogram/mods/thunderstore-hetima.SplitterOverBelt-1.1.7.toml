@@ -1,0 +1,10 @@
+[mod]
+provider = "thunderstore"
+mod_id = "hetima.SplitterOverBelt"
+file_id = "1.1.7"
+name = "SplitterOverBelt"
+file_label = ""
+version = "1.1.7"
+game = "dysonsphereprogram"
+depends = []
+priority = 0

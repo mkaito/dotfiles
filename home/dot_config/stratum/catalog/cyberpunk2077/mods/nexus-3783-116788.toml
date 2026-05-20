@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3783"
+file_id = "116788"
+name = "-KS- UV Texture Framework"
+file_label = "1. UV Framework 4.1"
+version = "4.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

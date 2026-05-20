@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10533"
+file_id = "84018"
+name = "Body Shield"
+file_label = "Body Shield"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

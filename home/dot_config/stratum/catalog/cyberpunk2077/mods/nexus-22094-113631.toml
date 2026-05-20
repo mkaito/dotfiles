@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "22094"
+file_id = "113631"
+name = "NCPD Cache - New Iconic Weapons"
+file_label = "NCPD Cache - New Iconic Weapons"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

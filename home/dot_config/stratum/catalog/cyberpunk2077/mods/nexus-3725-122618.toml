@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3725"
+file_id = "122618"
+name = "Framework - Unique V Body Shape - Rig"
+file_label = "Framework - Unique V Body Shape - Rig - 2.31"
+version = "2.31"
+game = "cyberpunk2077"
+depends = []
+priority = 0

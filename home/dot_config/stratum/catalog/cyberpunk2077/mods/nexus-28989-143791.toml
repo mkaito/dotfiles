@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "28989"
+file_id = "143791"
+name = "Street Sense"
+file_label = "Street Sense"
+version = "4.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

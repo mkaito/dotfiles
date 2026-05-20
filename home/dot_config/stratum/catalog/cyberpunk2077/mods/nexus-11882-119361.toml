@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11882"
+file_id = "119361"
+name = "Metro Pocket Guide"
+file_label = "Metro Pocket Guide"
+version = "1.2.10"
+game = "cyberpunk2077"
+depends = []
+priority = 0

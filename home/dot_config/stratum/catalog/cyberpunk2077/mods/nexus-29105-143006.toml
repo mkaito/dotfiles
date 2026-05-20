@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "29105"
+file_id = "143006"
+name = "Shattered Chrome"
+file_label = "Shattered Chrome"
+version = "2.7.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

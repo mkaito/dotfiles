@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "19679"
+file_id = "131527"
+name = "VendorsXL"
+file_label = "VendorsXL"
+version = "2.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

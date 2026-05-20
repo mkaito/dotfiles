@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18482"
+file_id = "110284"
+name = "H10 Interactive Stash Door Restored (2.31 Supported)"
+file_label = "H10InteractiveStashDoorRestored-1.1"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

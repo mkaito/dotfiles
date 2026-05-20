@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "13780"
+file_id = "72518"
+name = "Gamepad Button Hold Indicator Fix"
+file_label = "Gamepad Button Hold Indicator Fix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

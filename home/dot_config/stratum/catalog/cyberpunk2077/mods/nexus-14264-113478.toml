@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14264"
+file_id = "113478"
+name = "Stash and Backpack Search"
+file_label = "Backpack Search"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

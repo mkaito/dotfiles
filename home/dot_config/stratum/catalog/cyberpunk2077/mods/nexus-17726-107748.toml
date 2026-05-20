@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "17726"
+file_id = "107748"
+name = "Fix Advert Animations"
+file_label = "Fix Advert Animations"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

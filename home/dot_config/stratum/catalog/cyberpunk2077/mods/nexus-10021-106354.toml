@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10021"
+file_id = "106354"
+name = "Preem Scopes (Remove Tint Glitches Scanlines and 3D Depth Effect - FOMOD)"
+file_label = "Preem Scopes"
+version = "0.17.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

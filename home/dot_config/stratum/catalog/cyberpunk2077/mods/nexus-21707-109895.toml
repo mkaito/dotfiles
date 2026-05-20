@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21707"
+file_id = "109895"
+name = "Courier Jobs - Feature Settings"
+file_label = "Courier Job Settings"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21987"
+file_id = "110952"
+name = "Persistent CrystalCoat"
+file_label = "Persistent CrystalCoat - with glitch"
+version = "0.4.2.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

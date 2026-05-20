@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18587"
+file_id = "98552"
+name = "Steal Vehicles - Drive To Add Cars - Reworked"
+file_label = "Steal Vehicles - Drive To Claim"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

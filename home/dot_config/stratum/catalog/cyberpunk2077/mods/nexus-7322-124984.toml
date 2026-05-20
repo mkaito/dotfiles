@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7322"
+file_id = "124984"
+name = "Immersive Food Vendors"
+file_label = "Immersive Food Vendors"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

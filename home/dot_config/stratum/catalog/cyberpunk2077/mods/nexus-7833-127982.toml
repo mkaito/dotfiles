@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7833"
+file_id = "127982"
+name = "New Quest - Californication"
+file_label = "Californication"
+version = "3.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

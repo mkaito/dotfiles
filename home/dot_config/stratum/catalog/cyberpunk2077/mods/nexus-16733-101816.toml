@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16733"
+file_id = "101816"
+name = "Enemy Rarity Fixes"
+file_label = "Enemy Rarity Fixes"
+version = "0.6"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "17980"
+file_id = "114126"
+name = "Quest Trigger Fixes (2.31 Supported)"
+file_label = "QuestTriggerFixes-1.2-Compatibility"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

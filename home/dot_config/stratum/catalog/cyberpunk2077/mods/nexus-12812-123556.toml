@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12812"
+file_id = "123556"
+name = "Improved Vehicle Persistence"
+file_label = "Improved Vehicle Persistence"
+version = "1.0.6"
+game = "cyberpunk2077"
+depends = []
+priority = 0

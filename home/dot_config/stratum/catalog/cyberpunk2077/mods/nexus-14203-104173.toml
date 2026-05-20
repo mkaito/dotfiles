@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14203"
+file_id = "104173"
+name = "Berserk Unchained"
+file_label = "Berserk Unchained"
+version = "2.3.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

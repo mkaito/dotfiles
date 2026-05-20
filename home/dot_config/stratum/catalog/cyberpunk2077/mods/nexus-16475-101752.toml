@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16475"
+file_id = "101752"
+name = "Random Netrunners"
+file_label = "Random Netrunners"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

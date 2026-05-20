@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "25019"
+file_id = "124655"
+name = "Item Records Fixes"
+file_label = "Item Records Fixes"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16272"
+file_id = "84895"
+name = "Dash Fix"
+file_label = "Dash Fix"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

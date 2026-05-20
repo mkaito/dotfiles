@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4626"
+file_id = "125412"
+name = "Panam Romanced Enhanced"
+file_label = "Panam Romanced Enhanced"
+version = "2.6.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

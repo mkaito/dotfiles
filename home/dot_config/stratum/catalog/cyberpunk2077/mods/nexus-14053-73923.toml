@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14053"
+file_id = "73923"
+name = "Bug Fix - Full-Auto Tech Weapons Bolt Duration"
+file_label = "Senkoh LX Bolt Fix"
+version = "2.12"
+game = "cyberpunk2077"
+depends = []
+priority = 0

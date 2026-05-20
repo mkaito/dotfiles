@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "2886"
+file_id = "60146"
+name = "Convo Skill Check Scaling"
+file_label = "Convo Skill Check Scaling"
+version = "1.4.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

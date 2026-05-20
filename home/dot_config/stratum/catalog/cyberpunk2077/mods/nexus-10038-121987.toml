@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10038"
+file_id = "121987"
+name = "Browser Extension"
+file_label = "BrowserExtensionFramework"
+version = "0.9.7"
+game = "cyberpunk2077"
+depends = []
+priority = 0

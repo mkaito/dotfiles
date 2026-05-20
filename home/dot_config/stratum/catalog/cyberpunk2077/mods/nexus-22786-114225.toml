@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "22786"
+file_id = "114225"
+name = "Vehicle Exit Fix for 2.3"
+file_label = "VehicleExitFix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "25830"
+file_id = "128257"
+name = "ThrowingWeaponBugFix2.3"
+file_label = "FixThrowingWeaponBug"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "12325"
+file_id = "116296"
+name = "Extra Hands (cyberware)"
+file_label = "Extra Hands"
+version = "2.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

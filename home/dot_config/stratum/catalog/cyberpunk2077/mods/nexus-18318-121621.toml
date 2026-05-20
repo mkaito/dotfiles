@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "18318"
+file_id = "121621"
+name = "Deceptious Bug Fixes"
+file_label = "Deceptious Bug Fixes"
+version = "1.2.4"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24400"
+file_id = "122044"
+name = "Flatlined Exit"
+file_label = "Flatlined Exit"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

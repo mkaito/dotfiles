@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8340"
+file_id = "52766"
+name = "Find-EX"
+file_label = "Find-EX"
+version = "1.2.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

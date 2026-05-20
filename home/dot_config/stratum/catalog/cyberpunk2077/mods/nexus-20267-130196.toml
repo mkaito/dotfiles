@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20267"
+file_id = "130196"
+name = "Better Quality Sort V2"
+file_label = "Better Quality Sort"
+version = "2.1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

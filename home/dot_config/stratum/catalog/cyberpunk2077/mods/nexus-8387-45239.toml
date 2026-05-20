@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8387"
+file_id = "45239"
+name = "No Paper Bags From Vending Machines"
+file_label = "No Paper Bags From Vending Machines"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

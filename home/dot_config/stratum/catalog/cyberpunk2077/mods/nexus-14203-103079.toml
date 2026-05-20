@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14203"
+file_id = "103079"
+name = "Berserk Unchained"
+file_label = "Remove tunnelvision from VFX"
+version = "0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

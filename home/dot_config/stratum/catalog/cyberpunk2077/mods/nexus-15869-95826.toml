@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15869"
+file_id = "95826"
+name = "-KS- Solo Body 2.0"
+file_label = "1. Solo Body 2.0"
+version = "2.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

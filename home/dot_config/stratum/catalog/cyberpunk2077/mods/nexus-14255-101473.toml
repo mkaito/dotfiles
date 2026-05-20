@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14255"
+file_id = "101473"
+name = "Overclock Overheat"
+file_label = "Overclock Overheat"
+version = "1.6.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

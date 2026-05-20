@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "16932"
+file_id = "89059"
+name = "Delete -A Few Weeks Tops- Vik Voiceline"
+file_label = "Delete -A Few Weeks Tops- Voiceline 1.1"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

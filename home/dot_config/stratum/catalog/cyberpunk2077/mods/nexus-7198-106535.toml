@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7198"
+file_id = "106535"
+name = "Keep Drawing The Line (ricochet preview)"
+file_label = "Keep Drawing The Line"
+version = "3.4.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

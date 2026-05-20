@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "25792"
+file_id = "128171"
+name = "Immersion Patch - Holdin' On - Kerrys' mansion scene bug fixes"
+file_label = "Holdin' On - Kerrys' mansion scene bug fixes 1.0.0"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

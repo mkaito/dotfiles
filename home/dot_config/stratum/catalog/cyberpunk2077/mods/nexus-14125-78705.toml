@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14125"
+file_id = "78705"
+name = "Slaught-O-Matic QoL"
+file_label = "Slaught-O-Matic QoL"
+version = "1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

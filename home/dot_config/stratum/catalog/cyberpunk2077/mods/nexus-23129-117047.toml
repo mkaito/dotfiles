@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23129"
+file_id = "117047"
+name = "Animals Cache - New Iconic Weapons"
+file_label = "Animals Cache - New Iconic Weapons"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

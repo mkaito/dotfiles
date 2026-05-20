@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "15308"
+file_id = "125183"
+name = "Optical Camo Realism and Utility"
+file_label = "Camo Partial CD"
+version = "cd-2.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

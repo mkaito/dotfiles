@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9360"
+file_id = "122081"
+name = "Stealth Finishers (ZKV_Takedowns)"
+file_label = "ZKV_StealthFinishers_v2.1.0 - Beta"
+version = "2.1.0-Beta"
+game = "cyberpunk2077"
+depends = []
+priority = 0

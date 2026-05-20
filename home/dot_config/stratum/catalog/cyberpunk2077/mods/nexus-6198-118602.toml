@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6198"
+file_id = "118602"
+name = "Pet Your Cat"
+file_label = "Pet Your Cat"
+version = "2.4.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

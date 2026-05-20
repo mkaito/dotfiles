@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "11682"
+file_id = "111242"
+name = "Quickhack Loadouts"
+file_label = "Quickhack Loadouts"
+version = "1.4.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

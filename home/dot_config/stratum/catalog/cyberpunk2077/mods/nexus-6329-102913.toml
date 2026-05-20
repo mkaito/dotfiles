@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "6329"
+file_id = "102913"
+name = "Apartment Cats - Corpo Plaza"
+file_label = "Apartment Cats - Corpo Plaza"
+version = "2.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23157"
+file_id = "121291"
+name = "Auto Drive Enhanced"
+file_label = "auto_drive_enhanced"
+version = "0.0.0.14"
+game = "cyberpunk2077"
+depends = []
+priority = 0

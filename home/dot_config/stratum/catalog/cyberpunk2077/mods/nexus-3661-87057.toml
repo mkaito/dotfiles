@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "3661"
+file_id = "87057"
+name = "Challenging Breach Minigame"
+file_label = "Challenging Breach Minigame"
+version = "1.3.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

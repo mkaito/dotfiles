@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9429"
+file_id = "105001"
+name = "Cyberware-EX"
+file_label = "Cyberware-EX"
+version = "1.5.5"
+game = "cyberpunk2077"
+depends = []
+priority = 0

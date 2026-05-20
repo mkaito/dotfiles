@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23875"
+file_id = "119608"
+name = "Immersion Patch - Path Of Glory - Afterlife scene bug fixes"
+file_label = "Path Of Glory - Afterlife scene bug fixes 1.0.0"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

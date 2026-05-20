@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9724"
+file_id = "94435"
+name = "QoL - Faster Checkpoints"
+file_label = "Faster Checkpoints"
+version = "1.1.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "8099"
+file_id = "83793"
+name = "QoL - Interactive Judy's Apartment Devices"
+file_label = "Interactive Judys Apartment Devices"
+version = "3.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

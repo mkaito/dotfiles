@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14880"
+file_id = "88672"
+name = "In Cold Blood - NPC Execution Fix"
+file_label = "In Cold Blood Fix"
+version = "1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "107"
+file_id = "123169"
+name = "Cyber Engine Tweaks"
+file_label = "CET 1.37.1 - Scripting fixes"
+version = "1.37.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

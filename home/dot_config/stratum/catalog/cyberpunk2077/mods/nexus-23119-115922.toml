@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "23119"
+file_id = "115922"
+name = "Automatic Tech Weapon Handling (Like the Raiju)"
+file_label = "Automatic Tech Weapon Handling (Like the Raiju)"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "24404"
+file_id = "131438"
+name = "Deceptious Quest Core Utilities and Settings"
+file_label = "Deceptious Quest Core Utilities and Settings"
+version = "1.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

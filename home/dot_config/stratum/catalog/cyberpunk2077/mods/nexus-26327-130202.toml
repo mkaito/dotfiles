@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "26327"
+file_id = "130202"
+name = "Throwing Weapon Kerenzikov Fix"
+file_label = "Throwing Weapon Kerenzikov Fix"
+version = "1.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

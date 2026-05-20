@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "4575"
+file_id = "114235"
+name = "Input Loader"
+file_label = "input_loader_v0.2.3.zip"
+version = "0.2.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21820"
+file_id = "110530"
+name = "Bounties Restored"
+file_label = "Bounties Restored"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

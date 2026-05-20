@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "21798"
+file_id = "110224"
+name = "Smart Gun Lock Speed Fixes"
+file_label = "Smart Gun Lock Speed Fixes"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "10541"
+file_id = "121834"
+name = "DR-10 Wormhole Smart Revolver"
+file_label = "DR-10 Wormhole"
+version = "1.0.3"
+game = "cyberpunk2077"
+depends = []
+priority = 0

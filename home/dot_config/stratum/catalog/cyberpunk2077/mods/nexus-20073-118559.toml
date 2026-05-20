@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "20073"
+file_id = "118559"
+name = "Mox Cache - New Iconic Weapons"
+file_label = "Mox Cache - New Iconic Weapons"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

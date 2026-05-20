@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "7360"
+file_id = "38867"
+name = "Immersion patch - No crowd panic from stealth activity"
+file_label = "No Crowd panic from stealth activity CET 1.0.0"
+version = "1.0.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

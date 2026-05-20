@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "22228"
+file_id = "131430"
+name = "Say Something Damn It"
+file_label = "Say Something Damn It v1.14.0"
+version = "1.14.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

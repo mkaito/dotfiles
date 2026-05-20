@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "14662"
+file_id = "95094"
+name = "Modular Kyubi Revamp"
+file_label = "Precision Rifle"
+version = "1.0.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

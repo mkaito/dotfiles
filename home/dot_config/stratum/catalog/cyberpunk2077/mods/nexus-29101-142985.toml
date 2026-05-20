@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "29101"
+file_id = "142985"
+name = "Chrome Plating"
+file_label = "Chrome Plating"
+version = "2.7.0"
+game = "cyberpunk2077"
+depends = []
+priority = 0

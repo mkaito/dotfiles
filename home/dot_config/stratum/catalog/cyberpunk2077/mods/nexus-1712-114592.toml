@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "1712"
+file_id = "114592"
+name = "Damage Scaling and Balance (Formerly Level Scaling)"
+file_label = "Damage Scaling"
+version = "4.2.1"
+game = "cyberpunk2077"
+depends = []
+priority = 0

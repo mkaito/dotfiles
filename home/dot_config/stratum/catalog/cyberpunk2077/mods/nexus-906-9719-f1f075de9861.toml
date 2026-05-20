@@ -1,0 +1,27 @@
+[mod]
+provider = "nexus"
+mod_id = "906"
+file_id = "9719"
+variant = "f1f075de9861"
+name = "Spicy Clean Hack Screen"
+file_label = "Spicy Clean Hacking Screen 0.11 (FOMOD)"
+version = "0.11"
+game = "cyberpunk2077"
+depends = []
+priority = 0
+
+[[fomod.picks]]
+step = "Introduction"
+
+[[fomod.picks.groups]]
+name = "Intro"
+type = "All"
+plugins = []
+
+[[fomod.picks]]
+step = "Options"
+
+[[fomod.picks.groups]]
+name = "Options"
+type = "ExactlyOne"
+plugins = ["Clean and Green"]

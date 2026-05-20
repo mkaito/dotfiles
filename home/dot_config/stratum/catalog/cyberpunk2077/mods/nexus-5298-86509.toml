@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "5298"
+file_id = "86509"
+name = "Stash Filters"
+file_label = "Stash Filters"
+version = "2.1.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0

@@ -1,0 +1,11 @@
+[mod]
+provider = "local"
+mod_id = "5036"
+file_id = "125120"
+name = "Claim Vehicles"
+file_label = ""
+version = "2025.10.18"
+game = "cyberpunk2077"
+depends = []
+priority = 0
+overrides = "nexus:5036:125120"

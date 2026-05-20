@@ -1,0 +1,10 @@
+[mod]
+provider = "nexus"
+mod_id = "9429"
+file_id = "51398"
+name = "Cyberware-EX"
+file_label = "CyberwareEx-Config-ExpansionMode"
+version = "1.0.2"
+game = "cyberpunk2077"
+depends = []
+priority = 0
