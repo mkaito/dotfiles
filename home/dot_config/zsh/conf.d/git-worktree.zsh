@@ -1,8 +1,6 @@
 # Bare-repo + worktree + tmux helpers.
 # Layout: <reponame>/<reponame>.git (bare) with sibling <reponame>/<branch>/ worktrees.
 
-# Internal: resolve repo_root and worktree_path for a branch.
-# Echoes two lines: repo_root, worktree_path. Returns non-zero on failure.
 _wt_paths() {
   local branch=$1
   if [[ -z $branch ]]; then
@@ -12,14 +10,20 @@ _wt_paths() {
 
   local common_dir
   common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
-    print -u2 "not inside a git repository"
+    print -u2 "_wt_paths: not inside a git repository"
     return 1
   }
 
   common_dir=${common_dir:A}
+  if [[ $(git -C "$common_dir" rev-parse --is-bare-repository 2>/dev/null) != true ]]; then
+    print -u2 "_wt_paths: not a bare-repo layout (see wtmig)"
+    return 1
+  fi
+
   local repo_root=${common_dir:h}
   print -- "$repo_root"
   print -- "$repo_root/$branch"
+  print -- "$common_dir"
 }
 
 # Internal: tmux window with given name in current session exists?
@@ -46,8 +50,8 @@ _wt_link_overlays() {
       continue
     fi
     ln -s -- "$src" "$dst" \
-      && print -- "wta: linked $name" \
-      || print -u2 "wta: failed to link $name"
+      && print -- "wt: linked $name" \
+      || print -u2 "wt: failed to link $name"
   done
 }
 
@@ -195,9 +199,11 @@ wta() {
   fi
 
   local paths repo_root worktree_path
+  local -a path_lines
   paths=$(_wt_paths "$branch") || return $?
-  repo_root=${paths%%$'\n'*}
-  worktree_path=${paths##*$'\n'}
+  path_lines=(${(f)paths})
+  repo_root=${path_lines[1]}
+  worktree_path=${path_lines[2]}
 
   local existing_worktree=""
   existing_worktree=$(git worktree list --porcelain \
@@ -240,117 +246,87 @@ wta() {
 wtr() {
   emulate -L zsh
 
-  local force=0
-  local -a positional
-  local arg
-  for arg in "$@"; do
-    case $arg in
-      -f|--force) force=1 ;;
-      -*)
-        print -u2 "wtr: unknown flag: $arg"
-        return 2
-        ;;
-      *) positional+=("$arg") ;;
-    esac
-  done
-
-  local branch
-  if (( ${#positional} == 1 )); then
-    branch=${positional[1]}
-  elif (( ${#positional} == 0 )); then
-    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != true ]]; then
-      print -u2 "wtr: no branch given and cwd not inside a worktree"
-      return 1
-    fi
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null) || {
-      print -u2 "wtr: detached HEAD; pass branch explicitly"
-      return 1
-    }
-    local default
-    default=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
-    if [[ -z $default ]]; then
-      if git show-ref --verify --quiet refs/heads/main; then
-        default=main
-      elif git show-ref --verify --quiet refs/heads/master; then
-        default=master
-      elif git show-ref --verify --quiet refs/heads/develop; then
-        default=develop
-      fi
-    fi
-    if [[ -n $default && $branch == $default ]]; then
-      print -u2 "wtr: refusing to remove default branch '$default'"
-      return 1
-    fi
-    print -- "wtr: remove worktree + branch '$branch'"
-    local reply
-    printf "proceed? [yN] "
-    read -r reply
-    if [[ $reply != y && $reply != Y && $reply != yes && $reply != YES ]]; then
-      print -- "wtr: aborted"
-      return 1
-    fi
-  else
-    print -u2 "usage: wtr [<branch>] [-f|--force]"
+  if (( $# > 1 )); then
+    print -u2 "usage: wtr [<worktree-path>]"
     return 2
   fi
 
-  local paths repo_root worktree_path common_dir
-  paths=$(_wt_paths "$branch") || return $?
-  repo_root=${paths%%$'\n'*}
-  worktree_path=${paths##*$'\n'}
-  common_dir=$(git rev-parse --git-common-dir 2>/dev/null)
+  local worktree_path common_dir branch
+
+  if (( $# == 1 )); then
+    worktree_path=${1:A}
+    if [[ ! -d $worktree_path ]]; then
+      print -u2 "wtr: not a directory: $worktree_path"
+      return 1
+    fi
+    common_dir=$(git -C "$worktree_path" rev-parse --git-common-dir 2>/dev/null) || {
+      print -u2 "wtr: not a git worktree: $worktree_path"
+      return 1
+    }
+  else
+    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != true ]]; then
+      print -u2 "wtr: cwd not inside a worktree"
+      return 1
+    fi
+    worktree_path=$(git rev-parse --show-toplevel 2>/dev/null) || {
+      print -u2 "wtr: cannot resolve worktree path"
+      return 1
+    }
+    worktree_path=${worktree_path:A}
+    common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+      print -u2 "wtr: cwd not inside a git repository"
+      return 1
+    }
+  fi
   common_dir=${common_dir:A}
 
-  local has_worktree=0 has_branch=0 has_window=0
-  git -C "$common_dir" worktree list --porcelain | grep -Fxq -- "worktree $worktree_path" && has_worktree=1
-  git -C "$common_dir" show-ref --verify --quiet -- "refs/heads/$branch" && has_branch=1
-  if [[ -n $TMUX ]]; then
-    _wt_tmux_window_exists "$branch" && has_window=1
+  if [[ $(git -C "$common_dir" rev-parse --is-bare-repository 2>/dev/null) != true ]]; then
+    print -u2 "wtr: not a bare-repo layout"
+    return 1
   fi
 
-  if (( !has_worktree && !has_branch && !has_window )); then
-    print -- "wtr: nothing to remove"
-    return 0
+  if ! git -C "$common_dir" worktree list --porcelain | grep -Fxq -- "worktree $worktree_path"; then
+    print -u2 "wtr: $worktree_path is not a registered worktree"
+    return 1
   fi
 
-  if (( has_worktree && !force )); then
-    if [[ -n $(git -C "$worktree_path" status --porcelain 2>/dev/null) ]]; then
-      print -u2 "wtr: worktree has uncommitted changes; use -f to force"
-      return 1
+  branch=$(git -C "$worktree_path" symbolic-ref --short HEAD 2>/dev/null) || {
+    print -u2 "wtr: detached HEAD at $worktree_path"
+    return 1
+  }
+
+  local default
+  default=$(git -C "$common_dir" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
+  if [[ -z $default ]]; then
+    if git -C "$common_dir" show-ref --verify --quiet refs/heads/main; then
+      default=main
+    elif git -C "$common_dir" show-ref --verify --quiet refs/heads/master; then
+      default=master
+    elif git -C "$common_dir" show-ref --verify --quiet refs/heads/develop; then
+      default=develop
     fi
   fi
+  if [[ -n $default && $branch == $default ]]; then
+    print -u2 "wtr: refusing to remove default branch '$default'"
+    return 1
+  fi
 
-  if (( has_branch && !force )); then
-    local head_branch
-    head_branch=$(git -C "$common_dir" symbolic-ref --short HEAD 2>/dev/null)
-    if [[ -n $head_branch && $head_branch != $branch ]] \
-       && ! git -C "$common_dir" merge-base --is-ancestor "$branch" "$head_branch" 2>/dev/null; then
-      print -u2 "wtr: branch '$branch' not merged into $head_branch; use -f to force"
-      return 1
-    fi
+  print -- "wtr: remove worktree at $worktree_path"
+  local reply
+  printf "proceed? [yN] "
+  read -r reply
+  if [[ $reply != y && $reply != Y && $reply != yes && $reply != YES ]]; then
+    print -- "wtr: aborted"
+    return 1
   fi
 
   case $PWD/ in
-    $worktree_path/*) cd -- "$repo_root" || return 1 ;;
+    $worktree_path/*) cd -- "${common_dir:h}" || return 1 ;;
   esac
 
-  if (( has_worktree )); then
-    if (( force )); then
-      git -C "$common_dir" worktree remove --force -- "$worktree_path" || return 1
-    else
-      git -C "$common_dir" worktree remove -- "$worktree_path" || return 1
-    fi
-  fi
+  git -C "$common_dir" worktree remove --force -- "$worktree_path" || return 1
 
-  if (( has_branch )); then
-    if (( force )); then
-      git -C "$common_dir" branch -D -- "$branch" || return 1
-    else
-      git -C "$common_dir" branch -d -- "$branch" || return 1
-    fi
-  fi
-
-  if (( has_window )); then
+  if [[ -n $TMUX ]] && _wt_tmux_window_exists "$branch"; then
     tmux kill-window -t "=$branch"
   fi
 }
@@ -379,9 +355,11 @@ wtm() {
   fi
 
   local paths repo_root old_path new_path
+  local -a path_lines
   paths=$(_wt_paths "$old") || return $?
-  repo_root=${paths%%$'\n'*}
-  old_path=${paths##*$'\n'}
+  path_lines=(${(f)paths})
+  repo_root=${path_lines[1]}
+  old_path=${path_lines[2]}
   new_path=$repo_root/$new
 
   local old_wt=0 new_wt=0 old_br=0 new_br=0 old_win=0 new_win=0
@@ -484,11 +462,12 @@ wtmig() {
     return 1
   fi
 
-  local common_dir
+  local common_dir expected
   common_dir=$(git rev-parse --git-common-dir 2>/dev/null)
   common_dir=${common_dir:A}
-  if [[ $common_dir != $toplevel/.git ]]; then
-    print -u2 "wtmig: expected $toplevel/.git, got $common_dir (worktree or unusual layout)"
+  expected=$toplevel/.git
+  if [[ $common_dir != ${expected:A} ]]; then
+    print -u2 "wtmig: expected ${expected:A}, got $common_dir (worktree or unusual layout)"
     return 1
   fi
 
@@ -651,17 +630,23 @@ _wta_complete() {
   _describe -t branches 'branch' branches
 }
 
-# Branches with registered worktrees. For wtr, wtm first arg.
+# Registered worktree paths (excluding bare). For wtr.
 _wtr_complete() {
-  local -a branches
-  branches=(${(f)"$(git worktree list --porcelain 2>/dev/null \
-    | sed -n 's|^branch refs/heads/||p')"})
-  _describe -t branches 'worktree branch' branches
+  local -a paths
+  paths=(${(f)"$(git worktree list --porcelain 2>/dev/null \
+    | awk '/^worktree / { wt = substr($0, 10); bare = 0 }
+           /^bare$/      { bare = 1 }
+           /^branch /    { if (!bare) print wt }')"})
+  _describe -t paths 'worktree path' paths
 }
 
+# Branches with registered worktrees. For wtm first arg.
 _wtm_complete() {
   if (( CURRENT == 2 )); then
-    _wtr_complete
+    local -a branches
+    branches=(${(f)"$(git worktree list --porcelain 2>/dev/null \
+      | sed -n 's|^branch refs/heads/||p')"})
+    _describe -t branches 'worktree branch' branches
   fi
 }
 
