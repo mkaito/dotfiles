@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "27614"
+file_id = "138380"
+name = "Faction Attitudes Toggler"
+file_label = "FactionAttitudesToggler_v2.02"
+version = "v2.02"
+depends = []
+priority = 0

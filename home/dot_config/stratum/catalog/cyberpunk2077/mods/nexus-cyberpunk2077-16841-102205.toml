@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "16841"
+file_id = "102205"
+name = "Gunsensical"
+file_label = "Gunsensical"
+version = "2.1"
+depends = []
+priority = 0

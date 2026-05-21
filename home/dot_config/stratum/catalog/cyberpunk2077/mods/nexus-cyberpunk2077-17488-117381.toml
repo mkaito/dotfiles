@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "17488"
+file_id = "117381"
+name = "Improved NCPD Map Filters"
+file_label = "Improved NCPD Map Filters"
+version = "2.1.1"
+depends = []
+priority = 0

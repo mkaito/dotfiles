@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "16310"
+file_id = "92720"
+name = "LUT Switcher 2 (Custom Pack Support - LUT Adjustments - Hotkeys)"
+file_label = "LUT Switcher - Fixes (Scanner)"
+version = "1.1.0scnr"
+depends = []
+priority = 0

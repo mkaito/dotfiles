@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "29125"
+file_id = "143773"
+name = "Combat Evolved"
+file_label = "Combat Evolved"
+version = "3.0.1"
+depends = []
+priority = 0

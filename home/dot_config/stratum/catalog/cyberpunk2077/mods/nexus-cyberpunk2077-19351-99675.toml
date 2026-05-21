@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "19351"
+file_id = "99675"
+name = "Enemy Aggro Improvements"
+file_label = "Enemy Aggro Improvements"
+version = "0.1a"
+depends = []
+priority = 0

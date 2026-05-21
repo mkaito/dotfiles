@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "16310"
+file_id = "105483"
+name = "LUT Switcher 2 (Custom Pack Support - LUT Adjustments - Hotkeys)"
+file_label = "LUT Switcher 2 - Core"
+version = "2.4.0"
+depends = []
+priority = 0

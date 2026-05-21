@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "10128"
+file_id = "85402"
+name = "Balanced Attribute Checks"
+file_label = "Option 2 - Non-Redmod"
+version = "1.2"
+depends = []
+priority = 0

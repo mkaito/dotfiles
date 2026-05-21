@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "12569"
+file_id = "66815"
+name = "HARDCORE22V2 COMPLETE- REALISTIC COMBAT OVERHAUL"
+file_label = "HARDCORE22_V2_P1"
+version = "1.1C"
+depends = []
+priority = 0

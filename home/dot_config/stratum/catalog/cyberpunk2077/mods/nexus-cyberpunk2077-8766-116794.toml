@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "8766"
+file_id = "116794"
+name = "-KS- Atlas (a male player body mod)"
+file_label = "Atlas - UV"
+version = "1.2.1"
+depends = []
+priority = 0

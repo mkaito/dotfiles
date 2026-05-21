@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "13378"
+file_id = "131895"
+name = "RedFileSystem"
+file_label = "RedFileSystem"
+version = "0.15.1"
+depends = []
+priority = 0

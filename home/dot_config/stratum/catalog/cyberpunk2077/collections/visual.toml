@@ -2,17 +2,17 @@ name = "visual"
 title = "visual"
 version = "1"
 include = [
-    "nexus:16310:105483",
-    "nexus:16310:86062",
-    "nexus:16310:105484",
-    "nexus:16310:104757",
-    "nexus:16310:104739",
-    "nexus:16310:93636",
-    "nexus:16310:93591",
-    "nexus:16310:91927",
-    "nexus:16310:87511",
-    "nexus:16310:86143",
-    "nexus:16310:96880",
-    "nexus:16310:92720",
+    "nexus:cyberpunk2077:16310:105483",
+    "nexus:cyberpunk2077:16310:86062",
+    "nexus:cyberpunk2077:16310:105484",
+    "nexus:cyberpunk2077:16310:104757",
+    "nexus:cyberpunk2077:16310:104739",
+    "nexus:cyberpunk2077:16310:93636",
+    "nexus:cyberpunk2077:16310:93591",
+    "nexus:cyberpunk2077:16310:91927",
+    "nexus:cyberpunk2077:16310:87511",
+    "nexus:cyberpunk2077:16310:86143",
+    "nexus:cyberpunk2077:16310:96880",
+    "nexus:cyberpunk2077:16310:92720",
 ]
 blacklisted = []

@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "1727"
+file_id = "129201"
+name = "Muted Markers"
+file_label = "Muted Markers"
+version = "2.3.5"
+depends = []
+priority = 0

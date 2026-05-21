@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "28375"
+file_id = "141834"
+name = "Flesh And Chrome - Carry Overhaul"
+file_label = "Flesh and Chrome Carry Overhaul"
+version = "1.14.0"
+depends = []
+priority = 0

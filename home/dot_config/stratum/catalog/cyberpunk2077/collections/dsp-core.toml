@@ -1,0 +1,5 @@
+name = "dsp:core"
+title = "dsp:core"
+version = "1"
+include = []
+blacklisted = []

@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "10135"
+file_id = "96062"
+name = "Law Enforcement Overhaul"
+file_label = "Law Enforcement Overhaul"
+version = "3.4"
+depends = []
+priority = 0

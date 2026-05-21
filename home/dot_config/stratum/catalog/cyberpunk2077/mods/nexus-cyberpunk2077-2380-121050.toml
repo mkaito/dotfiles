@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "2380"
+file_id = "121050"
+name = "RED4ext"
+file_label = "RED4ext"
+version = "1.29.1"
+depends = []
+priority = 0

@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "11107"
+file_id = "58440"
+name = "Glen Apartment - Pool Table (8-Ball Fix)"
+file_label = "Glen Apartment - Pool Table (8-Ball Fix)"
+version = "1.0"
+depends = []
+priority = 0

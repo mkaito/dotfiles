@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "20393"
+file_id = "127454"
+name = "Alternative Berserk"
+file_label = "Alternative Berserk"
+version = "1.0.3"
+depends = []
+priority = 0

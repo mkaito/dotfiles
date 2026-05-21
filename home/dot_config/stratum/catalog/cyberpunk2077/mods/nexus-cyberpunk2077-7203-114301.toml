@@ -1,0 +1,9 @@
+[mod]
+provider = "nexus"
+mod_id = "7203"
+file_id = "114301"
+name = "Immersive Bartenders"
+file_label = "Immersive Bartenders"
+version = "2.0.3"
+depends = []
+priority = 0
