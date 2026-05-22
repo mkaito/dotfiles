@@ -1,8 +1,0 @@
-name = "wtnc-plus"
-collections = [
-    "nexus:iszwwe:481:wtnc",
-    "wtnc-addons",
-    "visual:body",
-    "visual",
-    "hardmode",
-]

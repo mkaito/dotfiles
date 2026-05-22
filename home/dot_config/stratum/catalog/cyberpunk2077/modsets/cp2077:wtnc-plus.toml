@@ -1,0 +1,8 @@
+name = "cp2077:wtnc-plus"
+collections = [
+    "cp2077:nexus:iszwwe:481:wtnc",
+    "cp2077:wtnc-addons",
+    "cp2077:visual:body",
+    "cp2077:visual",
+    "cp2077:hardmode",
+]
