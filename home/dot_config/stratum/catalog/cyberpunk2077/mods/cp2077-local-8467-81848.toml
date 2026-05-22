@@ -7,4 +7,4 @@ file_label = ""
 version = "PL-Beta-1.8.8-Hotfix"
 depends = []
 priority = 0
-overrides = "nexus:cyberpunk2077:8467:81848"
+overrides = "cp2077:nexus:8467:81848"

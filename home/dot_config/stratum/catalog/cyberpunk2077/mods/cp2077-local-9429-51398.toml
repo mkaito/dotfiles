@@ -7,4 +7,4 @@ file_label = ""
 version = "1.0.2"
 depends = []
 priority = 0
-overrides = "nexus:cyberpunk2077:9429:51398"
+overrides = "cp2077:nexus:9429:51398"
