@@ -1,0 +1,9 @@
+[mod]
+provider = "thunderstore"
+mod_id = "xiaoye97.BepInEx"
+file_id = "5.4.17"
+name = "BepInEx"
+file_label = ""
+version = "5.4.17"
+depends = []
+priority = 0

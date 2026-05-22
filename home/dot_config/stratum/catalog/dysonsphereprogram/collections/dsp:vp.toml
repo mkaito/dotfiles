@@ -1,0 +1,5 @@
+name = "dsp:vp"
+title = "dsp:vp"
+version = "1"
+include = []
+blacklisted = []
