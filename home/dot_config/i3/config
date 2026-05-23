@@ -67,6 +67,7 @@ bindsym $mod+F10 exec --no-startup-id anki
 # Browsers.
 assign [class="^firefox$" instance="^Navigator$"] 3
 assign [class="^Google-chrome$"] 3
+assign [class="^Helium$"] 3
 
 # Make Firefox dialogs float
 for_window [window_role="Dialog"] floating enable
