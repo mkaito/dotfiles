@@ -55,7 +55,14 @@ def main() -> None:
     util.set_xml_options(base_attribute, game_opts, "Bin64/SpaceEngineers.exe.config")
     if (game_path / "Pulsar" / "Legacy.exe").exists():
         util.set_xml_options(base_attribute, game_opts, "Pulsar/Legacy.exe.config")
+        # Replace SE.exe with Pulsar's launcher in argv, but Pulsar still needs
+        # to locate Bin64. Its FromSteamArgs scan can't fire here (we just
+        # overwrote the SE.exe arg) and FromSteamFiles/FromRegistry skip under
+        # Proton, so hand it -bin64 explicitly. Pulsar's TryConvertUnix prepends
+        # Z: to unix paths.
         util.replace_command(r"Bin64.SpaceEngineers\.exe", r"Pulsar\\Interim.exe")
+        util.append_argument("-bin64")
+        util.append_argument(str(game_path / "Bin64"))
 
     external = Path.home() / "GameData" / "SpaceEngineers"
     internal = (
