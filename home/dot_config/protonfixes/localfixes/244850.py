@@ -43,6 +43,7 @@ def main() -> None:
     util.protontricks("xaudio29")
     util.protontricks("dotnet48")
     util.protontricks("vcrun2019")
+    util.protontricks("dotnetdesktop10")
 
     base_attribute = "<runtime>"
     game_opts = """
@@ -54,7 +55,7 @@ def main() -> None:
     util.set_xml_options(base_attribute, game_opts, "Bin64/SpaceEngineers.exe.config")
     if (game_path / "Pulsar" / "Legacy.exe").exists():
         util.set_xml_options(base_attribute, game_opts, "Pulsar/Legacy.exe.config")
-        # util.replace_command(r'Bin64.SpaceEngineers\.exe', r'Pulsar\\Legacy.exe')
+        util.replace_command(r"Bin64.SpaceEngineers\.exe", r"Pulsar\\Interim.exe")
 
     external = Path.home() / "GameData" / "SpaceEngineers"
     internal = (
