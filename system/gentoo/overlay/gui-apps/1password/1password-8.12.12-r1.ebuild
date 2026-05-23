@@ -80,7 +80,8 @@ src_install() {
 		doicon -s ${size} resources/icons/hicolor/${size}x${size}/apps/1password.png
 	done
 
-	dodoc "${ED}/opt/1Password/resources/custom_allowed_browsers"
+	insinto /etc/1password
+	doins "${ED}/opt/1Password/resources/custom_allowed_browsers"
 
 	# cleanup files installed elsewhere
 	rm "${ED}/opt/1Password/com.1password.1Password.policy.tpl" || die
