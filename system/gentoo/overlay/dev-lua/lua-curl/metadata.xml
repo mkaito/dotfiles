@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>chrismhoppner@gmail.com</email>
+		<name>Christian Höppner</name>
+	</maintainer>
+	<longdescription>
+		Lua-cURLv3 is a Lua binding to libcurl, providing both an "easy" and
+		a "multi" interface. Installs the lcurl shared library plus the
+		cURL.lua wrapper and the cURL/safe, cURL/utils, cURL/impl/cURL Lua
+		modules into the active Lua impl's cmod / lmod directories.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">Lua-cURL/Lua-cURLv3</remote-id>
+	</upstream>
+</pkgmetadata>
