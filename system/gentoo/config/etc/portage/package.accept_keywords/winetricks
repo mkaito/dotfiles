@@ -1,0 +1,2 @@
+# winetricks cuts a release once a year; track git head instead.
+=app-emulation/winetricks-99999999 **
