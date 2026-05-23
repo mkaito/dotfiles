@@ -1,0 +1,4 @@
+# required by games-server/steamcmd (argument)
+>=games-server/steamcmd-1.0-r4 Steam
+# required by google-chrome (argument)
+>=www-client/google-chrome-148.0.7778.167 google-chrome
