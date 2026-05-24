@@ -127,8 +127,11 @@ assign [class="^KingdomsAndCastles.x86$"] 5
 assign [class="^XCOM: Enemy Unknown$"] 5
 for_window [class="^XCOM: Enemy Unknown$"] floating disable border none
 
-# catch-all for wine explorer
-assign [instance="^explorer.exe$"] 5
+assign [class="^pshd$"] 5
+
+# Path of Building
+assign [class="^rusty-path-of-building-1$"] PoB
+assign [class="^rusty-path-of-building-2$"] PoB
 
 # Random stuff
 assign [class="^jd-Main$"] 6
