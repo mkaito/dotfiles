@@ -11,9 +11,11 @@ priority = 0
 
 [[fomod.picks]]
 step = "Introduction"
-groups = [
-    { name = "Intro", type = "All", plugins = [] },
-]
+
+[[fomod.picks.groups]]
+name = "Intro"
+type = "All"
+plugins = []
 
 [[fomod.picks]]
 step = "Options"
@@ -21,6 +23,4 @@ step = "Options"
 [[fomod.picks.groups]]
 name = "Options"
 type = "ExactlyOne"
-plugins = [
-    "Clean and Green",
-]
+plugins = ["Clean and Green"]
