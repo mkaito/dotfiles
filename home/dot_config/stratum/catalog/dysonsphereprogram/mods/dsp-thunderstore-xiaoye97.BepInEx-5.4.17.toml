@@ -7,3 +7,8 @@ file_label = ""
 version = "5.4.17"
 depends = []
 priority = 0
+
+[[mod.env]]
+var = "WINEDLLOVERRIDES"
+value = "winhttp=n,b"
+merge = "join_semicolon"

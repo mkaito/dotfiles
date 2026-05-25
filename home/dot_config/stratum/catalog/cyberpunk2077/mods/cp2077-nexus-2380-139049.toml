@@ -7,3 +7,8 @@ file_label = "RED4ext"
 version = "1.30.0"
 depends = []
 priority = 0
+
+[[mod.env]]
+var = "WINEDLLOVERRIDES"
+value = "winmm=n,b"
+merge = "join_semicolon"

@@ -7,3 +7,8 @@ file_label = "CET 1.37.1 - Scripting fixes"
 version = "1.37.1"
 depends = []
 priority = 0
+
+[[mod.env]]
+var = "WINEDLLOVERRIDES"
+value = "version=n,b"
+merge = "join_semicolon"
