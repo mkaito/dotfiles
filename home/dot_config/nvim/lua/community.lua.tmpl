@@ -10,7 +10,9 @@ return {
   { import = "astrocommunity.colorscheme.tokyonight-nvim" },
 
   -- Packs
+{{- if eq .chezmoi.hostname "aldheim" }}
   { import = "astrocommunity.pack.cs" },
+{{- end }}
   { import = "astrocommunity.pack.docker" },
   { import = "astrocommunity.pack.full-dadbod" },
   { import = "astrocommunity.pack.json" },
