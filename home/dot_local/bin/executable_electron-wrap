@@ -1,0 +1,32 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ -z ${1:-} ]]; then
+  echo "Provide path to executable as first parameter"
+  exit 1
+fi
+
+if [[ ! -x $1 ]]; then
+  echo "File does not exist or is not executable: $1"
+  exit 127
+fi
+
+thing="$1"
+shift
+
+echo "Session type: ${XDG_SESSION_TYPE:-unknown}"
+
+if [[ ${XDG_SESSION_TYPE:-} == wayland ]]; then
+  exec "$thing" \
+    --enable-features=UseOzonePlatform,WaylandWindowDecorations,Vulkan \
+    --ozone-platform=wayland \
+    "$@"
+else
+  exec "$thing" \
+    --enable-accelerated-mjpeg-decode \
+    --enable-accelerated-video \
+    --ignore-gpu-blacklist \
+    --enable-native-gpu-memory-buffers \
+    --enable-gpu-rasterization \
+    "$@"
+fi

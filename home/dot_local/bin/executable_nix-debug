@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+drv="$(nix-store --query --deriver "$1")"
+dbg="$(nix show-derivation "$drv" | jq -r '.[]|.outputs.debug.path')"
+nix-store -r "$dbg"
+
+export NIX_DEBUG_INFO_DIRS="$dbg/lib/debug"
