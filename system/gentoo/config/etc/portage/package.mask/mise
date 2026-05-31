@@ -1,0 +1,4 @@
+# guru last-rited dev-util/mise on 2026-05-18; local overlay provides
+# our own ebuild forked from guru. Mask all guru versions so the local
+# overlay's mise wins.
+dev-util/mise::guru
