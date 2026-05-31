@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# mise description="Regenerate vendor tarballs for overlay ebuilds that need them"
+#USAGE flag "-f --force" help="Delete existing vendor tarball before regenerating"
+set -euo pipefail
+
+OVERLAY="$MISE_PROJECT_ROOT/system/gentoo/overlay"
+
+shopt -s nullglob
+scripts=("$OVERLAY"/*/*/files/make-vendor.sh)
+shopt -u nullglob
+
+if [[ ${#scripts[@]} -eq 0 ]]; then
+    echo "No make-vendor.sh scripts found under $OVERLAY"
+    exit 0
+fi
+
+force="${usage_force:-}"
+rc=0
+
+for script in "${scripts[@]}"; do
+    pkgdir="$(dirname "$(dirname "$script")")"
+    pn="$(basename "$pkgdir")"
+
+    ebuild="$(ls -v "$pkgdir/$pn-"*.ebuild 2>/dev/null | tail -n1 || true)"
+    if [[ -z "$ebuild" ]]; then
+        echo "[$pn] no ebuild found in $pkgdir; skipping" >&2
+        rc=1
+        continue
+    fi
+
+    pv="$(basename "$ebuild" .ebuild)"
+    pv="${pv#"$pn"-}"
+    pv="${pv%-r[0-9]*}"
+
+    vendor="$pkgdir/files/$pn-$pv-vendor.tar.xz"
+
+    echo "==> [$pn] PV=$pv"
+    if [[ -f "$vendor" ]]; then
+        if [[ -n "$force" ]]; then
+            echo "    removing existing $vendor"
+            rm -f "$vendor"
+        else
+            echo "    already present, skipping (use --force to regenerate)"
+            continue
+        fi
+    fi
+
+    "$script" "$pv"
+done
+
+exit $rc
