@@ -1,0 +1,1 @@
+message = "To update mise from the local overlay, run:\n\n\tmise run gentoo:vendor -- --force\n\t# edit dev-util/mise/mise-<old>.ebuild → mise-<new>.ebuild\n\tcd /var/db/repos/local/dev-util/mise && ebuild mise-<new>.ebuild manifest\n\tsudo emerge -au dev-util/mise\n"
