@@ -3,9 +3,9 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..15} )
 
-inherit flag-o-matic python-any-r1 toolchain-funcs
+inherit python-any-r1 toolchain-funcs
 
 MY_PV="${PV//./}"
 MY_P="mame-mame${MY_PV}"
@@ -36,13 +36,13 @@ RDEPEND="
 	media-libs/sdl2-ttf
 	media-libs/portaudio
 	media-libs/portmidi
-	sys-libs/zlib
+	virtual/zlib
 	x11-libs/libX11
 	x11-libs/libXi
 	x11-libs/libXinerama
 "
 DEPEND="${RDEPEND}
-	dev-qt/qtwidgets:5
+	dev-qt/qtbase:6[widgets]
 "
 BDEPEND="
 	${PYTHON_DEPS}
