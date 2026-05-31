@@ -17,8 +17,8 @@ inherit desktop xdg
 # stamped with date + 8-char SHA. PV here is the bundle date; bump the constants
 # below in lockstep with each upstream release. Use -rN if a same-day rebuild
 # needs to land.
-UPSTREAM_RELEASE_TAG="1.0.7"
-UPSTREAM_PULSAR_SHA="13a4f2f7"
+UPSTREAM_RELEASE_TAG="1.0.8"
+UPSTREAM_PULSAR_SHA="af8904e5"
 PULSAR_NATIVE_7Z="PulsarForLinux-Native.${PV}.${UPSTREAM_PULSAR_SHA}.7z"
 
 DESCRIPTION="Pulsar launcher for Space Engineers (native Linux build)"
