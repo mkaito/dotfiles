@@ -5,8 +5,8 @@ output_right="DisplayPort-2"
 # Restore default layout (matches ~/.xinitrc)
 snormal() {
   xrandr \
-    --output $output_left --primary --pos 0x1000 \
-    --output $output_right --rotate right --pos 3840x0
+    --output $output_left --auto --primary --pos 0x1000 \
+    --output $output_right --auto --rotate right --pos 3840x0
   rc-service --user polybar.secondary restart
   rc-service --user polybar.primary restart
 }
