@@ -99,6 +99,10 @@ wtc() {
 
   local url=$1 name=$2
 
+  if [[ $url =~ '^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$' ]]; then
+    url=git@github.com:$url.git
+  fi
+
   if [[ -z $name ]]; then
     name=${${url##*/}%.git}
   fi
