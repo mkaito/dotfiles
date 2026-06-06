@@ -1,0 +1,17 @@
+{
+  "1003590": "mangohud %command%",
+  "108600": "mangohud %command%",
+  "1091500": "stratum run --modset cp2077:wtnc-plus -- mangohud %command% -modded --launcher-skip -skipStartScreen",
+  "1096530": "mangohud %command%",
+  "1113000": "mangohud %command%",
+  "1133870": "mangohud %command%",
+  "1184370": "mangohud %command%",
+  "1366540": "STRATUM_LOG_FILE=/tmp/stratum-dsp.log stratum run --modset=dsp:vp -- gamemoderun mangohud %command%",
+  "238010": "DXVK_ASYNC=1 %command%",
+  "2694490": "gamemoderun mangohud %command%",
+  "292120": "PROTON_FORCE_LARGE_ADDRESS_AWARE=1 mangohud %command%",
+  "294100": "-popupwindow",
+  "602960": "mangohud bash -c \\\"wget -N   https://github.com/Luatrauma/Luatrauma.AutoUpdater/releases/download/latest/Luatrauma.AutoUpdater.linux-x64 && chmod   +x Luatrauma.AutoUpdater.linux-x64 && ./Luatrauma.AutoUpdater.linux-x64 %command%\\\"",
+  "640820": "mangohud %command%",
+  "839770": "mangohud %command%"
+}

@@ -53,7 +53,7 @@ Never use bare `rescue => e` — unexpected errors are bugs and should propagate
 Each domain is a product concern. Add new domains as `lib/<name>/` with specs under `spec/<name>/`.
 
 Current domains:
-- `steam` — Steam config sync (VDF ↔ TOML)
+- `steam` — Steam launch-options backup (VDF ↔ JSON), gem-free/stdlib only
 
 ## Testing
 

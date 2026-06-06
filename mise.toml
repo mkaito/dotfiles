@@ -8,8 +8,14 @@ run = "bundle install"
 dir = "{{config_root}}/ruby-scripts"
 
 [tasks."steam:import"]
-description = "Import Steam launch options from localconfig.vdf into launch-options.toml"
-run = "~/.local/bin/steam-launch-sync import"
+description = "Import Steam launch options from localconfig.vdf into the dotfiles backup"
+dir = "{{config_root}}/ruby-scripts"
+run = "ruby --disable-gems -I lib bin/steam-launch-sync import {{config_root}}/home/dot_config/steam/launch-options.json"
+
+[tasks."steam:export"]
+description = "Export the dotfiles backup into Steam's localconfig.vdf (quit Steam first)"
+dir = "{{config_root}}/ruby-scripts"
+run = "ruby --disable-gems -I lib bin/steam-launch-sync export {{config_root}}/home/dot_config/steam/launch-options.json"
 
 [tasks."steam:test"]
 description = "Run ruby-scripts unit tests"
