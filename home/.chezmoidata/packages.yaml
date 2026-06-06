@@ -6,6 +6,9 @@ packages:
     - sys-apps/fd
     - dev-util/direnv
     - x11-misc/xclip
+    - x11-misc/xdotool
+    - media-gfx/maim
+    - media-gfx/pngquant
     - net-p2p/transmission
     - sys-fs/udisks
     - x11-terms/wezterm
