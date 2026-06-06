@@ -1,5 +1,0 @@
-#!/bin/sh
-DOTFILES="{{ .chezmoi.sourceDir }}"
-MOD="$DOTFILES/../ruby-scripts/bin/mod"
-export BUNDLE_GEMFILE="$DOTFILES/../ruby-scripts/Gemfile"
-cd "$DOTFILES" && exec mise exec -- ruby "$MOD" "$@"

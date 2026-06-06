@@ -11,7 +11,6 @@
 .config/MangoHud
 .config/mpd
 .config/steam
-.config/mods
 .config/protonfixes
 .local/bin/cataclysm
 .local/bin/dwm-statusbar
@@ -41,7 +40,6 @@
 .local/bin/bg3_save_manager.rb
 .local/bin/nms_save_manager.rb
 .local/bin/se_bp_mods.py
-.local/bin/mod
 .local/bin/tar-backup-root
 .local/bin/tar-backup-root.exc.txt
 .local/bin/magnet
