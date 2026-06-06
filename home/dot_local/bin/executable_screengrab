@@ -8,7 +8,9 @@ fi
 tmp=$(mktemp --suffix=.png)
 trap 'rm -f "$tmp"' EXIT
 
-maim -s "$tmp"
+maim -s -m 1 "$tmp"
+pngquant -f -o "$tmp" "$tmp"
 xclip -selection clipboard -t image/png -i "$tmp"
 
-notify-send 'Screenshot' 'Region copied to clipboard' || true
+mb=$(awk "BEGIN{printf \"%.2f\", $(stat -c %s "$tmp")/1048576}")
+notify-send 'Screenshot' "Region copied to clipboard (${mb} MB)" || true

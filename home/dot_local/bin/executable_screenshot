@@ -4,7 +4,11 @@ set -euo pipefail
 tmp=$(mktemp --suffix=.png)
 trap 'rm -f "$tmp"' EXIT
 
-maim -i "$(xdotool getactivewindow)" "$tmp"
+# let the launcher (rofi) close and the real window regain focus
+sleep 0.1
+maim -i "$(xdotool getactivewindow)" -m 1 "$tmp"
+pngquant -f -o "$tmp" "$tmp"
 xclip -selection clipboard -t image/png -i "$tmp"
 
-notify-send "Window Screenshot" "Window screenshot taken, copied to clipboard." || true
+mb=$(awk "BEGIN{printf \"%.2f\", $(stat -c %s "$tmp")/1048576}")
+notify-send "Window Screenshot" "Window screenshot copied to clipboard (${mb} MB)." || true
