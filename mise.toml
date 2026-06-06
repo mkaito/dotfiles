@@ -13,5 +13,5 @@ run = "~/.local/bin/steam-launch-sync import"
 
 [tasks."steam:test"]
 description = "Run ruby-scripts unit tests"
-run = "bundle exec ruby -Ilib -Ispec spec/vdf_nav_spec.rb spec/steam_launch_sync_spec.rb"
+run = "bundle exec rake test"
 dir = "{{config_root}}/ruby-scripts"
