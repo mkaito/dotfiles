@@ -6,7 +6,6 @@ gemspec
 
 gem "toml-rb"
 gem "vdf"
-gem "rexml"
 
 group :test do
   gem "minitest"
