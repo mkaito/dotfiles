@@ -40,6 +40,8 @@ from `system/hosts/$(hostname)` (`os=`, `role=`):
 2. **common** — OS/role baseline (`system/<os>/<role>/etc`), e.g. `gentoo/desktop`.
 3. **machine** — host-specific deltas (`system/<os>/<host>/etc`), overlaid on common.
 
+Hosts: `aldheim` (gentoo/desktop), `public` (openbsd/server — `public.lomdar.com`).
+
 ```sh
 mise run system:bootstrap   # tier 1
 mise run system:common      # tier 2 -> /etc

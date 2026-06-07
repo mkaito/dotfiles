@@ -1,0 +1,2 @@
+exclude forgejo/app.ini
+exclude .gitignore

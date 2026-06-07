@@ -19,12 +19,14 @@ OS="$(uname -s)"
 
 if [[ "$OS" == "Darwin" ]]; then
     PLATFORM="darwin"
+elif [[ "$OS" == "OpenBSD" ]]; then
+    PLATFORM="openbsd"
 elif [[ -f /etc/os-release ]]; then
     # shellcheck source=/dev/null
     source /etc/os-release
     PLATFORM="${ID:-unknown}"
 else
-    echo "Error: cannot detect platform (no /etc/os-release, not macOS)" >&2
+    echo "Error: cannot detect platform (no /etc/os-release, not macOS/OpenBSD)" >&2
     exit 1
 fi
 
@@ -67,6 +69,22 @@ if [[ "$PLATFORM" == "gentoo" ]]; then
     echo "  mise run system:common      # tier 2: gentoo/<role> -> /etc"
     echo "  mise run system:machine     # tier 3: this host -> /etc"
     echo "  mise run install            # link chezmoi source and apply dotfiles"
+
+# ---------------------------------------------------------------------------
+# OpenBSD
+# ---------------------------------------------------------------------------
+# NB: base OpenBSD has no bash, so this script can't run until bash is added.
+# On a blank box run the tier-1 script directly first:
+#   doas sh system/openbsd/bootstrap.sh
+# then `sh system/lib/deploy.sh {common,machine}` (or the mise tasks if present).
+
+elif [[ "$PLATFORM" == "openbsd" ]]; then
+    echo "==> OpenBSD bootstrap"
+    sh system/openbsd/bootstrap.sh
+    echo ""
+    echo "Done. Next steps (mise if installed, else run deploy.sh directly):"
+    echo "  sh system/lib/deploy.sh common     # tier 2: openbsd/server -> /etc"
+    echo "  sh system/lib/deploy.sh machine    # tier 3: this host -> /etc"
 
 # ---------------------------------------------------------------------------
 # macOS

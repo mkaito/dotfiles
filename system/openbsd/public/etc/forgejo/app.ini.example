@@ -1,0 +1,67 @@
+; Template only. Copy to /etc/forgejo/app.ini, fill the two REPLACE_ME secrets
+; (forgejo generate secret SECRET_KEY / INTERNAL_TOKEN), then chown _forgejo
+; and chmod 640. Real app.ini is NEVER committed (see repo .gitignore).
+
+APP_NAME = lomdar git
+RUN_USER = _forgejo
+RUN_MODE = prod
+WORK_PATH = /var/forgejo
+
+[server]
+PROTOCOL  = http
+HTTP_ADDR = 127.0.0.1
+HTTP_PORT = 3000
+DOMAIN    = git.lomdar.com
+ROOT_URL  = https://git.lomdar.com/
+OFFLINE_MODE = true
+LANDING_PAGE = login
+; git-over-ssh via the host sshd on port 22 (NOT forgejo's builtin server).
+; sshd authorizes keys through `forgejo keys` (AuthorizedKeysCommand, see README).
+; Login user is _forgejo (== RUN_USER, the repo owner), so clone URLs are
+; _forgejo@git.lomdar.com:owner/repo.git.
+DISABLE_SSH       = false
+START_SSH_SERVER  = false
+SSH_DOMAIN        = git.lomdar.com
+SSH_PORT          = 22
+; sshd uses AuthorizedKeysCommand, so don't let forgejo manage an authorized_keys file
+SSH_CREATE_AUTHORIZED_KEYS_FILE = false
+
+[database]
+DB_TYPE = sqlite3
+PATH    = /var/forgejo/forgejo.db
+LOG_SQL = false
+
+[repository]
+ROOT = /var/forgejo/repositories
+DEFAULT_PRIVATE = private
+DEFAULT_BRANCH = master
+; OpenBSD base has no bash; git hooks must be sh or pushes fail with
+; "env: bash: No such file or directory". After changing, regenerate hooks.
+SCRIPT_TYPE = sh
+
+[security]
+INSTALL_LOCK   = true
+SECRET_KEY     = REPLACE_ME
+INTERNAL_TOKEN = REPLACE_ME
+PASSWORD_HASH_ALGO = argon2
+
+[service]
+DISABLE_REGISTRATION       = true
+REQUIRE_SIGNIN_VIEW        = true
+DEFAULT_KEEP_EMAIL_PRIVATE = true
+ENABLE_NOTIFY_MAIL         = false
+
+[session]
+PROVIDER = file
+
+[log]
+MODE      = file
+LEVEL     = info
+ROOT_PATH = /var/forgejo/log
+
+[mailer]
+ENABLED = false
+
+[indexer]
+ISSUE_INDEXER_TYPE  = db
+REPO_INDEXER_ENABLED = false
