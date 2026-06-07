@@ -6,7 +6,7 @@ Gentoo Linux and macOS configs, managed with [chezmoi](https://chezmoi.io) and [
 
 ```
 home/           chezmoi source — deploys to $HOME
-system/gentoo/  Gentoo system config (/etc) and local portage overlay
+system/gentoo/  Gentoo system config (/etc); the mkaito overlay lives in ~/dev/portage
 .mise/tasks/    task runner scripts
 vendor/         git submodules (zgenom, tokyonight.nvim)
 ```

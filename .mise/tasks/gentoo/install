@@ -23,8 +23,8 @@ rsync -av --chown=root:root --exclude=portage/ "$SYSTEM_CONFIG/etc/" /etc/
 
 echo "==> Writing local overlay config..."
 cat > /etc/portage/repos.conf/local.conf <<EOF
-[local]
-location = $MISE_PROJECT_ROOT/system/gentoo/overlay
+[mkaito]
+location = /home/chris/dev/portage
 auto-sync = no
 EOF
 

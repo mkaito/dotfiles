@@ -63,7 +63,7 @@ if [[ "$PLATFORM" == "gentoo" ]]; then
     install_mise
     echo ""
     echo "Done. Next steps:"
-    echo "  mise run gentoo:install   # deploy /etc and overlay"
+    echo "  mise run gentoo:install   # deploy /etc"
     echo "  mise run install          # link chezmoi source and apply dotfiles"
 
 # ---------------------------------------------------------------------------
