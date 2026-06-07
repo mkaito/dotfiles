@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#MISE description="Pull live /etc changes back into the matching tiers"
+exec "$MISE_PROJECT_ROOT/system/lib/deploy.sh" pull "$@"

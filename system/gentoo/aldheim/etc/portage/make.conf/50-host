@@ -1,0 +1,15 @@
+# Tier 3 (aldheim) — host make.conf overrides.
+# Concatenated after 00-base; sets the CPU/GPU-specific build flags. The
+# COMMON_FLAGS definition must precede the C*FLAGS assignments that expand it,
+# so the whole flags block lives here rather than in the base fragment.
+
+COMMON_FLAGS="-march=native -O2 -pipe"
+CFLAGS="${COMMON_FLAGS}"
+ABICXXFLAGS="${COMMON_FLAGS}"
+FCFLAGS="${COMMON_FLAGS}"
+FFLAGS="${COMMON_FLAGS}"
+RUSTFLAGS="${RUSTFLAGS} -C target-cpu=native"
+
+VIDEO_CARDS="amdgpu radeonsi radeon"
+
+CCACHE_DIR="/var/cache/ccache"

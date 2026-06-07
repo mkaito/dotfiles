@@ -1,0 +1,23 @@
+# Tier 2 (gentoo/desktop) — common make.conf base.
+# Portage reads /etc/portage/make.conf as a directory: files are concatenated
+# in sorted order, so the host fragment (50-host) overrides values set here.
+# Host-specific CPU/GPU flags and ccache dir live in the machine tier.
+
+ACCEPT_KEYWORDS="~amd64"
+ACCEPT_LICENSE="* -@EULA"
+ABI_X86="64"
+
+FEATURES="${FEATURES} getbinpkg binpkg-request-signature ccache"
+
+# No dist-kernel handled here; host runs custom-built sources.
+USE="-systemd -wayland -libei -nvidia elogind xinerama dist-kernel"
+
+# Build output language (keep for upstream bug reports).
+LC_MESSAGES=C.UTF-8
+
+GRUB_PLATFORMS="efi-64"
+
+GENTOO_MIRRORS="https://us.mirrors.cicku.me/gentoo/ \
+    https://es.mirrors.cicku.me/gentoo/ \
+    https://fr.mirrors.cicku.me/gentoo/ \
+    https://mirror.raiolanetworks.com/gentoo/"

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#MISE description="Diff repo tiers against live /etc (both directions)"
+exec "$MISE_PROJECT_ROOT/system/lib/deploy.sh" diff "$@"

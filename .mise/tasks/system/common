@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#MISE description="Tier 2: deploy OS/role common config to /etc"
+exec "$MISE_PROJECT_ROOT/system/lib/deploy.sh" common "$@"

@@ -6,8 +6,8 @@
 #   cd ~/dev/dotfiles
 #   ./bootstrap.sh
 #
-# After this script: run `mise run install` (all platforms) and, on Gentoo,
-# `mise run gentoo:install` to deploy system config.
+# After this script: run `mise run install` (all platforms) and, for system
+# config, the explicit tiers `mise run system:{bootstrap,common,machine}`.
 
 set -euo pipefail
 
@@ -62,9 +62,11 @@ if [[ "$PLATFORM" == "gentoo" ]]; then
     echo "==> Gentoo bootstrap"
     install_mise
     echo ""
-    echo "Done. Next steps:"
-    echo "  mise run gentoo:install   # deploy /etc"
-    echo "  mise run install          # link chezmoi source and apply dotfiles"
+    echo "Done. Next steps (each tier is explicit):"
+    echo "  mise run system:bootstrap   # tier 1: verify base tools"
+    echo "  mise run system:common      # tier 2: gentoo/<role> -> /etc"
+    echo "  mise run system:machine     # tier 3: this host -> /etc"
+    echo "  mise run install            # link chezmoi source and apply dotfiles"
 
 # ---------------------------------------------------------------------------
 # macOS
