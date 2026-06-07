@@ -49,16 +49,19 @@ FILTER="$SYSTEM/$OS/rsync-filter"
 COMMON_DIR="$SYSTEM/$OS/$ROLE"
 MACHINE_DIR="$SYSTEM/$OS/$HOST"
 
-# Deploy one tier's etc/ onto /etc (root-owned, no delete). The filter (a single
-# arg that must not be word-split) keeps the repo's own .gitignore out of /etc.
+# Deploy one tier's etc/ onto /etc (no delete). Runs via doas/sudo, so files are
+# written as root and get root's primary group (root on Linux, wheel on OpenBSD)
+# automatically — don't map to a "root" group name, which doesn't exist on BSD.
+# The filter (a single arg that must not be word-split) keeps the repo's own
+# .gitignore out of /etc.
 deploy_tier() {
     dir=$1
     if [ ! -d "$dir/etc" ]; then echo "==> $dir: no etc/, skipping"; return 0; fi
     echo "==> deploying $dir/etc -> /etc"
     if [ -f "$FILTER" ]; then
-        $ESC rsync -a --chown=root:root --filter="merge $FILTER" "$dir/etc/" /etc/
+        $ESC rsync -a --no-owner --no-group --filter="merge $FILTER" "$dir/etc/" /etc/
     else
-        $ESC rsync -a --chown=root:root "$dir/etc/" /etc/
+        $ESC rsync -a --no-owner --no-group "$dir/etc/" /etc/
     fi
 }
 
