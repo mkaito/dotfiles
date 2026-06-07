@@ -1,3 +1,4 @@
 httpd_flags=
 pkg_scripts=forgejo
 relayd_flags=
+smtpd_flags=NO          # no mail on this host
