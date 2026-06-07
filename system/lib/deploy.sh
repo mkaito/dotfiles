@@ -49,26 +49,17 @@ FILTER="$SYSTEM/$OS/rsync-filter"
 COMMON_DIR="$SYSTEM/$OS/$ROLE"
 MACHINE_DIR="$SYSTEM/$OS/$HOST"
 
-# rsync wrapper that inserts the OS filter as a single argument (it must not be
-# word-split) and optionally escalates. Usage: xrsync esc|noesc <rsync args...>
-xrsync() {
-    _esc=$1; shift
-    _pre=""; [ "$_esc" = esc ] && _pre=$ESC
-    if [ -f "$FILTER" ]; then
-        # shellcheck disable=SC2086
-        $_pre rsync --filter="merge $FILTER" "$@"
-    else
-        # shellcheck disable=SC2086
-        $_pre rsync "$@"
-    fi
-}
-
-# Deploy one tier's etc/ onto /etc (root-owned, no delete).
+# Deploy one tier's etc/ onto /etc (root-owned, no delete). The filter (a single
+# arg that must not be word-split) keeps the repo's own .gitignore out of /etc.
 deploy_tier() {
     dir=$1
     if [ ! -d "$dir/etc" ]; then echo "==> $dir: no etc/, skipping"; return 0; fi
     echo "==> deploying $dir/etc -> /etc"
-    xrsync esc -a --chown=root:root "$dir/etc/" /etc/
+    if [ -f "$FILTER" ]; then
+        $ESC rsync -a --chown=root:root --filter="merge $FILTER" "$dir/etc/" /etc/
+    else
+        $ESC rsync -a --chown=root:root "$dir/etc/" /etc/
+    fi
 }
 
 # Drop paths matching the rsync-filter's `exclude` rules, so reverse operations
@@ -94,7 +85,7 @@ pull_tier() {
     echo "==> pulling /etc -> $dir/etc (tracked files only)"
     tmp=$(mktemp)
     _tier_filelist "$dir" > "$tmp"
-    xrsync noesc -a --no-owner --no-group --files-from="$tmp" /etc/ "$dir/etc/"
+    rsync -a --no-owner --no-group --files-from="$tmp" /etc/ "$dir/etc/"
     rm -f "$tmp"
 }
 
@@ -105,33 +96,22 @@ diff_tier() {
     tmp=$(mktemp)
     _tier_filelist "$dir" > "$tmp"
     echo "-- $dir: repo -> /etc (would be applied):"
-    xrsync noesc -anic --no-group --files-from="$tmp" "$dir/etc/" /etc/ | grep -E '^[><c*]' || echo "   (none)"
+    rsync -anic --no-group --files-from="$tmp" "$dir/etc/" /etc/ | grep -E '^[><c*]' || echo "   (none)"
     echo "-- $dir: /etc -> repo (drift; capture with pull):"
-    xrsync noesc -anic --no-group --files-from="$tmp" /etc/ "$dir/etc/" | grep -E '^[><c*]' || echo "   (none)"
+    rsync -anic --no-group --files-from="$tmp" /etc/ "$dir/etc/" | grep -E '^[><c*]' || echo "   (none)"
     rm -f "$tmp"
 }
 
-# Gentoo machine post-step: point portage at the local mkaito overlay.
-post_machine() {
-    [ "$OS" = gentoo ] || return 0
-    echo "==> writing /etc/portage/repos.conf/local.conf"
-    $ESC sh -c 'cat > /etc/portage/repos.conf/local.conf' <<'EOF'
-[mkaito]
-location = /home/chris/dev/portage
-auto-sync = no
-EOF
-}
-
 cmd=${1:-}
-[ $# -gt 0 ] && shift || true
 case "$cmd" in
     bootstrap)
+        shift
         bs="$SYSTEM/$OS/bootstrap.sh"
         [ -x "$bs" ] || { echo "error: no $bs" >&2; exit 1; }
         exec "$bs" "$@"
         ;;
     common)  deploy_tier "$COMMON_DIR" ;;
-    machine) deploy_tier "$MACHINE_DIR"; post_machine ;;
+    machine) deploy_tier "$MACHINE_DIR" ;;
     pull)
         [ "$(id -u)" -eq 0 ] && { echo "error: run pull as your user, not root" >&2; exit 1; }
         pull_tier "$COMMON_DIR"; pull_tier "$MACHINE_DIR"

@@ -1,4 +1,3 @@
 exclude gnupg/
-exclude repos.conf/local.conf
 exclude repos.conf/eselect-repo.conf
 exclude .gitignore
