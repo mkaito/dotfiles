@@ -35,7 +35,7 @@ proxy; `httpd` can't proxy, so `relayd` owns `:443`.
 | `etc/httpd.conf`                  | `/etc/httpd.conf`                   |
 | `etc/relayd.conf`                 | `/etc/relayd.conf`                  |
 | `etc/acme-client.conf`            | `/etc/acme-client.conf`            |
-| `etc/forgejo/app.ini.example`     | `/etc/forgejo/app.ini` (fill secrets) |
+| `forgejo/app.ini.example`         | `/etc/forgejo/app.ini` (fill secrets, not deployed) |
 | `../server/etc/doas.conf`         | `/etc/doas.conf` (tier 2)           |
 | `../server/etc/rc.conf.local`     | reference for `rcctl enable` lines  |
 | forgejo port (`~/dev/ports`)      | build pkg, `pkg_add` on the box     |
@@ -108,7 +108,7 @@ Result: a `forgejo-<ver>.tgz`. Copy it to the box and install:
        doas -u _forgejo /usr/local/sbin/forgejo generate secret SECRET_KEY
        doas -u _forgejo /usr/local/sbin/forgejo generate secret INTERNAL_TOKEN
 
-   Copy `etc/forgejo/app.ini.example` -> `/etc/forgejo/app.ini`, paste the two
+   Copy `forgejo/app.ini.example` -> `/etc/forgejo/app.ini`, paste the two
    secrets, `chown _forgejo:_forgejo` it, `chmod 640`.
 
 2. Dirs: docroot (owned by deploy user so rsync can write), ACME challenge dir,

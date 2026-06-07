@@ -1,2 +1,2 @@
-# real forgejo config holds secrets; only app.ini.example is tracked
-etc/forgejo/app.ini
+# real forgejo config holds secrets; only app.ini.example (template) is tracked
+forgejo/app.ini
