@@ -37,12 +37,12 @@ proxy; `httpd` can't proxy, so `relayd` owns `:443`.
 | `etc/acme-client.conf`            | `/etc/acme-client.conf`            |
 | `forgejo/app.ini.example`         | `/etc/forgejo/app.ini` (fill secrets, not deployed) |
 | `../server/etc/doas.conf`         | `/etc/doas.conf` (tier 2)           |
-| `../server/etc/rc.conf.local`     | reference for `rcctl enable` lines  |
+| `etc/rc.conf.local`               | `/etc/rc.conf.local` (`pkg_scripts=forgejo`) |
 | forgejo port (`~/dev/ports`)      | build pkg, `pkg_add` on the box     |
 | `deploy/blog-push.sh`             | runs on the dev box                 |
 
-(`doas.conf` and `rc.conf.local` are shared baseline, so they live in the
-`openbsd/server` tier; everything else is host-specific.)
+(`doas.conf` is shared baseline in the `openbsd/server` tier; everything else,
+including `rc.conf.local` with its `pkg_scripts=forgejo`, is host-specific.)
 
 ---
 

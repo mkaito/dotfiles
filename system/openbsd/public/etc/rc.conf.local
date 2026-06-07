@@ -1,0 +1,3 @@
+httpd_flags=
+pkg_scripts=forgejo
+relayd_flags=
